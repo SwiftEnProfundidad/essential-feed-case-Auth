@@ -337,23 +337,23 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 - [🔜] Ofrecer recuperación de contraseña
     #### Subtareas
-    - [✅] Endpoint y DTO para recuperación de contraseña
-    - [✅] Caso de uso (UseCase) para solicitar recuperación
-    - [✅] Validación de email antes de enviar la petición
-    - [✅] Notificación de éxito/error al usuario
-    - [✅] Tests unitarios del caso de uso
-    - [✅] Tests de integración (sin acceso a Keychain ni login)
-    - [✅] Presentador y vista para feedback al usuario
-    - [✅] Cobertura en CI
+    - [⏳] Endpoint y DTO para recuperación de contraseña
+    - [🔜] Caso de uso (UseCase) para solicitar recuperación
+    - [❌] Validación de email antes de enviar la petición
+    - [❌] Notificación de éxito/error al usuario
+    - [❌] Tests unitarios del caso de uso
+    - [❌] Tests de integración (sin acceso a Keychain ni login)
+    - [❌] Presentador y vista para feedback al usuario
+    - [❌] Cobertura en CI
 
-- [❌] Almacenar la solicitud para reintentar (sin conexión)
+- [🔜] Almacenar la solicitud para reintentar (sin conexión)
 - [❌] Notificar error de conectividad
 - [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
 
 ---
 
-#### Checklist integración UI: Notificar éxito de login:  [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
-
+#### Checklist integración UI: Notificar éxito de login:  
+- [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
 - [❌] El presenter llama a la vista real al completar el login exitoso
 - [❌] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
 - [❌] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
