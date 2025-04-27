@@ -340,8 +340,8 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Endpoint y DTO para recuperación de contraseña
     - [✅] Caso de uso (UseCase) para solicitar recuperación
     - [✅] Validación de email antes de enviar la petición
-    - [🔜] Notificación de éxito/error al usuario
-    - [❌] Tests unitarios del caso de uso
+    - [✅] Notificación de éxito/error al usuario
+    - [🔜] Tests unitarios del caso de uso
     - [❌] Tests de integración (sin acceso a Keychain ni login)
     - [❌] Presentador y vista para feedback al usuario
     - [❌] Cobertura en CI
@@ -372,8 +372,6 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - El sistema recibe el token y lo almacena de forma segura
 - El sistema registra la sesión activa
 - El sistema notifica éxito de login
-
-
 
 **Sad path:**
 - Credenciales incorrectas: sistema notifica error y permite reintentar, registra intento fallido para métricas
