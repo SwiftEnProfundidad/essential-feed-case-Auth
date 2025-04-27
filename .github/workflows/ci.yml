@@ -24,14 +24,12 @@ jobs:
         run: |
           find ~/Library/Developer/Xcode/DerivedData -print
 
-      - name: List build products (executables and profdata)
+      # Paso de debug opcional: puedes eliminarlo si ya no necesitas rastrear paths
+      - name: List build products (debug)
         run: |
-          find ~/Library/Developer/Xcode/DerivedData -name "*.xctest" -print
-          find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -print
-          find ~/Library/Developer/Xcode/DerivedData -name "*.profdata" -print
           find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -print
 
-      - name: Convert coverage to lcov
+      - name: Extract coverage from xcresult
         run: |
           set -e
           XCRESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | sort | tail -n 1)
