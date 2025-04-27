@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/main/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
+[![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/feature/AuthModule/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
+
 # Essential App Case Study
 
 ## Architectural Decision: Composer vs Coordinator
