@@ -16,35 +16,39 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest
-      - name: Build and test (unit + integración)
+      - name: Build and test (unit + integration)
         run: |
-          xcodebuild test -project EssentialFeed/EssentialFeed.xcodeproj -scheme CI_macOS -destination 'platform=macOS' -enableCodeCoverage YES | xcpretty
+          set -e
+          xcodebuild test \
+            -workspace EssentialFeed.xcworkspace \
+            -scheme EssentialFeed \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+            -enableCodeCoverage YES | xcpretty
+        env:
+          NSUnbufferedIO: YES
+
       - name: List ALL files in DerivedData (exhaustive debug)
         run: |
           find ~/Library/Developer/Xcode/DerivedData -print
 
-      - name: List build products (executables and profdata)
+      # Paso de debug opcional: puedes eliminarlo si ya no necesitas rastrear paths
+      - name: List build products (debug)
         run: |
-          find ~/Library/Developer/Xcode/DerivedData -name "*.xctest" -print
-          find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -print
-          find ~/Library/Developer/Xcode/DerivedData -name "*.profdata" -print
           find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -print
 
-      - name: Convert coverage to lcov
+      - name: Extract coverage from xcresult
         run: |
           set -e
-          BUILD_DIR=$(find ~/Library/Developer/Xcode/DerivedData -type d -name "Build" | sort | tail -n 1)
-          COVERAGE_PATH=$(find "$BUILD_DIR" -name "*.xctest" -type d | head -n 1)
-          PROF_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -type f | head -n 1)
-          if [[ -z "$COVERAGE_PATH" || -z "$PROF_DATA" ]]; then
-            echo "No coverage files found."
+          XCRESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | sort | tail -n 1)
+          if [[ -z "$XCRESULT_PATH" ]]; then
+            echo "No xcresult bundle found."
             exit 1
           fi
-          EXECUTABLE=$(find "$COVERAGE_PATH/Contents/MacOS" -type f | head -n 1)
-          xcrun llvm-cov export -format=lcov "$EXECUTABLE" -instr-profile "$PROF_DATA" > coverage.lcov
+          xcrun xccov view --report --json "$XCRESULT_PATH" > coverage.json
+          cat coverage.json
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: coverage.lcov
+          files: coverage.json
           fail_ci_if_error: false
