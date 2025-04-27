@@ -20,10 +20,19 @@ jobs:
         run: |
           xcodebuild test -project EssentialFeed/EssentialFeed.xcodeproj -scheme CI_macOS -destination 'platform=macOS' -enableCodeCoverage YES | xcpretty
 
+      - name: List DerivedData contents (debug)
+        run: |
+          ls -R ~/Library/Developer/Xcode/DerivedData
+
       - name: Convert coverage to lcov
         run: |
+          set -e
           COVERAGE_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xctest" -type f | head -n 1)
           PROF_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -type f | head -n 1)
+          if [[ -z "$COVERAGE_PATH" || -z "$PROF_DATA" ]]; then
+            echo "No coverage files found."
+            exit 1
+          fi
           xcrun llvm-cov export -format=lcov "$COVERAGE_PATH" -instr-profile "$PROF_DATA" > coverage.lcov
 
       - name: Upload coverage to Codecov
