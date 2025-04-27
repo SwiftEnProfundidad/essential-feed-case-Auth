@@ -337,10 +337,10 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 - [🔜] Ofrecer recuperación de contraseña
     #### Subtareas
-    - [⏳] Endpoint y DTO para recuperación de contraseña
-    - [🔜] Caso de uso (UseCase) para solicitar recuperación
-    - [❌] Validación de email antes de enviar la petición
-    - [❌] Notificación de éxito/error al usuario
+    - [✅] Endpoint y DTO para recuperación de contraseña
+    - [✅] Caso de uso (UseCase) para solicitar recuperación
+    - [✅] Validación de email antes de enviar la petición
+    - [🔜] Notificación de éxito/error al usuario
     - [❌] Tests unitarios del caso de uso
     - [❌] Tests de integración (sin acceso a Keychain ni login)
     - [❌] Presentador y vista para feedback al usuario
