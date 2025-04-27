@@ -341,10 +341,10 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Caso de uso (UseCase) para solicitar recuperación
     - [✅] Validación de email antes de enviar la petición
     - [✅] Notificación de éxito/error al usuario
-    - [🔜] Tests unitarios del caso de uso
-    - [❌] Tests de integración (sin acceso a Keychain ni login)
-    - [❌] Presentador y vista para feedback al usuario
-    - [❌] Cobertura en CI
+    - [✅] Tests unitarios del caso de uso
+    - [✅] Tests de integración (sin acceso a Keychain ni login)
+    - [⏳] Presentador y vista para feedback al usuario
+    - [🔜] Cobertura en CI
 
 - [🔜] Almacenar la solicitud para reintentar (sin conexión)
 - [❌] Notificar error de conectividad

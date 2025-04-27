@@ -1,10 +1,7 @@
 import XCTest
+import EssentialFeed
 
-// MARK: - Password Recovery Use Case Tests
-
-@testable import EssentialFeed
-
-final class UserPasswordRecoveryUseCaseTests: XCTestCase {
+final class UserPasswordRecoveryIntegrationTests: XCTestCase {
 
     func test_recovery_succeeds_withValidEmail_andNotifiesSuccess() async {
         // Arrange

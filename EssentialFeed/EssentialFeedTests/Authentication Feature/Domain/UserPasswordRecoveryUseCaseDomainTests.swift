@@ -1,22 +1,18 @@
 import XCTest
 import EssentialFeed
 
-final class PasswordRecoveryUseCaseTests: XCTestCase {
+final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     func test_recoverPassword_deliversSuccess_onValidEmail() {
-        // Arrange: Setup a stub API and SUT
-        let api = PasswordRecoveryAPIStub(result: .success(PasswordRecoveryResponse(message: "OK")))
-        let sut = PasswordRecovery(api: api)
+        let (sut, _) = makeSUT(apiResult: .success(PasswordRecoveryResponse(message: "OK")))
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
         
-        // Act
         sut.recoverPassword(email: "test@example.com") { result in
             receivedResult = result
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
         
-        // Assert
         switch receivedResult {
         case let .success(response):
             XCTAssertEqual(response.message, "OK")
@@ -26,48 +22,31 @@ final class PasswordRecoveryUseCaseTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversInvalidEmailError_onInvalidEmail() {
-        let api = PasswordRecoveryAPIStub(result: .failure(.invalidEmailFormat))
-        let sut = PasswordRecovery(api: api)
-        let exp = expectation(description: "Wait for recovery")
-        var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
-        
-        sut.recoverPassword(email: "invalid") { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.invalidEmailFormat))
+        let receivedResult = recoverPasswordSync(sut: sut, email: "invalid")
         
         switch receivedResult {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidEmailFormat)
+            XCTAssertEqual(error, PasswordRecoveryError.invalidEmailFormat)
         default:
             XCTFail("Expected invalid email error, got \(String(describing: receivedResult))")
         }
     }
 
     func test_recoverPassword_deliversEmailNotFoundError_onUnknownEmail() {
-        let api = PasswordRecoveryAPIStub(result: .failure(.emailNotFound))
-        let sut = PasswordRecovery(api: api)
-        let exp = expectation(description: "Wait for recovery")
-        var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
-        
-        sut.recoverPassword(email: "unknown@example.com") { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.emailNotFound))
+        let receivedResult = recoverPasswordSync(sut: sut, email: "unknown@example.com")
         
         switch receivedResult {
         case let .failure(error):
-            XCTAssertEqual(error, .emailNotFound)
+            XCTAssertEqual(error, PasswordRecoveryError.emailNotFound)
         default:
             XCTFail("Expected email not found error, got \(String(describing: receivedResult))")
         }
     }
 
     func test_recoverPassword_deliversNetworkError_onNetworkFailure() {
-        let api = PasswordRecoveryAPIStub(result: .failure(.network))
-        let sut = PasswordRecovery(api: api)
+        let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.network))
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
         
@@ -79,12 +58,36 @@ final class PasswordRecoveryUseCaseTests: XCTestCase {
         
         switch receivedResult {
         case let .failure(error):
-            XCTAssertEqual(error, .network)
+            XCTAssertEqual(error, PasswordRecoveryError.network)
         default:
             XCTFail("Expected network error, got \(String(describing: receivedResult))")
         }
     }
+
+    // MARK: - Helpers
+    private func recoverPasswordSync(sut: UserPasswordRecoveryUseCase, email: String) -> Result<PasswordRecoveryResponse, PasswordRecoveryError>? {
+        let exp = expectation(description: "Wait for recovery")
+        var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
+        sut.recoverPassword(email: email) { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        return receivedResult
+    }
+
+    private func makeSUT(
+        apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>,
+        file: StaticString = #file, line: UInt = #line
+    ) -> (sut: UserPasswordRecoveryUseCase, api: PasswordRecoveryAPIStub) {
+        let api = PasswordRecoveryAPIStub(result: apiResult)
+        let sut = UserPasswordRecoveryUseCase(api: api)
+        trackForMemoryLeaks(api, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, api)
+    }
 }
+
 
 // Stub API for testing
 private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
@@ -92,7 +95,7 @@ private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         self.result = result
     }
-    func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+    func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
     }
 }

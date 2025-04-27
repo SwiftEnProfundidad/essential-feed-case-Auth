@@ -209,14 +209,14 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 	}
 	
 	private func makeSUTWithDefaults(
-		httpClient: HTTPClientSpy? = nil,
-		notifier: UserRegistrationNotifier? = nil
-	) -> (UserRegistrationUseCase, KeychainFullSpy, String, String, String, HTTPClientSpy) {
+        httpClient: HTTPClient = HTTPClientSpy(),
+        notifier: UserRegistrationNotifier = UserRegistrationNotifierSpy(),
+        name: String = "Test User",
+        email: String = "test@email.com",
+        password: String = "Password123",
+        file: StaticString = #file, line: UInt = #line
+    ) -> (sut: UserRegistrationUseCase, keychain: KeychainFullSpy, name: String, email: String, password: String, notifier: UserRegistrationNotifier) {
 		let keychain = makeKeychainFullSpy()
-		let name = "Carlos"
-		let email = "carlos@email.com"
-		let password = "StrongPassword123"
-		let httpClient = httpClient ?? HTTPClientSpy()
 		let registrationEndpoint = URL(string: "https://test-register-endpoint.com")!
 		let sut = UserRegistrationUseCase(
 			keychain: keychain,
@@ -225,9 +225,9 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 			registrationEndpoint: registrationEndpoint,
 			notifier: notifier
 		)
-		trackForMemoryLeaks(sut, file: #file, line: #line)
-		trackForMemoryLeaks(keychain as AnyObject, file: #file, line: #line)
-		return (sut, keychain, name, email, password, httpClient)
+		trackForMemoryLeaks(keychain, file: file, line: line)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return (sut, keychain, name, email, password, notifier)
 	}
 	
 	private func makeSUTWithKeychain(
