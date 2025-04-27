@@ -4,7 +4,7 @@ import EssentialFeed
 struct BorderedProminentIfAvailable: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 15.0, *) {
-            content.buttonStyle(.borderedProminent)
+            content.modifier(BorderedProminentIfAvailable())
         } else {
             content.buttonStyle(DefaultButtonStyle())
         }
@@ -13,6 +13,7 @@ struct BorderedProminentIfAvailable: ViewModifier {
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
+    @State private var showingPasswordRecovery = false
 
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -33,8 +34,15 @@ public struct LoginView: View {
                 viewModel.login()
             }
             .modifier(BorderedProminentIfAvailable())
+            Button("¿Has olvidado tu contraseña?") {
+                showingPasswordRecovery = true
+            }
+            .padding(.top, 8)
         }
         .padding()
+        .sheet(isPresented: $showingPasswordRecovery) {
+            PasswordRecoveryComposer.passwordRecoveryViewScreen()
+        }
         .alert(isPresented: $viewModel.loginSuccess) {
             Alert(
                 title: Text("Login Successful"),
