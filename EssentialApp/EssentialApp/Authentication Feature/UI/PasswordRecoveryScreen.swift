@@ -9,10 +9,10 @@ public struct PasswordRecoveryScreen: View {
 
     public var body: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $viewModel.email)
+            TextField("Email address", text: $viewModel.email)
                 .autocapitalization(.none)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            Button("Recuperar contraseña") {
+            Button("Recover password") {
                 viewModel.recoverPassword()
             }
             .modifier(BorderedProminentIfAvailable())

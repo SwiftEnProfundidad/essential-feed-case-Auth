@@ -9,14 +9,9 @@ public enum LoginComposer {
         onAuthenticated: @escaping () -> Void) -> UIViewController {
         print("🛠 LoginComposer: loginViewController called")
         let viewModel = LoginViewModel()
+        viewModel.onAuthenticated = onAuthenticated
         let loginView = LoginView(viewModel: viewModel)
         let controller = UIHostingController(rootView: loginView)
-        viewModel.authenticated
-            .sink {
-                print("🔔 LoginComposer: authenticated publisher fired")
-                onAuthenticated()
-            }
-            .store(in: &cancellables)
         return controller
     }
 }

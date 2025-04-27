@@ -11,18 +11,24 @@ public final class LoginViewModel: ObservableObject {
     public init() {}
     
     public func login() {
+        print("LoginViewModel: intentando login con \(username)/\(password)")
         if username == "user" && password == "pass" {
+            print("LoginViewModel: login OK, mostrando alerta")
             errorMessage = nil
             loginSuccess = true
             authenticated.send(())
         } else {
+            print("LoginViewModel: login FAIL")
             errorMessage = "Invalid credentials."
             loginSuccess = false
         }
     }
     
+    public var onAuthenticated: (() -> Void)?
+
     public func onSuccessAlertDismissed() {
+        print("LoginViewModel: alerta de éxito cerrada")
         loginSuccess = false
-        // Aquí puedes notificar a la capa superior si hace falta
+        onAuthenticated?()
     }
 }

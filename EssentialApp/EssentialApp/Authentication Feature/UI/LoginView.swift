@@ -20,7 +20,7 @@ public struct LoginView: View {
 	}
 	
 	public var body: some View {
-		VStack(spacing: 16) {
+        VStack(spacing: 16) {
 			TextField("Username", text: $viewModel.username)
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
@@ -31,10 +31,11 @@ public struct LoginView: View {
 					.foregroundColor(.red)
 			}
             Button("Login") {
+                print("🟠 Button Login tapped")
                 viewModel.login()
             }
             .modifier(BorderedProminentIfAvailable())
-			Button("¿Has olvidado tu contraseña?") {
+			Button("Forgot your password?") {
 				showingPasswordRecovery = true
 			}
 			.font(.footnote)
@@ -44,18 +45,16 @@ public struct LoginView: View {
 			PasswordRecoveryComposer.passwordRecoveryViewScreen()
 		}
 		.alert(isPresented: $viewModel.loginSuccess) {
-			Alert(
-				title: Text("Login Successful"),
-				message: Text("Welcome!"),
-				dismissButton: .default(Text("OK")) {
-					viewModel.onSuccessAlertDismissed()
-				}
-			)
+			Alert(title: Text("Login Successful"),
+                  message: Text("Welcome, \(viewModel.username)!"),
+                  dismissButton: .default(Text("OK"), action: {
+                    viewModel.onSuccessAlertDismissed()
+                  }))
 		}
-		.onAppear {
-			print("🟢 LoginView: body loaded")
-		}
-	}
+        .onAppear {
+            print(" LoginView: body loaded")
+        }
+    }
 }
 
 public protocol LoginSuccessView: AnyObject {
