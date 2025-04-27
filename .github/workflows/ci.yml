@@ -22,7 +22,7 @@ jobs:
           xcodebuild test \
             -workspace EssentialApp/EssentialApp.xcworkspace \
             -scheme EssentialApp \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.2' \
             -enableCodeCoverage YES | tee build-and-test.log | xcpretty
           cat build-and-test.log
         env:
