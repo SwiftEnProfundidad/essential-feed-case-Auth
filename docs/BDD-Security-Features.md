@@ -322,8 +322,14 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 - [✅] Almacenar token de autenticación de forma segura tras login exitoso
 - [✅] Registrar sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-- [🟡/❌] Notificar éxito de login (presenter unitario, falta integración UI)
-  - Parcialmente cubierto: lógica y tests unitarios listos, falta integración UI
+- [⏳] Notificar éxito de login (presenter unitario, falta integración UI)
+    #### Subtareas 
+    - [✅] Notificar éxito de login (presenter unitario, falta integración UI)
+    - [✅] El presenter llama a la vista real al completar el login exitoso
+    - [✅] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
+    - [✅] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
+    - [⏳] Hay tests de UI/integración que validan el flujo completo (login → notificación)
+    - [✅] El ciclo está cubierto por tests automáticos en CI
 
 - [✅] Notificar errores de validación específicos
     #### Subtareas
@@ -335,7 +341,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
     - [✅] El ciclo está cubierto por tests automáticos en CI
 
-- [🔜] Ofrecer recuperación de contraseña
+- [✅] Ofrecer recuperación de contraseña
     #### Subtareas
     - [✅] Endpoint y DTO para recuperación de contraseña
     - [✅] Caso de uso (UseCase) para solicitar recuperación
@@ -343,8 +349,8 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Notificación de éxito/error al usuario
     - [✅] Tests unitarios del caso de uso
     - [✅] Tests de integración (sin acceso a Keychain ni login)
-    - [⏳] Presentador y vista para feedback al usuario
-    - [🔜] Cobertura en CI
+    - [✅] Presentador y vista para feedback al usuario
+    - [✅] Cobertura en CI
 
 - [🔜] Almacenar la solicitud para reintentar (sin conexión)
 - [❌] Notificar error de conectividad
@@ -352,14 +358,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 ---
 
-#### Checklist integración UI: Notificar éxito de login:  
-- [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
-- [❌] El presenter llama a la vista real al completar el login exitoso
-- [❌] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
-- [❌] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
-- [❌] Hay tests de UI/integración que validan el flujo completo (login → notificación)
-- [❌] El ciclo está cubierto por tests automáticos en CI
-- [❌] El checklist principal puede marcarse como [✅] tras validar todo lo anterior
+
 
 ---
 
