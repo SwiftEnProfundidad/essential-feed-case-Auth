@@ -47,6 +47,11 @@
 		B46CA1682DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
+		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
+		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
+		B4D0FE642DBEEEE100033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
+		B4D0FE652DBEEEE100033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
+		B4D0FE662DBEEEE100033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,6 +125,11 @@
 		B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryScreen.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
+		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
+		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
+		B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
+		B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +155,7 @@
 		082C00022359E43F008927D3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */,
 				B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */,
 				08073B4A238D2E0E00A75DC6 /* UIImage+TestHelpers.swift */,
 				08073B50238D2E0F00A75DC6 /* UIRefreshControl+TestHelpers.swift */,
@@ -258,6 +269,8 @@
 		B4D0FE592DBEE83B00033FF3 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B4D0FE632DBEEEE000033FF3 /* snapshots */,
+				B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */,
 				B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */,
 			);
 			path = UI;
@@ -269,6 +282,16 @@
 				B4D0FE592DBEE83B00033FF3 /* UI */,
 			);
 			path = "Authentication Feature";
+			sourceTree = "<group>";
+		};
+		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
+			isa = PBXGroup;
+			children = (
+				B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
+				B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */,
+				B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
+			);
+			path = snapshots;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,6 +389,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4D0FE642DBEEEE100033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
+				B4D0FE652DBEEEE100033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
+				B4D0FE662DBEEEE100033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,9 +439,11 @@
 				B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
+				B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */,
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
 				08073B5D238D2E2600A75DC6 /* FeedUIIntegrationTests.swift in Sources */,
+				B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */,
 				082C00042359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

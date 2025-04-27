@@ -3,7 +3,7 @@ import EssentialFeed
 
 public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordRecoveryView {
     // Inputs
-    @Published var email: String = ""
+    @Published public var email: String = ""
     // Outputs
     @Published var feedbackMessage: String = ""
     @Published var isSuccess: Bool = false
@@ -17,7 +17,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         self.presenter = PasswordRecoveryPresenter(view: self)
     }
 
-    func recoverPassword() {
+    public func recoverPassword() {
         recoveryUseCase.recoverPassword(email: email) { [weak self] result in
             self?.presenter?.didRecoverPassword(with: result)
         }

@@ -7,19 +7,24 @@ public final class LoginViewModel: ObservableObject {
     @Published public var errorMessage: String?
     @Published public var loginSuccess: Bool = false
     public let authenticated = PassthroughSubject<Void, Never>()
-    
-    public init() {}
-    
-    public func login() {
-        print("LoginViewModel: intentando login con \(username)/\(password)")
-        if username == "user" && password == "pass" {
-            print("LoginViewModel: login OK, mostrando alerta")
+
+    /// Closure de autenticación asíncrona (production y tests)
+    private let authenticate: (String, String) async -> Result<LoginResponse, LoginError>
+
+    public init(authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>) {
+        self.authenticate = authenticate
+    }
+
+    @MainActor
+    public func login() async {
+        let result = await authenticate(username, password)
+        switch result {
+        case .success:
             errorMessage = nil
             loginSuccess = true
             authenticated.send(())
-        } else {
-            print("LoginViewModel: login FAIL")
-            errorMessage = "Invalid credentials."
+        case .failure(let error):
+            errorMessage = error.localizedDescription
             loginSuccess = false
         }
     }
@@ -27,7 +32,6 @@ public final class LoginViewModel: ObservableObject {
     public var onAuthenticated: (() -> Void)?
 
     public func onSuccessAlertDismissed() {
-        print("LoginViewModel: alerta de éxito cerrada")
         loginSuccess = false
         onAuthenticated?()
     }
