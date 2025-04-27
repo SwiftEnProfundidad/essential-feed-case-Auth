@@ -20,10 +20,16 @@ jobs:
         run: |
           xcodebuild test -project EssentialFeed/EssentialFeed.xcodeproj -scheme CI_macOS -destination 'platform=macOS' -enableCodeCoverage YES | xcpretty
 
-      - name: List Build Products (debug)
+      - name: List ALL files in DerivedData (exhaustive debug)
         run: |
-          find ~/Library/Developer/Xcode/DerivedData -type d -name "*.xctest"
-          find ~/Library/Developer/Xcode/DerivedData -name "default.profdata"
+          find ~/Library/Developer/Xcode/DerivedData -print
+
+      - name: List build products (executables and profdata)
+        run: |
+          find ~/Library/Developer/Xcode/DerivedData -name "*.xctest" -print
+          find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -print
+          find ~/Library/Developer/Xcode/DerivedData -name "*.profdata" -print
+          find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -print
 
       - name: Convert coverage to lcov
         run: |
