@@ -321,34 +321,31 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 ### Checklist técnico de login
 
 - [✅] Almacenar token de autenticación de forma segura tras login exitoso
-  - Cubierto por test: `test_login_succeeds_onValidCredentialsAndServerResponse`
 - [✅] Registrar sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-  - Cubierto por test: `SystemSessionManagerTests.swift`
 - [🟡/❌] Notificar éxito de login (presenter unitario, falta integración UI)
   - Parcialmente cubierto: lógica y tests unitarios listos, falta integración UI
-- [✅] Notificar errores de validación específicos (formato)
 
-  #### Checklist técnico (Subtareas): Notificar errores de validación específicos (formato)
-
-- [✅] El sistema valida el formato de los datos de login antes de enviar la petición  
-  - Cubierto por test: `test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest`
-- [✅] Si el email no tiene formato válido, muestra mensaje de error específico y no envía petición  
-  - Cubierto por test: `test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest`
-- [✅] Si la contraseña está vacía o no cumple requisitos mínimos, muestra mensaje de error específico y no envía petición  
-  - Cubierto por test: `test_login_fails_withInvalidPassword_andDoesNotSendRequest`
-- [✅] Los mensajes de error son claros, accesibles y están alineados con las guidelines de producto  
-    - Implementado en producción (`Authentication Feature/Presentation/LoginErrorMessageMapper.swift`)  
-    - Testeado en `Authentication Feature/UserLoginErrorMappingTests.swift`  
-    - Mensajes en inglés, preparados para internacionalización  
-    - 100% cobertura
-- [✅] Los tests unitarios cubren todos los escenarios de validación de formato (email, contraseña, campos vacíos, etc)
-    - Cubierto en `Authentication Feature/UserLoginUseCaseTests.swift` con escenarios exhaustivos y lógica de producción alineada
-    - Validación robusta (trim, longitud, no solo espacios)
-- [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
-- [✅] El ciclo está cubierto por tests automáticos en CI
+- [✅] Notificar errores de validación específicos
+    #### Subtareas
+    - [✅] El sistema valida el formato de los datos de login antes de enviar la petición  
+    - [✅] Si el email no tiene formato válido, muestra mensaje de error específico y no envía petición  
+    - [✅] Si la contraseña está vacía o no cumple requisitos mínimos, muestra mensaje de error específico y no envía petición  
+    - [✅] Los mensajes de error son claros, accesibles y están alineados con las guidelines de producto  
+    - [✅] Los tests unitarios cubren todos los escenarios de validación de formato (email, contraseña, campos vacíos, etc)
+    - [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
+    - [✅] El ciclo está cubierto por tests automáticos en CI
 
 - [🔜] Ofrecer recuperación de contraseña
-  - Será el siguiente caso a abordar tras finalizar errores de validación
+    #### Subtareas
+    - [✅] Endpoint y DTO para recuperación de contraseña
+    - [✅] Caso de uso (UseCase) para solicitar recuperación
+    - [✅] Validación de email antes de enviar la petición
+    - [✅] Notificación de éxito/error al usuario
+    - [✅] Tests unitarios del caso de uso
+    - [✅] Tests de integración (sin acceso a Keychain ni login)
+    - [✅] Presentador y vista para feedback al usuario
+    - [✅] Cobertura en CI
+
 - [❌] Almacenar la solicitud para reintentar (sin conexión)
 - [❌] Notificar error de conectividad
 - [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
@@ -424,12 +421,12 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 ---
 
 ### Checklist técnico de gestión de token expirado
-- ❌ Detectar expiración de token en cada petición protegida
-- ❌ Solicitar refresh token al backend si el token está expirado
-- ❌ Almacenar el nuevo token de forma segura tras la renovación
-- ❌ Notificar al usuario si la renovación falla
-- ❌ Redirigir a login si no es posible renovar
-- ❌ Registrar el evento de expiración para métricas
+- [❌] Detectar expiración de token en cada petición protegida
+- [❌] Solicitar refresh token al backend si el token está expirado
+- [❌] Almacenar el nuevo token de forma segura tras la renovación
+- [❌] Notificar al usuario si la renovación falla
+- [❌] Redirigir a login si no es posible renovar
+- [❌] Registrar el evento de expiración para métricas
 
 ---
 
@@ -558,7 +555,6 @@ flowchart TD
 > Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
 
 ---
-
 
 ## 6. 🔄 Gestión de Sesiones
 
