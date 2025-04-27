@@ -6,7 +6,3 @@ public struct PasswordRecoveryViewModel: Equatable {
         self.isSuccess = isSuccess
     }
 }
-
-public protocol PasswordRecoveryView {
-    func display(_ viewModel: PasswordRecoveryViewModel)
-}

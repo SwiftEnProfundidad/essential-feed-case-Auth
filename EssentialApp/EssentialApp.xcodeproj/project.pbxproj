@@ -42,6 +42,9 @@
 		B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2032DBD6ABC0078F27B /* LoginComposer.swift */; };
 		B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2052DBD6ABC0078F27B /* LoginView.swift */; };
 		B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2022DBD6ABC0078F27B /* AuthComposer.swift */; };
+		B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */; };
+		B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */; };
+		B46CA1682DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +113,9 @@
 		B449F2022DBD6ABC0078F27B /* AuthComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthComposer.swift; sourceTree = "<group>"; };
 		B449F2032DBD6ABC0078F27B /* LoginComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginComposer.swift; sourceTree = "<group>"; };
 		B449F2052DBD6ABC0078F27B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
+		B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryComposer.swift; sourceTree = "<group>"; };
+		B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +223,7 @@
 		B449F2042DBD6ABC0078F27B /* Composition */ = {
 			isa = PBXGroup;
 			children = (
+				B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */,
 				B449F2022DBD6ABC0078F27B /* AuthComposer.swift */,
 				B449F2032DBD6ABC0078F27B /* LoginComposer.swift */,
 			);
@@ -226,6 +233,8 @@
 		B449F2062DBD6ABC0078F27B /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
+				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
 				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
 			);
 			path = UI;
@@ -350,11 +359,14 @@
 				B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */,
 				B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */,
 				B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */,
+				B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
+				B46CA1682DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
+				B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */,
 				0835BF6D24850F9800A793D2 /* CombineHelpers.swift in Sources */,
 				088B441C25309B6E00D75AAD /* CommentsUIComposer.swift in Sources */,
 			);
