@@ -326,7 +326,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
   - Cubierto por test: `SystemSessionManagerTests.swift`
 - [🟡/❌] Notificar éxito de login (presenter unitario, falta integración UI)
   - Parcialmente cubierto: lógica y tests unitarios listos, falta integración UI
-- [⏳] Notificar errores de validación específicos (formato)
+- [✅] Notificar errores de validación específicos (formato)
 
   #### Checklist técnico (Subtareas): Notificar errores de validación específicos (formato)
 
@@ -345,8 +345,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - Cubierto en `Authentication Feature/UserLoginUseCaseTests.swift` con escenarios exhaustivos y lógica de producción alineada
     - Validación robusta (trim, longitud, no solo espacios)
 - [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
-- [⏳] El ciclo está cubierto por tests automáticos en CI
-- [⏳] El checklist principal puede marcarse como [✅] tras validar todo lo anterior
+- [✅] El ciclo está cubierto por tests automáticos en CI
 
 - [🔜] Ofrecer recuperación de contraseña
   - Será el siguiente caso a abordar tras finalizar errores de validación
