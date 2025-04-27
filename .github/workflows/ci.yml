@@ -19,6 +19,7 @@ jobs:
       - name: Build and test (unit + integración)
         run: |
           xcodebuild test -project EssentialFeed/EssentialFeed.xcodeproj -scheme CI_macOS -destination 'platform=macOS' -enableCodeCoverage YES | xcpretty
+
       - name: List ALL files in DerivedData (exhaustive debug)
         run: |
           find ~/Library/Developer/Xcode/DerivedData -print
@@ -33,15 +34,18 @@ jobs:
       - name: Convert coverage to lcov
         run: |
           set -e
-          BUILD_DIR=$(find ~/Library/Developer/Xcode/DerivedData -type d -name "Build" | sort | tail -n 1)
-          COVERAGE_PATH=$(find "$BUILD_DIR" -name "*.xctest" -type d | head -n 1)
-          PROF_DATA=$(find ~/Library/Developer/Xcode/DerivedData -name "default.profdata" -type f | head -n 1)
-          if [[ -z "$COVERAGE_PATH" || -z "$PROF_DATA" ]]; then
-            echo "No coverage files found."
+          XCRESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | sort | tail -n 1)
+          if [[ -z "$XCRESULT_PATH" ]]; then
+            echo "No xcresult bundle found."
             exit 1
           fi
-          EXECUTABLE=$(find "$COVERAGE_PATH/Contents/MacOS" -type f | head -n 1)
-          xcrun llvm-cov export -format=lcov "$EXECUTABLE" -instr-profile "$PROF_DATA" > coverage.lcov
+          xcrun xccov view --report --json "$XCRESULT_PATH" > coverage.json
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.json
+          fail_ci_if_error: false
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
