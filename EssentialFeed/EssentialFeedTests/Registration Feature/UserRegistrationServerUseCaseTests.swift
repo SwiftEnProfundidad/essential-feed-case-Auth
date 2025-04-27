@@ -5,7 +5,7 @@ import Foundation
 // Checklist: Validar integración de registro con servidor y manejo de respuestas
 import Foundation
 
-final class UserRegistrationUseCaseTests: XCTestCase {
+final class UserRegistrationServerUseCaseTests: XCTestCase {
 
     // CU: Registro de Usuario
 // Checklist: Enviar request correctamente al endpoint con datos válidos
@@ -21,7 +21,7 @@ func test_registerUser_sendsRequestToServer() async throws {
         let email = "carlos@email.com"
         let password = "StrongPassword123"
 
-        _ = try? await sut.register(name: name, email: email, password: password)
+        _ = await sut.register(name: name, email: email, password: password)
 
         XCTAssertEqual(httpClient.requestedURLs, [URL(string: "https://test-register-endpoint.com")!], "Should send request to correct registration endpoint")
         XCTAssertEqual(httpClient.lastHTTPBody, [
