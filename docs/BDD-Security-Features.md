@@ -343,17 +343,17 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Notificación de éxito/error al usuario
     - [✅] Tests unitarios del caso de uso
     - [✅] Tests de integración (sin acceso a Keychain ni login)
-    - [✅] Presentador y vista para feedback al usuario
-    - [✅] Cobertura en CI
+    - [⏳] Presentador y vista para feedback al usuario
+    - [🔜] Cobertura en CI
 
-- [❌] Almacenar la solicitud para reintentar (sin conexión)
+- [🔜] Almacenar la solicitud para reintentar (sin conexión)
 - [❌] Notificar error de conectividad
 - [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
 
 ---
 
-#### Checklist integración UI: Notificar éxito de login:  [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
-
+#### Checklist integración UI: Notificar éxito de login:  
+- [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
 - [❌] El presenter llama a la vista real al completar el login exitoso
 - [❌] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
 - [❌] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
@@ -372,8 +372,6 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - El sistema recibe el token y lo almacena de forma segura
 - El sistema registra la sesión activa
 - El sistema notifica éxito de login
-
-
 
 **Sad path:**
 - Credenciales incorrectas: sistema notifica error y permite reintentar, registra intento fallido para métricas

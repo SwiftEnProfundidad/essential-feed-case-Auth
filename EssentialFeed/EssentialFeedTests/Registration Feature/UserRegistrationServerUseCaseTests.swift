@@ -5,11 +5,28 @@ import Foundation
 // Checklist: Validar integración de registro con servidor y manejo de respuestas
 import Foundation
 
-final class UserRegistrationUseCaseTests: XCTestCase {
+final class UserRegistrationServerUseCaseTests: XCTestCase {
 
-    // CU: Registro de Usuario
-// Checklist: Enviar request correctamente al endpoint con datos válidos
 func test_registerUser_sendsRequestToServer() async throws {
+        let name = "Carlos"
+        let email = "carlos@email.com"
+        let password = "StrongPassword123"
+        let (sut, httpClient) = makeSUT()
+
+        _ = await sut.register(name: name, email: email, password: password)
+
+        XCTAssertEqual(httpClient.requestedURLs, [URL(string: "https://test-register-endpoint.com")!], "Should send request to correct registration endpoint")
+        XCTAssertEqual(httpClient.lastHTTPBody, [
+            "name": name,
+            "email": email,
+            "password": password
+        ])
+    }
+
+    // MARK: - Helpers
+    private func makeSUT(
+        file: StaticString = #file, line: UInt = #line
+    ) -> (sut: UserRegistrationUseCase, httpClient: HTTPClientSpy) {
         let httpClient = HTTPClientSpy()
         let sut = UserRegistrationUseCase(
             keychain: makeKeychainFullSpy(),
@@ -17,20 +34,9 @@ func test_registerUser_sendsRequestToServer() async throws {
             httpClient: httpClient,
             registrationEndpoint: URL(string: "https://test-register-endpoint.com")!
         )
-        let name = "Carlos"
-        let email = "carlos@email.com"
-        let password = "StrongPassword123"
-
-        _ = try? await sut.register(name: name, email: email, password: password)
-
-        XCTAssertEqual(httpClient.requestedURLs, [URL(string: "https://test-register-endpoint.com")!], "Should send request to correct registration endpoint")
-        XCTAssertEqual(httpClient.lastHTTPBody, [
-            // Should send correct registration data in HTTP body
-        
-            "name": name,
-            "email": email,
-            "password": password
-        ])
+        trackForMemoryLeaks(httpClient, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, httpClient)
     }
 }
 
