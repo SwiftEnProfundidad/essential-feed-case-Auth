@@ -56,15 +56,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 	
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-    print("➡️ SceneDelegate: willConnectTo called")
-    guard let scene = (scene as? UIWindowScene) else {
-        print("❌ SceneDelegate: windowScene not found")
-        return
+        guard let scene = (scene as? UIWindowScene) else {
+                return
     }
     window = UIWindow(windowScene: scene)
     configureWindow()
-    print("✅ SceneDelegate: configureWindow called")
-}
+    }
 	
     private func isUserAuthenticated() -> Bool {
         // TODO: Replace with real session/auth logic
@@ -72,25 +69,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeRootViewController() -> UIViewController {
-    print("➡️ SceneDelegate: makeRootViewController")
-    if isUserAuthenticated() {
-        print("⚡️ SceneDelegate: User is authenticated")
-        return navigationController
+        if isUserAuthenticated() {
+                return navigationController
     } else {
-        print("⚡️ SceneDelegate: User is NOT authenticated")
-        return AuthComposer.authViewController { [weak self] in
-            print("🔑 SceneDelegate: Authenticated callback fired")
-            self?.window?.rootViewController = self?.navigationController
+                return AuthComposer.authViewController { [weak self] in
+                        self?.window?.rootViewController = self?.navigationController
         }
     }
 }
 
     func configureWindow() {
-    print("➡️ SceneDelegate: configureWindow")
-    window?.rootViewController = makeRootViewController()
+        window?.rootViewController = makeRootViewController()
     window?.makeKeyAndVisible()
-    print("✅ SceneDelegate: window is key and visible")
-}
+    }
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		do {
