@@ -358,10 +358,6 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 ---
 
-
-
----
-
 ### Cursos técnicos (happy/sad path)
 
 **Happy path:**
