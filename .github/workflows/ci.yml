@@ -2,9 +2,9 @@ name: EssentialFeed CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, "feature/**" ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, "feature/**" ]
 
 jobs:
   build-and-test:
@@ -20,26 +20,35 @@ jobs:
         run: |
           set -e
           xcodebuild test \
-            -workspace EssentialFeed.xcworkspace \
-            -scheme EssentialFeed \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
-            -enableCodeCoverage YES | xcpretty
+            -workspace EssentialApp/EssentialApp.xcworkspace \
+            -scheme EssentialApp \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.2' \
+            -enableCodeCoverage YES | tee build-and-test.log | xcpretty
+          cat build-and-test.log
         env:
           NSUnbufferedIO: YES
 
       - name: List ALL files in DerivedData (exhaustive debug)
         run: |
-          find ~/Library/Developer/Xcode/DerivedData -print
+          if [ -d "$HOME/Library/Developer/Xcode/DerivedData" ]; then
+            find $HOME/Library/Developer/Xcode/DerivedData -print
+          else
+            echo "DerivedData directory does not exist yet."
+          fi
 
       # Paso de debug opcional: puedes eliminarlo si ya no necesitas rastrear paths
       - name: List build products (debug)
         run: |
-          find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" -print
+          if [ -d "$HOME/Library/Developer/Xcode/DerivedData" ]; then
+            find $HOME/Library/Developer/Xcode/DerivedData -name "*.xcresult" -print
+          else
+            echo "DerivedData directory does not exist yet."
+          fi
 
       - name: Extract coverage from xcresult
         run: |
           set -e
-          XCRESULT_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | sort | tail -n 1)
+          XCRESULT_PATH=$(find $HOME/Library/Developer/Xcode/DerivedData -name "*.xcresult" | sort | tail -n 1)
           if [[ -z "$XCRESULT_PATH" ]]; then
             echo "No xcresult bundle found."
             exit 1

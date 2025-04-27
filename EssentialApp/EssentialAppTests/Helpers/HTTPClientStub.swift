@@ -20,6 +20,11 @@ class HTTPClientStub: HTTPClient {
 		completion(stub(url))
 		return Task()
 	}
+	
+	func post(to url: URL, body: [String: String], completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
+		completion(stub(url))
+		return Task()
+	}
 }
 
 extension HTTPClientStub {
@@ -31,3 +36,4 @@ extension HTTPClientStub {
 		HTTPClientStub { url in .success(stub(url)) }
 	}
 }
+
