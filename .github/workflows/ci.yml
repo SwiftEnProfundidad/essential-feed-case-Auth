@@ -20,10 +20,11 @@ jobs:
         run: |
           set -e
           xcodebuild test \
-            -workspace EssentialFeed.xcworkspace \
-            -scheme EssentialFeed \
+            -workspace EssentialApp/EssentialApp.xcworkspace \
+            -scheme EssentialApp \
             -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
-            -enableCodeCoverage YES | xcpretty
+            -enableCodeCoverage YES | tee build-and-test.log | xcpretty
+          cat build-and-test.log
         env:
           NSUnbufferedIO: YES
 
