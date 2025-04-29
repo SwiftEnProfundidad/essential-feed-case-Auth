@@ -16,6 +16,11 @@ struct SnapshotConfiguration {
 
 extension UIViewController {
     func snapshot(for configuration: SnapshotConfiguration) -> UIImage {
+        if !Thread.isMainThread {
+            return DispatchQueue.main.sync {
+                self.snapshot(for: configuration)
+            }
+        }
         let window = UIWindow(frame: configuration.size)
         window.rootViewController = self
         window.makeKeyAndVisible()

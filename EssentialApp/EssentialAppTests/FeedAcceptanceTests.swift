@@ -82,22 +82,35 @@ class FeedAcceptanceTests: XCTestCase {
 	
 	// MARK: - Helpers
 	
-	private func launch(
-		httpClient: HTTPClientStub = .offline,
-		store: InMemoryFeedStore = .empty
-	) -> ListViewController {
-		let sut = SceneDelegate(httpClient: httpClient, store: store, scheduler: .immediateOnMainQueue)
-		sut.window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-		sut.configureWindow()
-		
-		let nav = sut.window?.rootViewController as? UINavigationController
-		return nav?.topViewController as! ListViewController
-	}
-	
-	private func enterBackground(with store: InMemoryFeedStore) {
-		let sut = SceneDelegate(httpClient: HTTPClientStub.offline, store: store, scheduler: .immediateOnMainQueue)
-		sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
-	}
+    private final class AlwaysAuthenticatedSessionManager: SessionManager {
+        var isAuthenticated: Bool { true }
+    }
+
+    private func launch(
+        httpClient: HTTPClientStub = .offline,
+        store: InMemoryFeedStore = .empty
+    ) -> ListViewController {
+        let sut = SceneDelegate(
+            httpClient: httpClient,
+            store: store,
+            scheduler: .immediateOnMainQueue,
+            sessionManager: AlwaysAuthenticatedSessionManager()
+        )
+        sut.window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        sut.configureWindow()
+        let nav = sut.window?.rootViewController as? UINavigationController
+        return nav?.topViewController as! ListViewController
+    }
+
+    private func enterBackground(with store: InMemoryFeedStore) {
+        let sut = SceneDelegate(
+            httpClient: HTTPClientStub.offline,
+            store: store,
+            scheduler: .immediateOnMainQueue,
+            sessionManager: AlwaysAuthenticatedSessionManager()
+        )
+        sut.sceneWillResignActive(UIApplication.shared.connectedScenes.first!)
+    }
 	
 	private func showCommentsForFirstImage() -> ListViewController {
 		let feed = launch(httpClient: .online(response), store: .empty)

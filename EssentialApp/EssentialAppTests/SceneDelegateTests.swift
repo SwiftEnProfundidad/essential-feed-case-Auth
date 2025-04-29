@@ -2,8 +2,10 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import XCTest
 import EssentialFeediOS
+import SwiftUI
+import XCTest
+
 @testable import EssentialApp
 
 class SceneDelegateTests: XCTestCase {
@@ -25,11 +27,20 @@ class SceneDelegateTests: XCTestCase {
 		sut.configureWindow()
 		
 		let root = sut.window?.rootViewController
-		let rootNavigation = root as? UINavigationController
-		let topController = rootNavigation?.topViewController
-		
-		XCTAssertNotNil(rootNavigation, "Expected a navigation controller as root, got \(String(describing: root)) instead")
-		XCTAssertTrue(topController is ListViewController, "Expected a feed controller as top view controller, got \(String(describing: topController)) instead")
+		if let nav = root as? UINavigationController {
+			let topController = nav.topViewController
+			XCTAssertTrue(
+				topController is ListViewController,
+				"Expected a feed controller as top view controller, got \(String(describing: topController)) instead"
+			)
+		} else if let hosting = root,
+							String(describing: type(of: hosting)).contains("UIHostingController") {
+		XCTAssertTrue(
+			String(describing: type(of: hosting)).contains("LoginView"),
+			"Expected a SwiftUI LoginView as root in UIHostingController")
+		} else {
+			XCTFail("Unexpected rootViewController type: \(String(describing: root))")
+		}
 	}
 	
 	private class UIWindowSpy: UIWindow {

@@ -9,6 +9,14 @@ import Combine
 import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    // UIKit necesita este init para instanciar desde Storyboard/Scene
+    override init() {
+        self.isUserAuthenticatedClosure = { RealSessionManager().isAuthenticated }
+        super.init()
+    }
+    private var isUserAuthenticatedClosure: () -> Bool
+
+
 	var window: UIWindow?
 	
 	private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
@@ -48,13 +56,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			imageLoader: makeLocalImageLoaderWithRemoteFallback,
 			selection: showComments))
 	
-	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler) {
-		self.init()
-		self.httpClient = httpClient
-		self.store = store
-		self.scheduler = scheduler
-	}
-	
+    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler, sessionManager: SessionManager = RealSessionManager()) {
+        self.init(sessionManager: sessionManager)
+        self.httpClient = httpClient
+        self.store = store
+        self.scheduler = scheduler
+    }
+
+    init(sessionManager: SessionManager = RealSessionManager()) {
+        self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
+        super.init()
+    }
+
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else {
                 return
@@ -64,8 +77,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 	
     private func isUserAuthenticated() -> Bool {
-        // TODO: Replace with real session/auth logic
-        return false // For development, always show login
+        return isUserAuthenticatedClosure()
     }
 
     private func makeRootViewController() -> UIViewController {
