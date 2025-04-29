@@ -71,26 +71,46 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 		XCTAssertEqual(sut.feedbackTitle, "Error")
 	}
 	
-	// MARK: - Helpers
+	func test_doesNotShowFeedback_ifEmailChangesBeforeResponse() {
+        let (sut, useCaseSpy) = makeSUT()
+        sut.email = "primero@email.com"
+
+        sut.recoverPassword()
+        // Cambia el email antes de simular la respuesta
+        sut.email = "segundo@email.com"
+        // Simula respuesta del use case para el email anterior
+        let completion = useCaseSpy.recoverPasswordCompletions.first?.1
+        completion?(.success(PasswordRecoveryResponse(message: "OK")))
+
+        // Añade logs y asserts para depuración
+        print("DEBUG: Feedback message after response: \(sut.feedbackMessage)")
+        print("DEBUG: Showing feedback: \(sut.showingFeedback)")
+        XCTAssertEqual(sut.feedbackMessage, "")
+        XCTAssertFalse(sut.showingFeedback)
+        // Añade assert para verificar si el email cambio limpió feedback
+        XCTAssertTrue(useCaseSpy.receivedEmails.count == 1, "El use case no debe recibir múltiples emails")
+    }
+
+    // MARK: - Helpers
 	private func makeSUT(result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK")), file: StaticString = #file, line: UInt = #line) -> (sut: PasswordRecoverySwiftUIViewModel, useCaseSpy: UserPasswordRecoveryUseCaseSpy) {
-		let useCaseSpy = UserPasswordRecoveryUseCaseSpy()
-		useCaseSpy.result = result
-		let sut = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCaseSpy)
-		sut.presenter = PasswordRecoveryPresenter(view: sut)
-		trackForMemoryLeaks(sut, file: file, line: line)
-		trackForMemoryLeaks(useCaseSpy, file: file, line: line)
-		return (sut, useCaseSpy)
-	}
+    let useCaseSpy = UserPasswordRecoveryUseCaseSpy()
+    useCaseSpy.result = result
+    let sut = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCaseSpy)
+    sut.presenter = PasswordRecoveryPresenter(view: sut)
+    trackForMemoryLeaks(sut, file: file, line: line)
+    trackForMemoryLeaks(useCaseSpy, file: file, line: line)
+    return (sut, useCaseSpy)
+}
 	
 	private final class UserPasswordRecoveryUseCaseSpy: UserPasswordRecoveryUseCase {
-		private(set) var receivedEmails = [String]()
-		var result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK"))
-		
-		func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
-			receivedEmails.append(email)
-			completion(result)
-		}
-	}
+        private(set) var receivedEmails = [String]()
+        var result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK"))
+        var recoverPasswordCompletions: [(String, (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void)] = []
+        
+        func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+            receivedEmails.append(email)
+            recoverPasswordCompletions.append((email, completion))
+        }
+    }
 	
 }
-

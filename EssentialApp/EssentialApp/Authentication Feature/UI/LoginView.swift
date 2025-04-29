@@ -1,16 +1,6 @@
 import SwiftUI
 import EssentialFeed
 
-struct BorderedProminentIfAvailable: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(iOS 15.0, *) {
-            content.buttonStyle(.borderedProminent)
-        } else {
-            content.buttonStyle(DefaultButtonStyle())
-        }
-    }
-}
-
 public struct LoginView: View {
 	@ObservedObject var viewModel: LoginViewModel
 	@State private var showingPasswordRecovery = false
@@ -20,7 +10,7 @@ public struct LoginView: View {
 	}
 	
 	public var body: some View {
-        VStack(spacing: 16) {
+		VStack(spacing: 16) {
 			TextField("Username", text: $viewModel.username)
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedBorderTextFieldStyle())
@@ -30,12 +20,12 @@ public struct LoginView: View {
 				Text(error)
 					.foregroundColor(.red)
 			}
-					Button("Login") {
-						Task {
-							await viewModel.login()
-						}
-					}
-            .modifier(BorderedProminentIfAvailable())
+			Button("Login") {
+				Task {
+					await viewModel.login()
+				}
+			}
+			.modifier(BorderedProminentIfAvailable())
 			Button("Forgot your password?") {
 				showingPasswordRecovery = true
 			}
@@ -46,16 +36,18 @@ public struct LoginView: View {
 			PasswordRecoveryComposer.passwordRecoveryViewScreen()
 		}
 		.alert(isPresented: $viewModel.loginSuccess) {
-			Alert(title: Text("Login Successful"),
-                  message: Text("Welcome, \(viewModel.username)!"),
-                  dismissButton: .default(Text("OK"), action: {
-                    viewModel.onSuccessAlertDismissed()
-                  }))
+			Alert(
+				title: Text("Login Successful"),
+				message: Text("Welcome, \(viewModel.username)!"),
+				dismissButton: .default(Text("OK"), action: {
+					viewModel.onSuccessAlertDismissed()
+				})
+			)
 		}
-        .onAppear {
-            print(" LoginView: body loaded")
-        }
-    }
+		.onAppear {
+			print("LoginView: body loaded")
+		}
+	}
 }
 
 public protocol LoginSuccessView: AnyObject {
