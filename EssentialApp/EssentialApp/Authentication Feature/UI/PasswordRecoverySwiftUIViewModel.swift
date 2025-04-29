@@ -5,12 +5,12 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     // Inputs
     @Published public var email: String = ""
     // Outputs
-    @Published var feedbackMessage: String = ""
-    @Published var isSuccess: Bool = false
-    @Published var showingFeedback: Bool = false
+    @Published public var feedbackMessage: String = ""
+    @Published public var isSuccess: Bool = false
+    @Published public var showingFeedback: Bool = false
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
-    private var presenter: PasswordRecoveryPresenter?
+    public var presenter: PasswordRecoveryPresenter?
 
     public init(recoveryUseCase: UserPasswordRecoveryUseCase) {
         self.recoveryUseCase = recoveryUseCase
@@ -23,11 +23,11 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         }
     }
 
-    func onFeedbackDismiss() {
+    public func onFeedbackDismiss() {
         showingFeedback = false
     }
 
-    var feedbackTitle: String {
+    public var feedbackTitle: String {
         isSuccess ? "Éxito" : "Error"
     }
 }
