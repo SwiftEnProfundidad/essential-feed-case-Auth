@@ -1,7 +1,7 @@
 import EssentialFeed
 import SwiftUI
 
-public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordRecoveryViewProtocol {
+public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordRecoveryView {
 	// Inputs
 	@Published public var email: String = "" {
 		didSet { handleEmailChange(from: oldValue, to: email) }
@@ -17,8 +17,12 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 	private var lastRequestedEmail: String?
 	
 	public var feedbackTitle: String {
-		isSuccess ? "Éxito" : "Error"
-	}
+        if isSuccess {
+            return "Éxito"
+        } else {
+            return "Error"
+        }
+    }
 	
 	public init(recoveryUseCase: UserPasswordRecoveryUseCase) {
 		self.recoveryUseCase = recoveryUseCase
@@ -48,7 +52,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 	}
 }
 
-// MARK: - PasswordRecoveryViewProtocol
+// MARK: - PasswordRecoveryView
 extension PasswordRecoverySwiftUIViewModel {
     public func display(_ viewModel: PasswordRecoveryViewModel) {
         feedbackMessage = viewModel.message

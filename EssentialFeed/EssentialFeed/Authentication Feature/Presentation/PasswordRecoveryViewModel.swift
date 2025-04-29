@@ -1,4 +1,4 @@
-public struct PasswordRecoveryViewModel {
+public struct PasswordRecoveryViewModel: Equatable {
     public let message: String
     public let isSuccess: Bool
     

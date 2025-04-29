@@ -14,6 +14,8 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 		let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
 		sut.email = "user@email.com"
 		sut.recoverPassword()
+		// Simula la respuesta del caso de uso
+		useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
 		XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
 		XCTAssertTrue(sut.isSuccess)
 		XCTAssertTrue(sut.showingFeedback)
@@ -25,6 +27,8 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 		let (sut, useCaseSpy) = makeSUT(result: .failure(.emailNotFound))
 		sut.email = "user@email.com"
 		sut.recoverPassword()
+		// Simula la respuesta del caso de uso
+		useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.emailNotFound))
 		XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
 		XCTAssertFalse(sut.isSuccess)
 		XCTAssertTrue(sut.showingFeedback)
@@ -33,9 +37,10 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 	}
 	
 	func test_onFeedbackDismiss_hidesFeedback() {
-		let (sut, _) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+		let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
 		sut.email = "user@email.com"
 		sut.recoverPassword()
+		useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
 		sut.onFeedbackDismiss()
 		XCTAssertFalse(sut.showingFeedback)
 	}
@@ -50,20 +55,23 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 	}
 
 	func test_changingEmailAfterFeedback_hidesFeedback() {
-		let (sut, _) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
-		sut.email = "user@email.com"
-		sut.recoverPassword()
-		XCTAssertTrue(sut.showingFeedback)
-		// Simula que el usuario cambia el email
-		sut.email = "nuevo@email.com"
-		XCTAssertFalse(sut.showingFeedback)
-		XCTAssertEqual(sut.feedbackMessage, "")
-	}
+    let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+    sut.email = "user@email.com"
+    sut.recoverPassword()
+    // Simula la respuesta del caso de uso
+    useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
+    XCTAssertTrue(sut.showingFeedback)
+    // Simula que el usuario cambia el email
+    sut.email = "nuevo@email.com"
+    XCTAssertFalse(sut.showingFeedback)
+    XCTAssertEqual(sut.feedbackMessage, "")
+}
 
 	func test_recoverPassword_failureUnknown_displaysGenericErrorFeedback() {
 		let (sut, useCaseSpy) = makeSUT(result: .failure(.unknown))
 		sut.email = "user@email.com"
 		sut.recoverPassword()
+		useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.unknown))
 		XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
 		XCTAssertFalse(sut.isSuccess)
 		XCTAssertTrue(sut.showingFeedback)

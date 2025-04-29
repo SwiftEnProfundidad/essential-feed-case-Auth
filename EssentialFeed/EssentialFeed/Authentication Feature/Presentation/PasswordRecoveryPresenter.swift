@@ -15,11 +15,11 @@ public final class PasswordRecoveryPresenter {
 				let message: String
 				switch error {
 					case .invalidEmailFormat:
-						message = "Introduce un email válido."
+						message = "El email no tiene un formato válido."
 					case .emailNotFound:
 						message = "No existe ninguna cuenta asociada a ese email."
 					case .network:
-						message = "No se ha podido conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo."
+						message = "Error de conexión. Inténtalo de nuevo."
 					case .unknown:
 						message = "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde."
 				}
