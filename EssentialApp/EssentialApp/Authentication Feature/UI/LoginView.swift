@@ -30,10 +30,11 @@ public struct LoginView: View {
 				Text(error)
 					.foregroundColor(.red)
 			}
-            Button("Login") {
-                print("🟠 Button Login tapped")
-                viewModel.login()
-            }
+					Button("Login") {
+						Task {
+							await viewModel.login()
+						}
+					}
             .modifier(BorderedProminentIfAvailable())
 			Button("Forgot your password?") {
 				showingPasswordRecovery = true
