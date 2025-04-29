@@ -90,9 +90,6 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         let completion = useCaseSpy.recoverPasswordCompletions.first?.1
         completion?(.success(PasswordRecoveryResponse(message: "OK")))
 
-        // Añade logs y asserts para depuración
-        print("DEBUG: Feedback message after response: \(sut.feedbackMessage)")
-        print("DEBUG: Showing feedback: \(sut.showingFeedback)")
         XCTAssertEqual(sut.feedbackMessage, "")
         XCTAssertFalse(sut.showingFeedback)
         // Añade assert para verificar si el email cambio limpió feedback
