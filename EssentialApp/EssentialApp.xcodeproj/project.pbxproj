@@ -205,7 +205,7 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
-				B4702E272DC146390055B3D9 /* KeychainHelper.swift */,
+				B4702E2F2DC150710055B3D9 /* Infrastructure */,
 				B4702E282DC146390055B3D9 /* SessionManager.swift */,
 				B449F2072DBD6ABC0078F27B /* Authentication Feature */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
@@ -227,14 +227,14 @@
 		0895DA9C234B3B980031BB2D /* EssentialAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
 				B4D0FE5A2DBEE83B00033FF3 /* Authentication Feature */,
-				0895DA9F234B3B980031BB2D /* Info.plist */,
+				B4702E312DC150BB0055B3D9 /* Infrastructure */,
 				082C00022359E43F008927D3 /* Helpers */,
 				0832C9CF238D2811002314C9 /* SceneDelegateTests.swift */,
 				08073B5E238D2FF100A75DC6 /* FeedAcceptanceTests.swift */,
 				08073B5C238D2E2600A75DC6 /* FeedUIIntegrationTests.swift */,
 				088B441825309AA300D75AAD /* CommentsUIIntegrationTests.swift */,
+				0895DA9F234B3B980031BB2D /* Info.plist */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -275,6 +275,38 @@
 				B449F2062DBD6ABC0078F27B /* UI */,
 			);
 			path = "Authentication Feature";
+			sourceTree = "<group>";
+		};
+		B4702E2F2DC150710055B3D9 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				B4702E302DC1508A0055B3D9 /* Keychain */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		B4702E302DC1508A0055B3D9 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				B4702E272DC146390055B3D9 /* KeychainHelper.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		B4702E312DC150BB0055B3D9 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				B4702E322DC150C00055B3D9 /* Keychain */,
+			);
+			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		B4702E322DC150C00055B3D9 /* Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
+			);
+			path = Keychain;
 			sourceTree = "<group>";
 		};
 		B4D0FE592DBEE83B00033FF3 /* UI */ = {
