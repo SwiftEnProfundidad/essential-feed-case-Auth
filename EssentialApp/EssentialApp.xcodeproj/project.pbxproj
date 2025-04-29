@@ -44,8 +44,6 @@
 		B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2022DBD6ABC0078F27B /* AuthComposer.swift */; };
 		B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */; };
 		B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */; };
-		B46CA1682DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
-		B46DAAB72DC18CE00080160E /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */; };
 		B4702E292DC146390055B3D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E272DC146390055B3D9 /* KeychainHelper.swift */; };
 		B4702E2A2DC146390055B3D9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E282DC146390055B3D9 /* SessionManager.swift */; };
 		B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */; };
@@ -482,13 +480,11 @@
 				B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
-				B46DAAB72DC18CE00080160E /* PasswordRecoveryScreen.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				B4702E382DC1553D0055B3D9 /* KeychainStore.swift in Sources */,
 				B4702E292DC146390055B3D9 /* KeychainHelper.swift in Sources */,
 				B4702E2A2DC146390055B3D9 /* SessionManager.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
-				B46CA1682DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
 				B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */,
 				0835BF6D24850F9800A793D2 /* CombineHelpers.swift in Sources */,

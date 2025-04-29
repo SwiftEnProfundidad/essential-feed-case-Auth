@@ -147,7 +147,6 @@
 		B447C64A2DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
 		B46CA1412DBE863800CE9ADC /* PasswordRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */; };
 		B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */; };
-		B46CA1492DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */; };
 		B46CA14D2DBE8E3900CE9ADC /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */; };
 		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */; };
 		B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */; };
@@ -1610,7 +1609,6 @@
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 				B4D71EEF2DAF1643003A1316 /* KeychainProtocol.swift in Sources */,
-				B46CA1492DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
