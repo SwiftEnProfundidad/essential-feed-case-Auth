@@ -5,9 +5,9 @@ protocol SessionManager {
 }
 
 final class RealSessionManager: SessionManager {
-    private let keychain: KeychainHelper
+    private let keychain: KeychainStore
     
-    init(keychain: KeychainHelper = KeychainHelper()) {
+    init(keychain: KeychainStore) {
         self.keychain = keychain
     }
     

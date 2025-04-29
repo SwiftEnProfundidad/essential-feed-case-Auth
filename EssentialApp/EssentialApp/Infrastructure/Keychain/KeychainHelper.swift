@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-final class KeychainHelper {
+final class KeychainHelper: KeychainStore {
     init() {}
 
     func get(_ key: String) -> String? {

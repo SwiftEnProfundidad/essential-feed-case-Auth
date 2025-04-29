@@ -11,7 +11,7 @@ import EssentialFeed
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // UIKit necesita este init para instanciar desde Storyboard/Scene
     override init() {
-        self.isUserAuthenticatedClosure = { RealSessionManager().isAuthenticated }
+        self.isUserAuthenticatedClosure = { RealSessionManager(keychain: KeychainHelper()).isAuthenticated }
         super.init()
     }
     private var isUserAuthenticatedClosure: () -> Bool
@@ -56,14 +56,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			imageLoader: makeLocalImageLoaderWithRemoteFallback,
 			selection: showComments))
 	
-    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler, sessionManager: SessionManager = RealSessionManager()) {
+    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler, sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
         self.init(sessionManager: sessionManager)
         self.httpClient = httpClient
         self.store = store
         self.scheduler = scheduler
     }
 
-    init(sessionManager: SessionManager = RealSessionManager()) {
+    init(sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
         self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
         super.init()
     }

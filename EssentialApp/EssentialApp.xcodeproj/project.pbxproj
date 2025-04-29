@@ -49,6 +49,9 @@
 		B4702E2A2DC146390055B3D9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E282DC146390055B3D9 /* SessionManager.swift */; };
 		B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */; };
 		B4702E2E2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4702E2D2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
+		B4702E352DC153280055B3D9 /* KeychainHelperSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */; };
+		B4702E362DC153280055B3D9 /* RealSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */; };
+		B4702E382DC1553D0055B3D9 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E372DC1553D0055B3D9 /* KeychainStore.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
@@ -131,6 +134,9 @@
 		B4702E282DC146390055B3D9 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperTests.swift; sourceTree = "<group>"; };
 		B4702E2D2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperSpy.swift; sourceTree = "<group>"; };
+		B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealSessionManagerTests.swift; sourceTree = "<group>"; };
+		B4702E372DC1553D0055B3D9 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
@@ -288,6 +294,7 @@
 		B4702E302DC1508A0055B3D9 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
+				B4702E372DC1553D0055B3D9 /* KeychainStore.swift */,
 				B4702E272DC146390055B3D9 /* KeychainHelper.swift */,
 			);
 			path = Keychain;
@@ -304,6 +311,8 @@
 		B4702E322DC150C00055B3D9 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
+				B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */,
+				B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */,
 				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
 			);
 			path = Keychain;
@@ -456,6 +465,7 @@
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
+				B4702E382DC1553D0055B3D9 /* KeychainStore.swift in Sources */,
 				B4702E292DC146390055B3D9 /* KeychainHelper.swift in Sources */,
 				B4702E2A2DC146390055B3D9 /* SessionManager.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
@@ -478,6 +488,8 @@
 				B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */,
 				08073B56238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift in Sources */,
 				0832C9D0238D2811002314C9 /* SceneDelegateTests.swift in Sources */,
+				B4702E352DC153280055B3D9 /* KeychainHelperSpy.swift in Sources */,
+				B4702E362DC153280055B3D9 /* RealSessionManagerTests.swift in Sources */,
 				08073B5B238D2E1000A75DC6 /* ListViewController+TestHelpers.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
