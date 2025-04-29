@@ -39,6 +39,37 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 		sut.onFeedbackDismiss()
 		XCTAssertFalse(sut.showingFeedback)
 	}
+
+	func test_recoverPassword_withEmptyEmail_doesNotCallUseCaseAndDoesNotShowFeedback() {
+		let (sut, useCaseSpy) = makeSUT()
+		sut.email = ""
+		sut.recoverPassword()
+		XCTAssertTrue(useCaseSpy.receivedEmails.isEmpty)
+		XCTAssertEqual(sut.feedbackMessage, "")
+		XCTAssertFalse(sut.showingFeedback)
+	}
+
+	func test_changingEmailAfterFeedback_hidesFeedback() {
+		let (sut, _) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+		sut.email = "user@email.com"
+		sut.recoverPassword()
+		XCTAssertTrue(sut.showingFeedback)
+		// Simula que el usuario cambia el email
+		sut.email = "nuevo@email.com"
+		XCTAssertFalse(sut.showingFeedback)
+		XCTAssertEqual(sut.feedbackMessage, "")
+	}
+
+	func test_recoverPassword_failureUnknown_displaysGenericErrorFeedback() {
+		let (sut, useCaseSpy) = makeSUT(result: .failure(.unknown))
+		sut.email = "user@email.com"
+		sut.recoverPassword()
+		XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
+		XCTAssertFalse(sut.isSuccess)
+		XCTAssertTrue(sut.showingFeedback)
+		XCTAssertEqual(sut.feedbackMessage, "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.")
+		XCTAssertEqual(sut.feedbackTitle, "Error")
+	}
 	
 	// MARK: - Helpers
 	private func makeSUT(result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK")), file: StaticString = #file, line: UInt = #line) -> (sut: PasswordRecoverySwiftUIViewModel, useCaseSpy: UserPasswordRecoveryUseCaseSpy) {

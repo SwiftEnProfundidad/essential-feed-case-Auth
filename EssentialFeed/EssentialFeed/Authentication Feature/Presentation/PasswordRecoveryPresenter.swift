@@ -20,7 +20,9 @@ public final class PasswordRecoveryPresenter {
                 message = "No existe ninguna cuenta asociada a ese email."
             case .network:
                 message = "Error de conexión. Inténtalo de nuevo."
-            }
+							case .unknown:
+								message = "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde."
+						}
 						view?.display(PasswordRecoveryViewModel(message: message, isSuccess: false))
         }
     }
