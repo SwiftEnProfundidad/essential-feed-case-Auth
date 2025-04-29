@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol UserPasswordRecoveryUseCaseProtocol {
+public protocol UserPasswordRecoveryUseCase {
     func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void)
 }
 

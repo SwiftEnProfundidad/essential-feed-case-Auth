@@ -18,7 +18,7 @@ final class PasswordRecoverySnapshotTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(email: String, apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> UIViewController {
         let api = DummyPasswordRecoveryAPI(result: apiResult)
-        let useCase = UserPasswordRecoveryUseCase(api: api)
+        let useCase = RemoteUserPasswordRecoveryUseCase(api: api)
         let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCase)
         viewModel.email = email
         let view = PasswordRecoveryScreen(viewModel: viewModel)

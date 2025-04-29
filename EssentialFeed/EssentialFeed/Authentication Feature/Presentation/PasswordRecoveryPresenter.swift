@@ -1,7 +1,7 @@
 import Foundation
 
 public final class PasswordRecoveryPresenter {
-    private let view: PasswordRecoveryView
+	private weak var view: (PasswordRecoveryView)?
 
     public init(view: PasswordRecoveryView) {
         self.view = view
@@ -10,7 +10,7 @@ public final class PasswordRecoveryPresenter {
     public func didRecoverPassword(with result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         switch result {
         case let .success(response):
-            view.display(PasswordRecoveryViewModel(message: response.message, isSuccess: true))
+						view?.display(PasswordRecoveryViewModel(message: response.message, isSuccess: true))
         case let .failure(error):
             let message: String
             switch error {
@@ -21,7 +21,7 @@ public final class PasswordRecoveryPresenter {
             case .network:
                 message = "Error de conexión. Inténtalo de nuevo."
             }
-            view.display(PasswordRecoveryViewModel(message: message, isSuccess: false))
+						view?.display(PasswordRecoveryViewModel(message: message, isSuccess: false))
         }
     }
 }

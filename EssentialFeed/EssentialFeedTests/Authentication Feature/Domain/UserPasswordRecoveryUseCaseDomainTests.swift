@@ -81,7 +81,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
         file: StaticString = #file, line: UInt = #line
     ) -> (sut: UserPasswordRecoveryUseCase, api: PasswordRecoveryAPIStub) {
         let api = PasswordRecoveryAPIStub(result: apiResult)
-        let sut = UserPasswordRecoveryUseCase(api: api)
+        let sut = RemoteUserPasswordRecoveryUseCase(api: api)
         trackForMemoryLeaks(api, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, api)
