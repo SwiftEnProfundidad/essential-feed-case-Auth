@@ -5,8 +5,13 @@ protocol SessionManager {
 }
 
 final class RealSessionManager: SessionManager {
+    private let keychain: KeychainHelper
+    
+    init(keychain: KeychainHelper = KeychainHelper()) {
+        self.keychain = keychain
+    }
+    
     var isAuthenticated: Bool {
-        // La fuente de verdad es Keychain
-        return KeychainHelper.shared.get("auth_token") != nil
+        return keychain.get("auth_token") != nil
     }
 }

@@ -2,8 +2,7 @@ import Foundation
 import Security
 
 final class KeychainHelper {
-    static let shared = KeychainHelper()
-    private init() {}
+    init() {}
 
     func get(_ key: String) -> String? {
         let query: [String: Any] = [
