@@ -24,7 +24,7 @@ public final class LoginViewModel: ObservableObject {
             loginSuccess = true
             authenticated.send(())
         case .failure(let error):
-            errorMessage = error.localizedDescription
+            errorMessage = LoginErrorMessageMapper.message(for: error)
             loginSuccess = false
         }
     }
