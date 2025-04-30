@@ -166,7 +166,20 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
 	}
 	
-	func test_errorMessage_isClearedOnLoginSuccess() async {
+	func test_login_doesNotTriggerAuthenticatedOnFailure() async {
+    let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
+    var authenticatedCalled = false
+    let cancellable = viewModel.authenticated.sink { _ in
+        authenticatedCalled = true
+    }
+    viewModel.username = "user@email.com"
+    viewModel.password = "fail"
+    await viewModel.login()
+    XCTAssertFalse(authenticatedCalled, "Expected authenticated event NOT to be sent after failed login")
+    _ = cancellable
+}
+
+func test_errorMessage_isClearedOnLoginSuccess() async {
     let viewModel = makeSUT(authenticate: { username, password in
         if password == "fail" {
             return .failure(.invalidCredentials)

@@ -367,7 +367,7 @@ Elimina espacios en blanco y valida el error correspondiente.
 Si se hace login varias veces rápidamente, solo el último resultado debe reflejarse en el estado.
 - [✅] test_errorMessage_isClearedOnLoginSuccess
 Si hay un error previo, tras un login exitoso el mensaje debe limpiarse.
-- [❌] test_login_doesNotTriggerAuthenticatedOnFailure
+- [✅] test_login_doesNotTriggerAuthenticatedOnFailure
 El evento authenticated NO se debe emitir en caso de error.
 - [❌] test_viewModel_deallocation_doesNotRetainClosure
 El ViewModel no debe retener closures tras dealloc.
