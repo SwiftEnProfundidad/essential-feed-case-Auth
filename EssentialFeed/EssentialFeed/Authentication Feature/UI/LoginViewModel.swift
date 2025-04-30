@@ -25,6 +25,16 @@ public final class LoginViewModel: ObservableObject {
 
     @MainActor
     public func login() async {
+        guard !username.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorMessage = LoginErrorMessageMapper.message(for: .invalidEmailFormat)
+            loginSuccess = false
+            return
+        }
+        guard !password.isEmpty else {
+            errorMessage = LoginErrorMessageMapper.message(for: .invalidPasswordFormat)
+            loginSuccess = false
+            return
+        }
         let result = await authenticate(username, password)
         switch result {
         case .success:

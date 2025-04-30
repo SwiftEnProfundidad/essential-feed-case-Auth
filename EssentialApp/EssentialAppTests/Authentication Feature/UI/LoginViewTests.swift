@@ -4,10 +4,10 @@ import EssentialApp
 import EssentialFeed
 
 final class LoginViewTests: XCTestCase {
+	
 	func test_login_withInvalidEmail_showsValidationError() async {
 		// Arrange
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidEmailFormat) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidEmailFormat) })
 		viewModel.username = "invalid-email"
 		viewModel.password = "password"
 		// Act
@@ -17,8 +17,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withEmptyPassword_showsValidationError() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidPasswordFormat) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidPasswordFormat) })
 		viewModel.username = "user@email.com"
 		viewModel.password = ""
 		await viewModel.login()
@@ -27,21 +26,19 @@ final class LoginViewTests: XCTestCase {
 	
 	func test_login_withValidCredentials_triggersAuthentication() async {
 		let exp = expectation(description: "Authentication triggered")
-		let viewModel = LoginViewModel(authenticate: { username, password in
+		let viewModel = makeSUT(authenticate: { username, password in
 			XCTAssertEqual(username, "user@email.com")
 			XCTAssertEqual(password, "password")
 			exp.fulfill()
 			return .success(LoginResponse(token: "token"))
 		})
-		_ = await LoginView(viewModel: viewModel)
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
 		await fulfillment(of: [exp], timeout: 1.0)    }
 	
 	func test_login_withInvalidCredentials_showsAuthenticationError() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT()
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -49,8 +46,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_success_showsSuccessFeedback() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -58,8 +54,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_networkError_showsNetworkErrorMessage() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.network) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) })
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -67,8 +62,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_error_showsErrorFeedback() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.unknown) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.unknown) })
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -76,8 +70,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_editingUsernameOrPassword_clearsErrorMessage() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT()
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -99,16 +92,14 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_loginSuccessFlag_isTrueAfterSuccessAndFalseAfterFailure() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
 		XCTAssertTrue(viewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
 		
 		// Ahora simula un login fallido
-		let failingVM = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: failingVM)
+		let failingVM = makeSUT()
 		failingVM.username = "user@email.com"
 		failingVM.password = "wrongpass"
 		await failingVM.login()
@@ -117,16 +108,14 @@ final class LoginViewTests: XCTestCase {
 	
 	func test_successfulLogin_clearsPreviousErrorMessage() async {
 		// Primer intento: error
-		let failingViewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: failingViewModel)
+		let failingViewModel = makeSUT()
 		failingViewModel.username = "user@email.com"
 		failingViewModel.password = "wrongpass"
 		await failingViewModel.login()
 		XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
 		
 		// Segundo intento: éxito, usando un nuevo ViewModel
-		let successViewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
-		_ = await LoginView(viewModel: successViewModel)
+		let successViewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		successViewModel.username = "user@email.com"
 		successViewModel.password = "password"
 		await successViewModel.login()
@@ -135,8 +124,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_usernameAndPassword_arePublishedAndObservable() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT()
 		let expectedUsername = "test@email.com"
 		let expectedPassword = "testpass123"
 		viewModel.username = expectedUsername
@@ -146,8 +134,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_onSuccessAlertDismissed_executesCallback() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -163,11 +150,28 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_initialState_isClean() async {
-		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
-		_ = await LoginView(viewModel: viewModel)
+		let viewModel = makeSUT()
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil on initial state")
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false on initial state")
 		XCTAssertEqual(viewModel.username, "", "Expected username to be empty on initial state")
 		XCTAssertEqual(viewModel.password, "", "Expected password to be empty on initial state")
 	}
+	
+	func test_login_withEmptyFields_showsValidationError() async {
+		let viewModel = makeSUT()
+		viewModel.username = ""
+		viewModel.password = ""
+		await viewModel.login()
+		XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.", "Expected validation error when username is empty")
+		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
+	}
+	
+	// MARK: Helpers
+	
+	private func makeSUT(
+		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) } ) -> LoginViewModel {
+			let sut = LoginViewModel(authenticate: authenticate)
+			_ = LoginView(viewModel: sut)
+			return sut
+		}
 }
