@@ -2,8 +2,16 @@ import Foundation
 import Combine
 
 public final class LoginViewModel: ObservableObject {
-    @Published public var username: String = ""
-    @Published public var password: String = ""
+    @Published public var username: String = "" {
+        didSet {
+            if oldValue != username { errorMessage = nil }
+        }
+    }
+    @Published public var password: String = "" {
+        didSet {
+            if oldValue != password { errorMessage = nil }
+        }
+    }
     @Published public var errorMessage: String?
     @Published public var loginSuccess: Bool = false
     public let authenticated = PassthroughSubject<Void, Never>()

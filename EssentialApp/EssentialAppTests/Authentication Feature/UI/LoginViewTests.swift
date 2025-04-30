@@ -74,4 +74,46 @@ final class LoginViewTests: XCTestCase {
 		await viewModel.login()
 		XCTAssertEqual(viewModel.errorMessage, "Something went wrong. Please try again.")
 	}
+	
+	func test_editingUsernameOrPassword_clearsErrorMessage() async {
+		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
+		_ = await LoginView(viewModel: viewModel)
+		viewModel.username = "user@email.com"
+		viewModel.password = "wrongpass"
+		await viewModel.login()
+		XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
+		
+		// Simula que el usuario corrige el email
+		viewModel.username = "new@email.com"
+		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing username, but got: \(viewModel.errorMessage ?? "nil")")
+		
+		// Vuelve a poner el error
+		viewModel.username = "user@email.com"
+		viewModel.password = "wrongpass"
+		await viewModel.login()
+		XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
+		
+		// Simula que el usuario corrige la contraseña
+		viewModel.password = "newpassword"
+		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing password, but got: \(viewModel.errorMessage ?? "nil")")
+	}
+	
+	func test_successfulLogin_clearsPreviousErrorMessage() async {
+        // Primer intento: error
+        let failingViewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
+        _ = await LoginView(viewModel: failingViewModel)
+        failingViewModel.username = "user@email.com"
+        failingViewModel.password = "wrongpass"
+        await failingViewModel.login()
+        XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
+        
+        // Segundo intento: éxito, usando un nuevo ViewModel
+        let successViewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+        _ = await LoginView(viewModel: successViewModel)
+        successViewModel.username = "user@email.com"
+        successViewModel.password = "password"
+        await successViewModel.login()
+        XCTAssertNil(successViewModel.errorMessage, "Expected errorMessage to be nil after successful login, but got: \(successViewModel.errorMessage ?? "nil")")
+        XCTAssertTrue(successViewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
+    }
 }
