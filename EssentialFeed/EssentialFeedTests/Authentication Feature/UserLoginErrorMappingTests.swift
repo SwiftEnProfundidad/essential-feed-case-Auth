@@ -15,10 +15,11 @@ final class UserLoginErrorMappingTests: XCTestCase {
     func test_errorMapping_returnsCorrectMessageForEachError() {
         // Given
         let cases: [(LoginError, String)] = [
-            (.invalidEmailFormat, "Email format is invalid"),
-            (.invalidPasswordFormat, "Password does not meet the minimum requirements"),
-            (.invalidCredentials, "Invalid credentials"),
-            (.network, "Could not connect. Please try again.")
+            (.invalidEmailFormat, "Email format is invalid."),
+            (.invalidPasswordFormat, "Password cannot be empty."),
+            (.invalidCredentials, "Invalid credentials."),
+            (.network, "Could not connect. Please try again."),
+						(.unknown, "Something went wrong. Please try again.")
         ]
 
         for (error, expectedMessage) in cases {

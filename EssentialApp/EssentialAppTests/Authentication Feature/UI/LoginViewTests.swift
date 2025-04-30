@@ -13,7 +13,7 @@ final class LoginViewTests: XCTestCase {
 		// Act
 		await viewModel.login()
 		// Assert
-		XCTAssertEqual(viewModel.errorMessage, "Email format is invalid")
+		XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.")
 	}
 	
 	func test_login_withEmptyPassword_showsValidationError() async {
