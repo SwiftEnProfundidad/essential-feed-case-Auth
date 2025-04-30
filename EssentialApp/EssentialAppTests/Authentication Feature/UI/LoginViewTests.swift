@@ -245,13 +245,39 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after last successful login")
 	}
 	
-	func test_login_withWhitespacePassword_showsValidationError() async {
+	func test_login_withInvalidPasswordFormat_showsValidationError() async {
+    let viewModel = makeSUT()
+    viewModel.username = "user@email.com"
+    viewModel.password = "short" // Menos de 8 caracteres
+    await viewModel.login()
+    XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
+    XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
+}
+
+func test_login_withWhitespacePassword_showsValidationError() async {
 		let viewModel = makeSUT()
 		viewModel.username = "user@email.com"
 		viewModel.password = "    "
 		await viewModel.login()
 		XCTAssertEqual(viewModel.errorMessage, "Password cannot be empty.", "Expected validation error when password is only whitespace")
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
+	}
+	
+	func test_errorMessage_isClearedOnEditingFieldsAfterNetworkError() async {
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) })
+		viewModel.username = "user@email.com"
+		viewModel.password = "password"
+		await viewModel.login()
+		XCTAssertEqual(viewModel.errorMessage, "Could not connect. Please try again.", "Expected network error message after failed login")
+		// Edit username
+		viewModel.username = "user2@email.com"
+		XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing username")
+		// Simula de nuevo el error
+		viewModel.username = "user@email.com"
+		await viewModel.login()
+		// Edit password
+		viewModel.password = "newpassword"
+		XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing password")
 	}
 	
 	func test_login_withWhitespaceUsername_showsValidationError() async {
