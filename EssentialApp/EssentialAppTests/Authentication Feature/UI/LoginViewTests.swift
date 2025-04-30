@@ -161,4 +161,13 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false after dismissing alert")
 		XCTAssertTrue(callbackCalled, "Expected onAuthenticated callback to be called after alert dismissed")
 	}
+	
+	func test_initialState_isClean() async {
+		let viewModel = LoginViewModel(authenticate: { _, _ in .failure(.invalidCredentials) })
+		_ = await LoginView(viewModel: viewModel)
+		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil on initial state")
+		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false on initial state")
+		XCTAssertEqual(viewModel.username, "", "Expected username to be empty on initial state")
+		XCTAssertEqual(viewModel.password, "", "Expected password to be empty on initial state")
+	}
 }
