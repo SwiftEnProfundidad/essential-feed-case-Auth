@@ -166,7 +166,24 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
 	}
 	
-	func test_multipleLoginAttempts_onlyLastResultMatters() async {
+	func test_errorMessage_isClearedOnLoginSuccess() async {
+    let viewModel = makeSUT(authenticate: { username, password in
+        if password == "fail" {
+            return .failure(.invalidCredentials)
+        } else {
+            return .success(LoginResponse(token: "token"))
+        }
+    })
+    viewModel.username = "user@email.com"
+    viewModel.password = "fail"
+    await viewModel.login()
+    XCTAssertNotNil(viewModel.errorMessage, "Expected error message after failed login")
+    viewModel.password = "pass"
+    await viewModel.login()
+    XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after successful login")
+}
+
+func test_multipleLoginAttempts_onlyLastResultMatters() async {
 		let exp = expectation(description: "Only last login result is reflected")
 		exp.expectedFulfillmentCount = 2
 		var completions: [Result<LoginResponse, LoginError>] = []
