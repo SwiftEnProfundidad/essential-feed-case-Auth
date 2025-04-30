@@ -363,7 +363,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 Elimina espacios en blanco y valida el error correspondiente.
 - [✅] test_login_withWhitespacePassword_showsValidationError
 Elimina espacios en blanco y valida el error correspondiente.
-- [❌] test_multipleLoginAttempts_onlyLastResultMatters
+- [✅] test_multipleLoginAttempts_onlyLastResultMatters
 Si se hace login varias veces rápidamente, solo el último resultado debe reflejarse en el estado.
 - [❌] test_errorMessage_isClearedOnLoginSuccess
 Si hay un error previo, tras un login exitoso el mensaje debe limpiarse.
