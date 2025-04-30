@@ -96,7 +96,31 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         XCTAssertTrue(useCaseSpy.receivedEmails.count == 1, "El use case no debe recibir múltiples emails")
     }
 
-    // MARK: - Helpers
+    func test_emailChange_toSameValue_doesNotHideFeedback() {
+    let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+    sut.email = "user@email.com"
+    sut.recoverPassword()
+    useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
+    XCTAssertTrue(sut.showingFeedback)
+    // Cambia el email al mismo valor
+    sut.email = "user@email.com"
+    // El feedback debe seguir visible
+    XCTAssertTrue(sut.showingFeedback)
+    XCTAssertEqual(sut.feedbackMessage, "OK")
+}
+
+func test_doesNotShowFeedback_ifEmailChangesBeforeErrorResponse() {
+    let (sut, useCaseSpy) = makeSUT(result: .failure(.unknown))
+    sut.email = "primero@email.com"
+    sut.recoverPassword()
+    // Cambia el email antes de simular la respuesta de error
+    sut.email = "segundo@email.com"
+    useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.unknown))
+    XCTAssertEqual(sut.feedbackMessage, "")
+    XCTAssertFalse(sut.showingFeedback)
+}
+
+// MARK: - Helpers
 	private func makeSUT(result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK")), file: StaticString = #file, line: UInt = #line) -> (sut: PasswordRecoverySwiftUIViewModel, useCaseSpy: UserPasswordRecoveryUseCaseSpy) {
     let useCaseSpy = UserPasswordRecoveryUseCaseSpy()
     useCaseSpy.result = result
