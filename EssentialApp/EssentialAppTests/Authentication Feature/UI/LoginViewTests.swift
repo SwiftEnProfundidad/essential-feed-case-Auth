@@ -35,7 +35,8 @@ final class LoginViewTests: XCTestCase {
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
-		await fulfillment(of: [exp], timeout: 1.0)    }
+		await fulfillment(of: [exp], timeout: 1.0)
+	}
 	
 	func test_login_withInvalidCredentials_showsAuthenticationError() async {
 		let viewModel = makeSUT()
@@ -234,27 +235,27 @@ final class LoginViewTests: XCTestCase {
 		})
 		viewModel.username = "user@email.com"
 		viewModel.password = "first"
-		async let firstLogin: Void = viewModel.login()
+		let firstLogin = Task { await viewModel.login() }
 		// Lanza el segundo login casi inmediato
 		viewModel.password = "second"
-		async let secondLogin: Void = viewModel.login()
-		await fulfillment(of: [exp], timeout: 2)
-		await firstLogin
-		await secondLogin
+		let secondLogin = Task { await viewModel.login() }
+		await fulfillment(of: [exp], timeout: 1.0)
+		await firstLogin.value
+		await secondLogin.value
 		XCTAssertTrue(viewModel.loginSuccess, "Expected loginSuccess to be true only for the last login attempt")
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after last successful login")
 	}
 	
 	func test_login_withInvalidPasswordFormat_showsValidationError() async {
-    let viewModel = makeSUT()
-    viewModel.username = "user@email.com"
-    viewModel.password = "short" // Menos de 8 caracteres
-    await viewModel.login()
-    XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
-    XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
-}
-
-func test_login_withWhitespacePassword_showsValidationError() async {
+		let viewModel = makeSUT()
+		viewModel.username = "user@email.com"
+		viewModel.password = "short" // Menos de 8 caracteres
+		await viewModel.login()
+		XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
+		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
+	}
+	
+	func test_login_withWhitespacePassword_showsValidationError() async {
 		let viewModel = makeSUT()
 		viewModel.username = "user@email.com"
 		viewModel.password = "    "
