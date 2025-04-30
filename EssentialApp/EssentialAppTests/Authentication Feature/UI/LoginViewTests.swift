@@ -144,4 +144,21 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(viewModel.username, expectedUsername, "Expected username to be published and observable")
 		XCTAssertEqual(viewModel.password, expectedPassword, "Expected password to be published and observable")
 	}
+	
+	func test_onSuccessAlertDismissed_executesCallback() async {
+		let viewModel = LoginViewModel(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+		_ = await LoginView(viewModel: viewModel)
+		viewModel.username = "user@email.com"
+		viewModel.password = "password"
+		await viewModel.login()
+		XCTAssertTrue(viewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
+		
+		var callbackCalled = false
+		viewModel.onAuthenticated = {
+			callbackCalled = true
+		}
+		viewModel.onSuccessAlertDismissed()
+		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false after dismissing alert")
+		XCTAssertTrue(callbackCalled, "Expected onAuthenticated callback to be called after alert dismissed")
+	}
 }
