@@ -45,7 +45,6 @@ public struct LoginView: View {
 			)
 		}
 		.onAppear {
-			print("LoginView: body loaded")
 		}
 	}
 }

@@ -356,6 +356,28 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - [❌] Notificar error de conectividad
 - [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
 
+
+
+🟧 Tests recomendados para cobertura completa (pendientes o sugeridos)
+- [✅] test_login_withWhitespaceUsername_showsValidationError
+Elimina espacios en blanco y valida el error correspondiente.
+- [✅] test_login_withWhitespacePassword_showsValidationError
+Elimina espacios en blanco y valida el error correspondiente.
+- [❌] test_multipleLoginAttempts_onlyLastResultMatters
+Si se hace login varias veces rápidamente, solo el último resultado debe reflejarse en el estado.
+- [❌] test_errorMessage_isClearedOnLoginSuccess
+Si hay un error previo, tras un login exitoso el mensaje debe limpiarse.
+- [❌] test_login_doesNotTriggerAuthenticatedOnFailure
+El evento authenticated NO se debe emitir en caso de error.
+- [❌] test_viewModel_deallocation_doesNotRetainClosure
+El ViewModel no debe retener closures tras dealloc.
+- [❌] test_login_callsAuthenticateWithTrimmedUsername
+El username se pasa a authenticate sin espacios en blanco.
+- [❌] test_login_withInvalidPasswordFormat_showsValidationError
+Si tienes validación de formato de password (longitud, caracteres, etc).
+- [❌] test_errorMessage_isClearedOnEditingFieldsAfterNetworkError
+El error de red se limpia al editar campos.
+
 ---
 
 ### Cursos técnicos (happy/sad path)

@@ -30,7 +30,7 @@ public final class LoginViewModel: ObservableObject {
             loginSuccess = false
             return
         }
-        guard !password.isEmpty else {
+        guard !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             errorMessage = LoginErrorMessageMapper.message(for: .invalidPasswordFormat)
             loginSuccess = false
             return

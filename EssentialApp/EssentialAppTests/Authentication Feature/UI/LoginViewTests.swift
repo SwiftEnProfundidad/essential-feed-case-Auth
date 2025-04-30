@@ -166,7 +166,25 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
 	}
 	
-	func test_loginSuccess_sendsAuthenticatedEvent() async {
+	func test_login_withWhitespacePassword_showsValidationError() async {
+    let viewModel = makeSUT()
+    viewModel.username = "user@email.com"
+    viewModel.password = "    "
+    await viewModel.login()
+    XCTAssertEqual(viewModel.errorMessage, "Password cannot be empty.", "Expected validation error when password is only whitespace")
+    XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
+}
+
+func test_login_withWhitespaceUsername_showsValidationError() async {
+    let viewModel = makeSUT()
+    viewModel.username = "    "
+    viewModel.password = "password"
+    await viewModel.login()
+    XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.", "Expected validation error when username is only whitespace")
+    XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
+}
+
+func test_loginSuccess_sendsAuthenticatedEvent() async {
 		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		var authenticatedCalled = false
 		let cancellable = viewModel.authenticated.sink { _ in
