@@ -369,7 +369,7 @@ Si se hace login varias veces rápidamente, solo el último resultado debe refle
 Si hay un error previo, tras un login exitoso el mensaje debe limpiarse.
 - [✅] test_login_doesNotTriggerAuthenticatedOnFailure
 El evento authenticated NO se debe emitir en caso de error.
-- [❌] test_viewModel_deallocation_doesNotRetainClosure
+- [✅] test_viewModel_deallocation_doesNotRetainClosure
 El ViewModel no debe retener closures tras dealloc.
 - [❌] test_login_callsAuthenticateWithTrimmedUsername
 El username se pasa a authenticate sin espacios en blanco.

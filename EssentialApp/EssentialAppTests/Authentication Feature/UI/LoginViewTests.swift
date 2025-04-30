@@ -166,7 +166,15 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
 	}
 	
-	func test_login_doesNotTriggerAuthenticatedOnFailure() async {
+	func test_viewModel_deallocation_doesNotRetainClosure() async {
+    var viewModel: LoginViewModel? = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
+    weak var weakViewModel = viewModel
+    viewModel?.onAuthenticated = { _ = weakViewModel; deallocated = false }
+    viewModel = nil
+    XCTAssertNil(weakViewModel, "ViewModel should be deallocated and not retain closures")
+}
+
+func test_login_doesNotTriggerAuthenticatedOnFailure() async {
     let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
     var authenticatedCalled = false
     let cancellable = viewModel.authenticated.sink { _ in
