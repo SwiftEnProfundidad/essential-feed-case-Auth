@@ -166,45 +166,57 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
 	}
 	
+	func test_login_callsAuthenticateWithTrimmedUsername() async {
+		var receivedUsername: String?
+		let viewModel = makeSUT(authenticate: { username, password in
+			receivedUsername = username
+			return .failure(.invalidCredentials)
+		})
+		viewModel.username = "   user@email.com   "
+		viewModel.password = "password"
+		await viewModel.login()
+		XCTAssertEqual(receivedUsername, "user@email.com", "Expected authenticate to be called with trimmed username")
+	}
+	
 	func test_viewModel_deallocation_doesNotRetainClosure() async {
-    var viewModel: LoginViewModel? = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
-    weak var weakViewModel = viewModel
-    viewModel?.onAuthenticated = { _ = weakViewModel; deallocated = false }
-    viewModel = nil
-    XCTAssertNil(weakViewModel, "ViewModel should be deallocated and not retain closures")
-}
-
-func test_login_doesNotTriggerAuthenticatedOnFailure() async {
-    let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
-    var authenticatedCalled = false
-    let cancellable = viewModel.authenticated.sink { _ in
-        authenticatedCalled = true
-    }
-    viewModel.username = "user@email.com"
-    viewModel.password = "fail"
-    await viewModel.login()
-    XCTAssertFalse(authenticatedCalled, "Expected authenticated event NOT to be sent after failed login")
-    _ = cancellable
-}
-
-func test_errorMessage_isClearedOnLoginSuccess() async {
-    let viewModel = makeSUT(authenticate: { username, password in
-        if password == "fail" {
-            return .failure(.invalidCredentials)
-        } else {
-            return .success(LoginResponse(token: "token"))
-        }
-    })
-    viewModel.username = "user@email.com"
-    viewModel.password = "fail"
-    await viewModel.login()
-    XCTAssertNotNil(viewModel.errorMessage, "Expected error message after failed login")
-    viewModel.password = "pass"
-    await viewModel.login()
-    XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after successful login")
-}
-
-func test_multipleLoginAttempts_onlyLastResultMatters() async {
+		var viewModel: LoginViewModel? = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
+		weak var weakViewModel = viewModel
+		viewModel?.onAuthenticated = { _ = weakViewModel }
+		viewModel = nil
+		XCTAssertNil(weakViewModel, "ViewModel should be deallocated and not retain closures")
+	}
+	
+	func test_login_doesNotTriggerAuthenticatedOnFailure() async {
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
+		var authenticatedCalled = false
+		let cancellable = viewModel.authenticated.sink { _ in
+			authenticatedCalled = true
+		}
+		viewModel.username = "user@email.com"
+		viewModel.password = "fail"
+		await viewModel.login()
+		XCTAssertFalse(authenticatedCalled, "Expected authenticated event NOT to be sent after failed login")
+		_ = cancellable
+	}
+	
+	func test_errorMessage_isClearedOnLoginSuccess() async {
+		let viewModel = makeSUT(authenticate: { username, password in
+			if password == "fail" {
+				return .failure(.invalidCredentials)
+			} else {
+				return .success(LoginResponse(token: "token"))
+			}
+		})
+		viewModel.username = "user@email.com"
+		viewModel.password = "fail"
+		await viewModel.login()
+		XCTAssertNotNil(viewModel.errorMessage, "Expected error message after failed login")
+		viewModel.password = "pass"
+		await viewModel.login()
+		XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after successful login")
+	}
+	
+	func test_multipleLoginAttempts_onlyLastResultMatters() async {
 		let exp = expectation(description: "Only last login result is reflected")
 		exp.expectedFulfillmentCount = 2
 		var completions: [Result<LoginResponse, LoginError>] = []
@@ -267,9 +279,12 @@ func test_multipleLoginAttempts_onlyLastResultMatters() async {
 	// MARK: Helpers
 	
 	private func makeSUT(
-		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) } ) -> LoginViewModel {
+		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
+		file: StaticString = #file, line: UInt = #line) -> LoginViewModel {
 			let sut = LoginViewModel(authenticate: authenticate)
-			_ = LoginView(viewModel: sut)
+			trackForMemoryLeaks(sut, file: file, line: line)
 			return sut
 		}
+	
 }
+

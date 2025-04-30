@@ -35,7 +35,8 @@ public final class LoginViewModel: ObservableObject {
             loginSuccess = false
             return
         }
-        let result = await authenticate(username, password)
+        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        let result = await authenticate(trimmedUsername, password)
         switch result {
         case .success:
             errorMessage = nil

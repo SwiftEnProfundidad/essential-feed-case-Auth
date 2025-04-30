@@ -371,7 +371,7 @@ Si hay un error previo, tras un login exitoso el mensaje debe limpiarse.
 El evento authenticated NO se debe emitir en caso de error.
 - [✅] test_viewModel_deallocation_doesNotRetainClosure
 El ViewModel no debe retener closures tras dealloc.
-- [❌] test_login_callsAuthenticateWithTrimmedUsername
+- [✅] test_login_callsAuthenticateWithTrimmedUsername
 El username se pasa a authenticate sin espacios en blanco.
 - [❌] test_login_withInvalidPasswordFormat_showsValidationError
 Si tienes validación de formato de password (longitud, caracteres, etc).
