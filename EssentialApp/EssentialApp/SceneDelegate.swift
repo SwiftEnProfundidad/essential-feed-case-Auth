@@ -56,14 +56,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			imageLoader: makeLocalImageLoaderWithRemoteFallback,
 			selection: showComments))
 	
-    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler, sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
-        self.init(sessionManager: sessionManager)
+// Removed the convenience initializer to consolidate dependency injection.
+
+    init(httpClient: HTTPClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral)),
+         store: FeedStore & FeedImageDataStore = {
+             do {
+                 return try CoreDataFeedStore(
+                     storeURL: NSPersistentContainer
+                         .defaultDirectoryURL()
+                         .appendingPathComponent("feed-store.sqlite"))
+             } catch {
+                 assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+                 return NullStore()
+             }
+         }(),
+         scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+             label: "com.essentialdeveloper.infra.queue",
+             qos: .userInitiated,
+             attributes: .concurrent
+         ).eraseToAnyScheduler(),
+         sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
         self.httpClient = httpClient
         self.store = store
         self.scheduler = scheduler
-    }
-
-    init(sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
         self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
         super.init()
     }
