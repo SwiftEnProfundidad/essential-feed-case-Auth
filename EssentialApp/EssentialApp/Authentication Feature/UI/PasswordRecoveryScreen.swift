@@ -28,12 +28,4 @@ public struct PasswordRecoveryScreen: View {
 	}
 }
 
-public struct BorderedProminentIfAvailable: ViewModifier {
-	public func body(content: Content) -> some View {
-		if #available(iOS 15.0, *) {
-			content.buttonStyle(.borderedProminent)
-		} else {
-			content.buttonStyle(DefaultButtonStyle())
-		}
-	}
-}
+// The BorderedProminentIfAvailable modifier has been moved to a shared utilities file.
