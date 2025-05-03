@@ -353,6 +353,17 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Cobertura en CI
 
 - [🔜] Almacenar la solicitud para reintentar (sin conexión)
+    #### Subtareas
+    - [ ] Definir el DTO/modelo para la solicitud de login pendiente (LoginRequest)
+    - [ ] Crear el store in-memory y/o persistente para solicitudes de login pendientes
+    - [ ] Implementar el wrapper type-erased (AnyLoginRequestStore)
+    - [ ] Integrar el almacenamiento en el ViewModel al detectar error de red
+    - [ ] Implementar la lógica para reintentar solicitudes almacenadas
+    - [ ] Tests unitarios del store y del wrapper type-erased
+    - [ ] Tests unitarios del ViewModel para almacenamiento y reintento
+    - [ ] Tests de integración (persistencia real, si aplica)
+    - [ ] Cobertura en CI para todos los escenarios
+
 - [❌] Notificar error de conectividad
 - [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
 
