@@ -221,12 +221,12 @@ final class LoginViewTests: XCTestCase {
 		let exp = expectation(description: "Only last login result is reflected")
 		exp.expectedFulfillmentCount = 2
 		actor CompletionsStore {
-    private(set) var completions: [Result<LoginResponse, LoginError>] = []
-    func append(_ value: Result<LoginResponse, LoginError>) {
-        completions.append(value)
-    }
-}
-let completionsStore = CompletionsStore()
+			private(set) var completions: [Result<LoginResponse, LoginError>] = []
+			func append(_ value: Result<LoginResponse, LoginError>) {
+				completions.append(value)
+			}
+		}
+		let completionsStore = CompletionsStore()
 		let viewModel = makeSUT(authenticate: { username, password in
 			if password == "first" {
 				try? await Task.sleep(nanoseconds: 200_000_000) // 0.2s
@@ -310,9 +310,9 @@ let completionsStore = CompletionsStore()
 	}
 	
 	func test_login_networkError_storesPendingRequest_and_canRetryLater() async {
-    // Arrange
-    let pendingStore = InMemoryPendingRequestStore<LoginRequest>()
-    var authenticateCalls: [(String, String)] = []
+		// Arrange
+		let pendingStore = InMemoryPendingRequestStore<LoginRequest>()
+		var authenticateCalls: [(String, String)] = []
 		let viewModel = LoginViewModel(
 			authenticate: { (username: String, password: String) -> Result<LoginResponse, LoginError> in
 				authenticateCalls.append((username, password))
@@ -320,53 +320,53 @@ let completionsStore = CompletionsStore()
 			},
 			pendingRequestStore: AnyLoginRequestStore(pendingStore)
 		)
-    viewModel.username = "user@email.com"
-    viewModel.password = "password"
-
-    // Act: Simula login con error de red
-    await viewModel.login()
-
-    // Assert: La solicitud debe estar almacenada
-    XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
-
-    // Simula que la siguiente autenticación tiene éxito
-    viewModel.authenticate = { (username: String, password: String) -> Result<LoginResponse, LoginError> in
-        authenticateCalls.append((username, password))
-        return .success(LoginResponse(token: "token"))
-    }
-
-    // Act: Reintenta las solicitudes almacenadas
-    await viewModel.retryPendingRequests()
-
-    // Assert: La solicitud debe haberse eliminado del store y el login debe haber sido exitoso
-    XCTAssertEqual(pendingStore.loadAll(), [])
-    XCTAssertTrue(viewModel.loginSuccess)
-    XCTAssertEqual(authenticateCalls.count, 2)
-}
-
-func test_login_blocksAfterMaxFailedAttempts() async {
-    let spyStore = SpyFailedLoginAttemptsStore()
-    let viewModel = makeSUT(
-        failedAttemptsStore: spyStore,
-        maxFailedAttempts: 3
-    )
-    
-    // Simulamos intentos previos (3/3)
-    spyStore.incrementAttempts(for: "user@test.com")
-    spyStore.incrementAttempts(for: "user@test.com")
-    spyStore.incrementAttempts(for: "user@test.com")
-    
-    viewModel.username = "user@test.com"
-    viewModel.password = "wrong-password"
-    
-    await viewModel.login()
-    
-    XCTAssertEqual(spyStore.getAttemptsCallCount, 1)
-    XCTAssertEqual(spyStore.incrementAttemptsCallCount, 3)
-    XCTAssertTrue(viewModel.isLoginBlocked)
-    XCTAssertEqual(viewModel.errorMessage, "Demasiados intentos. Por favor, espera 5 minutos o recupera tu contraseña.")
-}
-
+		viewModel.username = "user@email.com"
+		viewModel.password = "password"
+		
+		// Act: Simula login con error de red
+		await viewModel.login()
+		
+		// Assert: La solicitud debe estar almacenada
+		XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
+		
+		// Simula que la siguiente autenticación tiene éxito
+		viewModel.authenticate = { (username: String, password: String) -> Result<LoginResponse, LoginError> in
+			authenticateCalls.append((username, password))
+			return .success(LoginResponse(token: "token"))
+		}
+		
+		// Act: Reintenta las solicitudes almacenadas
+		await viewModel.retryPendingRequests()
+		
+		// Assert: La solicitud debe haberse eliminado del store y el login debe haber sido exitoso
+		XCTAssertEqual(pendingStore.loadAll(), [])
+		XCTAssertTrue(viewModel.loginSuccess)
+		XCTAssertEqual(authenticateCalls.count, 2)
+	}
+	
+	func test_login_blocksAfterMaxFailedAttempts() async {
+		let spyStore = SpyFailedLoginAttemptsStore()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 3
+		)
+		
+		// Simulamos intentos previos (3/3)
+		spyStore.incrementAttempts(for: "user@test.com")
+		spyStore.incrementAttempts(for: "user@test.com")
+		spyStore.incrementAttempts(for: "user@test.com")
+		
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-password"
+		
+		await viewModel.login()
+		
+		XCTAssertEqual(spyStore.getAttemptsCallCount, 1)
+		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 3)
+		XCTAssertTrue(viewModel.isLoginBlocked, "Expected account to be locked after max failed attempts")
+		XCTAssertEqual(viewModel.errorMessage, "Demasiados intentos. Por favor, espera 5 minutos o recupera tu contraseña.")
+	}
+	
 	func test_login_resetsAttemptsOnSuccess() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
 		let viewModel = makeSUT(
@@ -382,34 +382,42 @@ func test_login_blocksAfterMaxFailedAttempts() async {
 		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
 		XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
 	}
+	
+	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
+		let spyStore = SpyFailedLoginAttemptsStore()
+		
+		// Configuramos el mock para tener delay cuando se superen los intentos
+		var shouldDelay = false
+		let viewModel = makeSUT(
+			authenticate: { _, _ in 
+				if shouldDelay {
+					try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
+				}
+				return .failure(.invalidCredentials)
+			},
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 3
+		)
+		
+		// Primeros intentos (sin delay)
+		for _ in 1...3 {
+			await viewModel.login()
+			XCTAssertFalse(viewModel.isLoginBlocked)
+		}
+		
+		// Intento 4 (activamos delay)
+		shouldDelay = true
+		let startTime = Date()
+		await viewModel.login()
+		let isStillBlocked = viewModel.isLoginBlocked
+		let elapsed = Date().timeIntervalSince(startTime)
 
-private class SpyFailedLoginAttemptsStore: FailedLoginAttemptsStore {
-    private(set) var getAttemptsCallCount = 0
-    private(set) var incrementAttemptsCallCount = 0
-    private(set) var resetAttemptsCallCount = 0
-    private(set) var capturedUsernames = [String]()
-    private var attempts: [String: Int] = [:]
-
-    func getAttempts(for username: String) -> Int {
-        getAttemptsCallCount += 1
-        capturedUsernames.append(username)
-        return attempts[username, default: 0]
-    }
-
-    func incrementAttempts(for username: String) {
-        incrementAttemptsCallCount += 1
-        capturedUsernames.append(username)
-        attempts[username, default: 0] += 1
-    }
-
-    func resetAttempts(for username: String) {
-        resetAttemptsCallCount += 1
-        capturedUsernames.append(username)
-        attempts[username] = 0
-    }
-}
-
-// MARK: Helpers
+		XCTAssertTrue(isStillBlocked || elapsed >= 0.5, 
+		    "Account should be locked during delay. Locked: \(isStillBlocked), Elapsed: \(elapsed)s")
+		XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
+	}
+	
+	// MARK: Helpers
 	
 	private func makeSUT(
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
@@ -418,15 +426,41 @@ private class SpyFailedLoginAttemptsStore: FailedLoginAttemptsStore {
 		file: StaticString = #file,
 		line: UInt = #line
 	) -> LoginViewModel {
-			let sut = LoginViewModel(
-				authenticate: { username, password in 
-					await authenticate(username, password)
-				},
-				failedAttemptsStore: failedAttemptsStore,
-				maxFailedAttempts: maxFailedAttempts
-			)
-			trackForMemoryLeaks(sut, file: file, line: line)
-			return sut
+		let sut = LoginViewModel(
+			authenticate: { username, password in
+				await authenticate(username, password)
+			},
+			failedAttemptsStore: failedAttemptsStore,
+			maxFailedAttempts: maxFailedAttempts
+		)
+		trackForMemoryLeaks(sut, file: file, line: line)
+		return sut
+	}
+	
+	private class SpyFailedLoginAttemptsStore: FailedLoginAttemptsStore {
+		private(set) var getAttemptsCallCount = 0
+		private(set) var incrementAttemptsCallCount = 0
+		private(set) var resetAttemptsCallCount = 0
+		private(set) var capturedUsernames = [String]()
+		private var attempts: [String: Int] = [:]
+		
+		func getAttempts(for username: String) -> Int {
+			getAttemptsCallCount += 1
+			capturedUsernames.append(username)
+			return attempts[username, default: 0]
 		}
+		
+		func incrementAttempts(for username: String) {
+			incrementAttemptsCallCount += 1
+			capturedUsernames.append(username)
+			attempts[username, default: 0] += 1
+		}
+		
+		func resetAttempts(for username: String) {
+			resetAttemptsCallCount += 1
+			capturedUsernames.append(username)
+			attempts[username] = 0
+		}
+	}
 	
 }
