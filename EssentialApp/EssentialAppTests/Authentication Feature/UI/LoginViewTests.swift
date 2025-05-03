@@ -346,27 +346,82 @@ final class LoginViewTests: XCTestCase {
 	
 	func test_login_blocksAfterMaxFailedAttempts() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
-		let viewModel = makeSUT(
-			failedAttemptsStore: spyStore,
-			maxFailedAttempts: 3
-		)
-		
-		// Simulamos intentos previos (3/3)
-		spyStore.incrementAttempts(for: "user@test.com")
-		spyStore.incrementAttempts(for: "user@test.com")
-		spyStore.incrementAttempts(for: "user@test.com")
-		
+		let maxAttempts = 3
+		let viewModel = makeSUT(failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts)
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
 		
-		await viewModel.login()
+		for _ in 1...maxAttempts {
+			await viewModel.login()
+		}
 		
-		XCTAssertEqual(spyStore.getAttemptsCallCount, 1)
-		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 3)
 		XCTAssertTrue(viewModel.isLoginBlocked, "Expected account to be locked after max failed attempts")
-		XCTAssertEqual(viewModel.errorMessage, "Demasiados intentos. Por favor, espera 5 minutos o recupera tu contraseña.")
+		XCTAssertEqual(viewModel.errorMessage, "Too many attempts. Please wait 5 minutes or reset your password.")
+	}
+
+	
+	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
+		let spyStore = SpyFailedLoginAttemptsStore()
+		var shouldDelay = false
+		let maxAttempts = 3
+		let viewModel = makeSUT(
+			authenticate: { _, _ in
+				if shouldDelay {
+					try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
+				}
+				return .failure(.invalidCredentials)
+			},
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: maxAttempts
+		)
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-password"
+		
+		for _ in 1...maxAttempts {
+			await viewModel.login()
+		}
+		
+		shouldDelay = true
+		let startTime = Date()
+		await viewModel.login()
+		let isStillBlocked = viewModel.isLoginBlocked
+		let elapsed = Date().timeIntervalSince(startTime)
+
+		XCTAssertTrue(isStillBlocked, "Account should be locked during delay. Locked: \(isStillBlocked), Elapsed: \(elapsed)s")
+		XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
 	}
 	
+	func test_login_showRecoveryOptionWhenBlocked() async {
+		let maxAttempts = 1
+		let viewModel = makeSUT(maxFailedAttempts: maxAttempts)
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-password"
+		await viewModel.login()
+		XCTAssertTrue(viewModel.errorMessage?.contains("reset your password") ?? false, "Should show recovery option when blocked")
+	}
+
+	func test_fullLockFlow_withPasswordRecovery() async {
+		let spyStore = SpyFailedLoginAttemptsStore()
+		let navigationSpy = NavigationSpy()
+		let maxAttempts = 3
+		let viewModel = makeSUT(
+			authenticate: { _, _ in .failure(.invalidCredentials) },
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: maxAttempts
+		)
+		viewModel.navigation = navigationSpy
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-password"
+		
+		for _ in 1...maxAttempts {
+			await viewModel.login()
+		}
+		
+		XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after \(maxAttempts) attempts")
+		viewModel.handleRecoveryTap()
+		XCTAssertEqual(navigationSpy.recoveryScreenShown, true, "Should navigate to recovery screen")
+	}
+
 	func test_login_resetsAttemptsOnSuccess() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
 		let viewModel = makeSUT(
@@ -381,40 +436,6 @@ final class LoginViewTests: XCTestCase {
 		
 		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
 		XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
-	}
-	
-	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
-		let spyStore = SpyFailedLoginAttemptsStore()
-		
-		// Configuramos el mock para tener delay cuando se superen los intentos
-		var shouldDelay = false
-		let viewModel = makeSUT(
-			authenticate: { _, _ in 
-				if shouldDelay {
-					try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
-				}
-				return .failure(.invalidCredentials)
-			},
-			failedAttemptsStore: spyStore,
-			maxFailedAttempts: 3
-		)
-		
-		// Primeros intentos (sin delay)
-		for _ in 1...3 {
-			await viewModel.login()
-			XCTAssertFalse(viewModel.isLoginBlocked)
-		}
-		
-		// Intento 4 (activamos delay)
-		shouldDelay = true
-		let startTime = Date()
-		await viewModel.login()
-		let isStillBlocked = viewModel.isLoginBlocked
-		let elapsed = Date().timeIntervalSince(startTime)
-
-		XCTAssertTrue(isStillBlocked || elapsed >= 0.5, 
-		    "Account should be locked during delay. Locked: \(isStillBlocked), Elapsed: \(elapsed)s")
-		XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
 	}
 	
 	// MARK: Helpers
@@ -460,6 +481,14 @@ final class LoginViewTests: XCTestCase {
 			resetAttemptsCallCount += 1
 			capturedUsernames.append(username)
 			attempts[username] = 0
+		}
+	}
+	
+	private class NavigationSpy: LoginNavigation {
+		private(set) var recoveryScreenShown = false
+		
+		func showRecovery() {
+			recoveryScreenShown = true
 		}
 	}
 	

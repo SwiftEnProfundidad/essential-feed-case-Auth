@@ -1,11 +1,9 @@
 import Combine
 import Foundation
 
-// Importa el wrapper type-erased
-// Asegúrate de que AnyLoginRequestStore.swift está en el mismo target
-// y que LoginRequest.swift también está en el target
-
-// No necesitas import explícito de archivo, solo asegúrate de que ambos están en el target
+public protocol LoginNavigation: AnyObject {
+    func showRecovery()
+}
 
 public final class LoginViewModel: ObservableObject {
   @Published public var username: String = "" {
@@ -22,12 +20,16 @@ public final class LoginViewModel: ObservableObject {
   @Published public var loginSuccess: Bool = false
   @Published public var isLoginBlocked = false
   public let authenticated = PassthroughSubject<Void, Never>()
+  public let recoveryRequested = PassthroughSubject<Void, Never>()
+  private var cancellables: Set<AnyCancellable> = []
+  private var delayTask: Task<Void, Never>?
 
   /// Closure de autenticación asíncrona (production y tests)
   public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
   private let pendingRequestStore: AnyLoginRequestStore?
   private let failedAttemptsStore: FailedLoginAttemptsStore
   private let maxFailedAttempts: Int
+  public weak var navigation: LoginNavigation?
 
   public init(
     authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
@@ -39,55 +41,76 @@ public final class LoginViewModel: ObservableObject {
     self.pendingRequestStore = pendingRequestStore
     self.failedAttemptsStore = failedAttemptsStore
     self.maxFailedAttempts = maxFailedAttempts
+    recoveryRequested
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] _ in
+            self?.navigation?.showRecovery()
+        }
+        .store(in: &cancellables)
   }
 
   @MainActor
   public func login() async {
-    let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
-    let attempts = failedAttemptsStore.getAttempts(for: trimmedUsername)
+    delayTask?.cancel()
 
-    if attempts >= maxFailedAttempts {
-      isLoginBlocked = true
-      let delay = calculateDelay(attempts: attempts)
-      errorMessage = "Too many attempts. Please try again in \(Int(delay)) seconds or reset your password."
-      
-      // Mantener el estado durante el delay
-      let startTime = Date()
-      try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-      
-      // Solo limpiar si el delay completo ha terminado
-      if Date().timeIntervalSince(startTime) >= delay {
-        isLoginBlocked = false
-        errorMessage = nil
-      }
-      return
+    let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+    let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    // Validaciones
+    guard !trimmedUsername.isEmpty else {
+        errorMessage = "Email format is invalid."
+        return
+    }
+    
+    guard !trimmedPassword.isEmpty else {
+        errorMessage = "Password cannot be empty."
+        return
     }
 
-    do {
-      let result = await authenticate(trimmedUsername, password)
+    let result = await authenticate(trimmedUsername, trimmedPassword)
+
+    switch result {
+    case .success:
       failedAttemptsStore.resetAttempts(for: trimmedUsername)
-
-      switch result {
-      case .success:
-        errorMessage = nil
-        loginSuccess = true
-        authenticated.send(())
-      case .failure(let error):
-        failedAttemptsStore.incrementAttempts(for: trimmedUsername)
-        errorMessage = LoginErrorMessageMapper.message(for: error)
-        loginSuccess = false
-
-        if case .network = error {
-          let request = LoginRequest(username: trimmedUsername, password: password)
-          pendingRequestStore?.save(request)
+      errorMessage = nil
+      loginSuccess = true
+      isLoginBlocked = false // desbloquea en login exitoso
+      authenticated.send(())
+    case .failure(let error):
+      failedAttemptsStore.incrementAttempts(for: trimmedUsername)
+      let afterAttempts = failedAttemptsStore.getAttempts(for: trimmedUsername)
+      if afterAttempts >= maxFailedAttempts {
+        await MainActor.run {
+          isLoginBlocked = true
+          errorMessage = "Too many attempts. Please wait 5 minutes or reset your password."
         }
+        let delay = max(0.5, Double(afterAttempts - maxFailedAttempts + 1) * 0.5)
+        do {
+          try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+        } catch {
+          // Si la tarea se cancela, mantener el bloqueo
+        }
+      } else {
+        errorMessage = LoginErrorMessageMapper.message(for: error)
+      }
+      loginSuccess = false
+      if case .network = error {
+        let request = LoginRequest(username: trimmedUsername, password: trimmedPassword)
+        pendingRequestStore?.save(request)
       }
     }
   }
 
+  // Desbloquear tras recuperación
+  public func unlockAfterRecovery() {
+    isLoginBlocked = false
+    errorMessage = nil
+  }
+
   private func calculateDelay(attempts: Int) -> TimeInterval {
-    let baseDelay = 1.0  // 1 segundo base para testing
-    return min(baseDelay * pow(2, Double(attempts - maxFailedAttempts)), 5.0)  // Máximo 5 segundos para testing
+    let baseDelay = 0.5
+    let additionalDelay = Double(attempts - maxFailedAttempts) * 0.5
+    return max(baseDelay, baseDelay + additionalDelay)
   }
 
   private func isAccountLocked(for username: String) -> Bool {
@@ -124,5 +147,17 @@ public final class LoginViewModel: ObservableObject {
   public func onSuccessAlertDismissed() {
     loginSuccess = false
     onAuthenticated?()
+  }
+
+  public func handleRecoveryTap() {
+    navigation?.showRecovery()
+  }
+
+  private func localizedErrorMessage() -> String {
+    return "Too many attempts. Please wait 5 minutes or reset your password."
+  }
+
+  deinit {
+    delayTask?.cancel()
   }
 }
