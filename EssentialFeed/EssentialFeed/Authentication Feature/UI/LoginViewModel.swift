@@ -20,15 +20,25 @@ public final class LoginViewModel: ObservableObject {
 	}
 	@Published public var errorMessage: String?
 	@Published public var loginSuccess: Bool = false
+	@Published public var isLoginBlocked = false
 	public let authenticated = PassthroughSubject<Void, Never>()
 	
 	/// Closure de autenticación asíncrona (production y tests)
 	public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
 	private let pendingRequestStore: AnyLoginRequestStore?
+	private let failedAttemptsStore: FailedLoginAttemptsStore
+	private let maxFailedAttempts: Int
 	
-	public init(authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>, pendingRequestStore: AnyLoginRequestStore? = nil) {
+	public init(
+		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
+		pendingRequestStore: AnyLoginRequestStore? = nil,
+		failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
+		maxFailedAttempts: Int = 5
+	) {
 		self.authenticate = authenticate
 		self.pendingRequestStore = pendingRequestStore
+		self.failedAttemptsStore = failedAttemptsStore
+		self.maxFailedAttempts = maxFailedAttempts
 	}
 	
 	@MainActor
@@ -44,19 +54,30 @@ public final class LoginViewModel: ObservableObject {
 			return
 		}
 		let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
-		let result = await authenticate(trimmedUsername, password)
-		switch result {
-			case .success:
-				errorMessage = nil
-				loginSuccess = true
-				authenticated.send(())
-			case .failure(let error):
-				errorMessage = LoginErrorMessageMapper.message(for: error)
-				loginSuccess = false
-				if case .network = error {
-					let request = LoginRequest(username: trimmedUsername, password: password)
-					pendingRequestStore?.save(request)
-				}
+		let attempts = failedAttemptsStore.getAttempts(for: trimmedUsername)
+		
+		if attempts >= maxFailedAttempts {
+			isLoginBlocked = true
+			errorMessage = "Demasiados intentos. Por favor, espera 5 minutos o recupera tu contraseña."
+			return
+		}
+		
+		do {
+			let result = await authenticate(trimmedUsername, password)
+			failedAttemptsStore.resetAttempts(for: trimmedUsername)
+			switch result {
+				case .success:
+					errorMessage = nil
+					loginSuccess = true
+					authenticated.send(())
+				case .failure(let error):
+					errorMessage = LoginErrorMessageMapper.message(for: error)
+					loginSuccess = false
+					if case .network = error {
+						let request = LoginRequest(username: trimmedUsername, password: password)
+						pendingRequestStore?.save(request)
+					}
+			}
 		}
 	}
 	

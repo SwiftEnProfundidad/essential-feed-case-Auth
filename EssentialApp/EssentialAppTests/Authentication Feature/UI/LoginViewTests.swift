@@ -1,7 +1,7 @@
 import XCTest
-import SwiftUI
-import EssentialApp
+import Combine
 import EssentialFeed
+import EssentialApp
 
 final class LoginViewTests: XCTestCase {
 	
@@ -344,15 +344,89 @@ let completionsStore = CompletionsStore()
     XCTAssertEqual(authenticateCalls.count, 2)
 }
 
+func test_login_blocksAfterMaxFailedAttempts() async {
+    let spyStore = SpyFailedLoginAttemptsStore()
+    let viewModel = makeSUT(
+        failedAttemptsStore: spyStore,
+        maxFailedAttempts: 3
+    )
+    
+    // Simulamos intentos previos (3/3)
+    spyStore.incrementAttempts(for: "user@test.com")
+    spyStore.incrementAttempts(for: "user@test.com")
+    spyStore.incrementAttempts(for: "user@test.com")
+    
+    viewModel.username = "user@test.com"
+    viewModel.password = "wrong-password"
+    
+    await viewModel.login()
+    
+    XCTAssertEqual(spyStore.getAttemptsCallCount, 1)
+    XCTAssertEqual(spyStore.incrementAttemptsCallCount, 3)
+    XCTAssertTrue(viewModel.isLoginBlocked)
+    XCTAssertEqual(viewModel.errorMessage, "Demasiados intentos. Por favor, espera 5 minutos o recupera tu contraseña.")
+}
+
+	func test_login_resetsAttemptsOnSuccess() async {
+		let spyStore = SpyFailedLoginAttemptsStore()
+		let viewModel = makeSUT(
+			authenticate: { _, _ in .success(LoginResponse.init(token: "token")) }, // authenticate primero
+			failedAttemptsStore: spyStore // luego failedAttemptsStore
+		)
+		
+		viewModel.username = "user@test.com"
+		viewModel.password = "correct-password"
+		
+		await viewModel.login()
+		
+		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
+		XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
+	}
+
+private class SpyFailedLoginAttemptsStore: FailedLoginAttemptsStore {
+    private(set) var getAttemptsCallCount = 0
+    private(set) var incrementAttemptsCallCount = 0
+    private(set) var resetAttemptsCallCount = 0
+    private(set) var capturedUsernames = [String]()
+    private var attempts: [String: Int] = [:]
+
+    func getAttempts(for username: String) -> Int {
+        getAttemptsCallCount += 1
+        capturedUsernames.append(username)
+        return attempts[username, default: 0]
+    }
+
+    func incrementAttempts(for username: String) {
+        incrementAttemptsCallCount += 1
+        capturedUsernames.append(username)
+        attempts[username, default: 0] += 1
+    }
+
+    func resetAttempts(for username: String) {
+        resetAttemptsCallCount += 1
+        capturedUsernames.append(username)
+        attempts[username] = 0
+    }
+}
+
 // MARK: Helpers
 	
 	private func makeSUT(
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
-		file: StaticString = #file, line: UInt = #line) -> LoginViewModel {
-			let sut = LoginViewModel(authenticate: authenticate)
+		failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
+		maxFailedAttempts: Int = 5,
+		file: StaticString = #file,
+		line: UInt = #line
+	) -> LoginViewModel {
+			let sut = LoginViewModel(
+				authenticate: { username, password in 
+					await authenticate(username, password)
+				},
+				failedAttemptsStore: failedAttemptsStore,
+				maxFailedAttempts: maxFailedAttempts
+			)
 			trackForMemoryLeaks(sut, file: file, line: line)
 			return sut
 		}
 	
 }
-
