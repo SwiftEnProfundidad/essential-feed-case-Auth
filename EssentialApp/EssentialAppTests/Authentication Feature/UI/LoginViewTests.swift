@@ -303,7 +303,42 @@ final class LoginViewTests: XCTestCase {
 		_ = cancellable // Retain while in scope
 	}
 	
-	// MARK: Helpers
+	func test_login_networkError_storesPendingRequest_and_canRetryLater() async {
+    // Arrange
+    let pendingStore = InMemoryPendingRequestStore<LoginRequest>()
+    var authenticateCalls: [(String, String)] = []
+		let viewModel = LoginViewModel(
+			authenticate: { (username: String, password: String) -> Result<LoginResponse, LoginError> in
+				authenticateCalls.append((username, password))
+				return .failure(LoginError.network)
+			},
+			pendingRequestStore: AnyLoginRequestStore(pendingStore)
+		)
+    viewModel.username = "user@email.com"
+    viewModel.password = "password"
+
+    // Act: Simula login con error de red
+    await viewModel.login()
+
+    // Assert: La solicitud debe estar almacenada
+    XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
+
+    // Simula que la siguiente autenticación tiene éxito
+    viewModel.authenticate = { (username: String, password: String) -> Result<LoginResponse, LoginError> in
+        authenticateCalls.append((username, password))
+        return .success(LoginResponse(token: "token"))
+    }
+
+    // Act: Reintenta las solicitudes almacenadas
+    await viewModel.retryPendingRequests()
+
+    // Assert: La solicitud debe haberse eliminado del store y el login debe haber sido exitoso
+    XCTAssertEqual(pendingStore.loadAll(), [])
+    XCTAssertTrue(viewModel.loginSuccess)
+    XCTAssertEqual(authenticateCalls.count, 2)
+}
+
+// MARK: Helpers
 	
 	private func makeSUT(
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },

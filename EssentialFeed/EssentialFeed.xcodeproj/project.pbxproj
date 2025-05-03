@@ -158,6 +158,9 @@
 		B4702E462DC17E520055B3D9 /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E452DC17E520055B3D9 /* PasswordRecoveryPresenter.swift */; };
 		B47D59752DB39E8900034806 /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */; };
 		B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59792DB3D67F00034806 /* SecureStorageTests.swift */; };
+		B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */; };
+		B48838442DC65FD70048CF98 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838412DC65FD70048CF98 /* LoginRequest.swift */; };
+		B48838462DC66A7A0048CF98 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */; };
 		B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
 		B49D2E8C2DB8E7F800D36E0D /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */; };
 		B49D2E8E2DB8E98400D36E0D /* SystemSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */; };
@@ -402,6 +405,9 @@
 		B4702E452DC17E520055B3D9 /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryPresenter.swift; path = "EssentialFeed/Authentication Feature/Presentation/PasswordRecoveryPresenter.swift"; sourceTree = SOURCE_ROOT; };
 		B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B47D59792DB3D67F00034806 /* SecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageTests.swift; sourceTree = "<group>"; };
+		B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
+		B48838412DC65FD70048CF98 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
 		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionManager.swift; sourceTree = "<group>"; };
 		B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemSessionManagerTests.swift; path = "EssentialFeedTests/Security Feature/Session/SystemSessionManagerTests.swift"; sourceTree = SOURCE_ROOT; };
@@ -1046,6 +1052,7 @@
 		B400BE912DBD61E900A18EE5 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				B48838412DC65FD70048CF98 /* LoginRequest.swift */,
 				B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */,
 				B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */,
 				B400BE902DBD61E900A18EE5 /* UserLoginUseCase.swift */,
@@ -1069,6 +1076,7 @@
 		B400BE972DBD61E900A18EE5 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */,
 				B4702E452DC17E520055B3D9 /* PasswordRecoveryPresenter.swift */,
 				B400BE962DBD61E900A18EE5 /* LoginViewModel.swift */,
 			);
@@ -1168,11 +1176,20 @@
 		B4803EE02DB7A63C00E2D68A /* Authentication Feature */ = {
 			isa = PBXGroup;
 			children = (
+				B488383F2DC65FA60048CF98 /* Infrastructure */,
 				B400BE912DBD61E900A18EE5 /* Domain */,
 				B400BE942DBD61E900A18EE5 /* Presentation */,
 				B400BE972DBD61E900A18EE5 /* UI */,
 			);
 			path = "Authentication Feature";
+			sourceTree = "<group>";
+		};
+		B488383F2DC65FA60048CF98 /* Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */,
+			);
+			path = Infrastructure;
 			sourceTree = "<group>";
 		};
 		B4D71EF32DAF1D34003A1316 /* Registration Feature */ = {
@@ -1567,6 +1584,7 @@
 				08E546CC24F9631300C64FAE /* FeedImageDataMapper.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				08DB5510254467FC00B98C3A /* Paginated.swift in Sources */,
+				B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */,
 				08346CF224F93EC600A9F17C /* ImageComment.swift in Sources */,
 				08285AF4228BFAFF000A8987 /* FeedStore.xcdatamodeld in Sources */,
 				B46CA1412DBE863800CE9ADC /* PasswordRecoveryModels.swift in Sources */,
@@ -1583,6 +1601,7 @@
 				B49EFABB2DB54B6F007B703C /* SystemKeychain.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0889B0FA2530B0AA00FEAB5A /* ImageCommentsEndpoint.swift in Sources */,
+				B48838462DC66A7A0048CF98 /* AnyLoginRequestStore.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				B4702E462DC17E520055B3D9 /* PasswordRecoveryPresenter.swift in Sources */,
 				B46CA15F2DBEA28000CE9ADC /* PasswordRecoveryView.swift in Sources */,
@@ -1598,6 +1617,7 @@
 				B400BE9C2DBD61E900A18EE5 /* LoginPresenter.swift in Sources */,
 				B400BE9E2DBD61E900A18EE5 /* LoginPresentation.swift in Sources */,
 				B46CA14D2DBE8E3900CE9ADC /* PasswordRecovery.swift in Sources */,
+				B48838442DC65FD70048CF98 /* LoginRequest.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* ResourceErrorViewModel.swift in Sources */,
