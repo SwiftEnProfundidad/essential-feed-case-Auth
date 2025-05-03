@@ -25,6 +25,7 @@ public enum LoginError: Error, Equatable {
 	case network
 	case invalidEmailFormat
 	case invalidPasswordFormat
+	case unknown
 }
 
 public protocol LoginSuccessObserver {

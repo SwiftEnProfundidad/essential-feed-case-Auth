@@ -9,6 +9,14 @@ import Combine
 import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    // UIKit necesita este init para instanciar desde Storyboard/Scene
+    override init() {
+        self.isUserAuthenticatedClosure = { RealSessionManager(keychain: KeychainHelper()).isAuthenticated }
+        super.init()
+    }
+    private var isUserAuthenticatedClosure: () -> Bool
+
+
 	var window: UIWindow?
 	
 	private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
@@ -48,49 +56,59 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			imageLoader: makeLocalImageLoaderWithRemoteFallback,
 			selection: showComments))
 	
-	convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler) {
-		self.init()
-		self.httpClient = httpClient
-		self.store = store
-		self.scheduler = scheduler
-	}
-	
+// Removed the convenience initializer to consolidate dependency injection.
+
+    init(httpClient: HTTPClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral)),
+         store: FeedStore & FeedImageDataStore = {
+             do {
+                 return try CoreDataFeedStore(
+                     storeURL: NSPersistentContainer
+                         .defaultDirectoryURL()
+                         .appendingPathComponent("feed-store.sqlite"))
+             } catch {
+                 assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+                 return NullStore()
+             }
+         }(),
+         scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+             label: "com.essentialdeveloper.infra.queue",
+             qos: .userInitiated,
+             attributes: .concurrent
+         ).eraseToAnyScheduler(),
+         sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
+        self.httpClient = httpClient
+        self.store = store
+        self.scheduler = scheduler
+        self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
+        super.init()
+    }
+
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-    print("➡️ SceneDelegate: willConnectTo called")
-    guard let scene = (scene as? UIWindowScene) else {
-        print("❌ SceneDelegate: windowScene not found")
-        return
+        guard let scene = (scene as? UIWindowScene) else {
+                return
     }
     window = UIWindow(windowScene: scene)
     configureWindow()
-    print("✅ SceneDelegate: configureWindow called")
-}
+    }
 	
     private func isUserAuthenticated() -> Bool {
-        // TODO: Replace with real session/auth logic
-        return false // For development, always show login
+        return isUserAuthenticatedClosure()
     }
 
     private func makeRootViewController() -> UIViewController {
-    print("➡️ SceneDelegate: makeRootViewController")
-    if isUserAuthenticated() {
-        print("⚡️ SceneDelegate: User is authenticated")
-        return navigationController
+        if isUserAuthenticated() {
+                return navigationController
     } else {
-        print("⚡️ SceneDelegate: User is NOT authenticated")
-        return AuthComposer.authViewController { [weak self] in
-            print("🔑 SceneDelegate: Authenticated callback fired")
-            self?.window?.rootViewController = self?.navigationController
+                return AuthComposer.authViewController { [weak self] in
+                        self?.window?.rootViewController = self?.navigationController
         }
     }
 }
 
     func configureWindow() {
-    print("➡️ SceneDelegate: configureWindow")
-    window?.rootViewController = makeRootViewController()
+        window?.rootViewController = makeRootViewController()
     window?.makeKeyAndVisible()
-    print("✅ SceneDelegate: window is key and visible")
-}
+    }
 	
 	func sceneWillResignActive(_ scene: UIScene) {
 		do {

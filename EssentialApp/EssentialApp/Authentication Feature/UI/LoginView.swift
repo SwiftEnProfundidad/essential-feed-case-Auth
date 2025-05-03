@@ -1,16 +1,6 @@
 import SwiftUI
 import EssentialFeed
 
-struct BorderedProminentIfAvailable: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(iOS 15.0, *) {
-            content.buttonStyle(.borderedProminent)
-        } else {
-            content.buttonStyle(DefaultButtonStyle())
-        }
-    }
-}
-
 public struct LoginView: View {
 	@ObservedObject var viewModel: LoginViewModel
 	@State private var showingPasswordRecovery = false
@@ -30,11 +20,13 @@ public struct LoginView: View {
 				Text(error)
 					.foregroundColor(.red)
 			}
-            Button("Login") {
-                viewModel.login()
-            }
-            .modifier(BorderedProminentIfAvailable())
-			Button("¿Has olvidado tu contraseña?") {
+			Button("Login") {
+				Task {
+					await viewModel.login()
+				}
+			}
+			.modifier(BorderedProminentIfAvailable())
+			Button("Forgot your password?") {
 				showingPasswordRecovery = true
 			}
 			.font(.footnote)
@@ -46,14 +38,13 @@ public struct LoginView: View {
 		.alert(isPresented: $viewModel.loginSuccess) {
 			Alert(
 				title: Text("Login Successful"),
-				message: Text("Welcome!"),
-				dismissButton: .default(Text("OK")) {
+				message: Text("Welcome, \(viewModel.username)!"),
+				dismissButton: .default(Text("OK"), action: {
 					viewModel.onSuccessAlertDismissed()
-				}
+				})
 			)
 		}
 		.onAppear {
-			print("🟢 LoginView: body loaded")
 		}
 	}
 }

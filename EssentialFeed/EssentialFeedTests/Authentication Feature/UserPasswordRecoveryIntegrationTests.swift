@@ -78,7 +78,7 @@ final class UserPasswordRecoveryIntegrationTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (UserPasswordRecoveryUseCase, PasswordRecoveryAPISpy) {
         let api = PasswordRecoveryAPISpy()
-        let sut = UserPasswordRecoveryUseCase(api: api)
+        let sut = RemoteUserPasswordRecoveryUseCase(api: api)
         trackForMemoryLeaks(api, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, api)

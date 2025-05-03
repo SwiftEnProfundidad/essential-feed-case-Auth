@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1630"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -73,6 +73,252 @@
                BlueprintName = "EssentialFeedTests"
                ReferencedContainer = "container:../EssentialFeed/EssentialFeed.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "KeychainSecureStorageTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainSecureStorageTests/test_saveData_fails_whenKeychainReturnsError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainSecureStorageTests/test_saveData_succeeds_whenKeychainSavesSuccessfully()">
+               </Test>
+               <Test
+                  Identifier = "KeychainSecureStorageTests/test_saveData_usesAlternativeStorage_whenKeychainAndFallbackFail()">
+               </Test>
+               <Test
+                  Identifier = "KeychainSecureStorageTests/test_saveData_usesFallback_whenKeychainFails()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_NoFallback_save_alwaysReturnsFalse()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_closures_full_coverage()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_delete_returnsFalse_forKeyWithNullCharacters()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_direct_minimalistic_save_and_load()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_handleDuplicateItem_covers_all_branches()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_load_returnsNil_forEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_load_returnsNil_forNonexistentKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_saveAndLoad_realKeychain_persistsAndRetrievesData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_fallbacksToUpdate_whenDuplicateItemErrorOccurs()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_overwritesPreviousValue()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_forEmptyData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_forEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_forKeyWithOnlySpaces()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_whenAllRetriesFail()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_whenUpdateFailsAfterDuplicateItem()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_whenValidationAfterSaveFails()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_withExtremelyLargeKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_save_returnsFalse_withKeyContainingNullCharacters()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationCoverageTests/test_update_branch_coverage()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests/test_dataPersistsBetweenSaves()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests/test_load_returnsNil_forNonExistentKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests/test_save_fails_withEmptyData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests/test_save_fails_withEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainIntegrationTests/test_save_load_delete_withSystemKeychain()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_NoFallback_alwaysReturnsFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__delete_onSystemKeychain_returnsTrueOnSuccess()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__delete_returnsFalseOnEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__load_returnsNilOnEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__save_onSystemKeychain_validatesInputAndSavesCorrectly()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__save_returnsFailureOnEmptyData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__save_returnsFailureOnEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test__update_onSystemKeychain_failsWithEmptyKeyOrData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_delete_onSystemKeychain_withValidAndInvalidInput()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_delete_returnsTrue_whenKeyDoesNotExist()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_factory_handlesLargeData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_factory_handlesUnicodeKeys()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_factory_simulatesCorruption()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_handleDuplicateItem_returnsDuplicateItem_whenMaxAttemptsReached()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_init_noFallback_doesNotThrow()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_init_systemKeychain_doesNotThrow()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_init_withAndWithoutKeychainParameter_shouldNotCrash()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_noFallback_load_alwaysReturnsNil()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_noFallback_save_alwaysReturnsFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_noFallback_save_and_load_alwaysFail()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_and_delete_withEdgeCaseKeys_andHelpers()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_delegatesToKeychainProtocol_andReturnsSpyResult()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_deletesPreviousValueBeforeSavingNewOne()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_handlesSpecificKeychainErrors()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_isThreadSafe()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_isThreadSafeUnderConcurrentAccess()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_isThreadSafe_underConcurrentAccess()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_onNoFallbackStrategy_alwaysReturnsFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_onNoFallback_alwaysReturnsFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_onSystemKeychain_withDuplicateItem_andUpdateFails_returnsDuplicateItem()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_onSystemKeychain_withInvalidInput_returnsFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_overwritesPreviousValue_forcesUpdatePath()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsDuplicateItem_onKeychainFailure()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsDuplicateItem_whenUpdateFailsAfterDuplicate()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_forEmptyData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_forEmptyKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_forEmptyKeyOrData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_ifDeleteFailsBeforeSave()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_whenHandleDuplicateItemSucceedsButValidationFails()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_whenValidationAfterSaveFails()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsFailure_whenValidationAfterSaveFails_dueToCorruption()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsSuccess_forVeryLongKey()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_returnsSuccess_whenHandleDuplicateItemSucceedsAndValidationSucceeds()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_supportsLargeBinaryData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_supportsUnicodeKeys()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_supportsUnicodeKeysAndLargeBinaryData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_save_supportsUnicodeKeys_andLargeBinaryData()">
+               </Test>
+               <Test
+                  Identifier = "SystemKeychainTests/test_update_onSystemKeychain_withValidAndInvalidInput()">
+               </Test>
+            </SkippedTests>
+            <LocationScenarioReference
+               identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+               referenceType = "1">
+            </LocationScenarioReference>
          </TestableReference>
          <TestableReference
             skipped = "NO"

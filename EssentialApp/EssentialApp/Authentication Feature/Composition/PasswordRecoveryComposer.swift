@@ -6,7 +6,7 @@ public enum PasswordRecoveryComposer {
     public static func passwordRecoveryViewScreen() -> PasswordRecoveryScreen {
         // TODO: Inyecta tu API real aquí
         let apiStub = PasswordRecoveryAPIStub(result: .success(PasswordRecoveryResponse(message: "Simulación de recuperación")))
-        let recoveryUseCase = UserPasswordRecoveryUseCase(api: apiStub)
+        let recoveryUseCase = RemoteUserPasswordRecoveryUseCase(api: apiStub)
         let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: recoveryUseCase)
         let recoveryView = PasswordRecoveryScreen(viewModel: viewModel)
         return recoveryView

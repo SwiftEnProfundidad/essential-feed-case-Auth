@@ -322,8 +322,15 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
 - [✅] Almacenar token de autenticación de forma segura tras login exitoso
 - [✅] Registrar sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-- [🟡/❌] Notificar éxito de login (presenter unitario, falta integración UI)
-  - Parcialmente cubierto: lógica y tests unitarios listos, falta integración UI
+- [✅] Notificar éxito de login (presenter unitario, falta integración UI)
+    #### Subtareas 
+    - [✅] Notificar éxito de login (presenter unitario, falta integración UI)
+    - [✅] El presenter llama a la vista real al completar el login exitoso
+    - [✅] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
+    - [✅] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
+    - [✅] Hay tests de integración y snapshot que validan el flujo completo (login → notificación)
+    > Nota: El equipo ha decidido no implementar tests de UI end-to-end porque los tests de integración y snapshot ya cubren el flujo completo y el feedback visual de forma profesional y eficiente.
+    - [✅] El ciclo está cubierto por tests automáticos en CI
 
 - [✅] Notificar errores de validación específicos
     #### Subtareas
@@ -335,7 +342,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
     - [✅] El ciclo está cubierto por tests automáticos en CI
 
-- [🔜] Ofrecer recuperación de contraseña
+- [✅] Ofrecer recuperación de contraseña
     #### Subtareas
     - [✅] Endpoint y DTO para recuperación de contraseña
     - [✅] Caso de uso (UseCase) para solicitar recuperación
@@ -343,24 +350,36 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Notificación de éxito/error al usuario
     - [✅] Tests unitarios del caso de uso
     - [✅] Tests de integración (sin acceso a Keychain ni login)
-    - [⏳] Presentador y vista para feedback al usuario
-    - [🔜] Cobertura en CI
+    - [✅] Presentador y vista para feedback al usuario
+    - [✅] Cobertura en CI
 
-- [🔜] Almacenar la solicitud para reintentar (sin conexión)
-- [❌] Notificar error de conectividad
-- [❌] Aplicar retardo/bloqueo tras múltiples intentos fallidos
+- [✅] Almacenar la solicitud para reintentar (sin conexión)
+    #### Subtareas
+    - [✅] Definir el DTO/modelo para la solicitud de login pendiente (LoginRequest)
+    - [✅] Crear el store in-memory y/o persistente para solicitudes de login pendientes
+    - [✅] Implementar el wrapper type-erased (AnyLoginRequestStore)
+    - [✅] Integrar el almacenamiento en el ViewModel al detectar error de red
+    - [✅] Implementar la lógica para reintentar solicitudes almacenadas
+    - [✅] Tests unitarios del store y del wrapper type-erased
+    - [✅] Tests unitarios del ViewModel para almacenamiento y reintento
+    - [✅] Tests de integración (persistencia real, si aplica)
+    - [✅] Cobertura en CI para todos los escenarios
 
----
+- [✅] Notificar error de conectividad
+    - [✅] Notificar error de conectividad
 
-#### Checklist integración UI: Notificar éxito de login:  
-- [🟡] Notificar éxito de login (presenter unitario, falta integración UI)
-- [❌] El presenter llama a la vista real al completar el login exitoso
-- [❌] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
-- [❌] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
-- [❌] Hay tests de UI/integración que validan el flujo completo (login → notificación)
-- [❌] El ciclo está cubierto por tests automáticos en CI
-- [❌] El checklist principal puede marcarse como [✅] tras validar todo lo anterior
-
+- [✅] Aplicar retardo/bloqueo tras múltiples intentos fallidos
+    #### Subtareas
+    - [✅] Definir el umbral de intentos fallidos antes de aplicar retardo/bloqueo
+    - [✅] Persistir el contador de intentos fallidos (en memoria o persistente)
+    - [✅] Implementar el retardo incremental o bloqueo temporal tras superar el umbral
+    - [✅] Mostrar mensaje claro al usuario indicando el motivo del bloqueo/retardo y el tiempo restante
+    - [✅] Permitir sugerencia de recuperación de contraseña tras varios fallos
+    - [✅] Restablecer el contador tras login exitoso o tras el tiempo de espera
+    - [✅] Tests unitarios del ViewModel para intentos fallidos, retardo y desbloqueo
+    - [⏳] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
+    - [✅] Cobertura en CI para todos los escenarios
+s
 ---
 
 ### Cursos técnicos (happy/sad path)

@@ -1,6 +1,10 @@
 import Foundation
 
-public final class UserPasswordRecoveryUseCase {
+public protocol UserPasswordRecoveryUseCase {
+    func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void)
+}
+
+public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCase {
     private let api: PasswordRecoveryAPI
 
     public init(api: PasswordRecoveryAPI) {
@@ -9,7 +13,6 @@ public final class UserPasswordRecoveryUseCase {
 
     public func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
-        // Validación de formato básica (puedes mejorarla según guidelines)
         let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         guard emailPredicate.evaluate(with: trimmedEmail) else {
