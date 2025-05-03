@@ -139,6 +139,7 @@
 		B400BE9E2DBD61E900A18EE5 /* LoginPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B400BE932DBD61E900A18EE5 /* LoginPresentation.swift */; };
 		B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402E02E2DB864AF00B29ECF /* SessionManaging.swift */; };
 		B4153A6D2DC6811C00B40F51 /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */; };
+		B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C62F2DBE222E00E738D3 /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62E2DBE222E00E738D3 /* LoginErrorMessageMapper.swift */; };
@@ -385,6 +386,7 @@
 		B400BE962DBD61E900A18EE5 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B402E02E2DB864AF00B29ECF /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
+		B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
 		B42EB7002DAEBA17002FBC51 /* SystemKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemKeychain.swift; path = "EssentialFeed/Security Feature/Keychain/SystemKeychain.swift"; sourceTree = SOURCE_ROOT; };
 		B442B75D2AB3451700284B92 /* KeychainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainProtocol.swift; path = "EssentialFeed/Security Feature/Keychain/KeychainProtocol.swift"; sourceTree = SOURCE_ROOT; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
@@ -1077,6 +1079,7 @@
 		B400BE972DBD61E900A18EE5 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */,
 				B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */,
 				B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */,
 				B400BE962DBD61E900A18EE5 /* LoginViewModel.swift */,
@@ -1612,6 +1615,7 @@
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */,
 				08EF9D27250BBC1B004539C2 /* ResourceLoadingView.swift in Sources */,
+				B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */,
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				B400BE982DBD61E900A18EE5 /* LoginViewModel.swift in Sources */,

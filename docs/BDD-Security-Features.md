@@ -374,10 +374,10 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Persistir el contador de intentos fallidos (en memoria o persistente)
     - [✅] Implementar el retardo incremental o bloqueo temporal tras superar el umbral
     - [✅ Mostrar mensaje claro al usuario indicando el motivo del bloqueo/retardo y el tiempo restante
-    - [⏳] Permitir sugerencia de recuperación de contraseña tras varios fallos
+    - [✅] Permitir sugerencia de recuperación de contraseña tras varios fallos
     - [✅] Restablecer el contador tras login exitoso o tras el tiempo de espera
     - [✅] Tests unitarios del ViewModel para intentos fallidos, retardo y desbloqueo
-    - [❌] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
+    - [⏳] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
     - [✅] Cobertura en CI para todos los escenarios
 
 ---

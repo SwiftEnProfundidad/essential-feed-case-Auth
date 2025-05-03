@@ -7,7 +7,7 @@ final class LoginViewTests: XCTestCase {
 	
 	func test_login_withInvalidEmail_showsValidationError() async {
 		// Arrange
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidEmailFormat) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidEmailFormat) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "invalid-email"
 		viewModel.password = "password"
 		// Act
@@ -17,7 +17,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withEmptyPassword_showsValidationError() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidPasswordFormat) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidPasswordFormat) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = ""
 		await viewModel.login()
@@ -31,7 +31,7 @@ final class LoginViewTests: XCTestCase {
 			XCTAssertEqual(password, "password")
 			exp.fulfill()
 			return .success(LoginResponse(token: "token"))
-		})
+		}, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -39,7 +39,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withInvalidCredentials_showsAuthenticationError() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -47,7 +47,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_success_showsSuccessFeedback() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -55,7 +55,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_networkError_showsNetworkErrorMessage() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -63,7 +63,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_error_showsErrorFeedback() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.unknown) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.unknown) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -71,7 +71,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_editingUsernameOrPassword_clearsErrorMessage() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -93,7 +93,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_loginSuccessFlag_isTrueAfterSuccessAndFalseAfterFailure() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -125,7 +125,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_usernameAndPassword_arePublishedAndObservable() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		let expectedUsername = "test@email.com"
 		let expectedPassword = "testpass123"
 		viewModel.username = expectedUsername
@@ -135,7 +135,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_onSuccessAlertDismissed_executesCallback() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -151,7 +151,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_initialState_isClean() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil on initial state")
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false on initial state")
 		XCTAssertEqual(viewModel.username, "", "Expected username to be empty on initial state")
@@ -159,7 +159,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withEmptyFields_showsValidationError() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = ""
 		viewModel.password = ""
 		await viewModel.login()
@@ -172,7 +172,7 @@ final class LoginViewTests: XCTestCase {
 		let viewModel = makeSUT(authenticate: { username, password in
 			receivedUsername = username
 			return .failure(.invalidCredentials)
-		})
+		}, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "   user@email.com   "
 		viewModel.password = "password"
 		await viewModel.login()
@@ -188,7 +188,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_doesNotTriggerAuthenticatedOnFailure() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		var authenticatedCalled = false
 		let cancellable = viewModel.authenticated.sink { _ in
 			authenticatedCalled = true
@@ -207,7 +207,7 @@ final class LoginViewTests: XCTestCase {
 			} else {
 				return .success(LoginResponse(token: "token"))
 			}
-		})
+		}, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "fail"
 		await viewModel.login()
@@ -238,7 +238,7 @@ final class LoginViewTests: XCTestCase {
 				exp.fulfill()
 				return .success(LoginResponse(token: "token"))
 			}
-		})
+		}, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "first"
 		let firstLogin = Task { await viewModel.login() }
@@ -253,7 +253,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withInvalidPasswordFormat_showsValidationError() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = "user@email.com"
 		viewModel.password = "short" // Menos de 8 caracteres
 		await viewModel.login()
@@ -262,7 +262,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withWhitespacePassword_showsValidationError() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = "user@email.com"
 		viewModel.password = "    "
 		await viewModel.login()
@@ -271,7 +271,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_errorMessage_isClearedOnEditingFieldsAfterNetworkError() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) })
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.network) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		await viewModel.login()
@@ -288,7 +288,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withWhitespaceUsername_showsValidationError() async {
-		let viewModel = makeSUT()
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
 		viewModel.username = "    "
 		viewModel.password = "password"
 		await viewModel.login()
@@ -297,7 +297,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_loginSuccess_sendsAuthenticatedEvent() async {
-		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		var authenticatedCalled = false
 		let cancellable = viewModel.authenticated.sink { _ in
 			authenticatedCalled = true
@@ -347,7 +347,7 @@ final class LoginViewTests: XCTestCase {
 	func test_login_blocksAfterMaxFailedAttempts() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
 		let maxAttempts = 3
-		let viewModel = makeSUT(failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts)
+		let viewModel = makeSUT(failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
 		
@@ -356,23 +356,19 @@ final class LoginViewTests: XCTestCase {
 		}
 		
 		XCTAssertTrue(viewModel.isLoginBlocked, "Expected account to be locked after max failed attempts")
-		XCTAssertEqual(viewModel.errorMessage, "Too many attempts. Please wait 5 minutes or reset your password.")
+		XCTAssertEqual(viewModel.errorMessage, DefaultLoginBlockMessageProvider().message(forAttempts: maxAttempts, maxAttempts: maxAttempts))
 	}
 
-	
 	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
 		var shouldDelay = false
 		let maxAttempts = 3
-		let viewModel = makeSUT(
-			authenticate: { _, _ in
-				if shouldDelay {
-					try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
-				}
-				return .failure(.invalidCredentials)
-			},
-			failedAttemptsStore: spyStore,
-			maxFailedAttempts: maxAttempts
+		let viewModel = makeSUT(authenticate: { _, _ in
+			if shouldDelay {
+				try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
+			}
+			return .failure(.invalidCredentials)
+		}, failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider()
 		)
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
@@ -393,7 +389,7 @@ final class LoginViewTests: XCTestCase {
 	
 	func test_login_showRecoveryOptionWhenBlocked() async {
 		let maxAttempts = 1
-		let viewModel = makeSUT(maxFailedAttempts: maxAttempts)
+		let viewModel = makeSUT(maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
 		await viewModel.login()
@@ -404,10 +400,7 @@ final class LoginViewTests: XCTestCase {
 		let spyStore = SpyFailedLoginAttemptsStore()
 		let navigationSpy = NavigationSpy()
 		let maxAttempts = 3
-		let viewModel = makeSUT(
-			authenticate: { _, _ in .failure(.invalidCredentials) },
-			failedAttemptsStore: spyStore,
-			maxFailedAttempts: maxAttempts
+		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) }, failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider()
 		)
 		viewModel.navigation = navigationSpy
 		viewModel.username = "user@test.com"
@@ -424,9 +417,7 @@ final class LoginViewTests: XCTestCase {
 
 	func test_login_resetsAttemptsOnSuccess() async {
 		let spyStore = SpyFailedLoginAttemptsStore()
-		let viewModel = makeSUT(
-			authenticate: { _, _ in .success(LoginResponse.init(token: "token")) }, // authenticate primero
-			failedAttemptsStore: spyStore // luego failedAttemptsStore
+		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse.init(token: "token")) }, failedAttemptsStore: spyStore, blockMessageProvider: DefaultLoginBlockMessageProvider() // luego failedAttemptsStore
 		)
 		
 		viewModel.username = "user@test.com"
@@ -444,6 +435,7 @@ final class LoginViewTests: XCTestCase {
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
 		failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
 		maxFailedAttempts: Int = 5,
+		blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
 		file: StaticString = #file,
 		line: UInt = #line
 	) -> LoginViewModel {
@@ -452,7 +444,8 @@ final class LoginViewTests: XCTestCase {
 				await authenticate(username, password)
 			},
 			failedAttemptsStore: failedAttemptsStore,
-			maxFailedAttempts: maxFailedAttempts
+			maxFailedAttempts: maxFailedAttempts,
+			blockMessageProvider: blockMessageProvider
 		)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return sut

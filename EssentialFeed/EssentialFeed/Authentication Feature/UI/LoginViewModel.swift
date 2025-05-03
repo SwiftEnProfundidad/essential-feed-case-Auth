@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 public protocol LoginNavigation: AnyObject {
-    func showRecovery()
+  func showRecovery()
 }
 
 public final class LoginViewModel: ObservableObject {
@@ -29,24 +29,27 @@ public final class LoginViewModel: ObservableObject {
   private let pendingRequestStore: AnyLoginRequestStore?
   private let failedAttemptsStore: FailedLoginAttemptsStore
   private let maxFailedAttempts: Int
+  private let blockMessageProvider: LoginBlockMessageProvider
   public weak var navigation: LoginNavigation?
 
   public init(
     authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
     pendingRequestStore: AnyLoginRequestStore? = nil,
     failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
-    maxFailedAttempts: Int = 5
+    maxFailedAttempts: Int = 5,
+    blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider()
   ) {
     self.authenticate = authenticate
     self.pendingRequestStore = pendingRequestStore
     self.failedAttemptsStore = failedAttemptsStore
     self.maxFailedAttempts = maxFailedAttempts
+    self.blockMessageProvider = blockMessageProvider
     recoveryRequested
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] _ in
-            self?.navigation?.showRecovery()
-        }
-        .store(in: &cancellables)
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.navigation?.showRecovery()
+      }
+      .store(in: &cancellables)
   }
 
   @MainActor
@@ -55,16 +58,16 @@ public final class LoginViewModel: ObservableObject {
 
     let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
     let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
-    
+
     // Validaciones
     guard !trimmedUsername.isEmpty else {
-        errorMessage = "Email format is invalid."
-        return
+      errorMessage = "Email format is invalid."
+      return
     }
-    
+
     guard !trimmedPassword.isEmpty else {
-        errorMessage = "Password cannot be empty."
-        return
+      errorMessage = "Password cannot be empty."
+      return
     }
 
     let result = await authenticate(trimmedUsername, trimmedPassword)
@@ -74,7 +77,7 @@ public final class LoginViewModel: ObservableObject {
       failedAttemptsStore.resetAttempts(for: trimmedUsername)
       errorMessage = nil
       loginSuccess = true
-      isLoginBlocked = false // desbloquea en login exitoso
+      isLoginBlocked = false  // desbloquea en login exitoso
       authenticated.send(())
     case .failure(let error):
       failedAttemptsStore.incrementAttempts(for: trimmedUsername)
@@ -82,7 +85,8 @@ public final class LoginViewModel: ObservableObject {
       if afterAttempts >= maxFailedAttempts {
         await MainActor.run {
           isLoginBlocked = true
-          errorMessage = "Too many attempts. Please wait 5 minutes or reset your password."
+          errorMessage = blockMessageProvider.message(
+            forAttempts: afterAttempts, maxAttempts: maxFailedAttempts)
         }
         let delay = max(0.5, Double(afterAttempts - maxFailedAttempts + 1) * 0.5)
         do {
@@ -151,10 +155,6 @@ public final class LoginViewModel: ObservableObject {
 
   public func handleRecoveryTap() {
     navigation?.showRecovery()
-  }
-
-  private func localizedErrorMessage() -> String {
-    return "Too many attempts. Please wait 5 minutes or reset your password."
   }
 
   deinit {
