@@ -61,12 +61,12 @@ public final class LoginViewModel: ObservableObject {
 
     // Validaciones
     guard !trimmedUsername.isEmpty else {
-      errorMessage = "Email format is invalid."
+      errorMessage = blockMessageProvider.message(for: .emptyEmail)
       return
     }
 
     guard !trimmedPassword.isEmpty else {
-      errorMessage = "Password cannot be empty."
+      errorMessage = blockMessageProvider.message(for: .emptyPassword)
       return
     }
 
@@ -92,10 +92,10 @@ public final class LoginViewModel: ObservableObject {
         do {
           try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
         } catch {
-          // Si la tarea se cancela, mantener el bloqueo
+          errorMessage = blockMessageProvider.message(for: .unknown)
         }
       } else {
-        errorMessage = LoginErrorMessageMapper.message(for: error)
+        errorMessage = blockMessageProvider.message(for: error)
       }
       loginSuccess = false
       if case .network = error {
