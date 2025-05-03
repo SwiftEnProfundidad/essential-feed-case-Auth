@@ -220,15 +220,21 @@ final class LoginViewTests: XCTestCase {
 	func test_multipleLoginAttempts_onlyLastResultMatters() async {
 		let exp = expectation(description: "Only last login result is reflected")
 		exp.expectedFulfillmentCount = 2
-		var completions: [Result<LoginResponse, LoginError>] = []
+		actor CompletionsStore {
+    private(set) var completions: [Result<LoginResponse, LoginError>] = []
+    func append(_ value: Result<LoginResponse, LoginError>) {
+        completions.append(value)
+    }
+}
+let completionsStore = CompletionsStore()
 		let viewModel = makeSUT(authenticate: { username, password in
 			if password == "first" {
 				try? await Task.sleep(nanoseconds: 200_000_000) // 0.2s
-				completions.append(.failure(.invalidCredentials))
+				await completionsStore.append(.failure(.invalidCredentials))
 				exp.fulfill()
 				return .failure(.invalidCredentials)
 			} else {
-				completions.append(.success(LoginResponse(token: "token")))
+				await completionsStore.append(.success(LoginResponse(token: "token")))
 				exp.fulfill()
 				return .success(LoginResponse(token: "token"))
 			}
