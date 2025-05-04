@@ -38,7 +38,7 @@ class LoginLockingIntegrationTests: XCTestCase {
 		timeSubject.send(timeSubject.value.addingTimeInterval(5 * 60 + 1))
 		await sut.login()
 		XCTAssertFalse(sut.isLoginBlocked, "Account should unlock after timeout")
-		XCTAssertEqual(sut.errorMessage, "Invalid credentials", "Should show error after unlock since login() suma intento y pone el error")
+		XCTAssertEqual(sut.errorMessage, "Invalid credentials.", "Should show error after unlock since login() suma intento y pone el error")
 		XCTAssertEqual(store.resetAttemptsCallCount, 1, "Should reset attempts once")
 		XCTAssertEqual(store.incrementAttemptsSinceLastReset, 1, "Should record 1 attempt after reset")
 
@@ -47,7 +47,7 @@ class LoginLockingIntegrationTests: XCTestCase {
 		XCTAssertEqual(store.incrementAttemptsSinceLastReset, 2, "Should record 2 attempts after reset")
 		XCTAssertEqual(store.incrementAttemptsCallCount, 7, "Should record 7 attempts en total")
 		XCTAssertEqual(store.capturedUsernames.last, testUsername, "Should capture correct user")
-		XCTAssertEqual(sut.errorMessage, "Invalid credentials", "Should show error message on failed login")
+		XCTAssertEqual(sut.errorMessage, "Invalid credentials.", "Should show error message on failed login")
 	}
 	
 	// MARK: - Helpers

@@ -345,7 +345,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_blocksAfterMaxFailedAttempts() async {
-		let spyStore = FailedLoginAttemptsStoreSpy()
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
 		let maxAttempts = 3
 		let viewModel = makeSUT(failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@test.com"
@@ -358,33 +358,36 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertTrue(viewModel.isLoginBlocked, "Expected account to be locked after max failed attempts")
 		XCTAssertEqual(viewModel.errorMessage, DefaultLoginBlockMessageProvider().message(forAttempts: maxAttempts, maxAttempts: maxAttempts))
 	}
-
+	
 	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
-		let spyStore = FailedLoginAttemptsStoreSpy()
-		var shouldDelay = false
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
 		let maxAttempts = 3
-		let viewModel = makeSUT(authenticate: { _, _ in
-			if shouldDelay {
-				try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 segundo
-			}
-			return .failure(.invalidCredentials)
-		}, failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: maxAttempts,
+			blockMessageProvider: DefaultLoginBlockMessageProvider()
 		)
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
 		
-		for _ in 1...maxAttempts {
+		// Realiza los intentos previos sin medir el tiempo
+		for _ in 1..<maxAttempts {
 			await viewModel.login()
 		}
 		
-		shouldDelay = true
+		// El intento que debe bloquear la cuenta y aplicar el delay
 		let startTime = Date()
 		await viewModel.login()
-		let isStillBlocked = viewModel.isLoginBlocked
 		let elapsed = Date().timeIntervalSince(startTime)
-
-		XCTAssertTrue(isStillBlocked, "Account should be locked during delay. Locked: \(isStillBlocked), Elapsed: \(elapsed)s")
+		
+		XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after max failed attempts")
 		XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
+		
+		// Un intento adicional NO debe aplicar delay nuevamente
+		let nextStart = Date()
+		await viewModel.login()
+		let nextElapsed = Date().timeIntervalSince(nextStart)
+		XCTAssertLessThan(nextElapsed, 0.5, "No delay should be applied after account is already blocked")
 	}
 	
 	func test_login_showRecoveryOptionWhenBlocked() async {
@@ -395,9 +398,9 @@ final class LoginViewTests: XCTestCase {
 		await viewModel.login()
 		XCTAssertTrue(viewModel.errorMessage?.contains("reset your password") ?? false, "Should show recovery option when blocked")
 	}
-
+	
 	func test_fullLockFlow_withPasswordRecovery() async {
-		let spyStore = FailedLoginAttemptsStoreSpy()
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
 		let navigationSpy = NavigationSpy()
 		let maxAttempts = 3
 		let viewModel = makeSUT(
@@ -417,26 +420,40 @@ final class LoginViewTests: XCTestCase {
 		viewModel.handleRecoveryTap()
 		XCTAssertEqual(navigationSpy.recoveryScreenShown, true, "Should navigate to recovery screen")
 	}
-
+	
 	func test_login_resetsAttemptsOnSuccess() async {
-		let spyStore = FailedLoginAttemptsStoreSpy()
-		let viewModel = makeSUT(failedAttemptsStore: spyStore, blockMessageProvider: DefaultLoginBlockMessageProvider() // luego failedAttemptsStore
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		var callCount = 0
+		let viewModel = makeSUT(
+			authenticate: { username, password in
+				callCount += 1
+				if callCount == 1 {
+					return .failure(.invalidCredentials)
+				} else {
+					return .success(LoginResponse(token: "any"))
+				}
+			},
+			failedAttemptsStore: spyStore,
+			blockMessageProvider: DefaultLoginBlockMessageProvider()
 		)
 		
 		viewModel.username = "user@test.com"
-		viewModel.password = "correct-password"
+		viewModel.password = "wrong-password"
+		await viewModel.login() // Simula un fallo para incrementar los intentos
 		
-		await viewModel.login()
+		viewModel.password = "correct-password"
+		await viewModel.login() // Ahora debe hacer reset
 		
 		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
 		XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
+		XCTAssertEqual(spyStore.attempts["user@test.com"], 0)
 	}
 	
 	// MARK: Helpers
 	
 	private func makeSUT(
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
-		failedAttemptsStore: FailedLoginAttemptsStore = FailedLoginAttemptsStoreSpy(),
+		failedAttemptsStore: FailedLoginAttemptsStore = ThreadSafeFailedLoginAttemptsStoreSpy(),
 		maxFailedAttempts: Int = 5,
 		blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
 		file: StaticString = #file,
