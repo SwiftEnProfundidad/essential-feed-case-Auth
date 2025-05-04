@@ -403,7 +403,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
         5. Integración con Dependencias
         [✅] FailedLoginAttemptsStore recibe llamadas correctas
         [✅] timeProvider afecta el desbloqueo automático
-        [⏳] blockMessageProvider muestra mensajes adecuados
+        [✅] blockMessageProvider muestra mensajes adecuados
 
         6. Seguridad Adicional
         [⏳] Thread safety en operaciones async

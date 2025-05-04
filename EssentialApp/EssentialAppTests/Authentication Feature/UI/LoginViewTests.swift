@@ -544,6 +544,18 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Final counter should be zero")
 	}
 	
+	func test_blockMessageProvider_showsContextualMessages() {
+		let provider = DefaultLoginBlockMessageProvider()
+		
+		// Verificar mensaje de máximo intentos
+		let maxAttemptsMessage = provider.messageForMaxAttemptsReached()
+		XCTAssertEqual(maxAttemptsMessage, "Too many attempts. Please wait 5 minutes or reset your password.")
+		
+		// Verificar mensaje de error genérico
+		let invalidCredentialsMessage = provider.message(for: .invalidCredentials)
+		XCTAssertEqual(invalidCredentialsMessage, "Invalid credentials.")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(
