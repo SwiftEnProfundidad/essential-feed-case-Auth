@@ -2,191 +2,196 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import os
-import UIKit
-import CoreData
 import Combine
+import CoreData
 import EssentialFeed
+import UIKit
+import os
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    // UIKit necesita este init para instanciar desde Storyboard/Scene
-    override init() {
-        self.isUserAuthenticatedClosure = { RealSessionManager(keychain: KeychainHelper()).isAuthenticated }
-        super.init()
+  // UIKit necesita este init para instanciar desde Storyboard/Scene
+  override init() {
+    self.isUserAuthenticatedClosure = {
+      RealSessionManager(keychain: KeychainHelper()).isAuthenticated
     }
-    private var isUserAuthenticatedClosure: () -> Bool
+    super.init()
+  }
+  private var isUserAuthenticatedClosure: () -> Bool
 
+  var window: UIWindow?
 
-	var window: UIWindow?
-	
-	private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
-		label: "com.essentialdeveloper.infra.queue",
-		qos: .userInitiated,
-		attributes: .concurrent
-	).eraseToAnyScheduler()
-	
-	private lazy var httpClient: HTTPClient = {
-		URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-	}()
-	
-	private lazy var logger = Logger(subsystem: "com.essentialdeveloper.EssentialAppCaseStudy", category: "main")
-	
-	private lazy var store: FeedStore & FeedImageDataStore = {
-		do {
-			return try CoreDataFeedStore(
-				storeURL: NSPersistentContainer
-					.defaultDirectoryURL()
-					.appendingPathComponent("feed-store.sqlite"))
-		} catch {
-			assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
-			logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
-			return NullStore()
-		}
-	}()
-	
-	private lazy var localFeedLoader: LocalFeedLoader = {
-		LocalFeedLoader(store: store, currentDate: Date.init)
-	}()
-	
-	private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-	
-	private lazy var navigationController = UINavigationController(
-		rootViewController: FeedUIComposer.feedComposedWith(
-			feedLoader: makeRemoteFeedLoaderWithLocalFallback,
-			imageLoader: makeLocalImageLoaderWithRemoteFallback,
-			selection: showComments))
-	
-// Removed the convenience initializer to consolidate dependency injection.
+  private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+    label: "com.essentialdeveloper.infra.queue",
+    qos: .userInitiated,
+    attributes: .concurrent
+  ).eraseToAnyScheduler()
 
-    init(httpClient: HTTPClient = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral)),
-         store: FeedStore & FeedImageDataStore = {
-             do {
-                 return try CoreDataFeedStore(
-                     storeURL: NSPersistentContainer
-                         .defaultDirectoryURL()
-                         .appendingPathComponent("feed-store.sqlite"))
-             } catch {
-                 assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
-                 return NullStore()
-             }
-         }(),
-         scheduler: AnyDispatchQueueScheduler = DispatchQueue(
-             label: "com.essentialdeveloper.infra.queue",
-             qos: .userInitiated,
-             attributes: .concurrent
-         ).eraseToAnyScheduler(),
-         sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
-        self.httpClient = httpClient
-        self.store = store
-        self.scheduler = scheduler
-        self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
-        super.init()
+  private lazy var httpClient: HTTPClient = {
+    URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+  }()
+
+  private lazy var logger = Logger(
+    subsystem: "com.essentialdeveloper.EssentialAppCaseStudy", category: "main")
+
+  private lazy var store: FeedStore & FeedImageDataStore = {
+    do {
+      return try CoreDataFeedStore(
+        storeURL:
+          NSPersistentContainer
+          .defaultDirectoryURL()
+          .appendingPathComponent("feed-store.sqlite"))
+    } catch {
+      assertionFailure(
+        "Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+      logger.fault("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
+      return NullStore()
     }
+  }()
 
-	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let scene = (scene as? UIWindowScene) else {
-                return
+  private lazy var localFeedLoader: LocalFeedLoader = {
+    LocalFeedLoader(store: store, currentDate: Date.init)
+  }()
+
+  private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
+
+  private lazy var navigationController = UINavigationController(
+    rootViewController: FeedUIComposer.feedComposedWith(
+      feedLoader: makeRemoteFeedLoaderWithLocalFallback,
+      imageLoader: makeLocalImageLoaderWithRemoteFallback,
+      selection: showComments))
+
+  convenience init(
+    httpClient: HTTPClient, store: FeedStore & FeedImageDataStore,
+    scheduler: AnyDispatchQueueScheduler,
+    sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())
+  ) {
+    self.init(sessionManager: sessionManager)
+    self.httpClient = httpClient
+    self.store = store
+    self.scheduler = scheduler
+  }
+
+  init(sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
+    self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
+    super.init()
+  }
+
+  func scene(
+    _ scene: UIScene, willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    guard let scene = (scene as? UIWindowScene) else {
+      return
     }
     window = UIWindow(windowScene: scene)
     configureWindow()
-    }
-	
-    private func isUserAuthenticated() -> Bool {
-        return isUserAuthenticatedClosure()
-    }
+  }
 
-    private func makeRootViewController() -> UIViewController {
-        if isUserAuthenticated() {
-                return navigationController
+  private func isUserAuthenticated() -> Bool {
+    return isUserAuthenticatedClosure()
+  }
+
+  private func makeRootViewController() -> UIViewController {
+    if isUserAuthenticated() {
+      return navigationController
     } else {
-                return AuthComposer.authViewController { [weak self] in
-                        self?.window?.rootViewController = self?.navigationController
-        }
+      return AuthComposer.authViewController { [weak self] in
+        self?.window?.rootViewController = self?.navigationController
+      }
     }
-}
+  }
 
-    func configureWindow() {
-        window?.rootViewController = makeRootViewController()
+  func configureWindow() {
+    window?.rootViewController = makeRootViewController()
     window?.makeKeyAndVisible()
+  }
+
+  func sceneWillResignActive(_ scene: UIScene) {
+    do {
+      try localFeedLoader.validateCache()
+    } catch {
+      logger.error("Failed to validate cache with error: \(error.localizedDescription)")
     }
-	
-	func sceneWillResignActive(_ scene: UIScene) {
-		do {
-			try localFeedLoader.validateCache()
-		} catch {
-			logger.error("Failed to validate cache with error: \(error.localizedDescription)")
-		}
-	}
-	
-	private func showComments(for image: FeedImage) {
-		let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
-		let comments = CommentsUIComposer.commentsComposedWith(commentsLoader: makeRemoteCommentsLoader(url: url))
-		navigationController.pushViewController(comments, animated: true)
-	}
-	
-	private func makeRemoteCommentsLoader(url: URL) -> () -> AnyPublisher<[ImageComment], Error> {
-		return { [httpClient] in
-			return httpClient
-				.getPublisher(url: url)
-				.tryMap(ImageCommentsMapper.map)
-				.eraseToAnyPublisher()
-		}
-	}
-	
-	private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
-		makeRemoteFeedLoader()
-			.caching(to: localFeedLoader)
-			.fallback(to: localFeedLoader.loadPublisher)
-			.map(makeFirstPage)
-			.subscribe(on: scheduler)
-			.eraseToAnyPublisher()
-	}
-	
-	private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<Paginated<FeedImage>, Error> {
-		localFeedLoader.loadPublisher()
-			.zip(makeRemoteFeedLoader(after: last))
-			.map { (cachedItems, newItems) in
-				(cachedItems + newItems, newItems.last)
-			}
-			.map(makePage)
-			.caching(to: localFeedLoader)
-			.subscribe(on: scheduler)
-			.eraseToAnyPublisher()
-	}
-	
-	private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
-		let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
-		
-		return httpClient
-			.getPublisher(url: url)
-			.tryMap(FeedItemsMapper.map)
-			.eraseToAnyPublisher()
-	}
-	
-	private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
-		makePage(items: items, last: items.last)
-	}
-	
-	private func makePage(items: [FeedImage], last: FeedImage?) -> Paginated<FeedImage> {
-		Paginated(items: items, loadMorePublisher: last.map { last in
-			{ self.makeRemoteLoadMoreLoader(last: last) }
-		})
-	}
-	
-	private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
-		let localImageLoader = LocalFeedImageDataLoader(store: store)
-		
-		return localImageLoader
-			.loadImageDataPublisher(from: url)
-			.fallback(to: { [httpClient, scheduler] in
-				httpClient
-					.getPublisher(url: url)
-					.tryMap(FeedImageDataMapper.map)
-					.caching(to: localImageLoader, using: url)
-					.subscribe(on: scheduler)
-					.eraseToAnyPublisher()
-			})
-			.subscribe(on: scheduler)
-			.eraseToAnyPublisher()
-	}
+  }
+
+  private func showComments(for image: FeedImage) {
+    let url = ImageCommentsEndpoint.get(image.id).url(baseURL: baseURL)
+    let comments = CommentsUIComposer.commentsComposedWith(
+      commentsLoader: makeRemoteCommentsLoader(url: url))
+    navigationController.pushViewController(comments, animated: true)
+  }
+
+  private func makeRemoteCommentsLoader(url: URL) -> () -> AnyPublisher<[ImageComment], Error> {
+    return { [httpClient] in
+      return
+        httpClient
+        .getPublisher(url: url)
+        .tryMap(ImageCommentsMapper.map)
+        .eraseToAnyPublisher()
+    }
+  }
+
+  private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error>
+  {
+    makeRemoteFeedLoader()
+      .caching(to: localFeedLoader)
+      .fallback(to: localFeedLoader.loadPublisher)
+      .map(makeFirstPage)
+      .subscribe(on: scheduler)
+      .eraseToAnyPublisher()
+  }
+
+  private func makeRemoteLoadMoreLoader(last: FeedImage?) -> AnyPublisher<
+    Paginated<FeedImage>, Error
+  > {
+    localFeedLoader.loadPublisher()
+      .zip(makeRemoteFeedLoader(after: last))
+      .map { (cachedItems, newItems) in
+        (cachedItems + newItems, newItems.last)
+      }
+      .map(makePage)
+      .caching(to: localFeedLoader)
+      .subscribe(on: scheduler)
+      .eraseToAnyPublisher()
+  }
+
+  private func makeRemoteFeedLoader(after: FeedImage? = nil) -> AnyPublisher<[FeedImage], Error> {
+    let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
+
+    return
+      httpClient
+      .getPublisher(url: url)
+      .tryMap(FeedItemsMapper.map)
+      .eraseToAnyPublisher()
+  }
+
+  private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
+    makePage(items: items, last: items.last)
+  }
+
+  private func makePage(items: [FeedImage], last: FeedImage?) -> Paginated<FeedImage> {
+    Paginated(
+      items: items,
+      loadMorePublisher: last.map { last in
+        { self.makeRemoteLoadMoreLoader(last: last) }
+      })
+  }
+
+  private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+    let localImageLoader = LocalFeedImageDataLoader(store: store)
+
+    return
+      localImageLoader
+      .loadImageDataPublisher(from: url)
+      .fallback(to: { [httpClient, scheduler] in
+        httpClient
+          .getPublisher(url: url)
+          .tryMap(FeedImageDataMapper.map)
+          .caching(to: localImageLoader, using: url)
+          .subscribe(on: scheduler)
+          .eraseToAnyPublisher()
+      })
+      .subscribe(on: scheduler)
+      .eraseToAnyPublisher()
+  }
 }

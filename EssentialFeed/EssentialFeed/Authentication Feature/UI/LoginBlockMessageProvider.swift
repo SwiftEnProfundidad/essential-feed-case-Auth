@@ -17,15 +17,15 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
     public func message(for error: LoginError) -> String {
         switch error {
         case .invalidCredentials:
-            return "Invalid username or password."
+            return "Invalid credentials."
         case .invalidEmailFormat:
             return "Email format is invalid."
         case .invalidPasswordFormat:
-            return "Password format is invalid."
+            return "Invalid credentials."
         case .network:
-            return "Network error. Please try again."
+            return "Could not connect. Please try again."
         case .unknown:
-            return "An unknown error occurred."
+            return "Something went wrong. Please try again."
         }
     }
     public func message(for validation: LoginValidationError) -> String {
@@ -37,4 +37,3 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
         }
     }
 }
-

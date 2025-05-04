@@ -39,7 +39,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withInvalidCredentials_showsAuthenticationError() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -71,7 +71,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_editingUsernameOrPassword_clearsErrorMessage() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
@@ -125,7 +125,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_usernameAndPassword_arePublishedAndObservable() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		let expectedUsername = "test@email.com"
 		let expectedPassword = "testpass123"
 		viewModel.username = expectedUsername
@@ -151,7 +151,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_initialState_isClean() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil on initial state")
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false on initial state")
 		XCTAssertEqual(viewModel.username, "", "Expected username to be empty on initial state")
@@ -159,7 +159,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withEmptyFields_showsValidationError() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = ""
 		viewModel.password = ""
 		await viewModel.login()
@@ -253,7 +253,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withInvalidPasswordFormat_showsValidationError() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "short" // Menos de 8 caracteres
 		await viewModel.login()
@@ -262,7 +262,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withWhitespacePassword_showsValidationError() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
 		viewModel.password = "    "
 		await viewModel.login()
@@ -288,7 +288,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_withWhitespaceUsername_showsValidationError() async {
-		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider(),)
+		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "    "
 		viewModel.password = "password"
 		await viewModel.login()
