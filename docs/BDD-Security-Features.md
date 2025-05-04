@@ -368,7 +368,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - [✅] Notificar error de conectividad
     - [✅] Notificar error de conectividad
 
-- [✅] Aplicar retardo/bloqueo tras múltiples intentos fallidos
+- [⏳] Aplicar retardo/bloqueo tras múltiples intentos fallidos
     #### Subtareas
     - [✅] Definir el umbral de intentos fallidos antes de aplicar retardo/bloqueo
     - [✅] Persistir el contador de intentos fallidos (en memoria o persistente)
@@ -377,9 +377,41 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Permitir sugerencia de recuperación de contraseña tras varios fallos
     - [✅] Restablecer el contador tras login exitoso o tras el tiempo de espera
     - [✅] Tests unitarios del ViewModel para intentos fallidos, retardo y desbloqueo
+
     - [⏳] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
+        #### Subtareas
+        1. Flujo Básico de Bloqueo
+        [✅] Intentos 1-4: No bloquean la cuenta
+        [✅] Intento 5: Bloquea la cuenta
+        [✅] Mensaje de error específico al bloquear
+
+        2. Flujo de Desbloqueo
+        [✅] Desbloqueo automático tras 5 minutos
+        [⏳] Desbloqueo manual con unlockAfterRecovery()
+        [✅] Reset de contador tras desbloqueo
+
+        3. Casos Límite
+        [⏳] Login exitoso tras 4 intentos fallidos
+        [⏳] Nuevo intento fallido tras desbloqueo
+        [⏳] Múltiples ciclos bloqueo/desbloqueo
+
+        4. Verificación de Estados
+        [✅] isLoginBlocked se actualiza correctamente
+        [✅] errorMessage refleja cada estado
+        [✅] Contador de intentos se resetea apropiadamente
+
+        5. Integración con Dependencias
+        [✅] FailedLoginAttemptsStore recibe llamadas correctas
+        [✅] timeProvider afecta el desbloqueo automático
+        [⏳] blockMessageProvider muestra mensajes adecuados
+
+        6. Seguridad Adicional
+        [⏳] Thread safety en operaciones async
+        [⏳] No memory leaks
+        [⏳] Estado consistente tras errores
+
     - [✅] Cobertura en CI para todos los escenarios
-s
+
 ---
 
 ### Cursos técnicos (happy/sad path)
@@ -458,7 +490,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 **Sad path:**
 - El refresh token es inválido o ha expirado: el sistema notifica al usuario y redirige a login
 - Falla de red: el sistema notifica al usuario y permite reintentar
-- Error inesperado: el sistema registra el evento para métricas y notifica al usuario
+- Error inesperado: el sistema registra el evento para métricas
 
 ---
 
@@ -615,7 +647,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - El usuario cierra una sesión remota y la lista se actualiza correctamente
 - El usuario cierra todas las sesiones excepto la actual y recibe confirmación
 
-**Sad path:**
+**Sad path 1:**
 - Error al cerrar sesión: el sistema notifica el fallo y permite reintentar
 - Acceso sospechoso: el sistema notifica al usuario y ofrece acciones de seguridad
 - Falla de red: el sistema muestra mensaje de error y permite reintentar
@@ -1004,6 +1036,7 @@ flowchart TD
     H -- Yes --> I[Apply automatic measure]
     H -- No --> J[Continue monitoring]
     F -- No --> J
+    C -- Unexpected error --> K[Log event for metrics]
 ```
 
 ---
@@ -1039,3 +1072,5 @@ flowchart TD
 | Visualización y consulta de métricas         | No            |    ❌     |
 
 ---
+
+```
