@@ -11,7 +11,7 @@ public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
     private var lastAttemptTimes: [String: Date] = [:]
     
     public func getAttempts(for username: String) -> Int {
-        let a = attempts[username, default: 0]
+			_ = attempts[username, default: 0]
         getAttemptsCallCount += 1
         capturedUsernames.append(username)
         return attempts[username, default: 0]
@@ -33,7 +33,7 @@ public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
     }
     
     public var incrementAttemptsSinceLastReset: Int {
-        let v = incrementAttemptsCallCount - lastResetCount
+			_ = incrementAttemptsCallCount - lastResetCount
         return incrementAttemptsCallCount - lastResetCount
     }
     public func lastAttemptTime(for username: String) -> Date? {

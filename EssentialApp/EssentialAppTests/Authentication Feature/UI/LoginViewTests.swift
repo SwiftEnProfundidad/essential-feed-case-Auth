@@ -494,6 +494,31 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Counter should be 0 after success")
 	}
 	
+	func test_failedAttemptAfterUnlock_resetsCounterAgain() async {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 3
+		)
+		
+		// Bloqueo inicial (3 intentos fallidos)
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-pass"
+		for _ in 1...3 { await viewModel.login() }
+		XCTAssertTrue(viewModel.isLoginBlocked, "Account should lock after 3 failed attempts")
+		
+		// Desbloqueo manual
+		viewModel.unlockAfterRecovery()
+		XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after recovery")
+		
+		// Nuevo intento fallido post-desbloqueo
+		await viewModel.login()
+		
+		// Verificaciones
+		XCTAssertEqual(spyStore.attempts["user@test.com"], 1, "Counter should restart at 1 after unlock")
+		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 4, "Should increment attempts for new failures")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(

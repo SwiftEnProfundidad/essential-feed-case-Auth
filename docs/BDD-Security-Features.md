@@ -391,8 +391,8 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
         [✅] Reset de contador tras desbloqueo
 
         3. Casos Límite
-        [⏳] Login exitoso tras 4 intentos fallidos
-        [⏳] Nuevo intento fallido tras desbloqueo
+        [✅] Login exitoso tras 4 intentos fallidos
+        [✅] Nuevo intento fallido tras desbloqueo
         [⏳] Múltiples ciclos bloqueo/desbloqueo
 
         4. Verificación de Estados
