@@ -19,9 +19,7 @@ class LoginLockingIntegrationTests: XCTestCase {
 		
 		// Act & Assert - Fase 1: Bloqueo
 		for attempt in 1...5 {
-			print("⏩ [Test] Intento fallido \(attempt) antes de bloqueo")
 			await attemptLogin(with: sut, username: testUsername)
-			print("⏩ [Test] Tras intento \(attempt): isLoginBlocked=\(sut.isLoginBlocked), errorMessage=\(String(describing: sut.errorMessage)), incrementAttemptsCallCount=\(store.incrementAttemptsCallCount)")
 			XCTAssertNotNil(sut.errorMessage, "Should show error on attempt \(attempt)")
 		}
 		
@@ -30,9 +28,7 @@ class LoginLockingIntegrationTests: XCTestCase {
 		XCTAssertEqual(store.capturedUsernames.last, testUsername, "Should capture correct user")
 		
 		// Act & Assert - Fase 2: Desbloqueo por timeout
-		print("⏩ [Test] Avanzando tiempo para desbloqueo...")
 		timeSubject.send(timeSubject.value.addingTimeInterval(5 * 60 + 1))
-		print("⏩ [Test] Tras avanzar tiempo: isLoginBlocked=\(sut.isLoginBlocked), errorMessage=\(String(describing: sut.errorMessage)), incrementAttemptsCallCount=\(store.incrementAttemptsCallCount)")
 		
 		// Forzar la comprobación de desbloqueo tras el timeout
 		timeSubject.send(timeSubject.value.addingTimeInterval(5 * 60 + 1))

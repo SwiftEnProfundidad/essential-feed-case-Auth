@@ -57,9 +57,7 @@ public final class LoginViewModel: ObservableObject {
 	
 	@MainActor
 	public func login() async {
-		print("➡️ [LoginViewModel] login() called for username: \(username)")
 		checkAccountUnlock(for: username)
-		print("  [LoginViewModel] After checkAccountUnlock: isLoginBlocked=\(isLoginBlocked), errorMessage=\(String(describing: errorMessage))")
 		guard !isAccountLocked(for: username) else {
 			isLoginBlocked = true
 			errorMessage = blockMessageProvider.messageForMaxAttemptsReached()
@@ -164,13 +162,10 @@ public final class LoginViewModel: ObservableObject {
 	
 	private func checkAccountUnlock(for username: String) {
 		let attempts = failedAttemptsStore.getAttempts(for: username)
-		print("  [LoginViewModel] checkAccountUnlock: attempts=\(attempts), maxFailedAttempts=\(maxFailedAttempts)")
 		guard attempts >= maxFailedAttempts else { return }
 		guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return }
 		let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-		print("  [LoginViewModel] checkAccountUnlock: elapsed since lastAttempt=\(elapsed)")
 		if elapsed >= 5 * 60 {
-			print("  [LoginViewModel] Account unlocked and attempts reset for \(username)")
 			failedAttemptsStore.resetAttempts(for: username)
 			isLoginBlocked = false
 			errorMessage = nil
