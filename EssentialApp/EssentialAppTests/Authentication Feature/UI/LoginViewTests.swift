@@ -345,7 +345,7 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_login_blocksAfterMaxFailedAttempts() async {
-		let spyStore = SpyFailedLoginAttemptsStore()
+		let spyStore = FailedLoginAttemptsStoreSpy()
 		let maxAttempts = 3
 		let viewModel = makeSUT(failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@test.com"
@@ -360,7 +360,7 @@ final class LoginViewTests: XCTestCase {
 	}
 
 	func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
-		let spyStore = SpyFailedLoginAttemptsStore()
+		let spyStore = FailedLoginAttemptsStoreSpy()
 		var shouldDelay = false
 		let maxAttempts = 3
 		let viewModel = makeSUT(authenticate: { _, _ in
@@ -397,10 +397,13 @@ final class LoginViewTests: XCTestCase {
 	}
 
 	func test_fullLockFlow_withPasswordRecovery() async {
-		let spyStore = SpyFailedLoginAttemptsStore()
+		let spyStore = FailedLoginAttemptsStoreSpy()
 		let navigationSpy = NavigationSpy()
 		let maxAttempts = 3
-		let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidCredentials) }, failedAttemptsStore: spyStore, maxFailedAttempts: maxAttempts, blockMessageProvider: DefaultLoginBlockMessageProvider()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: maxAttempts,
+			blockMessageProvider: DefaultLoginBlockMessageProvider()
 		)
 		viewModel.navigation = navigationSpy
 		viewModel.username = "user@test.com"
@@ -416,8 +419,8 @@ final class LoginViewTests: XCTestCase {
 	}
 
 	func test_login_resetsAttemptsOnSuccess() async {
-		let spyStore = SpyFailedLoginAttemptsStore()
-		let viewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse.init(token: "token")) }, failedAttemptsStore: spyStore, blockMessageProvider: DefaultLoginBlockMessageProvider() // luego failedAttemptsStore
+		let spyStore = FailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(failedAttemptsStore: spyStore, blockMessageProvider: DefaultLoginBlockMessageProvider() // luego failedAttemptsStore
 		)
 		
 		viewModel.username = "user@test.com"
@@ -433,7 +436,7 @@ final class LoginViewTests: XCTestCase {
 	
 	private func makeSUT(
 		authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
-		failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
+		failedAttemptsStore: FailedLoginAttemptsStore = FailedLoginAttemptsStoreSpy(),
 		maxFailedAttempts: Int = 5,
 		blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
 		file: StaticString = #file,
@@ -449,32 +452,6 @@ final class LoginViewTests: XCTestCase {
 		)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return sut
-	}
-	
-	private class SpyFailedLoginAttemptsStore: FailedLoginAttemptsStore {
-		private(set) var getAttemptsCallCount = 0
-		private(set) var incrementAttemptsCallCount = 0
-		private(set) var resetAttemptsCallCount = 0
-		private(set) var capturedUsernames = [String]()
-		private var attempts: [String: Int] = [:]
-		
-		func getAttempts(for username: String) -> Int {
-			getAttemptsCallCount += 1
-			capturedUsernames.append(username)
-			return attempts[username, default: 0]
-		}
-		
-		func incrementAttempts(for username: String) {
-			incrementAttemptsCallCount += 1
-			capturedUsernames.append(username)
-			attempts[username, default: 0] += 1
-		}
-		
-		func resetAttempts(for username: String) {
-			resetAttemptsCallCount += 1
-			capturedUsernames.append(username)
-			attempts[username] = 0
-		}
 	}
 	
 	private class NavigationSpy: LoginNavigation {

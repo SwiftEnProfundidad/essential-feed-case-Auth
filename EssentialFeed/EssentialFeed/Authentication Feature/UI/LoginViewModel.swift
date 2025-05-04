@@ -30,6 +30,7 @@ public final class LoginViewModel: ObservableObject {
   private let failedAttemptsStore: FailedLoginAttemptsStore
   private let maxFailedAttempts: Int
   private let blockMessageProvider: LoginBlockMessageProvider
+  private let timeProvider: () -> Date
   public weak var navigation: LoginNavigation?
 
   public init(
@@ -37,13 +38,15 @@ public final class LoginViewModel: ObservableObject {
     pendingRequestStore: AnyLoginRequestStore? = nil,
     failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
     maxFailedAttempts: Int = 5,
-    blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider()
+    blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
+    timeProvider: @escaping () -> Date = { Date() }
   ) {
     self.authenticate = authenticate
     self.pendingRequestStore = pendingRequestStore
     self.failedAttemptsStore = failedAttemptsStore
     self.maxFailedAttempts = maxFailedAttempts
     self.blockMessageProvider = blockMessageProvider
+    self.timeProvider = timeProvider
     recoveryRequested
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
@@ -54,18 +57,26 @@ public final class LoginViewModel: ObservableObject {
 
   @MainActor
   public func login() async {
+    print("➡️ [LoginViewModel] login() called for username: \(username)")
+    checkAccountUnlock(for: username)
+    print("  [LoginViewModel] After checkAccountUnlock: isLoginBlocked=\(isLoginBlocked), errorMessage=\(String(describing: errorMessage))")
+    guard !isAccountLocked(for: username) else {
+        isLoginBlocked = true
+        errorMessage = blockMessageProvider.messageForMaxAttemptsReached()
+        return
+    }
+    
     delayTask?.cancel()
 
     let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
     let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
 
-    // Validaciones
-    guard !trimmedUsername.isEmpty else {
+    if trimmedUsername.isEmpty {
       errorMessage = blockMessageProvider.message(for: .emptyEmail)
       return
     }
 
-    guard !trimmedPassword.isEmpty else {
+    if trimmedPassword.isEmpty {
       errorMessage = blockMessageProvider.message(for: .emptyPassword)
       return
     }
@@ -73,31 +84,17 @@ public final class LoginViewModel: ObservableObject {
     let result = await authenticate(trimmedUsername, trimmedPassword)
 
     switch result {
-    case .success:
-      failedAttemptsStore.resetAttempts(for: trimmedUsername)
-      errorMessage = nil
-      loginSuccess = true
-      isLoginBlocked = false  // desbloquea en login exitoso
-      authenticated.send(())
-    case .failure(let error):
-      failedAttemptsStore.incrementAttempts(for: trimmedUsername)
-      let afterAttempts = failedAttemptsStore.getAttempts(for: trimmedUsername)
-      if afterAttempts >= maxFailedAttempts {
-        await MainActor.run {
-          isLoginBlocked = true
-          errorMessage = blockMessageProvider.message(
-            forAttempts: afterAttempts, maxAttempts: maxFailedAttempts)
-        }
-        let delay = max(0.5, Double(afterAttempts - maxFailedAttempts + 1) * 0.5)
-        do {
-          try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-        } catch {
-          errorMessage = blockMessageProvider.message(for: .unknown)
-        }
-      } else {
-        errorMessage = blockMessageProvider.message(for: error)
+			case .success(_):
+      await MainActor.run {
+        loginSuccess = true
+        authenticated.send(())
+        errorMessage = nil
+        isLoginBlocked = false
+        failedAttemptsStore.resetAttempts(for: trimmedUsername)
       }
-      loginSuccess = false
+      onAuthenticated?()
+    case .failure(let error):
+      await handleFailedLogin(username: trimmedUsername)
       if case .network = error {
         let request = LoginRequest(username: trimmedUsername, password: trimmedPassword)
         pendingRequestStore?.save(request)
@@ -119,18 +116,49 @@ public final class LoginViewModel: ObservableObject {
 
   private func isAccountLocked(for username: String) -> Bool {
     let attempts = failedAttemptsStore.getAttempts(for: username)
-    return attempts >= maxFailedAttempts
+    guard attempts >= maxFailedAttempts else { return false }
+    guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return false }
+    let elapsed = timeProvider().timeIntervalSince(lastAttempt)
+    return elapsed < 5 * 60 // bloqueado si no ha pasado el timeout
   }
 
   private func handleFailedLogin(username: String) async {
     failedAttemptsStore.incrementAttempts(for: username)
     let attempts = failedAttemptsStore.getAttempts(for: username)
-
+    
+    await MainActor.run { [weak self] in
+        guard let self = self else { return }
+        
+        // Mostrar error en todos los intentos fallidos
+        if attempts < self.maxFailedAttempts {
+            self.errorMessage = "Invalid credentials"
+        } else {
+            self.errorMessage = self.blockMessageProvider.messageForMaxAttemptsReached()
+            self.isLoginBlocked = true
+        }
+    }
+    
+    // Aplicar delay de seguridad
     if attempts >= maxFailedAttempts {
-      let delay = calculateDelay(attempts: attempts)
-      try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+        let delay = calculateDelay(attempts: attempts)
+        try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
     }
   }
+
+  private func checkAccountUnlock(for username: String) {
+    let attempts = failedAttemptsStore.getAttempts(for: username)
+    print("  [LoginViewModel] checkAccountUnlock: attempts=\(attempts), maxFailedAttempts=\(maxFailedAttempts)")
+    guard attempts >= maxFailedAttempts else { return }
+    guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return }
+    let elapsed = timeProvider().timeIntervalSince(lastAttempt)
+    print("  [LoginViewModel] checkAccountUnlock: elapsed since lastAttempt=\(elapsed)")
+    if elapsed >= 5 * 60 {
+        print("  [LoginViewModel] Account unlocked and attempts reset for \(username)")
+        failedAttemptsStore.resetAttempts(for: username)
+        isLoginBlocked = false
+        errorMessage = nil
+    }
+}
 
   public var onAuthenticated: (() -> Void)?
 
