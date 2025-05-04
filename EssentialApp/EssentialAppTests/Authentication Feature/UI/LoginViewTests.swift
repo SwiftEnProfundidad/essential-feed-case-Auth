@@ -575,6 +575,16 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 100, "Should handle all concurrent attempts")
 	}
 	
+	func test_loginViewModel_doesNotLeakMemory() {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		var sut: LoginViewModel? = makeSUT(failedAttemptsStore: spyStore)
+		
+		weak var weakSUT = sut
+		sut = nil
+		
+		XCTAssertNil(weakSUT, "ViewModel should be deallocated")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(

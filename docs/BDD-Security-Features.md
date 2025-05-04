@@ -407,7 +407,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
         6. Seguridad Adicional
         [✅] Thread safety en operaciones async
-        [⏳] No memory leaks
+        [✅] No memory leaks
         [⏳] Estado consistente tras errores
 
     - [✅] Cobertura en CI para todos los escenarios
