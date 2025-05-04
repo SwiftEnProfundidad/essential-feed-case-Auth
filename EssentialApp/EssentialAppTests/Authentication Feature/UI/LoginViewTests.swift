@@ -556,6 +556,25 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(invalidCredentialsMessage, "Invalid credentials.")
 	}
 	
+	func test_concurrentIncrementAttempts_threadSafety() async {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(
+			authenticate: { _, _ in .failure(.invalidCredentials) }, failedAttemptsStore: spyStore,
+			maxFailedAttempts: 100 // Fuerza fallos
+		)
+		
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-pass"
+		
+		await withTaskGroup(of: Void.self) { group in
+			for _ in 1...100 {
+				group.addTask { await viewModel.login() }
+			}
+		}
+		
+		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 100, "Should handle all concurrent attempts")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(

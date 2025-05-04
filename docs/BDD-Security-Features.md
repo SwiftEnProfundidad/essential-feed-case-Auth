@@ -406,7 +406,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
         [✅] blockMessageProvider muestra mensajes adecuados
 
         6. Seguridad Adicional
-        [⏳] Thread safety en operaciones async
+        [✅] Thread safety en operaciones async
         [⏳] No memory leaks
         [⏳] Estado consistente tras errores
 
