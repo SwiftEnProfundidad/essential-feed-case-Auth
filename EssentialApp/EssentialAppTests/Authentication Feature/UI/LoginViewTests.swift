@@ -519,6 +519,31 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 4, "Should increment attempts for new failures")
 	}
 	
+	func test_multipleLockUnlockCycles_handlesCountersCorrectly() async {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 3
+		)
+		
+		// Primer ciclo: Bloqueo + Desbloqueo
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-pass"
+		for _ in 1...3 { await viewModel.login() } // Bloquea
+		XCTAssertTrue(viewModel.isLoginBlocked)
+		viewModel.unlockAfterRecovery() // Desbloquea
+		
+		// Segundo ciclo: Bloqueo + Desbloqueo
+		for _ in 1...3 { await viewModel.login() } // Bloquea de nuevo
+		XCTAssertTrue(viewModel.isLoginBlocked)
+		viewModel.unlockAfterRecovery()
+		
+		// Verificaciones
+		XCTAssertEqual(spyStore.resetAttemptsCallCount, 2, "Should reset attempts twice")
+		XCTAssertEqual(spyStore.incrementAttemptsCallCount, 6, "Should increment attempts for all failures")
+		XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Final counter should be zero")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(
