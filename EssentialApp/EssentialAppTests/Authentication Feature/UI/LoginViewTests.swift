@@ -471,6 +471,29 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "resetAttempts should be called exactly once")
 	}
 	
+	func test_successfulLoginAfter4FailedAttempts_resetsCounter() async {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 5
+		)
+		
+		// 4 failed attempts
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-pass"
+		for _ in 1...4 { await viewModel.login() }
+		XCTAssertEqual(spyStore.attempts["user@test.com"], 4, "Should record 4 failed attempts")
+		
+		// Successful 5th attempt
+		viewModel.password = "correct-pass"
+		viewModel.authenticate = { _, _ in .success(LoginResponse(token: "valid-token")) }
+		await viewModel.login()
+		
+		// Verifications
+		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "Should reset counter after success")
+		XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Counter should be 0 after success")
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(

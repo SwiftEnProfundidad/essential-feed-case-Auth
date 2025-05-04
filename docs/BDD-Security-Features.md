@@ -387,7 +387,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 
         2. Flujo de Desbloqueo
         [✅] Desbloqueo automático tras 5 minutos
-        [⏳] Desbloqueo manual con unlockAfterRecovery()
+        [✅] Desbloqueo manual con unlockAfterRecovery()
         [✅] Reset de contador tras desbloqueo
 
         3. Casos Límite
