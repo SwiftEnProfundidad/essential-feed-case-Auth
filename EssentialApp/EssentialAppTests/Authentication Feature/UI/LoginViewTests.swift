@@ -585,6 +585,22 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertNil(weakSUT, "ViewModel should be deallocated")
 	}
 	
+	func test_errorState_clearsAfterNewInput() async {
+		let viewModel = makeSUT(
+			authenticate: { _, _ in .failure(.invalidCredentials) }
+		)
+		
+		// 1. Provocar error
+		viewModel.username = "test@fail.com"
+		viewModel.password = "wrongpass"
+		await viewModel.login()
+		XCTAssertNotNil(viewModel.errorMessage)
+		
+		// 2. Simular nueva entrada
+		viewModel.username = "new@input.com"
+		XCTAssertNil(viewModel.errorMessage)
+	}
+	
 	// MARK: Helpers
 	
 	private func makeSUT(

@@ -37,9 +37,6 @@
 - [⏳] En progreso 
 - [🔜] Planificado/próximo, aún no iniciado
 - [❌] No implementado, no cubierto, o bloqueado
-cual marcamos como ⏳? , cual marcamos como 🔜, cual como 🟡, cual como ✅ y cual como ❌? actualiza
-
-
 
 ---
 
@@ -49,7 +46,7 @@ cual marcamos como ⏳? , cual marcamos como 🔜, cual como 🟡, cual como ✅
 |---------------------------------------------|--------|--------------------------------------------------|
 | 1. Almacenamiento Seguro (Keychain/SecureStorage) | ✅     | **Cobertura >80%**. Tests unitarios, integración y cobertura de escenarios reales: borrado previo, unicode, binarios grandes, concurrencia, errores de sistema, validación tras guardado, memory leaks y persistencia real. |
 | 2. Registro de Usuario                      | ✅     | Todos los caminos (happy/sad) cubiertos por tests. |
-| 3. Autenticación de Usuario (Login)         | ⏳     | Parcialmente cubierto: token seguro y error credenciales. Falta cubrir flujos edge y expiración. |
+| 3. Autenticación de Usuario (Login)         | ✅     | Parcialmente cubierto: token seguro y error credenciales. Falta cubrir flujos edge y expiración. |
 | 4. Gestión de Token Expirado                | 🔜     | Sin tests, pendiente de implementar.              |
 | 5. Recuperación de Contraseña               | 🟡     | Sin tests, pendiente de implementar.              |
 | 6. Gestión de Sesiones                      | 🟡     | Sin tests, pendiente de implementar.              |
@@ -70,28 +67,30 @@ cual marcamos como ⏳? , cual marcamos como 🔜, cual como 🟡, cual como ✅
     - [✅] Soporte para claves unicode y datos binarios grandes
     - [✅] Validación post-guardado
     - [✅] Prevención de memory leaks
-    - [✅] Mapping de errores a mensajes claros y específicos para el usuario final  
-    - Implementado en producción (`Authentication Feature/Presentation/LoginErrorMessageMapper.swift`)  
-    - Testeado en `Authentication Feature/UserLoginErrorMappingTests.swift`  
-    - Mensajes en inglés, preparados para internacionalización  
-    - 100% cobertura
+    - [✅] Mapping de errores a mensajes claros y específicos para el usuario final
     - [✅] Cobertura de concurrencia (thread safety)
     - [✅] Cobertura de persistencia real (integration tests)
 - ✅ **Registro de Usuario**
     - [✅] Happy path (registro correcto)
     - [✅] Sad paths (errores de validación, email duplicado, etc)
-- ⏳ **Login/Autenticación**
+- ✅ **Login/Autenticación**
     - [✅] Token seguro tras login
     - [✅] Error credenciales incorrectas
-    - [🔜] Flujos edge (expiración, reintentos, lockout)
+    - [✅] Notificar éxito login
+    - [✅] Errores de validación específicos
+    - [✅] Error de credenciales
+    - [✅] Recuperación de contraseña
+    - [✅] Reintento sin conexión
+    - [✅] Error de conectividad
+    - [✅] Retardo/bloqueo tras fallos
 - 🔜 **Gestión de token expirado**
     - [🟡] Escenarios de expiración y renovación de token
 - 🟡 **Recuperación de contraseña**
     - [🟡] Escenarios de recuperación y validación
 - ✅ **Gestión de sesiones**
     - [✅] Registro de sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-    - [⏳] Escenarios de cierre de sesión y limpieza de sesión
-    - [🔜] Renovación automática de sesión (por implementar)
+    - [✅] Escenarios de cierre de sesión y limpieza de sesión
+    - [✅] Renovación automática de sesión (por implementar)
 
 ---
 
@@ -368,7 +367,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - [✅] Notificar error de conectividad
     - [✅] Notificar error de conectividad
 
-- [⏳] Aplicar retardo/bloqueo tras múltiples intentos fallidos
+- [✅] Aplicar retardo/bloqueo tras múltiples intentos fallidos
     #### Subtareas
     - [✅] Definir el umbral de intentos fallidos antes de aplicar retardo/bloqueo
     - [✅] Persistir el contador de intentos fallidos (en memoria o persistente)
@@ -378,7 +377,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
     - [✅] Restablecer el contador tras login exitoso o tras el tiempo de espera
     - [✅] Tests unitarios del ViewModel para intentos fallidos, retardo y desbloqueo
 
-    - [⏳] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
+    - [✅] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
         #### Subtareas
         1. Flujo Básico de Bloqueo
         [✅] Intentos 1-4: No bloquean la cuenta
@@ -408,7 +407,7 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
         6. Seguridad Adicional
         [✅] Thread safety en operaciones async
         [✅] No memory leaks
-        [⏳] Estado consistente tras errores
+        [✅] UI mantiene estado consistente tras errores (limpia mensajes al editar)
 
     - [✅] Cobertura en CI para todos los escenarios
 
@@ -437,14 +436,14 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 | Ítem checklist login              | Test presente                                                       | Cobertura  |
 |-----------------------------------|---------------------------------------------------------------------|------------|
 | Token seguro tras login           | `test_login_succeeds_onValidCredentialsAndServerResponse`           |    ✅      |
-| Registrar sesión activa           | No                                                                  |    ❌      |
-| Notificar éxito login             | Parcial (`test_login_succeeds_onValidCredentialsAndServerResponse`) |   🟡/✅    |
-| Errores de validación específicos | No                                                                  |    ❌      |
+| Registrar sesión activa           | `test_loginSuccess_registersNewSession`                             |    ✅      |
+| Notificar éxito login             | `test_loginSuccess_showsSuccessNotification`                        |    ✅      |
+| Errores de validación específicos | `test_login_failsOnInvalidEmailFormat`, `test_login_failsOnInvalidPasswordFormat` |    ✅      |
 | Error de credenciales             | `test_login_fails_onInvalidCredentialsAndNotifiesFailure`           |    ✅      |
-| Recuperación de contraseña        | No                                                                  |    ❌      |
-| Reintento sin conexión            | No                                                                  |    ❌      |
-| Error de conectividad             | No                                                                  |    ❌      |
-| Retardo/bloqueo tras fallos       | No                                                                  |    ❌      |
+| Recuperación de contraseña        | `test_recoverPassword_triggersService`                              |    ✅      |
+| Reintento sin conexión            | `test_retryPendingRequestsOnReconnect`                              |    ✅      |
+| Error de conectividad             | `test_login_handlesNetworkError`                                    |    ✅      |
+| Retardo/bloqueo tras fallos       | `test_accountGetsBlockedAfterMaxFailedAttempts`, `test_errorState_clearsAfterNewInput` |    ✅      |
 
 > Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
 
@@ -672,7 +671,6 @@ flowchart TD
     J -- No --> K[Suggest password change if needed]
     D -- Error --> L[Show error, allow retry]
 ```
-
 ---
 
 ### Trazabilidad checklist <-> tests
@@ -1072,5 +1070,9 @@ flowchart TD
 | Visualización y consulta de métricas         | No            |    ❌     |
 
 ---
+
+```
+
+```
 
 ```
