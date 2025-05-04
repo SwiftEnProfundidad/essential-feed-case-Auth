@@ -77,19 +77,19 @@ final class LoginViewTests: XCTestCase {
 		await viewModel.login()
 		XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
 		
-		// Simula que el usuario corrige el email
+		// Simulate user correcting email
 		viewModel.username = "new@email.com"
 		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing username, but got: \(viewModel.errorMessage ?? "nil")")
 		
-		// Vuelve a poner el error
+		// Put error back
 		viewModel.username = "user@email.com"
 		viewModel.password = "wrongpass"
 		await viewModel.login()
 		XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
 		
-		// Simula que el usuario corrige la contraseña
+		// Simulate user correcting password
 		viewModel.password = "newpassword"
-		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing password, but got: \(viewModel.errorMessage ?? "nil")")
+		XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing password")
 	}
 	
 	func test_loginSuccessFlag_isTrueAfterSuccessAndFalseAfterFailure() async {
@@ -99,7 +99,7 @@ final class LoginViewTests: XCTestCase {
 		await viewModel.login()
 		XCTAssertTrue(viewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
 		
-		// Ahora simula un login fallido
+		// Now simulate failed login
 		let failingVM = makeSUT()
 		failingVM.username = "user@email.com"
 		failingVM.password = "wrongpass"
@@ -108,14 +108,14 @@ final class LoginViewTests: XCTestCase {
 	}
 	
 	func test_successfulLogin_clearsPreviousErrorMessage() async {
-		// Primer intento: error
+		// First attempt: error
 		let failingViewModel = makeSUT()
 		failingViewModel.username = "user@email.com"
 		failingViewModel.password = "wrongpass"
 		await failingViewModel.login()
 		XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
 		
-		// Segundo intento: éxito, usando un nuevo ViewModel
+		// Second attempt: success, using new ViewModel
 		let successViewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
 		successViewModel.username = "user@email.com"
 		successViewModel.password = "password"
@@ -242,7 +242,7 @@ final class LoginViewTests: XCTestCase {
 		viewModel.username = "user@email.com"
 		viewModel.password = "first"
 		let firstLogin = Task { await viewModel.login() }
-		// Lanza el segundo login casi inmediato
+		// Launch second login almost immediately
 		viewModel.password = "second"
 		let secondLogin = Task { await viewModel.login() }
 		await fulfillment(of: [exp], timeout: 1.0)
@@ -255,7 +255,7 @@ final class LoginViewTests: XCTestCase {
 	func test_login_withInvalidPasswordFormat_showsValidationError() async {
 		let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
 		viewModel.username = "user@email.com"
-		viewModel.password = "short" // Menos de 8 caracteres
+		viewModel.password = "short" // Less than 8 characters
 		await viewModel.login()
 		XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
 		XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
@@ -279,7 +279,7 @@ final class LoginViewTests: XCTestCase {
 		// Edit username
 		viewModel.username = "user2@email.com"
 		XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing username")
-		// Simula de nuevo el error
+		// Simulate error again
 		viewModel.username = "user@email.com"
 		await viewModel.login()
 		// Edit password
@@ -323,22 +323,22 @@ final class LoginViewTests: XCTestCase {
 		viewModel.username = "user@email.com"
 		viewModel.password = "password"
 		
-		// Act: Simula login con error de red
+		// Act: Simulate login with network error
 		await viewModel.login()
 		
-		// Assert: La solicitud debe estar almacenada
+		// Assert: Request should be stored
 		XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
 		
-		// Simula que la siguiente autenticación tiene éxito
+		// Simulate next authentication is successful
 		viewModel.authenticate = { (username: String, password: String) -> Result<LoginResponse, LoginError> in
 			authenticateCalls.append((username, password))
 			return .success(LoginResponse(token: "token"))
 		}
 		
-		// Act: Reintenta las solicitudes almacenadas
+		// Act: Retry stored requests
 		await viewModel.retryPendingRequests()
 		
-		// Assert: La solicitud debe haberse eliminado del store y el login debe haber sido exitoso
+		// Assert: Request should be removed from store and login should be successful
 		XCTAssertEqual(pendingStore.loadAll(), [])
 		XCTAssertTrue(viewModel.loginSuccess)
 		XCTAssertEqual(authenticateCalls.count, 2)
@@ -370,12 +370,12 @@ final class LoginViewTests: XCTestCase {
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
 		
-		// Realiza los intentos previos sin medir el tiempo
+		// Perform previous attempts without measuring time
 		for _ in 1..<maxAttempts {
 			await viewModel.login()
 		}
 		
-		// El intento que debe bloquear la cuenta y aplicar el delay
+		// Attempt that should block account and apply delay
 		let startTime = Date()
 		await viewModel.login()
 		let elapsed = Date().timeIntervalSince(startTime)
@@ -383,7 +383,7 @@ final class LoginViewTests: XCTestCase {
 		XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after max failed attempts")
 		XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
 		
-		// Un intento adicional NO debe aplicar delay nuevamente
+		// Additional attempt should NOT apply delay again
 		let nextStart = Date()
 		await viewModel.login()
 		let nextElapsed = Date().timeIntervalSince(nextStart)
@@ -439,14 +439,36 @@ final class LoginViewTests: XCTestCase {
 		
 		viewModel.username = "user@test.com"
 		viewModel.password = "wrong-password"
-		await viewModel.login() // Simula un fallo para incrementar los intentos
+		await viewModel.login() // Simulate failure to increment attempts
 		
 		viewModel.password = "correct-password"
-		await viewModel.login() // Ahora debe hacer reset
+		await viewModel.login() // Now should reset
 		
 		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
 		XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
 		XCTAssertEqual(spyStore.attempts["user@test.com"], 0)
+	}
+	
+	func test_unlockAfterRecovery_resetsBlockState() async {
+		let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+		let viewModel = makeSUT(
+			failedAttemptsStore: spyStore,
+			maxFailedAttempts: 3
+		)
+		
+		// Lock account
+		viewModel.username = "user@test.com"
+		viewModel.password = "wrong-password" // Add password to avoid validation
+		for _ in 1...3 { await viewModel.login() }
+		XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after 3 failed attempts")
+		
+		// Manual unlock
+		viewModel.unlockAfterRecovery()
+		
+		// Verifications
+		XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after calling unlockAfterRecovery()")
+		XCTAssertNil(viewModel.errorMessage, "Error message should be nil after unlock")
+		XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "resetAttempts should be called exactly once")
 	}
 	
 	// MARK: Helpers

@@ -113,6 +113,7 @@ public final class LoginViewModel: ObservableObject {
 	public func unlockAfterRecovery() {
 		isLoginBlocked = false
 		errorMessage = nil
+		failedAttemptsStore.resetAttempts(for: username)
 	}
 	
 	private func calculateDelay(attempts: Int) -> TimeInterval {
