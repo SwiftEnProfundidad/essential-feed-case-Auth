@@ -69,38 +69,35 @@ public actor UserRegistrationUseCase {
 		}
 		
 		let userData = UserRegistrationData(name: name, email: email, password: password)
-		let body = [
-			"name": userData.name,
-			"email": userData.email,
-			"password": userData.password
-		]
 		
-		return await withCheckedContinuation { [self] continuation in
-			_ = httpClient.post(to: registrationEndpoint, body: body) { [weak self] result in
-				switch result {
-					case .success((_, let httpResponse)):
-						switch httpResponse.statusCode {
-							case 201:
-								Task { [weak self] in
-									await self?.saveCredentials(email: email, password: password)
-									continuation.resume(returning: .success(User(name: name, email: email)))
-								}
-							case 409:
-								Task { [weak self] in
-									await self?.notifier?.notifyEmailAlreadyInUse()
-								}
-								continuation.resume(returning: .failure(UserRegistrationError.emailAlreadyInUse))
-							case 400..<500:
-								continuation.resume(returning: .failure(NetworkError.clientError(statusCode: httpResponse.statusCode)))
-							case 500..<600:
-								continuation.resume(returning: .failure(NetworkError.serverError(statusCode: httpResponse.statusCode)))
-							default:
-								continuation.resume(returning: .failure(NetworkError.unknown))
-						}
-					case .failure(let error):
-						continuation.resume(returning: .failure(error))
-				}
+		do {
+			var request = URLRequest(url: registrationEndpoint)
+			request.httpMethod = "POST"
+			request.httpBody = try JSONSerialization.data(withJSONObject: [
+				"name": userData.name,
+				"email": userData.email,
+				"password": userData.password
+			])
+			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+			
+			let (_, httpResponse) = try await httpClient.send(request)
+			
+			switch httpResponse.statusCode {
+				case 201:
+					saveCredentials(email: email, password: password)
+					return .success(User(name: name, email: email))
+				case 409:
+					notifier?.notifyEmailAlreadyInUse()
+					return .failure(UserRegistrationError.emailAlreadyInUse)
+				case 400..<500:
+					return .failure(NetworkError.clientError(statusCode: httpResponse.statusCode))
+				case 500..<600:
+					return .failure(NetworkError.serverError(statusCode: httpResponse.statusCode))
+				default:
+					return .failure(NetworkError.unknown)
 			}
+		} catch {
+			return .failure(error)
 		}
 	}
 	

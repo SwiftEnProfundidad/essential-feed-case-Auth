@@ -33,17 +33,19 @@ public extension Paginated {
 }
 
 public extension HTTPClient {
-	typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
-	
-	func getPublisher(url: URL) -> Publisher {
-		var task: HTTPClientTask?
-		
-		return Deferred {
-			Future { completion in
-				task = self.get(from: url, completion: completion)
+	func getPublisher(url: URL) -> AnyPublisher<(Data, HTTPURLResponse), Error> {
+		Deferred {
+			Future { promise in
+				Task {
+					do {
+						let result = try await self.send(URLRequest(url: url))
+						promise(.success(result))
+					} catch {
+						promise(.failure(error))
+					}
+				}
 			}
 		}
-		.handleEvents(receiveCancel: { task?.cancel() })
 		.eraseToAnyPublisher()
 	}
 }
@@ -190,7 +192,7 @@ struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler 
 	private let _schedule: (SchedulerOptions?, @escaping () -> Void) -> Void
 	private let _scheduleAfter: (SchedulerTimeType, SchedulerTimeType.Stride, SchedulerOptions?, @escaping () -> Void) -> Void
 	private let _scheduleAfterInterval: (SchedulerTimeType, SchedulerTimeType.Stride, SchedulerTimeType.Stride, SchedulerOptions?, @escaping () -> Void) -> Cancellable
-
+	
 	init<S>(_ scheduler: S) where SchedulerTimeType == S.SchedulerTimeType, SchedulerOptions == S.SchedulerOptions, S: Scheduler {
 		_now = { scheduler.now }
 		_minimumTolerance = { scheduler.minimumTolerance }
@@ -206,11 +208,11 @@ struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler 
 	func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
 		_schedule(options, action)
 	}
-
+	
 	func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
 		_scheduleAfter(date, tolerance, options, action)
 	}
-
+	
 	func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
 		_scheduleAfterInterval(date, interval, tolerance, options, action)
 	}
