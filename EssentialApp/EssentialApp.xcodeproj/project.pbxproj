@@ -135,7 +135,7 @@
 		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
 		B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryComposer.swift; sourceTree = "<group>"; };
 		B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryScreen.swift; sourceTree = "<group>"; };
-		B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = "EssentialApp/Authentication Feature/UI/PasswordRecoveryScreen.swift"; sourceTree = SOURCE_ROOT; };
+		B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = EssentialApp/Features/Auth/UI/PasswordRecoveryScreen.swift; sourceTree = SOURCE_ROOT; };
 		B46DAAB82DC22A780080160E /* LoginViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewTests.swift; sourceTree = "<group>"; };
 		B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4702E272DC146390055B3D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 		B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
 		B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
 		B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
-		B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = "EssentialApp/Authentication Feature/UI/PasswordRecoveryScreen.swift"; sourceTree = SOURCE_ROOT; };
+		B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = EssentialApp/Features/Auth/UI/PasswordRecoveryScreen.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,9 +223,9 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6B25A2DC8D07900F5A3FE /* Features */,
 				B4702E2F2DC150710055B3D9 /* Infrastructure */,
 				B4702E282DC146390055B3D9 /* SessionManager.swift */,
-				B449F2072DBD6ABC0078F27B /* Authentication Feature */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
 				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
 				08CF92F52555A15B006B7E7D /* NullStore.swift */,
@@ -264,38 +264,6 @@
 				0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B449F2042DBD6ABC0078F27B /* Composition */ = {
-			isa = PBXGroup;
-			children = (
-				B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */,
-				B449F2022DBD6ABC0078F27B /* AuthComposer.swift */,
-				B449F2032DBD6ABC0078F27B /* LoginComposer.swift */,
-			);
-			path = Composition;
-			sourceTree = "<group>";
-		};
-		B449F2062DBD6ABC0078F27B /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				B4AAC3AF2DC1837800BEF56D /* Helpers */,
-				B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */,
-				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
-				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
-				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
-				B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
-		B449F2072DBD6ABC0078F27B /* Authentication Feature */ = {
-			isa = PBXGroup;
-			children = (
-				B449F2042DBD6ABC0078F27B /* Composition */,
-				B449F2062DBD6ABC0078F27B /* UI */,
-			);
-			path = "Authentication Feature";
 			sourceTree = "<group>";
 		};
 		B4702E2F2DC150710055B3D9 /* Infrastructure */ = {
@@ -343,13 +311,6 @@
 			path = Integration;
 			sourceTree = "<group>";
 		};
-		B4AAC3AF2DC1837800BEF56D /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		B4D0FE592DBEE83B00033FF3 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +341,45 @@
 				B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
 			);
 			path = snapshots;
+			sourceTree = "<group>";
+		};
+		B4D6B2572DC8D07900F5A3FE /* Composition */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */,
+				B449F2022DBD6ABC0078F27B /* AuthComposer.swift */,
+				B449F2032DBD6ABC0078F27B /* LoginComposer.swift */,
+			);
+			path = Composition;
+			sourceTree = "<group>";
+		};
+		B4D6B2582DC8D07900F5A3FE /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */,
+				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
+				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
+				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
+				B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		B4D6B2592DC8D07900F5A3FE /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B4D6B2572DC8D07900F5A3FE /* Composition */,
+				B4D6B2582DC8D07900F5A3FE /* UI */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		B4D6B25A2DC8D07900F5A3FE /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				B4D6B2592DC8D07900F5A3FE /* Auth */,
+			);
+			path = Features;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -25,12 +25,3 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
     // Si existe Keychain/secure storage en el flujo, añadir spy y test equivalente:
     // func test_login_doesNotAccessKeychain_whenValidationFails() async { ... }
 }
-
-// Spy para AuthAPI (puedes moverlo a un test helper si ya existe)
-final class AuthAPISpy: AuthAPI {
-    private(set) var wasCalled = false
-    func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
-        wasCalled = true
-        return .failure(.network)
-    }
-}
