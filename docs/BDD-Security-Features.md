@@ -469,12 +469,41 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 ---
 
 ### Checklist técnico de gestión de token expirado
-- [❌] Detectar expiración de token en cada petición protegida
-- [❌] Solicitar refresh token al backend si el token está expirado
-- [❌] Almacenar el nuevo token de forma segura tras la renovación
-- [❌] Notificar al usuario si la renovación falla
-- [❌] Redirigir a login si no es posible renovar
-- [❌] Registrar el evento de expiración para métricas
+
+#### 1. [❌] Detectar expiración de token en cada petición protegida
+- [❌] Crear `TokenValidator` con:
+  - [🔜] Validación timestamp local  
+  - [❌] Parseo JWT para claim `exp`  
+  - [❌] Handler para tokens malformados  
+
+#### 2. [🔜] Solicitar refresh token al backend si el token está expirado  
+- [🔜] Implementar `TokenRefreshService`:  
+  - [⏳] Request al endpoint `/auth/refresh`  
+  - [❌] Backoff exponencial (3 reintentos)  
+  - [❌] Semáforo para evitar race conditions  
+
+#### 3. [❌] Almacenar el nuevo token de forma segura tras la renovación 
+- [❌] KeychainManager:  
+  - [❌] Encriptación AES-256  
+  - [❌] Migración tokens existentes  
+  - [❌] Tests de seguridad (Keychain Spy)  
+
+#### 4. [🟡] Notificar al usuario si la renovación falla 
+- [✅] Alertas básicas (Snackbar)  
+- [🟡] Mensajes localizados:  
+  - [✅] Español/inglés  
+  - [❌] Screenshots tests  
+
+#### 5. [⏳] Redirigir a login si no es posible renovar  
+- [⏳] `AuthRouter.navigateToLogin()`  
+- [❌] Limpieza de credenciales  
+- [❌] Tests de integración  
+
+#### 6. [❌] Registrar el evento de expiración para métricass  
+- [❌] Eventos unificados:  
+  - [❌] `TokenExpired`  
+  - [❌] `RefreshFailed`  
+- [❌] Integración con Firebase/Sentry  
 
 ---
 
