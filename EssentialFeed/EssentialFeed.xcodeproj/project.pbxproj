@@ -608,7 +608,6 @@
 				080EDEF321B6DA7E00813479 /* EssentialFeed */,
 				080EDEFE21B6DA7E00813479 /* EssentialFeedTests */,
 				0899395D220359C50031B03D /* EssentialFeedAPIEndToEndTests */,
-				B447C6492DBE291A00E738D3 /* EssentialFeedLoginIntegrationTests */,
 				0832C67E22A0223A00E1C5E9 /* EssentialFeedCacheIntegrationTests */,
 				08D917A122B92A5D003BC31B /* EssentialFeediOS */,
 				08D917AC22B92A5D003BC31B /* EssentialFeediOSTests */,
@@ -1056,21 +1055,6 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
-		B447C6472DBE291A00E738D3 /* Authentication Feature */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Authentication Feature";
-			sourceTree = "<group>";
-		};
-		B447C6492DBE291A00E738D3 /* EssentialFeedLoginIntegrationTests */ = {
-			isa = PBXGroup;
-			children = (
-				B447C6472DBE291A00E738D3 /* Authentication Feature */,
-			);
-			path = EssentialFeedLoginIntegrationTests;
-			sourceTree = SOURCE_ROOT;
-		};
 		B46CA14F2DBE8F6500CE9ADC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -1199,7 +1183,6 @@
 				B4D6B2672DC8D71600F5A3FE /* Domain */,
 				B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */,
 				B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */,
-				B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */,
 				B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */,
 			);
 			path = Auth;
@@ -1211,6 +1194,7 @@
 				B4D6B26D2DC8DD2C00F5A3FE /* Helpers */,
 				B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */,
 				B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */,
+				B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -1234,9 +1218,7 @@
 		B4D6B26A2DC8D73700F5A3FE /* Registration */ = {
 			isa = PBXGroup;
 			children = (
-				B46CA14F2DBE8F6500CE9ADC /* Helpers */,
-				B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */,
-				B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */,
+				B4D6B2702DC8E21F00F5A3FE /* Domain */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -1256,6 +1238,16 @@
 				B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B4D6B2702DC8E21F00F5A3FE /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA14F2DBE8F6500CE9ADC /* Helpers */,
+				B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */,
+				B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		B4E5AC912DB5785C007B8F34 /* Helpers */ = {
