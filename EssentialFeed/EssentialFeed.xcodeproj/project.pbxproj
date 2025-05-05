@@ -654,7 +654,7 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B2652DC8D70600F5A3FE /* Features */,
+				B4D6B2652DC8D70600F5A3FE /* FeaturesTest */,
 				B402E02D2DB8642D00B29ECF /* Session */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
 				0844768D21FCB23900439BE9 /* Helpers */,
@@ -1165,71 +1165,68 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
-		B4D6B2652DC8D70600F5A3FE /* Features */ = {
+		B4D6B2652DC8D70600F5A3FE /* FeaturesTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B26B2DC8D74400F5A3FE /* Security */,
-				B4D6B26A2DC8D73700F5A3FE /* Registration */,
-				B4D6B2662DC8D70D00F5A3FE /* Auth */,
+				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
+				B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */,
+				B4D6B2662DC8D70D00F5A3FE /* AuthTest */,
 			);
-			path = Features;
+			path = FeaturesTest;
 			sourceTree = "<group>";
 		};
-		B4D6B2662DC8D70D00F5A3FE /* Auth */ = {
+		B4D6B2662DC8D70D00F5A3FE /* AuthTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B2692DC8D72D00F5A3FE /* UI */,
-				B4D6B2682DC8D71D00F5A3FE /* Presentation */,
-				B4D6B2672DC8D71600F5A3FE /* Domain */,
-				B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */,
+				B4D6B2692DC8D72D00F5A3FE /* UITest */,
+				B4D6B2682DC8D71D00F5A3FE /* PresentationTest */,
+				B4D6B2672DC8D71600F5A3FE /* DomainTest */,
+			);
+			path = AuthTest;
+			sourceTree = "<group>";
+		};
+		B4D6B2672DC8D71600F5A3FE /* DomainTest */ = {
+			isa = PBXGroup;
+			children = (
 				B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */,
-				B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
-		B4D6B2672DC8D71600F5A3FE /* Domain */ = {
-			isa = PBXGroup;
-			children = (
+				B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */,
+				B4D6B2772DC8F07E00F5A3FE /* UnitTest */,
 				B4D6B26D2DC8DD2C00F5A3FE /* Helpers */,
-				B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */,
-				B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */,
-				B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */,
 			);
-			path = Domain;
+			path = DomainTest;
 			sourceTree = "<group>";
 		};
-		B4D6B2682DC8D71D00F5A3FE /* Presentation */ = {
+		B4D6B2682DC8D71D00F5A3FE /* PresentationTest */ = {
 			isa = PBXGroup;
 			children = (
 				B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */,
 				B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */,
 			);
-			path = Presentation;
+			path = PresentationTest;
 			sourceTree = "<group>";
 		};
-		B4D6B2692DC8D72D00F5A3FE /* UI */ = {
+		B4D6B2692DC8D72D00F5A3FE /* UITest */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			path = UI;
+			path = UITest;
 			sourceTree = "<group>";
 		};
-		B4D6B26A2DC8D73700F5A3FE /* Registration */ = {
+		B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B2702DC8E21F00F5A3FE /* Domain */,
+				B4D6B2702DC8E21F00F5A3FE /* DomainTest */,
 			);
-			path = Registration;
+			path = RegistrationTest;
 			sourceTree = "<group>";
 		};
-		B4D6B26B2DC8D74400F5A3FE /* Security */ = {
+		B4D6B26B2DC8D74400F5A3FE /* SecurityTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4E5AC952DB5785C007B8F34 /* Keychain */,
 				B47D59792DB3D67F00034806 /* SecureStorageTests.swift */,
+				B4E5AC952DB5785C007B8F34 /* KeychainTest */,
 			);
-			path = Security;
+			path = SecurityTest;
 			sourceTree = "<group>";
 		};
 		B4D6B26D2DC8DD2C00F5A3FE /* Helpers */ = {
@@ -1240,14 +1237,67 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		B4D6B2702DC8E21F00F5A3FE /* Domain */ = {
+		B4D6B2702DC8E21F00F5A3FE /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6B27B2DC8F22000F5A3FE /* UseCases */,
 				B46CA14F2DBE8F6500CE9ADC /* Helpers */,
+			);
+			path = DomainTest;
+			sourceTree = "<group>";
+		};
+		B4D6B2762DC8F06500F5A3FE /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */,
+				B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B4D6B2772DC8F07E00F5A3FE /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */,
+				B4D6B2762DC8F06500F5A3FE /* UseCases */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
+		B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */,
+				B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */,
+			);
+			path = IntegrationTest;
+			sourceTree = "<group>";
+		};
+		B4D6B2792DC8F18D00F5A3FE /* IntegrationTest */ = {
+			isa = PBXGroup;
+			children = (
+				B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */,
+				B4E5AC99A2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift */,
+			);
+			path = IntegrationTest;
+			sourceTree = "<group>";
+		};
+		B4D6B27A2DC8F1A200F5A3FE /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */,
+				B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
+		B4D6B27B2DC8F22000F5A3FE /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
 				B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */,
 				B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */,
 			);
-			path = Domain;
+			path = UseCases;
 			sourceTree = "<group>";
 		};
 		B4E5AC912DB5785C007B8F34 /* Helpers */ = {
@@ -1258,16 +1308,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		B4E5AC952DB5785C007B8F34 /* Keychain */ = {
+		B4E5AC952DB5785C007B8F34 /* KeychainTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6B27A2DC8F1A200F5A3FE /* UnitTest */,
+				B4D6B2792DC8F18D00F5A3FE /* IntegrationTest */,
 				B4E5AC912DB5785C007B8F34 /* Helpers */,
-				B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */,
-				B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */,
-				B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */,
-				B4E5AC99A2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift */,
 			);
-			path = Keychain;
+			path = KeychainTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
