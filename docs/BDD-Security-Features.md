@@ -30,13 +30,34 @@
 > Para garantizar la fiabilidad y reproducibilidad de los tests de integración relacionados con Keychain, se recomienda ejecutar siempre en target **macOS** salvo que sea imprescindible una dependencia de UIKit. En simulador iOS y en CLI (xcodebuild), los tests de Keychain pueden fallar de forma intermitente por problemas de sandboxing y sincronización. Esta preferencia se aplica tanto en CI/CD como en validaciones locales. 
 > Por ejemplo para EssentialFeed: **xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES**  
 
-### Leyenda
+## 🛠 ESTÁNDARES DE DESARROLLO
 
-- [✅] Completado y cubierto (con test o funcionalidad)
-- [🟡] Parcialmente cubierto o pendiente de edge cases (ver comentario)
-- [⏳] En progreso 
-- [🔜] Planificado/próximo, aún no iniciado
-- [❌] No implementado, no cubierto, o bloqueado
+### Sistema de Estados
+| Emoji | Estado          | Criterios de Completado                          |
+|-------|-----------------|--------------------------------------------------|
+| ✅    | **Completado**  | Implementado + tests (≥80%) + documentado        |
+| 🟡    | **Parcial**     | Código hecho pero faltan tests/edge cases        |
+| ⏳    | **En progreso** | Branch activo (prefijo `feature/` o `fix/`)      |
+| 🔜    | **Planificado** | Priorizado en sprint backlog (Jira/GitHub)       |
+| ❌    | **Pendiente**   | Sin trabajo iniciado/bloqueado                   |
+
+### Convenciones Técnicas
+1. **Tests**:
+   - Nomenclatura: `test_[unidad]_[condición]_[resultadoEsperado]`
+   - Ubicación:
+     ```bash
+     EssentialFeedTests/
+     ├── Features/
+     │   └── [Feature]/
+     │       ├── Unit/  # Lógica core
+     │       └── Integration/  # Flujos complejos
+     ```
+
+2. **Documentación**:
+   - Checklists técnicos requieren:
+     - Emoji de estado en ítem principal
+     - Subtareas con mismo sistema
+     - Comentarios breves para items [🟡] y [❌]
 
 ---
 
@@ -70,101 +91,16 @@
     - [✅] Mapping de errores a mensajes claros y específicos para el usuario final
     - [✅] Cobertura de concurrencia (thread safety)
     - [✅] Cobertura de persistencia real (integration tests)
-- ✅ **Registro de Usuario**
-    - [✅] Happy path (registro correcto)
-    - [✅] Sad paths (errores de validación, email duplicado, etc)
-- ✅ **Login/Autenticación**
-    - [✅] Token seguro tras login
-    - [✅] Error credenciales incorrectas
-    - [✅] Notificar éxito login
-    - [✅] Errores de validación específicos
-    - [✅] Error de credenciales
-    - [✅] Recuperación de contraseña
-    - [✅] Reintento sin conexión
-    - [✅] Error de conectividad
-    - [✅] Retardo/bloqueo tras fallos
-- 🔜 **Gestión de token expirado**
-    - [🟡] Escenarios de expiración y renovación de token
-- 🟡 **Recuperación de contraseña**
-    - [🟡] Escenarios de recuperación y validación
-- ✅ **Gestión de sesiones**
-    - [✅] Registro de sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-    - [✅] Escenarios de cierre de sesión y limpieza de sesión
-    - [✅] Renovación automática de sesión (por implementar)
-
----
-
-> Última actualización: 2025-04-21
-
-### Tabla de trazabilidad (próximos casos de uso)
-
-| Caso de Uso                   | Test presente | Cobertura |
-|-------------------------------|--------------|-----------|
-| Gestión de Token Expirado     | No           |   🟡      |
-| Recuperación de Contraseña    | No           |   🟡      |
-| Gestión de Sesiones           | No           |   🟡      |
-| Cambio de Contraseña          | No           |   🟡      |
-| Verificación de Cuenta        | No           |   🟡      |
-| Proveedores Externos          | No           |   🟡      |
-| Métricas de Seguridad         | No           |   🟡      |
-
-# Casos de Uso
-
-## 1. Almacenamiento Seguro (SecureStorage)
-
-### Narrativa funcional
-Como usuario de la aplicación, quiero que mi información sensible se almacene de forma segura, para garantizar la privacidad y la integridad de mis datos.
-
-### Escenarios (Criterios de aceptación)
-(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)
-- Almacenar datos sensibles de forma segura
-- Recuperar datos de forma segura
-- Manejar errores de almacenamiento
-- Soportar concurrencia y robustez ante fallos
-- [Nuevo] Cubrir todos los caminos de error y edge cases internos en helpers y factories de test
-- [Nuevo] Ejecutar y cubrir closures internos de guardado, borrado y carga (incluyendo callbacks y ramas asíncronas si existen)
-- [Nuevo] Validar integración real con Keychain del sistema (tests de integración)
-- [Nuevo] Validar outputs y errores mediante snapshot testing (si aplica y sube cobertura)
-- [Nuevo] Garantizar que cada rama/branch del código crítico tiene su test asociado-
-
-### [✅] Checklist técnico de almacenamiento seguro
-
-> **Limitación técnica en cobertura automatizada de Keychain**
->
-> Por restricciones conocidas de Xcode y el entorno CLI, los tests que interactúan con el Keychain del sistema/simulador pueden fallar o no reflejar cobertura real al ejecutar por línea de comandos (xcodebuild, CI, scripts), aunque funcionen correctamente en Xcode GUI.  
-> Por tanto, la cobertura de la clase `SystemKeychain.swift` y sus flujos críticos se valida y audita visualmente mediante el reporte de cobertura integrado de Xcode, que es la fuente de verdad para auditoría y compliance.  
-> El resto de la cobertura (tests unitarios, helpers, lógica de negocio) se reporta y automatiza normalmente por CLI.
->
-> _Esta decisión se documenta para máxima transparencia ante revisores y auditores, y se mantiene alineada con las mejores prácticas de seguridad y calidad en iOS._
-
-- [✅] Determinar el nivel de protección necesario para cada dato
-- [✅] Encriptar la información antes de almacenar si es necesario
-- [✅] Almacenar en Keychain con configuración adecuada
-- [✅] Verificar que la información se almacena correctamente
-- [✅] Intentar almacenamiento alternativo si falla el Keychain
-- [✅] Notificar error si persiste el fallo
-- [✅] Limpiar datos corruptos y solicitar nueva autenticación
-- [✅] Eliminar correctamente valores previos antes de guardar uno nuevo
-- [✅] Soportar claves unicode y datos grandes
-- [✅] Devuelve error para clave vacía o datos vacíos
-- [✅] Simula errores específicos de Keychain
-- [✅] Retornar 'false' si la clave está vacía
-- [✅] Retornar 'false' si los datos están vacíos
-- [✅] Retornar 'false' si la clave contiene solo espacios
-- [✅] Retornar 'false' si la operación de Keychain falla (simulado)
-- [✅] Robustez ante concurrencia (thread safe)
-- [✅] Cubrir todos los códigos de error posibles de la API Keychain
-- [✅] Persistencia real: save y load en Keychain
-- [✅] Forzar error de duplicidad y asegurar que se ejecuta handleDuplicateItem 
-- [✅] Validar que el método handleDuplicateItem retorna correctamente según el flujo de actualización y comparación (cubierto por tests de actualización y duplicidad)
-- [✅] Garantizar que la estrategia NoFallback retorna .failure y nil en todos los casos (tests de fallback y no fallback cubiertos)
-- [✅] Cubrir todos los caminos de error y edge cases internos de los helpers/factories usados en tests
-- [✅] Ejecutar closures internos de guardado, borrado y carga (incluyendo callbacks y ramas asíncronas si existen)
-- [✅] Test de integración real con Keychain del sistema 
-- [❌-N/A] Snapshot testing para outputs y errores relevantes (no aporta valor añadido en almacenamiento seguro; cubierto por asserts y validaciones directas)
+    - [✅] Forzar error de duplicidad y asegurar que se ejecuta handleDuplicateItem 
+    - [✅] Validar que el método handleDuplicateItem retorna correctamente según el flujo de actualización y comparación (cubierto por tests de actualización y duplicidad)
+    - [✅] Garantizar que la estrategia NoFallback retorna .failure y nil en todos los casos (tests de fallback y no fallback cubiertos)
+    - [✅] Cubrir todos los caminos de error y edge cases internos de los helpers/factories usados en tests
+    - [✅] Ejecutar closures internos de guardado, borrado y carga (incluyendo callbacks y ramas asíncronas si existen)
+    - [✅] Test de integración real con Keychain del sistema 
+    - [❌-N/A] Snapshot testing para outputs y errores relevantes (no aporta valor añadido en almacenamiento seguro; cubierto por asserts y validaciones directas)
 
 > **Nota:** El snapshot testing se ha evaluado y descartado para el almacenamiento seguro, ya que los outputs relevantes (resultados y errores) se validan de forma directa mediante asserts y comparaciones explícitas. Esta decisión sigue las mejores prácticas de testing profesional en iOS y evita añadir tests redundantes o de bajo valor añadido para el dominio de Keychain.
-- [✅] Cobertura de todos los branches/ramas de código crítico (añadir tests específicos para cada branch no cubierto)
+    - [✅] Cobertura de todos los branches/ramas de código crítico (añadir tests específicos para cada branch no cubierto)
 
 #### Diagrama técnico
 
@@ -1099,9 +1035,5 @@ flowchart TD
 | Visualización y consulta de métricas         | No            |    ❌     |
 
 ---
-
-```
-
-```
 
 ```
