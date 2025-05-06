@@ -1,16 +1,11 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import UIKit
 import EssentialFeediOS
 
 extension ListViewController {
-	public override func loadViewIfNeeded() {
-		super.loadViewIfNeeded()
-		
-		tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
-	}
 	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
@@ -40,6 +35,37 @@ extension ListViewController {
 		let index = IndexPath(row: row, section: section)
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
+	
+	func simulateAppearance() {
+		if !isViewLoaded {
+			loadViewIfNeeded()
+		}
+		// Dejamos la simulación de viewWillAppear/Appear comentada por ahora,
+		// ya que la estrategia principal es loadViewIfNeeded y el FakeRefreshControl.
+		// viewWillAppear(false)
+		// viewDidAppear(false)
+	}
+	
+	public func replaceRefreshControlWithFakeForiOS17Support() {
+		let fake = FakeRefreshControl()
+		var originalIsRefreshing = false 
+		
+		if let originalRefreshControl = self.refreshControl {
+			originalIsRefreshing = originalRefreshControl.isRefreshing 
+			originalRefreshControl.allTargets.forEach { target in
+				originalRefreshControl.actions(forTarget: target, forControlEvent: UIControl.Event.valueChanged)?.forEach { action in
+					fake.addTarget(target, action: Selector(action), for: UIControl.Event.valueChanged)
+				}
+			}
+		}
+		
+		self.refreshControl = fake
+		
+		if originalIsRefreshing {
+			fake.beginRefreshing()
+		}
+	}
+	
 }
 
 extension ListViewController {

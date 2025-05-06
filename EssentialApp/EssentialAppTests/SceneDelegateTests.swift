@@ -1,10 +1,11 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
+import XCTest
+@testable import EssentialApp
 import EssentialFeediOS
 import SwiftUI
-import XCTest
 import EssentialApp
 
 class SceneDelegateTests: XCTestCase {
@@ -34,9 +35,9 @@ class SceneDelegateTests: XCTestCase {
 			)
 		} else if let hosting = root,
 							String(describing: type(of: hosting)).contains("UIHostingController") {
-		XCTAssertTrue(
-			String(describing: type(of: hosting)).contains("LoginView"),
-			"Expected a SwiftUI LoginView as root in UIHostingController")
+			XCTAssertTrue(
+				String(describing: type(of: hosting)).contains("LoginView"),
+				"Expected a SwiftUI LoginView as root in UIHostingController")
 		} else {
 			XCTFail("Unexpected rootViewController type: \(String(describing: root))")
 		}

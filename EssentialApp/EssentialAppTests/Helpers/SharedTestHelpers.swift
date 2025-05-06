@@ -1,9 +1,10 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import Foundation
 import EssentialFeed
+import UIKit
 
 func anyNSError() -> NSError {
 	return NSError(domain: "any error", code: 0)
@@ -15,6 +16,12 @@ func anyURL() -> URL {
 
 func anyData() -> Data {
 	return Data("any data".utf8)
+}
+
+// ADD: Helper para obtener datos PNG "estabilizados"
+public func stabilizedPNGData(for color: UIColor) -> Data {
+	let originalPngData = UIImage.make(withColor: color).pngData()!
+	return UIImage(data: originalPngData)!.pngData()!
 }
 
 func uniqueFeed() -> [FeedImage] {

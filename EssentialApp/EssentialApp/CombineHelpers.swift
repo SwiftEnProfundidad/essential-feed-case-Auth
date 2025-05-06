@@ -33,31 +33,27 @@ public extension Paginated {
 }
 
 public extension HTTPClient {
+	// Podrías definir un error específico si la request no se puede crear,
+	// aunque para una URLRequest simple desde una URL, es menos probable.
+	// private enum PublisherAdaptationError: Error {
+	//     case invalidURLForRequest
+	// }
+	
 	func getPublisher(url: URL) -> AnyPublisher<(Data, HTTPURLResponse), Error> {
-		var taskHolder: Task<Void, Never>? // Para mantener la referencia a la Task
+		let request = URLRequest(url: url)
 		
 		return Deferred {
 			Future { promise in
-				taskHolder = Task {
+				Task { // Crea una nueva Task para ejecutar el código asíncrono
 					do {
-						// Realizar la operación asíncrona
-						let result = try await self.send(URLRequest(url: url))
-						// Si la tarea es cancelada, se espera que la línea anterior lance CancellationError
-						// Por lo tanto, no necesitamos verificar Task.isCancelled aquí explícitamente
-						// antes de llamar a promise(.success).
-						promise(.success(result))
+						let (data, response) = try await self.send(request)
+						promise(.success((data, response)))
 					} catch {
-						// El bloque catch manejará cualquier error, incluyendo CancellationError
-						// si es lanzado por self.send o session.data(for:).
 						promise(.failure(error))
 					}
 				}
 			}
 		}
-		.handleEvents(receiveCancel: {
-			// Si la suscripción se cancela, cancelar la Task asociada.
-			taskHolder?.cancel()
-		})
 		.eraseToAnyPublisher()
 	}
 }
@@ -130,35 +126,35 @@ private extension FeedCache {
 	}
 }
 
-extension Publisher {
+public extension Publisher {
 	func dispatchOnMainQueue() -> AnyPublisher<Output, Failure> {
 		receive(on: DispatchQueue.immediateWhenOnMainQueueScheduler).eraseToAnyPublisher()
 	}
 }
 
-extension DispatchQueue {
+public extension DispatchQueue {
 	static var immediateWhenOnMainQueueScheduler: ImmediateWhenOnMainQueueScheduler {
 		ImmediateWhenOnMainQueueScheduler.shared
 	}
 	
 	struct ImmediateWhenOnMainQueueScheduler: Scheduler {
-		typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
-		typealias SchedulerOptions = DispatchQueue.SchedulerOptions
+		public typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
+		public typealias SchedulerOptions = DispatchQueue.SchedulerOptions
 		
-		var now: SchedulerTimeType {
+		public var now: SchedulerTimeType {
 			DispatchQueue.main.now
 		}
 		
-		var minimumTolerance: SchedulerTimeType.Stride {
+		public var minimumTolerance: SchedulerTimeType.Stride {
 			DispatchQueue.main.minimumTolerance
 		}
 		
-		static let shared = Self()
+		public static let shared = Self()
 		
 		private static let key = DispatchSpecificKey<UInt8>()
 		private static let value = UInt8.max
 		
-		private init() {
+		public init() {
 			DispatchQueue.main.setSpecific(key: Self.key, value: Self.value)
 		}
 		
@@ -166,7 +162,7 @@ extension DispatchQueue {
 			DispatchQueue.getSpecific(key: Self.key) == Self.value
 		}
 		
-		func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+		public func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
 			guard isMainQueue() else {
 				return DispatchQueue.main.schedule(options: options, action)
 			}
@@ -174,38 +170,38 @@ extension DispatchQueue {
 			action()
 		}
 		
-		func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+		public func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
 			DispatchQueue.main.schedule(after: date, tolerance: tolerance, options: options, action)
 		}
 		
-		func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
+		public func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
 			DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: options, action)
 		}
 	}
 }
 
-typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeType, DispatchQueue.SchedulerOptions>
+public typealias AnyDispatchQueueScheduler = AnyScheduler<DispatchQueue.SchedulerTimeType, DispatchQueue.SchedulerOptions>
 
-extension AnyDispatchQueueScheduler {
+public extension AnyDispatchQueueScheduler {
 	static var immediateOnMainQueue: Self {
 		DispatchQueue.immediateWhenOnMainQueueScheduler.eraseToAnyScheduler()
 	}
 }
 
-extension Scheduler {
+public extension Scheduler {
 	func eraseToAnyScheduler() -> AnyScheduler<SchedulerTimeType, SchedulerOptions> {
 		AnyScheduler(self)
 	}
 }
 
-struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler where SchedulerTimeType.Stride: SchedulerTimeIntervalConvertible {
+public struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler where SchedulerTimeType.Stride: SchedulerTimeIntervalConvertible {
 	private let _now: () -> SchedulerTimeType
 	private let _minimumTolerance: () -> SchedulerTimeType.Stride
 	private let _schedule: (SchedulerOptions?, @escaping () -> Void) -> Void
 	private let _scheduleAfter: (SchedulerTimeType, SchedulerTimeType.Stride, SchedulerOptions?, @escaping () -> Void) -> Void
 	private let _scheduleAfterInterval: (SchedulerTimeType, SchedulerTimeType.Stride, SchedulerTimeType.Stride, SchedulerOptions?, @escaping () -> Void) -> Cancellable
 	
-	init<S>(_ scheduler: S) where SchedulerTimeType == S.SchedulerTimeType, SchedulerOptions == S.SchedulerOptions, S: Scheduler {
+	public init<S>(_ scheduler: S) where SchedulerTimeType == S.SchedulerTimeType, SchedulerOptions == S.SchedulerOptions, S: Scheduler {
 		_now = { scheduler.now }
 		_minimumTolerance = { scheduler.minimumTolerance }
 		_schedule = scheduler.schedule(options:_:)
@@ -213,19 +209,19 @@ struct AnyScheduler<SchedulerTimeType: Strideable, SchedulerOptions>: Scheduler 
 		_scheduleAfterInterval = scheduler.schedule(after:interval:tolerance:options:_:)
 	}
 	
-	var now: SchedulerTimeType { _now() }
+	public var now: SchedulerTimeType { _now() }
 	
-	var minimumTolerance: SchedulerTimeType.Stride { _minimumTolerance() }
+	public var minimumTolerance: SchedulerTimeType.Stride { _minimumTolerance() }
 	
-	func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+	public func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
 		_schedule(options, action)
 	}
 	
-	func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+	public func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
 		_scheduleAfter(date, tolerance, options, action)
 	}
 	
-	func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
+	public func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
 		_scheduleAfterInterval(date, interval, tolerance, options, action)
 	}
 }

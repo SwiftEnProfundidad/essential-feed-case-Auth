@@ -1,5 +1,5 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import Foundation
@@ -8,6 +8,8 @@ import EssentialFeed
 class InMemoryFeedStore {
 	private(set) var feedCache: CachedFeed?
 	private var feedImageDataCache: [URL: Data] = [:]
+	// CHANGE: Make queue private for better encapsulation
+	private let queue = DispatchQueue(label: "\(InMemoryFeedStore.self)Queue", qos: .userInitiated, attributes: .concurrent)
 	
 	private init(feedCache: CachedFeed? = nil) {
 		self.feedCache = feedCache
@@ -16,25 +18,42 @@ class InMemoryFeedStore {
 
 extension InMemoryFeedStore: FeedStore {
 	func deleteCachedFeed() throws {
-		feedCache = nil
+		// CHANGE: Use sync for barrier to ensure completion before returning, fixing test assumptions
+		queue.sync(flags: .barrier) {
+			self.feedCache = nil
+		}
 	}
-
+	
 	func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
-		feedCache = CachedFeed(feed: feed, timestamp: timestamp)
+		// CHANGE: Use sync for barrier to ensure completion before returning
+		queue.sync(flags: .barrier) {
+			self.feedCache = CachedFeed(feed: feed, timestamp: timestamp)
+		}
 	}
-
+	
 	func retrieve() throws -> CachedFeed? {
-		feedCache
+		var result: CachedFeed?
+		queue.sync { // sync is fine for reads
+			result = self.feedCache
+		}
+		return result
 	}
 }
 
 extension InMemoryFeedStore: FeedImageDataStore {
 	func insert(_ data: Data, for url: URL) throws {
-		feedImageDataCache[url] = data
+		// CHANGE: Use sync for barrier to ensure completion before returning
+		queue.sync(flags: .barrier) {
+			self.feedImageDataCache[url] = data
+		}
 	}
 	
 	func retrieve(dataForURL url: URL) throws -> Data? {
-		feedImageDataCache[url]
+		var result: Data?
+		queue.sync { // sync is fine for reads
+			result = self.feedImageDataCache[url]
+		}
+		return result
 	}
 }
 
