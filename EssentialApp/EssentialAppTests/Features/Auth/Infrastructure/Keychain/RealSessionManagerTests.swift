@@ -1,5 +1,5 @@
 import XCTest
-@testable import EssentialApp
+import EssentialApp
 
 final class RealSessionManagerTests: XCTestCase {
     func test_isAuthenticated_queriesKeychainWithAuthTokenKey() {

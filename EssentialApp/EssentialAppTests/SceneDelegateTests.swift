@@ -5,8 +5,7 @@
 import EssentialFeediOS
 import SwiftUI
 import XCTest
-
-@testable import EssentialApp
+import EssentialApp
 
 class SceneDelegateTests: XCTestCase {
 	

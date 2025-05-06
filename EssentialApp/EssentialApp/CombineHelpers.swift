@@ -1,5 +1,5 @@
 //
-//  Copyright © 2020 Essential Developer. All rights reserved.
+//  Copyright 2020 Essential Developer. All rights reserved.
 //
 
 import Foundation
@@ -34,18 +34,30 @@ public extension Paginated {
 
 public extension HTTPClient {
 	func getPublisher(url: URL) -> AnyPublisher<(Data, HTTPURLResponse), Error> {
-		Deferred {
+		var taskHolder: Task<Void, Never>? // Para mantener la referencia a la Task
+		
+		return Deferred {
 			Future { promise in
-				Task {
+				taskHolder = Task {
 					do {
+						// Realizar la operación asíncrona
 						let result = try await self.send(URLRequest(url: url))
+						// Si la tarea es cancelada, se espera que la línea anterior lance CancellationError
+						// Por lo tanto, no necesitamos verificar Task.isCancelled aquí explícitamente
+						// antes de llamar a promise(.success).
 						promise(.success(result))
 					} catch {
+						// El bloque catch manejará cualquier error, incluyendo CancellationError
+						// si es lanzado por self.send o session.data(for:).
 						promise(.failure(error))
 					}
 				}
 			}
 		}
+		.handleEvents(receiveCancel: {
+			// Si la suscripción se cancela, cancelar la Task asociada.
+			taskHolder?.cancel()
+		})
 		.eraseToAnyPublisher()
 	}
 }
