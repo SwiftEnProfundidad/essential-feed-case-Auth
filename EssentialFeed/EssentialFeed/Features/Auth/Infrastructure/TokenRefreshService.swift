@@ -23,7 +23,6 @@ public final class TokenRefreshService: RefreshTokenUseCase {
 	public func execute() async throws -> Token {
 		let refreshToken = try storage.loadRefreshToken()
 		let request = makeRequest(with: refreshToken)
-		let data = try await client.send(request)
 		let (responseData, _) = try await client.send(request)
 		let token = try parser.parse(from: responseData) 
 		try storage.save(token: token)

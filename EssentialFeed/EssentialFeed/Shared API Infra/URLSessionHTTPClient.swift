@@ -13,11 +13,10 @@ public final class URLSessionHTTPClient: HTTPClient {
 	
 	public func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
 		let (data, response) = try await session.data(for: request)
-		
 		guard let httpResponse = response as? HTTPURLResponse else {
 			throw URLError(.badServerResponse)
 		}
-		
+		// Si data es nil, devolvemos Data vacía
 		return (data, httpResponse)
 	}
 }

@@ -1,9 +1,9 @@
 import XCTest
 import EssentialFeed
 import Foundation
+
 // CU: Registro de Usuario en servidor
 // Checklist: Validar integración de registro con servidor y manejo de respuestas
-import Foundation
 
 final class UserRegistrationServerUseCaseTests: XCTestCase {
 
@@ -26,8 +26,8 @@ func test_registerUser_sendsRequestToServer() async throws {
     // MARK: - Helpers
     private func makeSUT(
         file: StaticString = #file, line: UInt = #line
-    ) -> (sut: UserRegistrationUseCase, httpClient: HTTPClientSpy) {
-        let httpClient = HTTPClientSpy()
+    ) -> (sut: UserRegistrationUseCase, httpClient: RegistrationHTTPClientSpy) {
+        let httpClient = RegistrationHTTPClientSpy()
         let sut = UserRegistrationUseCase(
             keychain: makeKeychainFullSpy(),
             validator: RegistrationValidatorStub(),
@@ -42,25 +42,25 @@ func test_registerUser_sendsRequestToServer() async throws {
 
 // MARK: - Test Doubles
 
-final class HTTPClientSpy: HTTPClient {
-    private(set) var requestedURLs: [URL] = []
-    private(set) var lastHTTPBody: [String: String]? = nil
-
-    func post(to url: URL, body: [String: String], completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-        requestedURLs.append(url)
-        lastHTTPBody = body
-        // Simula una respuesta exitosa con la tupla correcta
-        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        completion(.success((Data(), response)))
-        return DummyHTTPClientTask()
+final class RegistrationHTTPClientSpy: HTTPClient {
+    private(set) var requests = [URLRequest]()
+    
+    func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        requests.append(request)
+        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        return (Data(), response)
     }
-
-    // Implementación dummy para cumplir el protocolo
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-        return DummyHTTPClientTask()
+    
+    // Helpers para tests
+    var requestedURLs: [URL] {
+        requests.map { $0.url! }
     }
-}
-
-final class DummyHTTPClientTask: HTTPClientTask {
-    func cancel() {}
+    
+    var lastHTTPBody: [String: String]? {
+        guard let lastRequest = requests.last,
+              let body = lastRequest.httpBody,
+              let json = try? JSONSerialization.jsonObject(with: body) as? [String: String] 
+        else { return nil }
+        return json
+    }
 }
