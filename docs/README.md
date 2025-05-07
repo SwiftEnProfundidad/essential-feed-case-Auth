@@ -1,3 +1,9 @@
+
+# App Architecture Diagram
+
+![App Architecture Diagram](https://raw.githubusercontent.com/SwiftEnProfundidad/essential-feed-case-Auth/main/docs/images/AchitectureEssentialApp.png))
+
+
 # Carpeta de documentación y recursos
 
 Esta carpeta contiene toda la documentación técnica del proyecto, así como recursos visuales y diagramas en `images/`.
