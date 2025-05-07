@@ -25,6 +25,7 @@ public enum LoginError: Error, Equatable {
 	case network
 	case invalidEmailFormat
 	case invalidPasswordFormat
+	case tokenStorageFailed
 	case unknown
 }
 
@@ -91,11 +92,30 @@ public final class UserLoginUseCase {
 		
 		switch result {
 			case .success(let response):
-				successObserver?.didLoginSuccessfully(response: response)
-				return .success(response)
+				print("[LoginUseCase] API Success. Response token: \(response.token)")
+				let defaultTokenDuration: TimeInterval = 3600
+				let expiryDate = Date().addingTimeInterval(defaultTokenDuration)
+				
+				print("[LoginUseCase] Attempting to create Token object...")
+				let tokenToStore = Token(value: response.token, expiry: expiryDate)
+				print("[LoginUseCase] Token object created: \(tokenToStore.value)")
+				
+				do {
+					print("[LoginUseCase] Attempting: try await tokenStorage.save(token)...")
+					try await tokenStorage.save(tokenToStore)
+					print("[LoginUseCase] tokenStorage.save() SUCCEEDED.")
+					print("[LoginUseCase] Notifying successObserver and returning .success")
+					successObserver?.didLoginSuccessfully(response: response)
+					return .success(response)
+				} catch {
+					print("[LoginUseCase] tokenStorage.save() FAILED with error: \(error)")
+					print("[LoginUseCase] Notifying failureObserver and returning .failure(.tokenStorageFailed)")
+					failureObserver?.didFailLogin(error: .tokenStorageFailed)
+					return .failure(.tokenStorageFailed)
+				}
+				
 			case .failure(let error):
-				// Solo notificar si el error no fue ya manejado por una validación de formato
-				// (aunque en este flujo, si llegamos aquí, la validación de formato ya pasó).
+				print("[LoginUseCase] API Failure. Error: \(error)")
 				failureObserver?.didFailLogin(error: error)
 				return .failure(error)
 		}

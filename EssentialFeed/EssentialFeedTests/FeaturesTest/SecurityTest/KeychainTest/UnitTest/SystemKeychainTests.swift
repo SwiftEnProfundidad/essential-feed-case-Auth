@@ -31,7 +31,7 @@ final class SystemKeychainTests: XCTestCase {
 				expectation.fulfill()
 			}
 		}
-		// Forzamos la liberación del SUT antes del wait
+
 		sut = nil
 		wait(for: [expectation], timeout: 5)
 		XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem")
@@ -694,9 +694,7 @@ extension SystemKeychainTests {
 			"Should return \(expected) when loadResult is \(String(describing: loadResult))", file: file,
 			line: line)
 	}
-	
-	// MARK: - KeychainFullSpy
-	
+		
 	// MARK: - DeleteFailKeychain
 	private class DeleteFailKeychain: KeychainFull {
         func load(forKey key: String) -> Data? { return nil }

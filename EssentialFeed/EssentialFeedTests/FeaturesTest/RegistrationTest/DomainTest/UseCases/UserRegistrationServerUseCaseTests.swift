@@ -29,22 +29,22 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
 	) -> (sut: UserRegistrationUseCase, httpClient: RegistrationHTTPClientSpy) {
 		let httpClient = RegistrationHTTPClientSpy()
 		let tokenStorage = TokenStorageSpy()
-		let keychain = KeychainFullSpy() // Asumiendo que usas KeychainFullSpy. Si es otro, ajústalo.
-																		 // Si tienes un `makeKeychainFullSpy()` global, úsalo.
-																		 // Por ejemplo: let keychain = makeKeychainFullSpy()
+		let keychain = KeychainFullSpy()
+		let offlineStore = OfflineRegistrationStoreSpy()
 		
 		let sut = UserRegistrationUseCase(
-			keychain: keychain, // Usar la instancia creada
+			keychain: keychain,
 			tokenStorage: tokenStorage,
-			validator: RegistrationValidatorStub(), // O el validador apropiado para estos tests
+			offlineStore: offlineStore,
+			validator: RegistrationValidatorStub(),
 			httpClient: httpClient,
 			registrationEndpoint: URL(string: "https://test-register-endpoint.com")!
-			// notifier: nil // Si el init de UserRegistrationUseCase tiene notifier opcional
 		)
 		trackForMemoryLeaks(httpClient, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		trackForMemoryLeaks(tokenStorage, file: file, line: line)
 		trackForMemoryLeaks(keychain, file: file, line: line)
+		trackForMemoryLeaks(offlineStore, file: file, line: line)
 		return (sut, httpClient)
 	}
 }
@@ -72,4 +72,8 @@ final class RegistrationHTTPClientSpy: HTTPClient {
 		else { return nil }
 		return json
 	}
+}
+
+final class OfflineRegistrationStoreSpy: OfflineRegistrationStore {
+	func save(_ data: UserRegistrationData) async throws {}
 }

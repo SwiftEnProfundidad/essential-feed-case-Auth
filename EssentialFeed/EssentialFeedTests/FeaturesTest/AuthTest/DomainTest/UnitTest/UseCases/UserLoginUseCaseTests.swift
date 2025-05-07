@@ -155,14 +155,14 @@ final class UserLoginUseCaseTests: XCTestCase {
 	}
 	
 	func test_login_succeedsApiCall_butFailsToStoreToken_returnsError() async throws {
-		let (sut, api, successObserver, failureObserver, tokenStorage) = makeSUT()
+		let (sut, api, successObserver, _, tokenStorage) = makeSUT()
 		let credentials = LoginCredentials(email: "user@example.com", password: "password123")
 		
 		let expectedTokenValue = "jwt-token-for-fail-case"
 		let apiResponse = LoginResponse(token: expectedTokenValue)
 		api.stubbedResult = .success(apiResponse)
 		
-		let storageError = NSError(domain: "TokenStorageError", code: 1)
+		let storageError = NSError(domain: "TokenStorageError", code: 1) // Este es el error que el Spy simula
 		tokenStorage.saveTokenError = storageError
 		
 		let result = await sut.login(with: credentials)
@@ -170,8 +170,9 @@ final class UserLoginUseCaseTests: XCTestCase {
 		switch result {
 			case .success:
 				XCTFail("Expected failure due to token storage error, got success")
-			case .failure(let error):
-				XCTAssertEqual(error as NSError, storageError, "Expected token storage error")
+			case .failure(let error): // 'error' aquí es de tipo LoginError
+				
+				XCTAssertEqual(error, LoginError.tokenStorageFailed, "Expected token storage error")
 		}
 		XCTAssertFalse(successObserver.didNotifySuccess, "Success observer should NOT be notified if token storage fails")
 		XCTAssertEqual(tokenStorage.messages.count, 1, "Expected TokenStorage save attempt")
