@@ -1,5 +1,5 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import UIKit
@@ -23,9 +23,76 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
 		refresh()
 	}
 	
+	public override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+		
+		// Only clear snapshot if the view controller is being popped or dismissed.
+		if isMovingFromParent || isBeingDismissed {
+			// Applying an empty snapshot is a clean way to clear the diffable data source.
+			if #available(iOS 13.0, *) {
+				var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
+				// Ensure sections exist before trying to append/delete to avoid crashes if sections are conditional.
+				// However, applying an empty snapshot is safer.
+				if !dataSource.snapshot().sectionIdentifiers.isEmpty {
+					snapshot.appendSections(dataSource.snapshot().sectionIdentifiers) // Keep existing sections
+					snapshot.deleteAllItems() // Delete all items from them
+					dataSource.apply(snapshot, animatingDifferences: false)
+				} else {
+					// If there are no sections (e.g. initial empty state), apply a completely empty snapshot.
+					dataSource.apply(NSDiffableDataSourceSnapshot<Int, CellController>(), animatingDifferences: false)
+				}
+			}
+		}
+	}
+	
+	deinit {
+		print("ListViewController DEINIT - \(self) - Title: \(String(describing: self.title))")
+		onRefresh = nil
+		errorView.onHide = nil
+		
+		// Explicitly break refreshControl cycle
+		refreshControl?.removeTarget(nil, action: nil, for: .allEvents)
+		refreshControl?.removeFromSuperview() // Not strictly necessary if tableView is also deallocating, but good practice.
+		refreshControl = nil
+		
+		// If the tableView's refreshControl property still points to the (now nilled) refreshControl instance,
+		// it's good to nil it out on the tableView as well.
+		// However, self.refreshControl = nil already does this if it was the one assigned.
+		// If a different refresh control instance was assigned directly to tableView.refreshControl,
+		// then tableView.refreshControl = nil would be important.
+		// Given self.refreshControl is the one we manage, this is likely redundant but harmless.
+		if tableView.refreshControl != nil { // Check to avoid potential issues if it was already nilled by system
+			tableView.refreshControl = nil
+		}
+		
+		// Explicitly break tableView delegate/dataSource cycle if self is assigned to them
+		// and they are not automatically nilled out by UIKit early enough.
+		// For prefetchDataSource, self is the prefetchDataSource.
+		if tableView.prefetchDataSource === self { // Check identity
+			tableView.prefetchDataSource = nil
+		}
+		
+		// The main dataSource is the UITableViewDiffableDataSource instance.
+		// It should deallocate when 'self' (ListViewController) deallocates,
+		// as it's a stored property.
+		// If tableView held a strong reference back to it that wasn't broken,
+		// then tableView.dataSource = nil would be needed.
+		// However, UITableView.dataSource is typically a weak reference or managed correctly.
+		// We'll add it for maximum safety, though it might be redundant.
+		if tableView.dataSource === dataSource { // Check identity, though it's a lazy var of self
+			tableView.dataSource = nil
+		}
+		
+		// Clear the table view's header view if it's our errorView's container
+		if tableView.tableHeaderView == errorView.superview { // errorView.makeContainer()
+			tableView.tableHeaderView = nil
+		}
+	}
+	
 	private func configureTableView() {
 		dataSource.defaultRowAnimation = .fade
 		tableView.dataSource = dataSource
+		// tableView.prefetchDataSource = self // This is set by the system if conforming to UITableViewDataSourcePrefetching
 		tableView.tableHeaderView = errorView.makeContainer()
 		
 		errorView.onHide = { [weak self] in
@@ -66,7 +133,11 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	public func display(_ viewModel: ResourceLoadingViewModel) {
-		refreshControl?.update(isRefreshing: viewModel.isLoading)
+		if viewModel.isLoading {
+			refreshControl?.beginRefreshing()
+		} else {
+			refreshControl?.endRefreshing()
+		}
 	}
 	
 	public func display(_ viewModel: ResourceErrorViewModel) {

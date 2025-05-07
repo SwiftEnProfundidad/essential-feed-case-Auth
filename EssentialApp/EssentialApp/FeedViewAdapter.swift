@@ -5,12 +5,12 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 final class FeedViewAdapter: ResourceView {
 	private weak var controller: ListViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 	private let selection: (FeedImage) -> Void
-	// CHANGE: Revert currentFeed to its original purpose now that CellController IDs should be stable via the model.
 	private var currentFeed: [FeedImage: CellController]
 	
 	private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
@@ -21,17 +21,22 @@ final class FeedViewAdapter: ResourceView {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.selection = selection
+		let controllerAddress = Unmanaged.passUnretained(controller).toOpaque()
+		print("FeedViewAdapter INIT for controller: \(controllerAddress) with imageLoader: \(String(describing: imageLoader)) and selection: \(String(describing: selection))")
+	}
+	
+	deinit {
+		let controllerAddress = controller.map { Unmanaged.passUnretained($0).toOpaque() }
+		print("FeedViewAdapter DEINIT for controller: \(String(describing: controllerAddress))")
+		currentFeed = [:]
 	}
 	
 	func display(_ viewModel: Paginated<FeedImage>) {
 		guard let controller = controller else { return }
 		
-		// currentFeed ahora se usa para intentar reutilizar CellControllers existentes.
-		// Esto es importante para mantener el estado de las celdas (ej. si una imagen ya se cargó).
 		var feedCellControllers = self.currentFeed
 		
 		let feed: [CellController] = viewModel.items.map { model in
-			// Intenta reutilizar un CellController existente para este FeedImage.
 			if let existingCellController = feedCellControllers[model] {
 				return existingCellController
 			}
@@ -53,14 +58,11 @@ final class FeedViewAdapter: ResourceView {
 				errorView: WeakRefVirtualProxy(view),
 				mapper: UIImage.tryMake)
 			
-			// CHANGE: Usar el 'model' (FeedImage) como ID, asumiendo que FeedImage es Hashable
-			// y su hash se basa en su 'id: UUID'.
 			let cellController = CellController(id: model, view)
-			feedCellControllers[model] = cellController // Guardar para posible reutilización
+			feedCellControllers[model] = cellController
 			return cellController
 		}
 		
-		// Actualizar self.currentFeed con el conjunto actual de cell controllers.
 		self.currentFeed = feedCellControllers
 		
 		guard let loadMorePublisher = viewModel.loadMorePublisher else {
@@ -72,16 +74,15 @@ final class FeedViewAdapter: ResourceView {
 		let loadMore = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
 		
 		loadMoreAdapter.presenter = LoadResourcePresenter(
-			resourceView: FeedViewAdapter( // Esta instancia es para el resultado de "cargar más"
-				currentFeed: self.currentFeed, // Pasa el feed actual para que pueda intentar fusionar/reutilizar
+			resourceView: FeedViewAdapter(
+				currentFeed: self.currentFeed,
 				controller: controller,
 				imageLoader: imageLoader,
 				selection: selection
-																	 ),
+			),
 			loadingView: WeakRefVirtualProxy(loadMore),
 			errorView: WeakRefVirtualProxy(loadMore))
 		
-		// El ID para LoadMoreCellController también puede ser un UUID() ya que es único y no se basa en datos.
 		let loadMoreSection = [CellController(id: UUID(), loadMore)]
 		
 		controller.display(feed, loadMoreSection)
