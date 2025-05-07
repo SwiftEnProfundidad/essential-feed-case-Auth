@@ -173,6 +173,8 @@
 		B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */; };
 		B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */; };
 		B4A921712DC981B100591F6E /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A921702DC981B100591F6E /* TokenStorageSpy.swift */; };
+		B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */; };
+		B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
 		B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */; };
 		B4D71EEF2DAF1643003A1316 /* KeychainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B442B75D2AB3451700284B92 /* KeychainProtocol.swift */; };
@@ -431,6 +433,8 @@
 		B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainSecureStorage.swift; path = "../../../../Security Feature/Keychain/KeychainSecureStorage.swift"; sourceTree = "<group>"; };
 		B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAssertHelpers.swift; sourceTree = "<group>"; };
 		B4A921702DC981B100591F6E /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
+		B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
+		B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParser.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4D71EF12DAF1D34003A1316 /* UserRegistrationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCase.swift; sourceTree = "<group>"; };
 		B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseTests.swift; sourceTree = "<group>"; };
@@ -1103,6 +1107,8 @@
 		B4D6B25B2DC8D15400F5A3FE /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */,
+				B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */,
 				B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */,
 				B48838412DC65FD70048CF98 /* LoginRequest.swift */,
 				B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */,
@@ -1712,6 +1718,7 @@
 				08346CEF24F93BC400A9F17C /* ImageCommentsMapper.swift in Sources */,
 				08EF9D1A250BB15C004539C2 /* LoadResourcePresenter.swift in Sources */,
 				B4F6AFE82DAE9DDA00D46FA8 /* SecureStorage.swift in Sources */,
+				B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */,
 				B48838482DC678930048CF98 /* FailedLoginAttemptsStore.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* SystemKeychain.swift in Sources */,
@@ -1738,6 +1745,7 @@
 				B48838442DC65FD70048CF98 /* LoginRequest.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */,
+				B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* ResourceErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
 				B49D2E8C2DB8E7F800D36E0D /* SystemSessionManager.swift in Sources */,

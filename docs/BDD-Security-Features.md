@@ -24,6 +24,8 @@
 
 *El token se almacena solo si el backend lo devuelve tras el registro.
 
+
+ahora te voy a pasar mi fichero BDD para que veas lo que llevo hecho y por dónde voy, además de que puedas analizar los checklist técnicos de cada caso de uso, que son 10 y darme tu valoración, así como de comparar en el proyecto y cotejar los checklist en verde con la implementación en Xcdode, tanto de producción como de cobertura en los test según lo que hay hecho y si está implementado o no, si falta algo o sobra algo. En definitiva, una auditoria del proyecto en base al BDD
 ---
 
 > **Nota profesional sobre tests de Keychain:**

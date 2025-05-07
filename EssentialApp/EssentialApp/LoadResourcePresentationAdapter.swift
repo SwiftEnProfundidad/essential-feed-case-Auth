@@ -15,12 +15,10 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
 	
 	init(loader: @escaping () -> AnyPublisher<Resource, Error>) {
 		self.loader = loader
-		print("LoadResourcePresentationAdapter<Resource:\(String(describing: Resource.self)), View:\(String(describing: View.self))> INIT")
 	}
 	
 	deinit {
 		cancellable?.cancel()
-		print("LoadResourcePresentationAdapter<Resource:\(String(describing: Resource.self)), View:\(String(describing: View.self))> DEINIT")
 	}
 	
 	func loadResource() {

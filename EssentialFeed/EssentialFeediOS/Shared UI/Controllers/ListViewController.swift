@@ -46,7 +46,6 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
 	}
 	
 	deinit {
-		print("ListViewController DEINIT - \(self) - Title: \(String(describing: self.title))")
 		onRefresh = nil
 		errorView.onHide = nil
 		

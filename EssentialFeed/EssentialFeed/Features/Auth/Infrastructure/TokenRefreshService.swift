@@ -1,38 +1,44 @@
 import Foundation
+import EssentialFeed // Asegúrate de que Token y TokenStorage son accesibles desde este target
 
-public protocol TokenStorage {
-	func loadRefreshToken() throws -> String
-	func save(token: Token) throws
-}
-
-public protocol TokenParser {
-	func parse(from data: Data) throws -> Token
-}
-
-public final class TokenRefreshService: RefreshTokenUseCase {
-	private let client: HTTPClient
-	private let storage: TokenStorage
-	private let parser: TokenParser
+final class TokenStorageSpy: TokenStorage {
+	// Mensajes para registrar las llamadas y sus parámetros
+	enum Message: Equatable {
+		case loadRefreshToken
+		case save(Token) // Token ya es Equatable
+	}
+	private(set) var messages = [Message]()
 	
-	public init(client: HTTPClient, storage: TokenStorage, parser: TokenParser) {
-		self.client = client
-		self.storage = storage
-		self.parser = parser
+	// Stubs para controlar el comportamiento del Spy
+	var loadRefreshTokenStub: Result<String?, Error>?
+	var saveTokenError: Error?
+	
+	// Implementación del protocolo TokenStorage
+	func loadRefreshToken() async throws -> String? {
+		messages.append(.loadRefreshToken)
+		
+		if let stub = loadRefreshTokenStub {
+			switch stub {
+				case .success(let tokenString):
+					return tokenString
+				case .failure(let error):
+					throw error
+			}
+		}
+		// Si no hay stub, puedes decidir un comportamiento por defecto.
+		// Por ejemplo, devolver un token de prueba o nil.
+		// Aquí devuelvo nil como un comportamiento por defecto razonable si no se especifica.
+		// O podrías lanzar un error si un test espera que siempre se configure un stub.
+		// return "default-spy-refresh-token" 
+		return nil // O un valor por defecto más explícito para los tests si es necesario
 	}
 	
-	public func execute() async throws -> Token {
-		let refreshToken = try storage.loadRefreshToken()
-		let request = makeRequest(with: refreshToken)
-		let (responseData, _) = try await client.send(request)
-		let token = try parser.parse(from: responseData) 
-		try storage.save(token: token)
-		return token
-	}
-	
-	private func makeRequest(with token: String) -> URLRequest {
-		var request = URLRequest(url: URL(string: "https://api.essentialdeveloper.com/auth/refresh")!)
-		request.httpMethod = "POST"
-		request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-		return request
+	func save(_ token: Token) async throws {
+		messages.append(.save(token))
+		
+		if let error = saveTokenError {
+			throw error
+		}
+		// Si no hay error, la operación de guardado se considera exitosa en el Spy.
 	}
 }

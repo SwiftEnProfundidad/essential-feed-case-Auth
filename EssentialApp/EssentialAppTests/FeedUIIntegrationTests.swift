@@ -15,7 +15,6 @@ class FeedUIIntegrationTests: XCTestCase {
 	private var sut: ListViewController?
 	
 	override func tearDown() {
-		print("FeedUIIntegrationTests tearDown: Nil-ing onRefresh for sut: \(String(describing: sut))")
 		sut?.onRefresh = nil
 		
 		window?.rootViewController = nil

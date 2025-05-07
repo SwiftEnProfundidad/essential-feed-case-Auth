@@ -186,32 +186,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		XCTAssertEqual(keychain.saveSpy.saveCallCount, 0, "No Keychain save should occur if there is no connectivity")
 	}
 	
-	// MARK: - Debug Minimal Test
-//	func test_registerUser_withNoConnectivity_minimal() async {
-//		let httpClient = HTTPClientSpy()
-//		let keychain = makeKeychainFullSpy()
-//		let sut = UserRegistrationUseCase(
-//			keychain: keychain,
-//			validator: RegistrationValidatorAlwaysValid(),
-//			httpClient: httpClient,
-//			registrationEndpoint: URL(string: "https://test-register-endpoint.com")!
-//		)
-//		
-//		print("TEST: SUT created")
-//		
-//		async let _ = sut.register(name: "Test", email: "test@gmail.com", password: "password")
-//		
-//		// Espera asíncrona a que el spy registre la request (máx 1s)
-//		let timeout: UInt64 = 1_000_000_000 // 1 segundo en nanosegundos
-//		let start = DispatchTime.now()
-//		while httpClient.requests.isEmpty && DispatchTime.now().uptimeNanoseconds - start.uptimeNanoseconds < timeout {
-//			try? await Task.sleep(nanoseconds: 10_000_000) // 10ms
-//		}
-//		
-//		print("TEST: HTTPClientSpy requests count: \(httpClient.requests.count)")
-//		XCTAssertEqual(httpClient.requests.count, 1, "Should have registered exactly one request")
-//	}
-	
 	private func makeSUTWithDefaults(
 		httpClient: HTTPClient = HTTPClientSpy(),
 		notifier: UserRegistrationNotifier = UserRegistrationNotifierSpy(),

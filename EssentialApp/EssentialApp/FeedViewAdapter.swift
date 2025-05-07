@@ -21,13 +21,11 @@ final class FeedViewAdapter: ResourceView {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.selection = selection
-		let controllerAddress = Unmanaged.passUnretained(controller).toOpaque()
-		print("FeedViewAdapter INIT for controller: \(controllerAddress) with imageLoader: \(String(describing: imageLoader)) and selection: \(String(describing: selection))")
+		_ = Unmanaged.passUnretained(controller).toOpaque()
 	}
 	
 	deinit {
-		let controllerAddress = controller.map { Unmanaged.passUnretained($0).toOpaque() }
-		print("FeedViewAdapter DEINIT for controller: \(String(describing: controllerAddress))")
+		_ = controller.map { Unmanaged.passUnretained($0).toOpaque() }
 		currentFeed = [:]
 	}
 	
