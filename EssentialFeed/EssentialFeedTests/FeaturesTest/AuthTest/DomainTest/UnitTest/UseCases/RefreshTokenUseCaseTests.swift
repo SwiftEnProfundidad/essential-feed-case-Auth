@@ -45,7 +45,7 @@ final class RefreshTokenUseCaseTests: XCTestCase {
 		XCTAssertEqual(client.requests.count, 1)
 		XCTAssertEqual(client.requestedHTTPMethods, ["POST"])
 		
-		// XCTAssertEqual(client.requestedHeaders, [["Authorization": "Bearer any-token"]])
+//	  XCTAssertEqual(client.requestedHeaders, [["Authorization": "Bearer any-token"]])
 	}
 	
 	// Helpers
@@ -59,10 +59,10 @@ final class RefreshTokenUseCaseTests: XCTestCase {
 		let refreshURL = URL(string: "https://any-refresh-url.com")!
 		
 		let sut = TokenRefreshService(
-			httpClient: client,      // Etiqueta correcta
-			tokenStorage: storage,   // Etiqueta correcta
-			tokenParser: parser,     // Etiqueta correcta
-			refreshURL: refreshURL   // Argumento añadido y etiqueta correcta
+			httpClient: client,
+			tokenStorage: storage,
+			tokenParser: parser,
+			refreshURL: refreshURL
 		)
 		trackForMemoryLeaks(client, file: file, line: line)
 		trackForMemoryLeaks(storage, file: file, line: line)
