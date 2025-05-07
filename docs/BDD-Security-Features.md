@@ -6,6 +6,7 @@ This document tracks the implementation of critical security features in the app
 
 *   ✅ **Implemented and Verified:** The feature is fully implemented and tests (unit, integration, UI) confirm it.
 *   🚧 **In Progress:** Implementation has started but is not complete.
+*   🔜 **Soon:** Implementation is planned but not yet started.
 *   ❌ **Not Implemented (Critical):** The feature is critical and has not yet been addressed.
 *   ⚠️ **Partially Implemented / Needs Review:** Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.
 *   ❓ **Pending Analysis/Definition:** The feature needs further discussion or definition before it can be implemented.
@@ -189,11 +190,11 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ### Technical Checklist for Registration (Reviewed)
 
 - [✅] **Store initial credentials (email/password) securely (Keychain)** (Implemented in `UserRegistrationUseCase` calling `keychain.save`)
-- [❌] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` currently does not receive or store token. **CRITICAL DISCREPANCY WITH BDD.**)
+- [🚧] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` currently does not receive or store token.)
 - [✅] **Notify registration success** (Via `UserRegistrationResult.success`)
 - [✅] **Notify that the email is already in use** (Handled by `UserRegistrationUseCase` and notifier)
 - [✅] **Show appropriate and specific error messages** (Via returned error types)
-- [❌] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` currently does not implement retry/offline logic. **CRITICAL DISCREPANCY WITH BDD.**)
+- [❌] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` currently does not implement retry/offline logic.)
 - [🟡] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality, but not missing parts like post-registration token handling or retries.)
 - [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests)
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
@@ -271,7 +272,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ### Technical Checklist for Login (Reviewed)
 
-- [🟡] **Store authentication token securely after successful login** (`UserLoginUseCase` returns the token, but does not store it. Responsibility falls on the consumer. **BDD implies this is part of the "completed" login flow**.)
+- [🟡🔜] **Store authentication token securely after successful login** (`UserLoginUseCase` returns the token, but does not store it. Responsibility falls on the consumer. **BDD implies this is part of the "completed" login flow**.)
 - [🟡] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by another component. **BDD implies this is part of the "completed" login flow**.)
 - [✅] **Notify login success** (Via `LoginSuccessObserver`)
     #### Subtasks

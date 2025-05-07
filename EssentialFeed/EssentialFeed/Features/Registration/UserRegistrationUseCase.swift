@@ -26,7 +26,6 @@ public protocol RegistrationValidatorProtocol {
 	func validate(name: String, email: String, password: String) -> RegistrationValidationError?
 }
 
-
 public enum UserRegistrationError: Error, Equatable {
 	case emailAlreadyInUse
 }
@@ -48,15 +47,35 @@ public protocol UserRegistrationNotifier {
 	func notifyEmailAlreadyInUse()
 }
 
+public enum TokenParsingError: Error, Equatable {
+	case invalidData
+	case missingToken
+}
+
+private struct ServerAuthResponse: Codable {
+	struct UserPayload: Codable {
+		let name: String
+		let email: String
+	}
+	struct TokenPayload: Codable {
+		let value: String
+		let expiry: Date
+	}
+	let user: UserPayload
+	let token: TokenPayload
+}
+
 public actor UserRegistrationUseCase {
 	private let keychain: KeychainProtocol
+	private let tokenStorage: TokenStorage
 	private let validator: RegistrationValidatorProtocol
 	private let httpClient: HTTPClient
 	private let registrationEndpoint: URL
 	private let notifier: UserRegistrationNotifier?
 	
-	public init(keychain: KeychainProtocol, validator: RegistrationValidatorProtocol, httpClient: HTTPClient, registrationEndpoint: URL, notifier: UserRegistrationNotifier? = nil) {
+	public init(keychain: KeychainProtocol, tokenStorage: TokenStorage, validator: RegistrationValidatorProtocol, httpClient: HTTPClient, registrationEndpoint: URL, notifier: UserRegistrationNotifier? = nil) {
 		self.keychain = keychain
+		self.tokenStorage = tokenStorage
 		self.validator = validator
 		self.httpClient = httpClient
 		self.registrationEndpoint = registrationEndpoint
@@ -80,12 +99,26 @@ public actor UserRegistrationUseCase {
 			])
 			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 			
-			let (_, httpResponse) = try await httpClient.send(request)
+			let (data, httpResponse) = try await httpClient.send(request)
 			
 			switch httpResponse.statusCode {
 				case 201:
-					saveCredentials(email: email, password: password)
-					return .success(User(name: name, email: email))
+					do {
+						let decoder = JSONDecoder()
+						decoder.dateDecodingStrategy = .iso8601
+						let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
+						let receivedToken = Token(value: serverResponse.token.value, expiry: serverResponse.token.expiry)
+						
+						try await tokenStorage.save(receivedToken)
+						
+						saveCredentials(email: email, password: password)
+						return .success(User(name: name, email: email))
+						
+					} catch let tokenError as TokenParsingError {
+						return .failure(tokenError)
+					} catch { 
+						return .failure(error) 
+					}
 				case 409:
 					notifier?.notifyEmailAlreadyInUse()
 					return .failure(UserRegistrationError.emailAlreadyInUse)
@@ -96,12 +129,13 @@ public actor UserRegistrationUseCase {
 				default:
 					return .failure(NetworkError.unknown)
 			}
+		} catch let error as NetworkError {
+			return .failure(error)
 		} catch {
 			return .failure(error)
 		}
 	}
 	
-	// MARK: - Private Helpers (Actor Context)
 	private func saveCredentials(email: String, password: String) {
 		_ = keychain.save(data: password.data(using: .utf8)!, forKey: email)
 	}

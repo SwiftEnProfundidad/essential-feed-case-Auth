@@ -1,44 +1,57 @@
 import Foundation
-import EssentialFeed // Asegúrate de que Token y TokenStorage son accesibles desde este target
+// Asegúrate de que Token, TokenStorage, TokenParser y HTTPClient sean accesibles.
+// Probablemente necesites: import EssentialFeed o importaciones específicas si están en diferentes módulos/targets.
 
-final class TokenStorageSpy: TokenStorage {
-	// Mensajes para registrar las llamadas y sus parámetros
-	enum Message: Equatable {
-		case loadRefreshToken
-		case save(Token) // Token ya es Equatable
+public final class TokenRefreshService: RefreshTokenUseCase {
+	private let httpClient: HTTPClient
+	private let tokenStorage: TokenStorage
+	private let tokenParser: TokenParser 
+	private let refreshURL: URL 
+	
+	public enum Error: Swift.Error {
+		case connectivity
+		case invalidData
+		case expiredRefreshToken
 	}
-	private(set) var messages = [Message]()
 	
-	// Stubs para controlar el comportamiento del Spy
-	var loadRefreshTokenStub: Result<String?, Error>?
-	var saveTokenError: Error?
+	public init(httpClient: HTTPClient, tokenStorage: TokenStorage, tokenParser: TokenParser, refreshURL: URL) {
+		self.httpClient = httpClient
+		self.tokenStorage = tokenStorage
+		self.tokenParser = tokenParser
+		self.refreshURL = refreshURL
+	}
 	
-	// Implementación del protocolo TokenStorage
-	func loadRefreshToken() async throws -> String? {
-		messages.append(.loadRefreshToken)
+	public func execute() async throws -> Token {
+		guard let refreshToken = try await tokenStorage.loadRefreshToken() else {
+			throw Error.expiredRefreshToken
+		}
 		
-		if let stub = loadRefreshTokenStub {
-			switch stub {
-				case .success(let tokenString):
-					return tokenString
-				case .failure(let error):
-					throw error
+		var request = URLRequest(url: refreshURL)
+		request.httpMethod = "POST"
+		request.httpBody = try JSONEncoder().encode(["refreshToken": refreshToken])
+		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		
+		do {
+			let (data, response) = try await httpClient.send(request) 
+			
+			guard response.statusCode == 200 else {
+				if response.statusCode == 401 {
+					throw Error.expiredRefreshToken
+				}
+				throw Error.invalidData
 			}
-		}
-		// Si no hay stub, puedes decidir un comportamiento por defecto.
-		// Por ejemplo, devolver un token de prueba o nil.
-		// Aquí devuelvo nil como un comportamiento por defecto razonable si no se especifica.
-		// O podrías lanzar un error si un test espera que siempre se configure un stub.
-		// return "default-spy-refresh-token" 
-		return nil // O un valor por defecto más explícito para los tests si es necesario
-	}
-	
-	func save(_ token: Token) async throws {
-		messages.append(.save(token))
-		
-		if let error = saveTokenError {
+			
+			let newToken = try tokenParser.parse(from: data)
+			
+			try await tokenStorage.save(newToken)
+			
+			return newToken
+		} catch is Swift.DecodingError {
+			throw Error.invalidData
+		} catch let error as Error { 
 			throw error
+		} catch { 
+			throw Error.connectivity
 		}
-		// Si no hay error, la operación de guardado se considera exitosa en el Spy.
 	}
 }
