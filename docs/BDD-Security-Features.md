@@ -1,203 +1,227 @@
-# Estado de Implementación
+# BDD - Security Features Implementation Status
 
-# Cómo usar este documento
-- Utiliza este documento como guía para priorizar el desarrollo y los tests.
-- Marca los escenarios como completados a medida que avances.
-- Amplía los escenarios con ejemplos Gherkin si lo deseas (puedo ayudarte a generarlos).
+This document tracks the implementation of critical security features in the application, following a Behavior-Driven Development (BDD) approach. Each feature is broken down into specific scenarios or acceptance criteria.
 
-## 🔐 Explicación técnica: Ciclo de vida y uso de tokens (JWT/OAuth)
+## Status Legend:
 
-- **Registro de usuario:** No requiere token en la petición. El backend devuelve un token tras el registro exitoso (si aplica), que debe almacenarse de forma segura (Keychain).
-- **Login/autenticación:** No requiere token en la petición. El backend devuelve un token tras login exitoso, que debe almacenarse de forma segura.
-- **Operaciones protegidas:** Todas las peticiones a endpoints protegidos (cambio de contraseña, actualización de perfil, acceso a recursos, etc) requieren que la app añada el token en la cabecera `Authorization: Bearer <token>`. El token se obtiene del almacenamiento seguro.
-- **Expiración y renovación:** El token tiene un tiempo de vida limitado. Si expira, la app debe intentar renovarlo usando el refresh token. Si no es posible renovar, se fuerza al usuario a autenticarse de nuevo.
-- **Peticiones públicas:** Registro, login y recuperación de contraseña (si es pública) no requieren token.
+*   ✅ **Implemented and Verified:** The feature is fully implemented and tests (unit, integration, UI) confirm it.
+*   🚧 **In Progress:** Implementation has started but is not complete.
+*   ❌ **Not Implemented (Critical):** The feature is critical and has not yet been addressed.
+*   ⚠️ **Partially Implemented / Needs Review:** Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.
+*   ❓ **Pending Analysis/Definition:** The feature needs further discussion or definition before it can be implemented.
+*   🔒 **Documented Only (Concept):** The feature is defined and documented, but implementation has not started. Awaiting validation.
 
-| Petición                   | ¿Requiere token? | ¿Almacena token? | ¿Usa refresh? |
-|----------------------------|:----------------:|:----------------:|:-------------:|
-| Registro                   |        ❌        |       ✅*        |      ❌       |
-| Login                      |        ❌        |       ✅         |      ❌       |
-| Cambio de contraseña       |        ✅        |       ❌         |      ❌       |
-| Acceso a datos protegidos  |        ✅        |       ❌         |      ❌       |
-| Refresh token              |        ✅        |       ✅         |      ✅       |
-| Logout                     |      Depende     |       ❌         |      ❌       |
+# Implementation Status
 
-*El token se almacena solo si el backend lo devuelve tras el registro.
+# How to use this document
+- Use this document as a guide to prioritize development and tests.
+- Mark scenarios as completed as you progress.
+- Expand scenarios with Gherkin examples if you wish (I can help generate them).
 
----
+## 🔐 Technical Explanation: Token Lifecycle and Usage (JWT/OAuth)
 
-> **Nota profesional sobre tests de Keychain:**
-> Para garantizar la fiabilidad y reproducibilidad de los tests de integración relacionados con Keychain, se recomienda ejecutar siempre en target **macOS** salvo que sea imprescindible una dependencia de UIKit. En simulador iOS y en CLI (xcodebuild), los tests de Keychain pueden fallar de forma intermitente por problemas de sandboxing y sincronización. Esta preferencia se aplica tanto en CI/CD como en validaciones locales. 
-> Por ejemplo para EssentialFeed: **xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES**  
+- **User Registration:** Does not require a token in the request. The backend returns a token after successful registration (if applicable), which must be stored securely (Keychain).
+- **Login/Authentication:** Does not require a token in the request. The backend returns a token after successful login, which must be stored securely.
+- **Protected Operations:** All requests to protected endpoints (password change, profile update, resource access, etc.) require the app to add the token in the `Authorization: Bearer <token>` header. The token is obtained from secure storage.
+- **Expiration and Renewal:** The token has a limited lifetime. If it expires, the app must attempt to renew it using the refresh token. If renewal is not possible, the user is forced to authenticate again.
+- **Public Requests:** Registration, login, and password recovery (if public) do not require a token.
 
-## 🛠 ESTÁNDARES DE DESARROLLO
+| Request                     | Requires token? | Stores token? | Uses refresh? |
+|-----------------------------|:--------------:|:-------------:|:-------------:|
+| Registration                |       ❌       |      ✅*      |      ❌       |
+| Login                       |       ❌       |      ✅       |      ❌       |
+| Password change             |       ✅       |      ❌       |      ❌       |
+| Access to protected data    |       ✅       |      ❌       |      ❌       |
+| Refresh token               |       ✅       |      ✅       |      ✅       |
+| Logout                      |    Depends     |      ❌       |      ❌       |
 
-### Sistema de Estados
-| Emoji | Estado          | Criterios de Completado                          |
-|-------|-----------------|--------------------------------------------------|
-| ✅    | **Completado**  | Implementado + tests (≥80%) + documentado        |
-| 🟡    | **Parcial**     | Código hecho pero faltan tests/edge cases        |
-| ⏳    | **En progreso** | Branch activo (prefijo `feature/` o `fix/`)      |
-| 🔜    | **Planificado** | Priorizado en sprint backlog (Jira/GitHub)       |
-| ❌    | **Pendiente**   | Sin trabajo iniciado/bloqueado                   |
-
-### Convenciones Técnicas
-1. **Tests**:
-   - Nomenclatura: `test_[unidad]_[condición]_[resultadoEsperado]`
-   - Ubicación:
-     ```bash
-     EssentialFeedTests/
-     ├── Features/
-     │   └── [Feature]/
-     │       ├── Unit/  # Lógica core
-     │       └── Integration/  # Flujos complejos
-     ```
-
-2. **Documentación**:
-   - Checklists técnicos requieren:
-     - Emoji de estado en ítem principal
-     - Subtareas con mismo sistema
-     - Comentarios breves para items [🟡] y [❌]
+*The token is stored only if the backend returns it after registration.
 
 ---
 
-## Resumen Actualizado de Estado de Implementación
+> **Professional note about Keychain tests:**
+> To ensure reliability and reproducibility of integration tests related to Keychain, it is recommended to always run on **macOS** target unless UIKit dependency is essential. On iOS simulator and CLI (xcodebuild), Keychain tests may fail intermittently due to sandboxing and synchronization issues. This preference applies both in CI/CD and local validations.
+> For EssentialFeed, for example: **xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES**  
 
-| Caso de Uso                                 | Estado | Comentario                                       |
-|---------------------------------------------|--------|--------------------------------------------------|
-| 1. Almacenamiento Seguro (Keychain/SecureStorage) | ✅     | **Cobertura >80%**. Tests unitarios, integración y cobertura de escenarios reales: borrado previo, unicode, binarios grandes, concurrencia, errores de sistema, validación tras guardado, memory leaks y persistencia real. |
-| 2. Registro de Usuario                      | ✅     | Todos los caminos (happy/sad) cubiertos por tests. |
-| 3. Autenticación de Usuario (Login)         | ✅     | Parcialmente cubierto: token seguro y error credenciales. Falta cubrir flujos edge y expiración. |
-| 4. Gestión de Token Expirado                | 🔜     | Sin tests, pendiente de implementar.              |
-| 5. Recuperación de Contraseña               | 🟡     | Sin tests, pendiente de implementar.              |
-| 6. Gestión de Sesiones                      | 🟡     | Sin tests, pendiente de implementar.              |
-| 7. Cambio de Contraseña                     | 🟡     | Sin tests, pendiente de implementar              |
-| 8. Verificación de Cuenta                   | 🟡     | Sin tests, pendiente de implementar              |
-| 9. Autenticación con Proveedores Externos   | 🟡     | Sin tests, pendiente de implementar              |
-| 10. Métricas de Seguridad                   | 🟡     | Sin tests, pendiente de implementar              |
+## 🛠 DEVELOPMENT STANDARDS
 
-> Solo se marca como completado lo que está cubierto por tests automatizados reales. El resto debe implementarse y testearse antes de marcar como hecho.
+### Status System
+| Emoji | Status           | Completion Criteria                                  |
+|-------|------------------|-----------------------------------------------------|
+| ✅    | **Completed**    | Implemented + tests (≥80%) + documented             |
+| 🟡    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
+| ❌    | **Pending**      | Not implemented or not found in current code.        |
+
+- ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
+    - [✅] **Real save/load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
+    - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
+    - [🟡] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
+    - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
+    - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
+    - [🟡] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
+    - [🟡] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
+    - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
+    - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
+    - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
+    - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
+    - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
+    - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
+    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
+    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+
+#### Technical Diagram
+*(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
+
+> **Note:** Snapshot testing has been evaluated and discarded for secure storage, since relevant outputs (results and errors) are directly validated using asserts and explicit comparisons. This decision follows best professional testing practices in iOS and avoids adding redundant or low-value tests for the Keychain domain.
+    - [✅] Coverage of all critical code branches (add specific tests for each uncovered branch)
+
+#### Secure storage technical diagram flow
+### Functional Narrative
+As an application, I need to store sensitive data (tokens, credentials) securely, protecting it against unauthorized access and persisting the information between sessions.
 
 ---
 
-## Checklist de Cobertura y Escenarios
+### Scenarios (Acceptance Criteria)
+_(Only reference for QA/business. Progress is marked only in the technical checklist)_
+- Successful storage and retrieval of data in Keychain.
+- Secure deletion of data from Keychain.
+- Resilience against operations with non-existent keys.
+- The implementation prevents accidental duplication of items for the same key (delete-before-add strategy).
+- Guardado y recuperación exitosa de datos en Keychain.
+- Borrado seguro de datos de Keychain.
+- Resiliencia ante operaciones con claves inexistentes.
+- La implementación previene la duplicación accidental de ítems para la misma clave (estrategia de borrar antes de añadir).
 
-- ✅ **Keychain/SecureStorage**
-    - [✅] Save/load real en Keychain
-    - [✅] Borrado previo antes de guardar
-    - [✅] Soporte para claves unicode y datos binarios grandes
-    - [✅] Validación post-guardado
-    - [✅] Prevención de memory leaks
-    - [✅] Mapping de errores a mensajes claros y específicos para el usuario final
-    - [✅] Cobertura de concurrencia (thread safety)
-    - [✅] Cobertura de persistencia real (integration tests)
-    - [✅] Forzar error de duplicidad y asegurar que se ejecuta handleDuplicateItem 
-    - [✅] Validar que el método handleDuplicateItem retorna correctamente según el flujo de actualización y comparación (cubierto por tests de actualización y duplicidad)
-    - [✅] Garantizar que la estrategia NoFallback retorna .failure y nil en todos los casos (tests de fallback y no fallback cubiertos)
-    - [✅] Cubrir todos los caminos de error y edge cases internos de los helpers/factories usados en tests
-    - [✅] Ejecutar closures internos de guardado, borrado y carga (incluyendo callbacks y ramas asíncronas si existen)
-    - [✅] Test de integración real con Keychain del sistema 
-    - [❌-N/A] Snapshot testing para outputs y errores relevantes (no aporta valor añadido en almacenamiento seguro; cubierto por asserts y validaciones directas)
+---
+
+### Checklist técnico de Almacenamiento Seguro
+
+| Emoji | Estado          | Criterios de Completado (Revisado)                 |
+|-------|-----------------|----------------------------------------------------|
+| ✅    | **Completado**  | Implementado + tests (≥80%) + documentado          |
+| 🟡    | **Parcial**     | Implementación funcional pero no cubre todos los aspectos avanzados del BDD original o necesita validación adicional. |
+| ❌    | **Pendiente**   | No implementado o no encontrado en el código actual. |
+
+- ✅ **Keychain/SecureStorage (Implementación Principal: `KeychainHelper` como `KeychainStore`)**
+    - [✅] **Save/load real en Keychain para Strings** (Cubierto por `KeychainHelper` y `KeychainHelperTests`)
+    - [✅] **Borrado previo antes de guardar** (Estrategia implementada en `KeychainHelper.set`)
+    - [🟡] **Soporte para claves unicode y datos binarios grandes** (Actualmente `KeychainHelper` solo maneja `String`. El ✅ original en BDD podría ser una sobreestimación o referirse a la capacidad de la API de Keychain, no de `KeychainHelper`. Necesitaría extensión para `Data`.)
+    - [❌] **Validación post-guardado** (No implementado en `KeychainHelper`. `set` no relee para confirmar.)
+    - [✅] **Prevención de memory leaks** (Se usa `trackForMemoryLeaks` en `KeychainHelperTests`)
+    - [🟡] **Mapping de errores a mensajes claros y específicos para el usuario final** (`KeychainHelper` devuelve `nil` en fallos de lectura, no hay mapping granular de `OSStatus`. El ✅ original en BDD podría referirse a una capa superior o ser una sobreestimación.)
+    - [🟡] **Cobertura de concurrencia (thread safety)** (Operaciones individuales de Keychain son atómicas. `KeychainHelper` no añade sincronización para secuencias complejas. El ✅ original es aceptable si se refiere a operaciones atómicas, no a la thread-safety de la clase para múltiples operaciones combinadas.)
+    - [✅] **Cobertura de persistencia real (integration tests)** (Cubierto por `KeychainHelperTests` que interactúan con Keychain real.)
+    - [✅] **Forzar error de duplicidad y asegurar que se ejecuta `handleDuplicateItem`** (No aplicable a `KeychainHelper` por su estrategia de borrar-antes-de-añadir, que previene `errSecDuplicateItem`. El ✅ original es coherente con esta prevención.)
+    - [✅] **Validar que el método `handleDuplicateItem` retorna correctamente según el flujo de actualización y comparación** (No aplicable a `KeychainHelper`.)
+    - [❌] **Garantizar que la estrategia `NoFallback` retorna `.failure` y `nil` en todos los casos** (No hay evidencia de una estrategia "NoFallback" en `KeychainHelper` o `KeychainStore`.)
+    - [✅] **Cubrir todos los caminos de error y edge cases internos de los helpers/factories usados en tests** (`KeychainHelperTests` cubre casos básicos de CRUD y claves inexistentes.)
+    - [✅] **Ejecutar closures internos de guardado, borrado y carga** (No hay closures complejos en `KeychainHelper`.)
+    - [✅] **Test de integración real con Keychain del sistema** (Cubierto por `KeychainHelperTests`.)
+    - [✅] **Cobertura de todos los branches/ramas de código crítico** (Para `KeychainHelper`, las ramas principales de CRUD están cubiertas en tests.)
+
+#### Diagrama técnico
+*(El diagrama original sigue siendo válido conceptualmente, pero la implementación actual de `SecureStorage` es `KeychainHelper` y no parece haber `AlternativeStorage`)*
 
 > **Nota:** El snapshot testing se ha evaluado y descartado para el almacenamiento seguro, ya que los outputs relevantes (resultados y errores) se validan de forma directa mediante asserts y comparaciones explícitas. Esta decisión sigue las mejores prácticas de testing profesional en iOS y evita añadir tests redundantes o de bajo valor añadido para el dominio de Keychain.
     - [✅] Cobertura de todos los branches/ramas de código crítico (añadir tests específicos para cada branch no cubierto)
 
-#### Diagrama técnico
+#### Flujo del diagrama técnico almacenamiento seguro
 
 ```mermaid
-graph TD
-    A[App] -->|save| B[SecureStorage]
-    B -->|save| C[SystemKeychain]
-    C -->|OS API| D[Keychain Services]
-    B -->|fallback| E[AlternativeStorage]
-    E -->|save| F[UserDefaults/Cloud]
-    C -->|error| G[ErrorHandler]
-    G -->|notify| A
+flowchart TD
+    A[App] -- save/get/delete via KeychainStore --> B[KeychainHelper]
+    B -- SecItemAdd, SecItemCopyMatching, SecItemDelete --> C[System Keychain]
+    C -- OS API --> D[Keychain Services]
+    B -- returns String? or void, no error mapping granular --> A
 ```
 
-#### 🗂️ Tabla de trazabilidad técnica <-> tests
+#### 🗂️ Tabla de trazabilidad técnica <-> tests (Revisada)
 
-| 🛠️ Subtarea técnica                                                                                                   | ✅ Test que la cubre (real/propuesto)                     | Tipo de test         | Estado   |
-|-----------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|----------------------|----------|
-| Determinar nivel de protección necesario para cada dato                         | test_protectionLevelForData              | Unitario          | ✅         |
-| Encriptar la información antes de almacenar si es necesario                     | test_encryptsDataIfNeeded                | Unitario          | ✅         |
-| Almacenar en Keychain con configuración adecuada                                | test_saveAndLoad_realKeychain_persistsAndRetrievesData | Integración | ✅      |
-| Verificar que la información se almacena correctamente                          | test_saveAndLoad_realKeychain_persistsAndRetrievesData | Integración | ✅      |
-| Intentar almacenamiento alternativo si falla el Keychain                        | test_save_fallbackToAlternativeStorage   | Unitario/Integración | ✅      |
-| Notificar error si persiste el fallo                                            | test_save_notifiesOnPersistentFailure    | Unitario/Integración | ✅      |
-| Limpiar datos corruptos y solicitar nueva autenticación                         | test_detectsAndCleansCorruptedData       | Unitario/Integración | ✅      |
-| Eliminar correctamente valores previos antes de guardar uno nuevo               | test_save_deletesPreviousValueBeforeSavingNewOne | Integración | ✅  |
-| Soportar claves unicode y datos binarios grandes                                | test_save_supportsUnicodeKeysAndLargeBinaryData | Integración | ✅     |
-| Robustez ante concurrencia                                                      | test_save_isThreadSafe                   | Integración       | ✅         |
-| Cubrir todos los códigos de error posibles de la API Keychain                   | test_save_handlesSpecificKeychainErrors  | Unitario/Integración | ✅      |
-| Retornar 'false' si la clave está vacía                                         | test_save_returnsFalse_forEmptyKey       | Unitario          | ✅         |
-| Retornar 'false' si los datos están vacíos                                      | test_save_returnsFalse_forEmptyData      | Unitario          | ✅         |
-| Retornar 'false' si la clave contiene solo espacios                             | test_save_returnsFalse_forKeyWithOnlySpaces | Unitario       | ✅         |
-| Retornar 'false' si la operación de Keychain falla (simulado)                   | test_save_returnsFalse_onKeychainFailure, test_save_returnsFalse_whenKeychainAlwaysFails | Unitario/Integración | ✅      |
-| Persistencia real: save y load en Keychain                                      | test_realSystemKeychain_saveAndLoad_returnsPersistedData | Integración | ✅      |
-| Forzar error de duplicidad y asegurar que se ejecuta `handleDuplicateItem`      | test_save_onSystemKeychain_withDuplicateItem_andUpdateFails_returnsDuplicateItem, test_save_duplicateItem_triggersHandleDuplicateItem | Unitario/Integración | ✅ |
-| Validar que el método `handleDuplicateItem` retorna correctamente según el flujo de actualización y comparación | test_handleDuplicateItem_returnsDuplicateItem_whenMaxAttemptsReached, test_save_onSystemKeychain_withDuplicateItem_andUpdateFails_returnsDuplicateItem | Unitario/Integración | ✅ |
-| Garantizar que la estrategia `NoFallback` retorna `.failure` y `nil` en todos los casos | test_noFallback_save_and_load_alwaysFail, test_save_onNoFallback_alwaysReturnsFailure, test_noFallback_load_alwaysReturnsNil | Unitario/Integración | ✅ |
-| Ejecutar closures internos de guardado, borrado y carga (incluyendo callbacks y ramas asíncronas si existen) | test_closures_full_coverage, test_closures_areInvokedInAllPaths | Unitario/Integración | ✅ (cobertura parcial, falta afinar edge cases asíncronos) |
-| Cubrir todos los caminos de error y edge cases internos de los helpers/factories usados en tests | test_factories_coverAllInternalPaths | Unitario/Integración | ✅ (pendiente de refinar para casos extremos y factories auxiliares) |
+| 🛠️ Subtarea técnica (BDD Original)                                    | ✅ Test que la cubre (real/propuesto)                     | Tipo de test         | Estado (Revisado) | Comentario Breve                                                                 |
+|-----------------------------------------------------------------------|-----------------------------------------------------------|----------------------|-------------------|----------------------------------------------------------------------------------|
+| Determinar nivel de protección necesario para cada dato                 | *No directamente testeable a nivel de `KeychainHelper`*     | *Configuración*      | 🟡                | Depende de cómo se usa `KeychainHelper` y los atributos por defecto de Keychain. |
+| Encriptar la información antes de almacenar si es necesario             | *Keychain lo hace por defecto*                            | *Sistema Operativo*  | ✅                | No es responsabilidad de `KeychainHelper` implementar la encriptación.        |
+| Almacenar en Keychain con configuración adecuada                        | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integración          | ✅                | Para Strings.                                                                    |
+| Verificar que la información se almacena correctamente                  | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integración          | ✅                | Para Strings.                                                                    |
+| Intentar almacenamiento alternativo si falla el Keychain                | *No implementado*                                         | N/A                  | ❌                | `KeychainHelper` no tiene lógica de fallback.                                   |
+| Notificar error si persiste el fallo                                    | *No implementado*                                         | N/A                  | 🟡                | `KeychainHelper.get` devuelve `nil`, no errores específicos.                     |
+| Limpiar datos corruptos y solicitar nueva autenticación                 | *No implementado*                                         | N/A                  | ❌                | Lógica de aplicación, no de `KeychainHelper`.                                   |
+| Eliminar correctamente valores previos antes de guardar uno nuevo       | `test_set_overwritesPreviousValue` (`KeychainHelperTests`)| Integración          | ✅                |                                                                                  |
+| Soportar claves unicode y datos binarios grandes                        | `KeychainHelperTests` usa Strings.                        | Integración          | 🟡                | `KeychainHelper` limitado a Strings. Soporte binario requeriría cambios.       |
+| Robustez ante concurrencia                                              | *No hay tests específicos de concurrencia*                  | Integración          | 🟡                | Operaciones Keychain individuales son atómicas. `KeychainHelper` no añade más. |
+| Cover all possible Keychain API error codes                | `KeychainHelperTests` covers `nil` on get.                  | Unit/Integration    | 🟡                | No granular mapping of `OSStatus`.                                               |
+| Return 'false' if the key is empty                        | *Not explicitly tested*                                     | Unit                | 🟡                | Depends on Keychain API behavior with empty keys.                                |
+| Return 'false' if the data is empty                       | `KeychainHelperTests` does not test saving empty string.    | Unit                | 🟡                |                                                                                  |
+| Return 'false' if the key contains only spaces            | *Not explicitly tested*                                     | Unit                | 🟡                |                                                                                  |
+| Return 'false' if the Keychain operation fails (simulated)| `test_get_returnsNilForNonexistentKey`                      | Unit/Integration    | ✅                | Covers the "not found" case.                                                     |
+| Real persistence: save and load in Keychain               | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration         | ✅                |                                                                                  |
+| Force duplicate error and ensure `handleDuplicateItem` is executed | *Not applicable*                                    | N/A                 | ✅                | `KeychainHelper` prevents duplicates by deleting first.                          |
+| Validate that `handleDuplicateItem` returns correctly...  | *Not applicable*                                            | N/A                 | ✅                |                                                                                  |
+| Ensure the `NoFallback` strategy returns `.failure` and `nil`... | *Not implemented*                                   | N/A                 | ❌                | No fallback strategy.                                                            |
 
 ---
 
-> **Nota profesional sobre tests de Keychain:**
+> **Professional note about Keychain tests:**
 > 
-> El test `test_save_returnsFalse_whenAllRetriesFail_integration` es de tipo **integración** y puede ser no determinista en simulador/CLI.
-> Para cobertura real de la rama de error (por ejemplo, clave inválida), utiliza el test **unitario con mock**: `test_save_returnsFalse_whenKeychainAlwaysFails`.
+> The test `test_save_returnsFalse_whenAllRetriesFail_integration` is an **integration** test and may be non-deterministic on simulator/CLI.
+> For real error branch coverage (e.g., invalid key), use the **unit test with mock**: `test_save_returnsFalse_whenKeychainAlwaysFails`.
 > 
-> Esta práctica garantiza fiabilidad, reproducibilidad y cobertura real de todos los caminos de error en Keychain, tanto en CI/CD como en validaciones locales.
+> This practice ensures reliability, reproducibility, and real coverage of all error paths in Keychain, both in CI/CD and local validations.
 
 ---
 
-## 2. Registro de Usuario
+## 2. User Registration
 
-### Narrativa funcional
-Como nuevo usuario, quiero poder registrarme en la aplicación para acceder a las funcionalidades y recibir un token de autenticación tras el registro.
-
----
-
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Registro exitoso (token y credenciales almacenadas de forma segura)
-- Error de datos inválidos
-- Error de correo ya registrado
-- Error de conexión
+### Functional Narrative
+As a new user, I want to be able to register in the application to access functionalities and receive an authentication token after registration, which will be stored securely.
 
 ---
 
-### Checklist técnico de registro
-- [✅] Almacenar credenciales iniciales de forma segura (Keychain)
-- [✅] Almacenar el token de autenticación recibido (OAuth/JWT) de forma segura tras registro
-- [✅] Notificar éxito de registro
-- [✅] Notificar que el correo ya está en uso
-- [✅] Mostrar mensajes de error apropiados y específicos
-- [✅] Guardar datos para reintento si no hay conexión y notificar error
-- [✅] Tests unitarios y de integración para todos los caminos (happy/sad path)
-- [✅] Refactor: helper de tests usa KeychainSpy concreto para asserts claros
-- [✅] Documentación y arquitectura alineada (ver AUTH-ARCHITECTURE-GUIDE.md, sección 2)
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- Successful registration (credentials stored, **authentication token received and stored**).
+- Invalid data error.
+- Email already registered error.
+- Connection error (**with retry handling if applicable**).
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Checklist for Registration (Reviewed)
+
+- [✅] **Store initial credentials (email/password) securely (Keychain)** (Implemented in `UserRegistrationUseCase` calling `keychain.save`)
+- [❌] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` currently does not receive or store token. **CRITICAL DISCREPANCY WITH BDD.**)
+- [✅] **Notify registration success** (Via `UserRegistrationResult.success`)
+- [✅] **Notify that the email is already in use** (Handled by `UserRegistrationUseCase` and notifier)
+- [✅] **Show appropriate and specific error messages** (Via returned error types)
+- [❌] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` currently does not implement retry/offline logic. **CRITICAL DISCREPANCY WITH BDD.**)
+- [🟡] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality, but not missing parts like post-registration token handling or retries.)
+- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests)
+- [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
+
+---
+
+### Technical Flows (happy/sad path) (Reviewed)
 **Happy path:**
-- Ejecutar comando "Registrar Usuario" con los datos proporcionados
-- Validar el formato de los datos
-- Enviar solicitud de registro al servidor
-- Recibir confirmación de creación de cuenta
-- Almacenar credenciales y token de forma segura
-- Notificar éxito de registro
+- Execute "Register User" command with provided data.
+- Validate data format.
+- Send registration request to the server.
+- Receive account creation confirmation **and authentication token.**
+- Store credentials and **authentication token** securely.
+- Notify registration success.
 
 **Sad path:**
-- Datos inválidos: sistema no envía solicitud ni guarda credenciales
-- Email ya registrado (409): sistema devuelve error de dominio y no guarda credenciales, notifica y sugiere recuperación
-- Sin conectividad: sistema almacena la solicitud para reintentar, notifica error y ofrece opción de notificación al usuario
+- Invalid data: system does not send request or store credentials.
+- Email already registered (409): system returns domain error and does not store credentials, notifies and suggests recovery.
+- No connectivity: system **(should)** store the request for retry, notifies error and offers notification option to user. *(Currently not implemented)*
 
 ---
 
-### Diagrama técnico del flujo de registro
+### Technical Diagram
+*(The original diagram is conceptually valid, but the implementation of C[UserRegistrationUseCase] currently omits step G[Token stored] and retry logic)*
+
+---
+
+### Registration Technical Diagram Flow
 ```mermaid
 flowchart TD
     A[UI Layer] --> B[RegistrationViewModel]
@@ -205,214 +229,191 @@ flowchart TD
     C --> D[HTTPClient]
     C --> E[RegistrationValidator]
     C --> F[SecureStorage/Keychain]
-    D -- 201 Created --> G[Token almacenado]
-    D -- 409 Conflict --> H[Notificar email ya registrado]
-    D -- Error --> I[Notificar error de conectividad o dominio]
+    D -- 201 Created --> G[Token stored]
+    D -- 409 Conflict --> H[Notify email already registered]
+    D -- Error --> I[Notify connectivity or domain error]
 ```
 
 ---
 
-### Tabla de trazabilidad checklist técnico <-> tests
-| Ítem checklist técnico                                         | Test que lo cubre (nombre real)                                    | Tipo de test      | Cobertura  |
-|---------------------------------------------------------------|--------------------------------------------------------------------|-------------------|------------|
-| Almacenar credenciales iniciales de forma segura (Keychain)   | test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely | Integración       | ✅         |
-| Almacenar el token de autenticación recibido...                | test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely | Integración       | ✅         |
-| Notificar éxito de registro                                   | test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely | Integración       | ✅         |
-| Notificar que el correo ya está en uso                        | test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError_andDoesNotStoreCredentials | Integración       | ✅         |
-| Mostrar mensajes de error apropiados y específicos            | test_registerUser_withInvalidEmail_returnsValidationError_andDoesNotCallHTTPOrKeychain, test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain | Unitario | ✅         |
-| Guardar datos para reintento si no hay conexión...            | test_registerUser_withNoConnectivity_returnsConnectivityError_andDoesNotStoreCredentials | Integración       | ✅         |
-| Tests unitarios y de integración para todos los caminos       | test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely, test_registerUser_withInvalidEmail_returnsValidationError_andDoesNotCallHTTPOrKeychain, ... | Unitario/Integración | ✅         |
-| Refactor: helper de tests usa KeychainSpy concreto            | Todos los tests que usan KeychainSpy                               | Unitario/Integración | ✅         |
-| Documentación y arquitectura alineada                         | Ver AUTH-ARCHITECTURE-GUIDE.md, sección 2                          | Documentación      | ✅         |
+### Technical Checklist <-> Tests Traceability Table (Reviewed)
+
+| Technical Checklist Item                                       | Test covering it (real name)                                    | Test Type          | Coverage (Reviewed) | Brief Comment                                                                     |
+|---------------------------------------------------------------|----------------------------------------------------------------|--------------------|---------------------|------------------------------------------------------------------------------------|
+| Store initial credentials securely (Keychain)                  | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit) | Integration        | ✅                  | Test verifies success, not explicitly storage in Keychain but assumed.             |
+| Store authentication token received...                         | *No tests for this*                                             | N/A                | ❌                  | Functionality not implemented.                                                     |
+| Notify registration success                                    | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` | Integration        | ✅                  |                                                                                    |
+| Notify that the email is already in use                        | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter`, `...returnsEmailAlreadyInUseError...` | Integration/Unit   | ✅                  |                                                                                    |
+| Show appropriate and specific error messages                   | `test_registerUser_withInvalidEmail...`, `test_registerUser_withWeakPassword...` | Unit               | ✅                  |                                                                                    |
+| Save data for retry if no connection...                        | `test_registerUser_withNoConnectivity_returnsConnectivityError...` (only notifies error) | Integration        | ❌                  | Test only verifies error, not saving for retry. Functionality not implemented.      |
+| Unit and integration tests for all paths                       | Various tests cover existing paths.                              | Unit/Integration   | 🟡                  | Do not cover post-registration token storage or retries.                           |
+| Refactor: test helper uses concrete KeychainSpy                | `makeSUTWithDefaults` uses `KeychainFullSpy`.                   | Unit/Integration   | ✅                  |                                                                                    |
 
 ---
 
-## 3. Autenticación de Usuario
+## 3. User Authentication (Login)
 
-### Narrativa funcional
-Como usuario registrado,
-quiero poder iniciar sesión en la aplicación,
-para acceder a mis recursos protegidos.
+### Functional Narrative
+As a registered user, I want to be able to log in to the application with my credentials to access my protected resources. The session must be managed securely and the app must be robust against failures.
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Login exitoso (token almacenado de forma segura)
-- Error de datos inválidos
-- Error de credenciales
-- Error de conexión
-- Registrar sesión activa en SessionManager
-- Notificar éxito de login
-- Notificar errores de validación específicos
-- Notificar error de credenciales
-- Ofrecer recuperación de contraseña
-- Almacenar la solicitud para reintentar (sin conexión)
-- Notificar error de conectividad
-- Aplicar retardo/bloqueo tras múltiples intentos fallidos
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- Successful login (**token stored securely, session registered in `SessionManager`**).
+- Invalid data error (email/password format).
+- Incorrect credentials error.
+- Connection error (**with retry handling if applicable**).
+- **(Optional, but recommended) Apply delay/lockout after multiple failed attempts.**
 
 ---
 
-### Checklist técnico de login
+### Technical Checklist for Login (Reviewed)
 
-- [✅] Almacenar token de autenticación de forma segura tras login exitoso
-- [✅] Registrar sesión activa en SessionManager (interfaz, implementación y test cubiertos)
-- [✅] Notificar éxito de login (presenter unitario, falta integración UI)
-    #### Subtareas 
-    - [✅] Notificar éxito de login (presenter unitario, falta integración UI)
-    - [✅] El presenter llama a la vista real al completar el login exitoso
-    - [✅] La vista muestra la notificación de éxito al usuario (según guidelines de producto)
-    - [✅] El usuario puede ver y entender el mensaje de éxito (accesibilidad y UX)
-    - [✅] Hay tests de integración y snapshot que validan el flujo completo (login → notificación)
-    > Nota: El equipo ha decidido no implementar tests de UI end-to-end porque los tests de integración y snapshot ya cubren el flujo completo y el feedback visual de forma profesional y eficiente.
-    - [✅] El ciclo está cubierto por tests automáticos en CI
+- [🟡] **Store authentication token securely after successful login** (`UserLoginUseCase` returns the token, but does not store it. Responsibility falls on the consumer. **BDD implies this is part of the "completed" login flow**.)
+- [🟡] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by another component. **BDD implies this is part of the "completed" login flow**.)
+- [✅] **Notify login success** (Via `LoginSuccessObserver`)
+    #### Subtasks
+    - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
+    - [✅] The view shows the success notification to the user (UI responsibility)
+    - [✅] The user can see and understand the success message (UI responsibility)
+    - [🟡] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
 
-- [✅] Notificar errores de validación específicos
-    #### Subtareas
-    - [✅] El sistema valida el formato de los datos de login antes de enviar la petición  
-    - [✅] Si el email no tiene formato válido, muestra mensaje de error específico y no envía petición  
-    - [✅] Si la contraseña está vacía o no cumple requisitos mínimos, muestra mensaje de error específico y no envía petición  
-    - [✅] Los mensajes de error son claros, accesibles y están alineados con las guidelines de producto  
-    - [✅] Los tests unitarios cubren todos los escenarios de validación de formato (email, contraseña, campos vacíos, etc)
-    - [✅] Los tests de integración garantizan que no se realiza petición HTTP ni acceso a Keychain cuando hay errores de formato
-    - [✅] El ciclo está cubierto por tests automáticos en CI
+- [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
+    #### Subtasks
+    - [✅] The system validates login data format before sending the request
+    - [✅] If the email is not valid, shows a specific error message and does not send the request
+    - [✅] If the password is empty or does not meet minimum requirements, shows a specific error message and does not send the request
+    - [✅] Error messages are clear, accessible, and aligned with product guidelines (Errors returned are specific, presentation is UI's responsibility)
+    - [✅] Unit tests cover all format validation scenarios (email, password, empty fields, etc)
+    - [✅] Integration tests ensure no HTTP request or Keychain access is made when there are format errors
+    - [✅] The cycle is covered by automated tests in CI
 
-- [✅] Ofrecer recuperación de contraseña
-    #### Subtareas
-    - [✅] Endpoint y DTO para recuperación de contraseña
-    - [✅] Caso de uso (UseCase) para solicitar recuperación
-    - [✅] Validación de email antes de enviar la petición
-    - [✅] Notificación de éxito/error al usuario
-    - [✅] Tests unitarios del caso de uso
-    - [✅] Tests de integración (sin acceso a Keychain ni login)
-    - [✅] Presentador y vista para feedback al usuario
-    - [✅] Cobertura en CI
+- [❌] **Offer password recovery** (`UserLoginUseCase` does not include this. It's a separate feature, referenced in Use Case 5. The ✅ here in BDD is a **discrepancy** if expected as part of *this* use case.)
+    #### Subtasks (Move to Use Case 5 if not done)
+    - [❌] Endpoint and DTO for password recovery
+    - [❌] UseCase for requesting recovery
+    - [❌] Email validation before sending the request
+    - [❌] Notify user of success/error
+    - [❌] Unit tests for the use case
+    - [❌] Integration tests (no Keychain or login access)
+    - [❌] Presenter and view for user feedback
+    - [❌] CI coverage
 
-- [✅] Almacenar la solicitud para reintentar (sin conexión)
-    #### Subtareas
-    - [✅] Definir el DTO/modelo para la solicitud de login pendiente (LoginRequest)
-    - [✅] Crear el store in-memory y/o persistente para solicitudes de login pendientes
-    - [✅] Implementar el wrapper type-erased (AnyLoginRequestStore)
-    - [✅] Integrar el almacenamiento en el ViewModel al detectar error de red
-    - [✅] Implementar la lógica para reintentar solicitudes almacenadas
-    - [✅] Tests unitarios del store y del wrapper type-erased
-    - [✅] Tests unitarios del ViewModel para almacenamiento y reintento
-    - [✅] Tests de integración (persistencia real, si aplica)
-    - [✅] Cobertura en CI para todos los escenarios
+- [❌] **Store the request for retry (offline)** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
+    #### Subtasks
+    - [❌] Define DTO/model for pending login request (LoginRequest)
+    - [❌] Create in-memory and/or persistent store for pending login requests
+    - [❌] Implement type-erased wrapper (AnyLoginRequestStore)
+    - [❌] Integrate storage in ViewModel upon network error
+    - [❌] Implement logic to retry stored requests
+    - [❌] Unit tests for the store and type-erased wrapper
+    - [❌] Unit tests for ViewModel for storage and retry
+    - [❌] Integration tests (real persistence, if applicable)
+    - [❌] CI coverage for all scenarios
 
-- [✅] Notificar error de conectividad
-    - [✅] Notificar error de conectividad
+- [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network`, `UserLoginUseCase` propagates and notifies the `failureObserver`.)
 
-- [✅] Aplicar retardo/bloqueo tras múltiples intentos fallidos
-    #### Subtareas
-    - [✅] Definir el umbral de intentos fallidos antes de aplicar retardo/bloqueo
-    - [✅] Persistir el contador de intentos fallidos (en memoria o persistente)
-    - [✅] Implementar el retardo incremental o bloqueo temporal tras superar el umbral
-    - [✅] Mostrar mensaje claro al usuario indicando el motivo del bloqueo/retardo y el tiempo restante
-    - [✅] Permitir sugerencia de recuperación de contraseña tras varios fallos
-    - [✅] Restablecer el contador tras login exitoso o tras el tiempo de espera
-    - [✅] Tests unitarios del ViewModel para intentos fallidos, retardo y desbloqueo
-
-    - [✅] Tests de integración para el flujo completo (varios fallos → bloqueo → desbloqueo)
-        #### Subtareas
-        1. Flujo Básico de Bloqueo
-        [✅] Intentos 1-4: No bloquean la cuenta
-        [✅] Intento 5: Bloquea la cuenta
-        [✅] Mensaje de error específico al bloquear
-
-        2. Flujo de Desbloqueo
-        [✅] Desbloqueo automático tras 5 minutos
-        [✅] Desbloqueo manual con unlockAfterRecovery()
-        [✅] Reset de contador tras desbloqueo
-
-        3. Casos Límite
-        [✅] Login exitoso tras 4 intentos fallidos
-        [✅] Nuevo intento fallido tras desbloqueo
-        [✅] Múltiples ciclos bloqueo/desbloqueo
-
-        4. Verificación de Estados
-        [✅] isLoginBlocked se actualiza correctamente
-        [✅] errorMessage refleja cada estado
-        [✅] Contador de intentos se resetea apropiadamente
-
-        5. Integración con Dependencias
-        [✅] FailedLoginAttemptsStore recibe llamadas correctas
-        [✅] timeProvider afecta el desbloqueo automático
-        [✅] blockMessageProvider muestra mensajes adecuados
-
-        6. Seguridad Adicional
-        [✅] Thread safety en operaciones async
-        [✅] No memory leaks
-        [✅] UI mantiene estado consistente tras errores (limpia mensajes al editar)
-
-    - [✅] Cobertura en CI para todos los escenarios
+- [❌] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
+    #### Subtasks (Detailed in the original BDD, all marked as ❌ for current implementation)
+    - [❌] Define DTO/model for failed login attempts (FailedLoginAttempt)
+    - [❌] Create in-memory and/or persistent store for failed attempts (FailedLoginAttemptStore)
+    - [❌] Implement type-erased wrapper (AnyFailedLoginAttemptStore)
+    - [❌] Integrate failed attempt logging in UserLoginUseCase (when not a format error)
+    - [❌] Implement logic to query recent failed attempts (e.g., last 5 minutes)
+    - [❌] Implement delay logic (e.g., block for 1 minute after 3 failures, 5 minutes after 5 failures)
+    - [❌] Notify user of temporary lockout and remaining time
+    - [❌] Suggest password recovery after X accumulated failed attempts
+    - [❌] Unit tests for the store and wrapper
+    - [❌] Unit tests for UserLoginUseCase for lockout and notification logic
+    - [❌] Integration tests (real persistence, if applicable)
+    - [❌] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Flows (happy/sad path) (Reviewed)
 
 **Happy path:**
-- El usuario introduce credenciales válidas
-- El sistema valida el formato de los datos
-- El sistema envía solicitud de autenticación al servidor
-- El sistema recibe el token y lo almacena de forma segura
-- El sistema registra la sesión activa
-- El sistema notifica éxito de login
+- User enters valid credentials.
+- System validates data format.
+- System sends authentication request to the server.
+- System receives the token.
+- **(Missing in current UC implementation) System stores the token securely.**
+- **(Missing in current UC implementation) System registers the active session.**
+- System notifies login success (via observer).
 
 **Sad path:**
-- Credenciales incorrectas: sistema notifica error y permite reintentar, registra intento fallido para métricas
-- Sin conectividad: sistema almacena la solicitud y notifica error, permite reintentar cuando haya conexión
-- Errores de validación: sistema muestra mensajes claros y no envía solicitud
-- Múltiples intentos fallidos: sistema aplica retardo/bloqueo y sugiere recuperación de contraseña
+- Incorrect credentials: system notifies error and allows retry, **(missing) logs failed attempt for metrics.**
+- No connectivity: system notifies error, **(missing) should store the request and allow retry when connection is available.**
+- Validation errors: system shows clear messages and does not send request.
+- Multiple failed attempts: **(missing) system should apply delay/lockout and suggest password recovery.**
 
 ---
 
-### Trazabilidad checklist <-> tests
+### Flujo del diagrama técnico login
 
-| Ítem checklist login              | Test presente                                                       | Cobertura  |
-|-----------------------------------|---------------------------------------------------------------------|------------|
-| Token seguro tras login           | `test_login_succeeds_onValidCredentialsAndServerResponse`           |    ✅      |
-| Registrar sesión activa           | `test_loginSuccess_registersNewSession`                             |    ✅      |
-| Notificar éxito login             | `test_loginSuccess_showsSuccessNotification`                        |    ✅      |
-| Errores de validación específicos | `test_login_failsOnInvalidEmailFormat`, `test_login_failsOnInvalidPasswordFormat` |    ✅      |
-| Error de credenciales             | `test_login_fails_onInvalidCredentialsAndNotifiesFailure`           |    ✅      |
-| Recuperación de contraseña        | `test_recoverPassword_triggersService`                              |    ✅      |
-| Reintento sin conexión            | `test_retryPendingRequestsOnReconnect`                              |    ✅      |
-| Error de conectividad             | `test_login_handlesNetworkError`                                    |    ✅      |
-| Retardo/bloqueo tras fallos       | `test_accountGetsBlockedAfterMaxFailedAttempts`, `test_errorState_clearsAfterNewInput` |    ✅      |
+```mermaid
+flowchart TD
+    A[UI Layer] --> B[LoginViewModel]
+    B --> C[UserLoginUseCase]
+    C --> D[LoginValidator]
+    C --> E[HTTPClient]
+    
+    E -- Token Exitoso --> F[Token Almacenado y Sesión Activa]
+    F --> G[UI: Notificar Login Exitoso]
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+    E -- Credenciales Inválidas --> H[UI: Notificar Error Credenciales]
+    E -- Error Conectividad --> I[UI: Notificar Error Conexión]
+    E -- Otro Error Servidor --> J[UI: Notificar Error General]
 
----
+``` 
 
-## 4. 🔄 Gestión de Token Expirado
+### Trazabilidad checklist <-> tests (Revisada)
 
-### Narrativa funcional
-Como usuario autenticado,
-quiero que el sistema gestione automáticamente la expiración de mi token,
-para mantener la sesión activa y segura sin interrupciones innecesarias.
-
----
-
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Detectar token expirado en cualquier operación protegida
-- Renovar el token automáticamente si es posible (refresh token)
-- Notificar al usuario si la renovación falla
-- Redirigir a login si no es posible renovar
-- Registrar el evento de expiración para métricas
+| Ítem checklist login              | Test presente (o N/A si falta funcionalidad)                 | Cobertura (Revisado) | Comentario Breve                                                              |
+|-----------------------------------|--------------------------------------------------------------|----------------------|-------------------------------------------------------------------------------|
+| Secure token after login         | `test_login_succeeds_onValidCredentialsAndServerResponse`    | 🟡                   | Test verifies token in response, not its secure storage.                        |
+| Register active session          | *Not tested in `UserLoginUseCaseTests`*                      | ❌                   | Functionality not in `UserLoginUseCase`.                                       |
+| Notify login success             | `test_login_succeeds_onValidCredentialsAndServerResponse`    | ✅                   | Test verifies notification to `successObserver`.                                |
+| Specific validation errors       | `test_login_failsOnInvalidEmailFormat`, etc.                 | ✅                   | Thoroughly covered.                                                             |
+| Credentials error                | `test_login_fails_onInvalidCredentials`                      | ✅                   | Covered.                                                                        |
+| Password recovery                | *Not applicable to `UserLoginUseCase`*                       | ❌                   | Separate feature.                                                               |
+| Retry without connection         | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
+| Connectivity error               | `UserLoginUseCase` propagates `LoginError.network` (assumed).| 🟡                   | Failure notification is tested, not specifically network error vs others.        |
+| Delay/lockout after failures     | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
 
 ---
 
-### Checklist técnico de gestión de token expirado
+## 4. 🔄 Expired Token Management
 
-#### 1. [❌] Detectar expiración de token en cada petición protegida
-- [❌] Crear `TokenValidator` con:
-  - [🔜] Validación timestamp local  
-  - [❌] Parseo JWT para claim `exp`  
-  - [❌] Handler para tokens malformados  
+### Functional Narrative
+As an authenticated user,
+I want the system to automatically handle my token's expiration,
+to keep my session active and secure without unnecessary interruptions.
 
-#### 2. [🔜] Solicitar refresh token al backend si el token está expirado  
+---
+
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- Detect expired token in any protected operation
+- Automatically renew the token if possible (refresh token)
+- Notify the user if renewal fails
+- Redirect to login if renewal is not possible
+- Log the expiration event for metrics
+
+---
+
+### Technical Checklist for Expired Token Management
+
+#### 1. [❌] Detect token expiration in every protected request
+- [❌] Create `TokenValidator` with:
+  - [🔜] Local timestamp validation  
+  - [❌] JWT parsing for `exp` claim  
+  - [❌] Handler for malformed tokens  
+
+#### 2. [🔜] Request refresh token from backend if token is expired  
+
 - [🔜] Implementar `TokenRefreshService`:  
   - [⏳] Request al endpoint `/auth/refresh`  
   - [❌] Backoff exponencial (3 reintentos)  
@@ -439,26 +440,26 @@ _(Solo referencia para QA/negocio. El avance se marca únicamente en el checklis
 - [❌] Eventos unificados:  
   - [❌] `TokenExpired`  
   - [❌] `RefreshFailed`  
-- [❌] Integración con Firebase/Sentry  
+- [❌] Integration with Firebase/Sentry  
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Flows (happy/sad path)
 
 **Happy path:**
-- El sistema detecta que el token ha expirado
-- El sistema solicita un refresh token al backend
-- El sistema almacena el nuevo token de forma segura
-- El usuario continúa usando la app sin interrupciones
+- The system detects that the token has expired
+- The system requests a refresh token from the backend
+- The system securely stores the new token
+- The user continues using the app without interruptions
 
 **Sad path:**
-- El refresh token es inválido o ha expirado: el sistema notifica al usuario y redirige a login
-- Falla de red: el sistema notifica al usuario y permite reintentar
-- Error inesperado: el sistema registra el evento para métricas
+- The refresh token is invalid or expired: the system notifies the user and redirects to login
+- Network failure: the system notifies the user and allows retry
+- Unexpected error: the system logs the event for metrics
 
 ---
 
-### Technical diagram of expired token management flow
+### Technical Diagram of Expired Token Management Flow
 
 ```mermaid
 flowchart TD
@@ -475,21 +476,20 @@ flowchart TD
 
 ---
 
-### Trazabilidad checklist <-> tests
+### Checklist <-> Tests Traceability
 
-| Ítem checklist gestión token expirado         | Test presente | Cobertura |
+| Expired token management checklist item       | Test present  | Coverage  |
 |-----------------------------------------------|---------------|-----------|
-| Detectar expiración de token                  | No            |    ❌     |
-| Solicitar refresh token al backend            | No            |    ❌     |
-| Almacenar nuevo token tras renovación         | No            |    ❌     |
-| Notificar usuario si renovación falla         | No            |    ❌     |
-| Redirigir a login si no se puede renovar      | No            |    ❌     |
-| Registrar evento de expiración para métricas  | No            |    ❌     |
+| Detect token expiration                       | No            |    ❌     |
+| Request refresh token from backend            | No            |    ❌     |
+| Store new token after renewal                 | No            |    ❌     |
+| Notify user if renewal fails                  | No            |    ❌     |
+| Redirect to login if renewal is not possible  | No            |    ❌     |
+| Log expiration event for metrics              | No            |    ❌     |
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
-### Narrativa funcional
 
 ## 5. 🔄 Recuperación de Contraseña
 
@@ -554,71 +554,71 @@ flowchart TD
 
 ---
 
-### Trazabilidad checklist <-> tests
+### Traceability Checklist <-> Tests
 
-| Ítem checklist recuperación de contraseña     | Test presente | Cobertura |
+| Password Recovery Checklist Item             | Test Present  | Coverage  |
 |----------------------------------------------|---------------|-----------|
-| Enviar enlace de restablecimiento            | No            |    ❌     |
-| Mensaje neutro si correo no registrado       | No            |    ❌     |
-| Permitir nueva contraseña con enlace válido  | No            |    ❌     |
-| Error y nuevo enlace si enlace inválido      | No            |    ❌     |
-| Registro de intentos/cambios para métricas   | No            |    ❌     |
-| Notificación por correo tras cambio          | No            |    ❌     |
+| Send reset link                             | No            |    ❌     |
+| Neutral message if email not registered      | No            |    ❌     |
+| Allow new password with valid link           | No            |    ❌     |
+| Error and new link if link invalid           | No            |    ❌     |
+| Logging of attempts/changes for metrics      | No            |    ❌     |
+| Email notification after change              | No            |    ❌     |
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
-
----
-
-## 6. 🔄 Gestión de Sesiones
-
-### Narrativa funcional
-Como usuario preocupado por la seguridad,
-quiero poder ver y gestionar mis sesiones activas,
-para detectar y cerrar accesos no autorizados.
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Visualización de todas las sesiones activas
-- Información de dispositivo, ubicación y último acceso
-- Destacar la sesión actual
-- Cierre de sesión remota
-- Cierre de todas las sesiones excepto la actual
-- Notificación al dispositivo afectado
-- Detección y notificación de acceso sospechoso
-- Opción de verificar/cerrar sesión sospechosa
-- Sugerencia de cambio de contraseña ante sospecha
+## 6. 🔄 Session Management
+
+### Functional Narrative
+As a security-conscious user,
+I want to be able to view and manage my active sessions,
+so I can detect and terminate unauthorized access.
 
 ---
 
-### Checklist técnico de gestión de sesiones
-- [❌] Mostrar lista de sesiones activas con detalles relevantes
-- [❌] Destacar la sesión actual
-- [❌] Permitir cierre remoto de una sesión
-- [❌] Permitir cierre de todas las sesiones excepto la actual
-- [❌] Notificar al dispositivo afectado tras cierre remoto
-- [❌] Detectar acceso sospechoso y notificar al usuario
-- [❌] Permitir verificar o cerrar sesión sospechosa
-- [❌] Sugerir cambio de contraseña si corresponde
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- View all active sessions
+- Device, location, and last access information
+- Highlight current session
+- Remote session termination
+- Terminate all sessions except current
+- Notification to affected device after remote logout
+- Detection and notification of suspicious access
+- Option to verify/terminate suspicious session
+- Suggest password change if suspicious activity detected
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Checklist for Session Management
+- [❌] Show list of active sessions with relevant details
+- [❌] Highlight current session
+- [❌] Allow remote session termination
+- [❌] Allow termination of all sessions except current
+- [❌] Notify affected device after remote termination
+- [❌] Detect suspicious access and notify user
+- [❌] Allow verification or termination of suspicious session
+- [❌] Suggest password change if applicable
+
+---
+
+### Technical Flows (happy/sad path)
 
 **Happy path:**
-- El usuario accede a la sección de sesiones y visualiza todas sus sesiones activas
-- El usuario cierra una sesión remota y la lista se actualiza correctamente
-- El usuario cierra todas las sesiones excepto la actual y recibe confirmación
+- User accesses session section and views all active sessions
+- User terminates a remote session and the list updates correctly
+- User terminates all sessions except current and receives confirmation
 
 **Sad path 1:**
-- Error al cerrar sesión: el sistema notifica el fallo y permite reintentar
-- Acceso sospechoso: el sistema notifica al usuario y ofrece acciones de seguridad
-- Falla de red: el sistema muestra mensaje de error y permite reintentar
+- Error during session termination: system notifies failure and allows retry
+- Suspicious access: system notifies user and offers security actions
+- Network failure: system shows error message and allows retry
 
 ---
 
-### Technical diagram of session management flow
+### Technical Diagram of Session Management Flow
 
 ```mermaid
 flowchart TD
@@ -638,63 +638,63 @@ flowchart TD
 ```
 ---
 
-### Trazabilidad checklist <-> tests
+### Traceability Checklist <-> Tests
 
-| Ítem checklist gestión de sesiones            | Test presente | Cobertura |
+| Session Management Checklist Item            | Test Present  | Coverage  |
 |----------------------------------------------|---------------|-----------|
-| Mostrar lista de sesiones activas            | No            |    ❌     |
-| Destacar sesión actual                      | No            |    ❌     |
-| Cierre remoto de sesión                     | No            |    ❌     |
-| Cierre de todas excepto la actual            | No            |    ❌     |
-| Notificar dispositivo tras cierre remoto     | No            |    ❌     |
-| Detección y notificación de acceso sospechoso| No            |    ❌     |
-| Verificar/cerrar sesión sospechosa          | No            |    ❌     |
-| Sugerir cambio de contraseña                | No            |    ❌     |
+| Show list of active sessions                 | No            |    ❌     |
+| Highlight current session                    | No            |    ❌     |
+| Remote session termination                   | No            |    ❌     |
+| Terminate all except current                 | No            |    ❌     |
+| Notify device after remote termination       | No            |    ❌     |
+| Detect and notify suspicious access          | No            |    ❌     |
+| Verify/terminate suspicious session          | No            |    ❌     |
+| Suggest password change                      | No            |    ❌     |
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
-
----
-
-## 7. Verificación de Cuenta
-
-### Historia: Usuario debe verificar su cuenta tras el registro
-
-**Narrativa:**  
-Como usuario recién registrado  
-Quiero verificar mi correo electrónico  
-Para confirmar mi identidad y activar completamente mi cuenta
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Verificación de correo electrónico tras registro
-- Reenvío de correo de verificación
-- Manejo de enlace inválido, expirado o ya usado
-- Mensaje de éxito tras verificación
-- Permitir inicio de sesión solo con cuenta verificada
-- Actualización de estado en todos los dispositivos
-- Opción de reenviar correo en caso de error
+## 7. Account Verification
+
+### Story: User must verify account after registration
+
+**Narrative:**  
+As a newly registered user  
+I want to verify my email address  
+To confirm my identity and fully activate my account
 
 ---
 
-### Checklist técnico de verificación de cuenta
-
-- [❌] Enviar correo de verificación tras registro
-- [❌] Procesar enlace de verificación y actualizar estado de cuenta
-- [❌] Mostrar mensaje de éxito tras verificación
-- [❌] Permitir inicio de sesión solo si la cuenta está verificada
-- [❌] Actualizar estado de verificación en todos los dispositivos
-- [❌] Permitir reenvío de correo de verificación
-- [❌] Invalidar enlaces de verificación anteriores tras reenvío
-- [❌] Mostrar mensaje de error en caso de enlace inválido/expirado
-- [❌] Ofrecer opción de reenviar correo en caso de error
-
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- Email verification after registration
+- Resend verification email
+- Handle invalid, expired, or already used link
+- Success message after verification
+- Allow login only with verified account
+- Update verification status on all devices
+- Option to resend email in case of error
 
 ---
 
-### Diagrama técnico del flujo de verificación de cuenta
+### Technical Checklist for Account Verification
+
+- [❌] Send verification email after registration
+- [❌] Process verification link and update account status
+- [❌] Show success message after verification
+- [❌] Allow login only if account is verified
+- [❌] Update verification status on all devices
+- [❌] Allow resending of verification email
+- [❌] Invalidate previous verification links after resend
+- [❌] Show error message for invalid/expired link
+- [❌] Offer option to resend email in case of error
+
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
+
+---
+
+### Technical Diagram of Account Verification Flow
 
 ```mermaid
 flowchart TD
@@ -715,106 +715,190 @@ flowchart TD
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Flows (happy/sad path)
 
 **Happy path:**
-- Usuario se registra correctamente
-- Sistema envía correo de verificación
-- Usuario accede al enlace de verificación
-- Sistema valida el enlace y marca la cuenta como verificada
-- Sistema muestra mensaje de éxito y permite acceso completo
+- User registers successfully
+- System sends verification email
+- User accesses the verification link
+- System validates the link and marks the account as verified
+- System shows success message and allows full access
 
 **Sad path 1:**
-- Usuario accede a enlace inválido/expirado
-- Sistema muestra mensaje de error y ofrece reenviar correo
+- User accesses invalid/expired link
+- System shows error message and offers to resend email
 
 **Sad path 2:**
-- Usuario no recibe el correo
-- Usuario solicita reenvío
-- Sistema envía nuevo correo e invalida enlaces anteriores
+- User does not receive the email
+- User requests resend
+- System sends new email and invalidates previous links
 
+---
+
+### Traceability Checklist <-> Tests
+
+| Account Verification Checklist Item           | Test Present  | Coverage  |
+|:---------------------------------------------:|:-------------:|:---------:|
+| Send verification email                       | No            |    ❌     |
+| Process link and update status                | No            |    ❌     |
+| Success message after verification            | No            |    ❌     |
+| Login only with verified account              | No            |    ❌     |
+| Update status on all devices                  | No            |    ❌     |
+| Allow resend of email                         | No            |    ❌     |
+| Invalidate previous links                     | No            |    ❌     |
+| Error message for invalid link                | No            |    ❌     |
+| Option to resend on error                     | No            |    ❌     |
+
+---
+
+## 8. Password Change
+
+### Functional Narrative
+As an authenticated user,
+I want to be able to securely change my password,
+so I can maintain my account security if I suspect it has been compromised or as part of good security practices.
+
+---
+
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
+- Successful password change with correct current password and valid new password.
+- Error if the current password provided is incorrect.
+- Error if the new password does not meet security requirements.
+- Notification (optionally by email) after successful password change.
+- Invalidate other sessions (optional, but recommended for security) after password change.
+
+---
+
+### Technical Checklist for Password Change
+
+- [❌] Validate the user's current password against the system.
+- [❌] Validate that the new password meets defined strength criteria.
+- [❌] Prevent the new password from being the same as the previous one (or the last N, if policy defined).
+- [❌] Update the password securely in the authentication system.
+- [❌] Invalidate the current session token and issue a new one if the change is successful.
+- [❌] Optional: Implement invalidation of all other active user sessions.
+- [❌] Notify the user of successful change (in app and/or by email).
+- [❌] Log the password change event for audit.
+- [❌] Handle connectivity errors during the process.
+- [❌] Handle other server errors.
+
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
+
+---
+
+### Data:
+- Current password
+- New password
+
+---
+
+### Technical Flows (happy/sad path)
+
+**Happy path:**
+- User initiates password change with correct current password and valid new password.
+- System validates the current password.
+- System updates the password securely.
+- System invalidates the current session token and issues a new one.
+- System notifies the user of successful change.
+**Curso Principal (happy path):**
+- Ejecutar comando "Cambiar Contraseña" con los datos proporcionados.
+- Sistema valida el formato de las contraseñas.
+- **(Adicional)** Sistema verifica que la contraseña actual es correcta.
+- Sistema envía solicitud al servidor.
+- Sistema actualiza las credenciales almacenadas (la nueva contraseña).
+- Sistema actualiza/invalida token de sesión si es necesario.
+- Sistema notifica cambio exitoso.
+
+**Curso de error - contraseña actual incorrecta (sad path):**
+- Sistema registra el intento fallido.
+- Sistema notifica error de autenticación (contraseña actual incorrecta).
+- Sistema verifica si se debe aplicar restricción temporal (si hay múltiples fallos).
+
+**Curso de error - nueva contraseña inválida (sad path):**
+- Sistema notifica requisitos de contraseña no cumplidos.
+- Sistema ofrece recomendaciones para contraseña segura.
+
+**Curso de error - sin conectividad (sad path):**
+- **(Ajuste)** Sistema no permite el cambio y notifica error de conectividad. (El almacenamiento para reintentar un cambio de contraseña puede ser riesgoso o complejo de manejar en términos de estado de sesión).
+- Sistema ofrece opción de reintentar más tarde.
+
+---
+
+### Diagrama técnico del flujo de Cambio de Contraseña
+*(Este caso de uso no tiene un diagrama Mermaid en el documento original. Se puede crear uno si es necesario)*
+
+
+```mermaid
+flowchart TD
+    A[UI: Usuario introduce contrasenas] --> B[ViewModel: Iniciar Cambio]
+    B --> C[UseCase: Validar Contrasena Actual]
+    C -- Correcta --> D[UseCase: Validar Fortaleza Nueva Contrasena]
+    C -- Incorrecta --> E[UI: Notificar Error Contrasena Incorrecta]
+    D -- Valida --> F[HTTPClient: Enviar Solicitud de Cambio]
+    D -- Invalida --> G[UI: Notificar Error Nueva Contrasena Invalida]
+    F -- Exito Servidor (200 OK) --> H[Actualizar Contrasena en Backend]
+    H --> I[Invalidar/Refrescar Token Sesion]
+    I --> J[UI: Notificar Cambio Exitoso]
+    J --> K[Opcional: Invalidar Otras Sesiones]
+    F -- Error Servidor (ej. 4xx, 5xx) --> L[UI: Notificar Error del Servidor]
+    F -- Error Conectividad --> M[UI: Notificar Error de Conectividad]
+``` 
 ---
 
 ### Trazabilidad checklist <-> tests
 
-| Ítem checklist verificación de cuenta      | Test presente | Cobertura |
-|:------------------------------------------:|:-------------:|:---------:|
-| Enviar correo de verificación              | No            |    ❌     |
-| Procesar enlace y actualizar estado        | No            |    ❌     |
-| Mensaje de éxito tras verificación         | No            |    ❌     |
-| Inicio de sesión solo con cuenta verificada| No            |    ❌     |
-| Actualizar estado en todos los dispositivos| No            |    ❌     |
-| Permitir reenvío de correo                 | No            |    ❌     |
-| Invalidar enlaces anteriores               | No            |    ❌     |
-| Mensaje de error en enlace inválido        | No            |    ❌     |
-| Opción de reenviar en error                | No            |    ❌     |
+| Ítem checklist Cambio de Contraseña                            | Test presente | Cobertura |
+|:---------------------------------------------------------------|:-------------:|:---------:|
+| Validate current password                                      | No            |    ❌     |
+| Validate new password strength                                 | No            |    ❌     |
+| Prevent reuse of previous password                             | No            |    ❌     |
+| Securely update password                                       | No            |    ❌     |
+| Invalidate/refresh session token                               | No            |    ❌     |
+| Optional: Invalidate other sessions                            | No            |    ❌     |
+| Notify successful change                                       | No            |    ❌     |
+| Log password change event                                      | No            |    ❌     |
+| Handle connectivity error                                      | No            |    ❌     |
+| Handle other server errors                                     | No            |    ❌     |
 
 ---
 
-### Caso de Uso Técnico: Cambio de Contraseña
+## 9. Public Feed Viewing
 
-**Datos:**  
-- Contraseña actual  
-- Nueva contraseña  
+### Story: Unauthenticated User Wants to View Public Content
 
-**Curso Principal (happy path):**  
-- Ejecutar comando "Cambiar Contraseña" con los datos proporcionados.  
-- Sistema valida el formato de las contraseñas.  
-- Sistema envía solicitud al servidor.  
-- Sistema actualiza las credenciales almacenadas.  
-- Sistema actualiza token de sesión si es necesario.  
-- Sistema notifica cambio exitoso.  
-
-**Curso de error - contraseña actual incorrecta (sad path):**  
-- Sistema registra el intento fallido.  
-- Sistema notifica error de autenticación.  
-- Sistema verifica si se debe aplicar restricción temporal.  
-
-**Curso de error - nueva contraseña inválida (sad path):**  
-- Sistema notifica requisitos de contraseña no cumplidos.  
-- Sistema ofrece recomendaciones para contraseña segura.  
-
-**Curso de error - sin conectividad (sad path):**  
-- Sistema almacena la solicitud para reintentar.  
-- Sistema notifica error de conectividad.  
-- Sistema ofrece opción de reintentar más tarde.
-
-## 8. Visualización de Feed Público
-
-### Historia: Usuario no autenticado desea ver contenido público
-
-**Narrativa:**  
-Como visitante o usuario no autenticado  
-Quiero poder visualizar el feed público  
-Para explorar el contenido disponible sin necesidad de iniciar sesión
+**Narrative:**  
+As a visitor or unauthenticated user  
+I want to be able to view the public feed  
+So that I can explore available content without needing to log in
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Visualización de feed público para usuarios no autenticados
-- Ocultación de información sensible en modo público
-- Solicitud de autenticación al acceder a contenido restringido
-- Manejo de errores de conectividad
-- Permitir recarga manual del feed
-- Mostrar placeholders o estados vacíos cuando no hay contenido
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is tracked solely in the technical checklist)_
+- Viewing public feed for unauthenticated users
+- Hiding sensitive information in public mode
+- Requesting authentication when accessing restricted content
+- Handling connectivity errors
+- Allowing manual feed reload
+- Showing placeholders or empty states when no content is available
 
 ---
 
-### Checklist técnico de visualización de feed público
+### Technical Checklist for Public Feed Viewing
 
-- [❌] Mostrar feed público para usuarios no autenticados
-- [❌] Ocultar información sensible o privada en modo público
-- [❌] Solicitar autenticación al acceder a contenido restringido
-- [❌] Manejar errores de conectividad y mostrar mensajes claros
-- [❌] Permitir recarga manual del feed
-- [❌] Mostrar placeholders o estados vacíos cuando no hay contenido
+- [❌] Show public feed for unauthenticated users
+- [❌] Hide sensitive or private information in public mode
+- [❌] Request authentication when accessing restricted content
+- [❌] Handle connectivity errors and display clear messages
+- [❌] Allow manual feed reload
+- [❌] Show placeholders or empty states when no content is available
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
 
-### Diagrama técnico del flujo de visualización de feed público
+### Technical Diagram of Public Feed Viewing Flow
 
 ```mermaid
 flowchart TD
@@ -830,76 +914,76 @@ flowchart TD
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Flows (Happy/Sad Path)
 
 **Happy path:**
-- Usuario no autenticado accede a la app
-- Sistema solicita y recibe el feed público
-- Sistema muestra la lista de elementos públicos
-- Usuario navega por el feed y accede a detalles permitidos
+- Unauthenticated user accesses the app
+- System requests and receives the public feed
+- System displays the list of public items
+- User browses the feed and accesses allowed details
 
 **Sad path 1:**
-- Usuario intenta acceder a detalle restringido
-- Sistema solicita autenticación
+- User attempts to access restricted detail
+- System requests authentication
 
 **Sad path 2:**
-- Falla la conexión al cargar el feed
-- Sistema muestra mensaje de error y permite reintentar
+- Connection fails when loading the feed
+- System displays error message and allows retry
 
 ---
 
-### Trazabilidad checklist <-> tests
+### Checklist Traceability <-> Tests
 
-| Ítem checklist feed público                    | Test presente | Cobertura |
+| Public Feed Checklist Item                     | Test Present  | Coverage  |
 |:----------------------------------------------:|:-------------:|:---------:|
-| Mostrar feed público                           | No            |    ❌     |
-| Ocultar información sensible                   | No            |    ❌     |
-| Solicitar autenticación en acceso restringido  | No            |    ❌     |
-| Manejar error de conectividad                  | No            |    ❌     |
-| Permitir recarga manual                        | No            |    ❌     |
-| Mostrar placeholders/estados vacíos            | No            |    ❌     |
-
----
-  
-## 9. Autenticación con Proveedores Externos
-
-### Historia: Usuario desea autenticarse con proveedores externos
-
-**Narrativa:**  
-Como usuario  
-Quiero poder iniciar sesión utilizando proveedores externos (Google, Apple, etc.)  
-Para acceder de forma rápida y segura a la aplicación sin crear una nueva contraseña
+| Show public feed                              | No            |    ❌     |
+| Hide sensitive information                    | No            |    ❌     |
+| Request authentication for restricted access  | No            |    ❌     |
+| Handle connectivity error                     | No            |    ❌     |
+| Allow manual reload                           | No            |    ❌     |
+| Show placeholders/empty states                | No            |    ❌     |
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Autenticación exitosa con proveedor externo
-- Creación automática de cuenta si es primer acceso
-- Asociación de cuenta existente si el email ya está registrado
-- Manejo de errores de autenticación externa
-- Desvinculación de proveedor externo
-- Manejo de revocación de permisos desde el proveedor
-- Actualización de sesión y permisos tras autenticación externa
+## 10. Authentication with External Providers
+
+### Story: User Wants to Authenticate with External Providers
+
+**Narrative:**  
+As a user  
+I want to be able to log in using external providers (Google, Apple, etc.)  
+So that I can access the application quickly and securely without creating a new password
 
 ---
 
-### Checklist técnico de autenticación con proveedores externos
-
-- [❌] Permitir autenticación con Google
-- [❌] Permitir autenticación con Apple
-- [❌] Crear cuenta automáticamente si es primer acceso
-- [❌] Asociar cuenta existente si el email ya existe
-- [❌] Manejar errores de autenticación y mostrar mensajes claros
-- [❌] Permitir desvinculación de proveedor externo
-- [❌] Manejar revocación de permisos desde el proveedor
-- [❌] Actualizar sesión y permisos tras autenticación externa
-
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is tracked solely in the technical checklist)_
+- Successful authentication with external provider
+- Automatic account creation if it is the first access
+- Linking existing account if the email is already registered
+- Handling external authentication errors
+- Unlinking external provider
+- Handling permission revocation from the provider
+- Updating session and permissions after external authentication
 
 ---
 
-### Diagrama técnico del flujo de autenticación con proveedores externos
+### Technical Checklist for Authentication with External Providers
+
+- [❌] Allow authentication with Google
+- [❌] Allow authentication with Apple
+- [❌] Automatically create account on first access
+- [❌] Link existing account if email already exists
+- [❌] Handle authentication errors and display clear messages
+- [❌] Allow unlinking of external provider
+- [❌] Handle permission revocation from provider
+- [❌] Update session and permissions after external authentication
+
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
+
+---
+
+### Technical Diagram of External Provider Authentication Flow
 
 ```mermaid
 flowchart TD
@@ -916,56 +1000,55 @@ flowchart TD
 
 ---
 
-### Cursos técnicos (happy/sad path)
+### Technical Flows (Happy/Sad Path)
 
 **Happy path:**
-- Usuario selecciona proveedor externo
-- Es redirigido y completa la autenticación
-- El sistema asocia o crea la cuenta y actualiza la sesión
-- Usuario accede a la aplicación con permisos completos
+- User selects external provider
+- User is redirected and completes authentication
+- System links or creates the account and updates the session
+- User accesses the application with full permissions
 
 **Sad path 1:**
-- Fallo en la autenticación externa
-- El sistema muestra mensaje de error y permite reintentar
+- External authentication fails
+- System displays error message and allows retry
 
 **Sad path 2:**
-- Usuario revoca permisos desde el proveedor
-- El sistema detecta la revocación y desvincula la cuenta, cerrando sesión
+- User revokes permissions from the provider
+- System detects revocation, unlinks the account, and logs out
 
 ---
 
-### Trazabilidad checklist <-> tests
+### Checklist Traceability <-> Tests
 
-| Ítem checklist autenticación externa           | Test presente | Cobertura |
+| External Authentication Checklist Item         | Test Present  | Coverage  |
 |:----------------------------------------------:|:-------------:|:---------:|
-| Permitir autenticación con Google              | No            |    ❌     |
-| Permitir autenticación con Apple               | No            |    ❌     |
-| Crear cuenta automáticamente                  | No            |    ❌     |
-| Asociar cuenta existente                      | No            |    ❌     |
-| Manejar errores de autenticación              | No            |    ❌     |
-| Permitir desvinculación de proveedor externo  | No            |    ❌     |
-| Manejar revocación de permisos                | No            |    ❌     |
-| Actualizar sesión y permisos                  | No            |    ❌     |
+| Allow authentication with Google              | No            |    ❌     |
+| Allow authentication with Apple               | No            |    ❌     |
+| Automatically create account                  | No            |    ❌     |
+| Link existing account                         | No            |    ❌     |
+| Handle authentication errors                  | No            |    ❌     |
+| Allow unlinking of external provider          | No            |    ❌     |
+| Handle permission revocation                  | No            |    ❌     |
+| Update session and permissions                | No            |    ❌     |
 
 ---
 
+## 11. Security Metrics
 
-## 10. Métricas de Seguridad
+### Story: System Monitors Security Events
 
-### Historia: Sistema monitoriza eventos de seguridad
-
-**Narrativa:**  
-Como sistema de autenticación  
-Quiero registrar y analizar eventos de seguridad  
-Para detectar amenazas y proteger las cuentas de usuarios
+**Narrative:**  
+As an authentication system  
+I want to record and analyze security events  
+So that I can detect threats and protect user accounts
 
 ---
 
-### Escenarios (Criterios de aceptación)
-_(Solo referencia para QA/negocio. El avance se marca únicamente en el checklist técnico)_
-- Registro de eventos de seguridad relevantes
-- Análisis de patrones de intentos fallidos
-- Notificación a administradores en eventos críticos
+### Scenarios (Acceptance Criteria)
+_(Reference only for QA/business. Progress is tracked solely in the technical checklist)_
+- Logging relevant security events
+- Analyzing patterns of failed attempts
+- Notifying administrators in critical events
 - Almacenamiento seguro y trazable de eventos
 - Medidas automáticas ante patrones sospechosos
 - Visualización y consulta de métricas de seguridad
@@ -1035,5 +1118,241 @@ flowchart TD
 | Visualización y consulta de métricas         | No            |    ❌     |
 
 ---
+## III. Hoja de Ruta de Seguridad Avanzada y Específica de Móvil
 
-```
+Esta sección describe casos de uso adicionales enfocados en el fortalecimiento de la seguridad de la aplicación a nivel de cliente y plataforma móvil. Su implementación progresiva contribuirá a una mayor robustez y protección de los datos del usuario y la integridad de la aplicación.
+
+---
+
+## 12. Detección de Dispositivos Comprometidos (Jailbreak/Root)
+
+### Narrativa funcional
+Como aplicación que maneja datos sensibles,
+necesito intentar detectar si estoy corriendo en un dispositivo comprometido (con jailbreak o rooteado),
+para tomar medidas preventivas y proteger la integridad de los datos y la funcionalidad de la aplicación.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- Detección positiva de un entorno comprometido.
+- Detección negativa (dispositivo no comprometido).
+- La aplicación reacciona según una política definida al detectar un entorno comprometido (ej. advertir al usuario, limitar funcionalidad, denegar el servicio, notificar al backend).
+
+---
+
+### Checklist técnico
+- [❌] Implementar mecanismos de detección de jailbreak (iOS).
+- [❌] Implementar mecanismos de detección de root (Android, si aplica).
+- [❌] Definir y documentar la política de reacción de la aplicación ante un dispositivo comprometido.
+- [❌] Implementar la lógica de reacción según la política.
+- [❌] Considerar la ofuscación de los mecanismos de detección para dificultar su evasión.
+- [❌] Tests para verificar la detección en entornos simulados o reales comprometidos.
+- [❌] Tests para verificar la correcta reacción de la aplicación.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+
+## 13. Protección Anti-Tampering y Ofuscación de Código
+
+### Narrativa funcional
+Como aplicación con lógica de negocio o seguridad sensible en el cliente,
+necesito aplicar medidas para dificultar la ingeniería inversa, el análisis dinámico y la modificación no autorizada de mi código (tampering),
+para proteger la propiedad intelectual y la efectividad de mis controles de seguridad.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- Aplicación de técnicas de ofuscación a partes críticas del código.
+- Detección de debuggers adjuntos (anti-debugging).
+- Verificación de la integridad del código de la aplicación en tiempo de ejecución (checksums).
+- La aplicación reacciona de forma controlada si se detecta tampering o un debugger.
+
+---
+
+### Checklist técnico
+- [❌] Identificar las secciones de código más sensibles que requieren ofuscación.
+- [❌] Aplicar herramientas o técnicas de ofuscación de código (nombres de clases/métodos, strings, flujo de control).
+- [❌] Implementar técnicas de detección de debuggers.
+- [❌] Implementar mecanismos de verificación de checksums del código o binario.
+- [❌] Definir y aplicar una política de reacción ante detección de tampering/debugging.
+- [❌] Evaluar el impacto de la ofuscación en el rendimiento y la depuración.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+
+## 14. Protección contra Captura/Grabación de Pantalla (Vistas Sensibles)
+
+### Narrativa funcional
+Como aplicación que puede mostrar información altamente confidencial en vistas específicas,
+necesito poder prevenir o disuadir la captura o grabación de pantalla en esas vistas,
+para proteger la privacidad de los datos sensibles.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- La captura de pantalla es bloqueada o la vista se oculta/muestra un overlay cuando se intenta una captura en una vista marcada como sensible.
+- La grabación de pantalla muestra contenido negro u oculto para las vistas sensibles.
+- Funcionalidad normal de captura/grabación en vistas no sensibles.
+
+---
+
+### Checklist técnico
+- [❌] Identificar todas las vistas que muestran información suficientemente sensible para requerir esta protección.
+- [❌] Implementar el bloqueo de capturas de pantalla en vistas sensibles (ej. usando `UIApplication.userDidTakeScreenshotNotification` y modificando la vista, o APIs específicas si existen).
+- [❌] Asegurar que el contenido de vistas sensibles se oculte durante la grabación de pantalla (ej. `UIScreen.isCaptured` en iOS).
+- [❌] Considerar la experiencia de usuario (ej. notificar por qué no se puede capturar).
+- [❌] Tests para verificar el bloqueo/ocultamiento en vistas sensibles.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+
+## 15. Fijación de Certificados (Certificate Pinning)
+
+### Narrativa funcional
+Como aplicación que se comunica con un backend crítico a través de HTTPS,
+necesito asegurar que solo confío en el certificado específico (o clave pública) de mi servidor,
+para protegerme contra ataques de hombre en el medio (MitM) que utilicen certificados SSL/TLS falsos o comprometidos.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- La comunicación con el backend es exitosa cuando el servidor presenta el certificado/clave pública esperado.
+- La comunicación con el backend falla si el servidor presenta un certificado/clave pública diferente al esperado.
+- Estrategia de actualización de los pines en la aplicación en caso de que el certificado del servidor cambie.
+
+---
+
+### Checklist técnico
+- [❌] Decidir la estrategia de pinning (pin de certificado completo, pin de clave pública, pin de CA intermedio/raíz - menos recomendado para auto-firmados o controlados).
+- [❌] Extraer el/los certificado(s) o clave(s) pública(s) del servidor de producción.
+- [❌] Implementar la lógica de validación del pin en la capa de red de la aplicación (ej. `URLSessionDelegate`).
+- [❌] Almacenar de forma segura los pines dentro de la aplicación.
+- [❌] Definir y probar la estrategia de actualización de los pines (ej. a través de una actualización de la app, o un mecanismo de entrega seguro si es dinámico).
+- [❌] Tests exhaustivos para conexiones exitosas (pin correcto) y fallidas (pin incorrecto, certificado diferente).
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+## 16. Manejo Seguro de Datos Sensibles en Memoria
+
+### Narrativa funcional
+Como aplicación que maneja temporalmente datos altamente sensibles (ej. contraseñas, claves de API, tokens de sesión) en memoria,
+necesito minimizar el tiempo de exposición de estos datos y asegurar su limpieza de la memoria tan pronto como ya no sean necesarios,
+para reducir el riesgo de que sean extraídos por malware o herramientas de análisis de memoria.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- Las contraseñas ingresadas por el usuario se limpian de la memoria después de ser usadas para la autenticación o el cambio de contraseña.
+- Las claves de API o tokens de sesión se manejan con cuidado y se limpian si es posible cuando la sesión termina o ya no son válidos.
+- Uso de tipos de datos seguros si la plataforma/lenguaje los provee (ej. `SecureString` en otros contextos, o técnicas equivalentes en Swift).
+
+---
+
+### Checklist técnico
+- [❌] Identificar todas las variables y estructuras de datos que contienen información crítica en memoria.
+- [❌] Implementar la sobrescritura o puesta a nil de estas variables tan pronto como su contenido ya no sea necesario.
+- [❌] Investigar y utilizar, si es posible, tipos de datos o técnicas que dificulten la persistencia en memoria o la extracción (ej. manejo cuidadoso de `String` para contraseñas).
+- [❌] Ser consciente de las optimizaciones del compilador que podrían mantener copias de datos en memoria.
+- [❌] Para datos muy críticos, considerar el uso de porciones de memoria no intercambiables (si la plataforma lo permite y es justificable).
+- [❌] Realizar análisis de memoria (si es posible con herramientas) para verificar la limpieza de datos.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+
+## 17. Autenticación Biométrica Segura (Touch ID/Face ID)
+
+### Narrativa funcional
+Como usuario, quiero poder utilizar la autenticación biométrica de mi dispositivo (Touch ID/Face ID) para acceder a la aplicación o autorizar operaciones sensibles de forma rápida y segura,
+y como aplicación, necesito integrar esta funcionalidad correctamente, manejando los posibles fallos y respetando la seguridad de las credenciales subyacentes.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- Configuración exitosa de la autenticación biométrica para la app (si requiere un "opt-in").
+- Autenticación biométrica exitosa permite el acceso/autorización.
+- Fallos en la autenticación biométrica (ej. no reconocimiento, demasiados intentos) son manejados correctamente, ofreciendo un fallback (ej. PIN/contraseña de la app).
+- Cambios en la configuración biométrica del dispositivo (ej. nuevos dedos/rostros añadidos, biometría desactivada) invalidan o requieren revalidación de la configuración biométrica de la app.
+- Las claves o tokens protegidos por biometría se almacenan de forma segura (ej. en Keychain con el flag `kSecAccessControlBiometryCurrentSet` o similar).
+
+---
+
+### Checklist técnico
+- [❌] Integrar el framework `LocalAuthentication`.
+- [❌] Solicitar permiso para usar biometría de forma contextual.
+- [❌] Manejar todos los posibles códigos de error de `LAError`.
+- [❌] Implementar un mecanismo de fallback seguro si la biometría falla o no está disponible.
+- [❌] Para proteger datos con biometría, usar atributos de Keychain que requieran autenticación biométrica para el acceso (`kSecAccessControl...`).
+- [❌] Considerar el manejo del `evaluatedPolicyDomainState` para detectar cambios en la configuración biométrica del sistema y revalidar si es necesario.
+- [❌] Proporcionar feedback claro al usuario durante el proceso de autenticación.
+- [❌] Tests para flujos exitosos, fallidos, y de fallback.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+
+## 18. Logout Seguro Detallado (Invalidación en Servidor)
+
+### Narrativa funcional
+Como usuario, cuando cierro sesión en la aplicación,
+quiero que mi sesión se invalide completamente, no solo localmente, sino también en el servidor si es posible,
+para asegurar que los tokens de sesión anteriores ya no puedan ser utilizados.
+
+---
+
+### Escenarios (Criterios de aceptación)
+- Al cerrar sesión, todos los datos de sesión locales (tokens, caché de usuario) son eliminados.
+- Si el backend soporta la invalidación de tokens, se realiza una llamada al endpoint de logout del servidor para invalidar el token actual.
+- El usuario es redirigido a la pantalla de login o a un estado no autenticado.
+- Fallos en la llamada de invalidación del servidor son manejados (ej. la limpieza local aún ocurre, se puede reintentar o informar).
+
+---
+
+### Checklist técnico
+- [❌] Implementar la limpieza completa de todos los datos de sesión almacenados localmente (Keychain, UserDefaults, variables en memoria).
+- [❌] Si el backend tiene un endpoint de logout para invalidar tokens (ej. JWT en una blacklist), implementar la llamada a este endpoint.
+- [❌] Manejar la respuesta del servidor (éxito/error) de la llamada de invalidación.
+- [❌] Asegurar que la UI refleje correctamente el estado de no autenticado.
+- [❌] Tests para verificar la limpieza local y la llamada al servidor.
+
+---
+*(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
+---
+## 19. Gestión Segura de Permisos del Dispositivo
+
+### Functional Narrative
+As an application that requires certain device permissions (e.g., location, contacts, camera, notifications) to offer its full functionality,
+I need to request and manage these permissions transparently, securely, and respectfully of the user's privacy,
+ensuring that they are only requested when necessary and that the user understands why.
+
+---
+
+### Scenarios (Acceptance Criteria)
+- Permissions are requested only when a feature that requires them is about to be used for the first time (contextual request).
+- A clear explanation is provided to the user about why the permission is needed before the system's formal request.
+- The app correctly handles cases where the user grants or denies the permission.
+- The app behaves predictably and offers alternatives (if possible) when a required permission is denied.
+- The app respects the revocation of permissions by the user from system settings.
+- The permission state is checked before attempting to use features that require them (do not assume a previously granted permission is still active).
+
+---
+
+### Technical Checklist
+- [❌] Identify all device permissions the app needs and for which features.
+- [❌] Implement permission requests using the platform's correct APIs (e.g., `CoreLocation`, `Contacts`, `UserNotifications`).
+- [❌] Design and implement a "pre-request" UI to explain the need for the permission before the system alert.
+- [❌] Handle all permission authorization states (granted, denied, restricted, not determined).
+- [❌] Provide guidance to the user on how to change permissions in system settings if initially denied and then wanted.
+- [❌] Check the current permission state every time a dependent feature is about to be used.
+- [❌] Ensure the app does not crash or behave unexpectedly if a permission is denied or revoked.
+- [❌] Tests for all request flows and permission states.
+
+---
+*(Diagram, Technical Flows, and Traceability to be developed)*
+---
+
+
