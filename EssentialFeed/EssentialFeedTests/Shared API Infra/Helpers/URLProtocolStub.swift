@@ -1,64 +1,102 @@
-//
-//  Copyright © 2019 Essential Developer. All rights reserved.
-//
-
 import Foundation
 
 class URLProtocolStub: URLProtocol {
-	private struct Stub {
-		let data: Data?
-		let response: URLResponse?
-		let error: Error?
-		let requestObserver: ((URLRequest) -> Void)?
-	}
-	
-	private static var _stub: Stub?
-	private static var stub: Stub? {
-		get { return queue.sync { _stub } }
-		set { queue.sync { _stub = newValue } }
-	}
+	private static var stubData: Data?
+	private static var stubResponse: URLResponse?
+	private static var stubError: Error?
+	private static var requestObserver: ((URLRequest) -> Void)?
 	
 	private static let queue = DispatchQueue(label: "URLProtocolStub.queue")
+	private var isCompleted = false
+	
+	static var hangRequests: Bool = false
 	
 	static func stub(data: Data?, response: URLResponse?, error: Error?) {
-		stub = Stub(data: data, response: response, error: error, requestObserver: nil)
+		queue.sync {
+			stubData = data
+			stubResponse = response
+			stubError = error
+		}
 	}
 	
 	static func observeRequests(observer: @escaping (URLRequest) -> Void) {
-		stub = Stub(data: nil, response: nil, error: nil, requestObserver: observer)
+		queue.sync {
+			requestObserver = observer
+		}
 	}
 	
 	static func removeStub() {
-		stub = nil
+		queue.sync {
+			stubData = nil
+			stubResponse = nil
+			stubError = nil
+			requestObserver = nil
+			hangRequests = false
+		}
 	}
 	
 	override class func canInit(with request: URLRequest) -> Bool {
-		return true
+		true
 	}
 	
 	override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-		return request
+		request
 	}
 	
 	override func startLoading() {
-		guard let stub = URLProtocolStub.stub else { return }
+		guard !isCompleted else { return }
 		
-		if let data = stub.data {
-			client?.urlProtocol(self, didLoad: data)
+		URLProtocolStub.queue.sync {
+			URLProtocolStub.requestObserver?(request)
 		}
 		
-		if let response = stub.response {
-			client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+		if URLProtocolStub.hangRequests {
+			return
 		}
 		
-		if let error = stub.error {
+		var didReportClientEvent = false
+		var currentStubError: Error?
+		var currentStubResponse: URLResponse?
+		var currentStubData: Data?
+		
+		URLProtocolStub.queue.sync {
+			currentStubError = URLProtocolStub.stubError
+			currentStubResponse = URLProtocolStub.stubResponse
+			currentStubData = URLProtocolStub.stubData
+		}
+		
+		if let error = currentStubError {
 			client?.urlProtocol(self, didFailWithError: error)
-		} else {
-			client?.urlProtocolDidFinishLoading(self)
+			didReportClientEvent = true
 		}
 		
-		stub.requestObserver?(request)
+		if !didReportClientEvent, let response = currentStubResponse {
+			client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+			didReportClientEvent = true
+			
+			if let data = currentStubData {
+				client?.urlProtocol(self, didLoad: data)
+			}
+		}
+		
+		if !didReportClientEvent {
+			let protocolError = NSError(
+				domain: NSURLErrorDomain,
+				code: URLError.unknown.rawValue,
+				userInfo: [NSLocalizedDescriptionKey: "URLProtocolStub: La solicitud finalizó sin una respuesta o error específico provisto por el stub, o con datos pero sin respuesta."]
+			)
+			client?.urlProtocol(self, didFailWithError: protocolError)
+		}
+		
+		client?.urlProtocolDidFinishLoading(self)
+		isCompleted = true
 	}
 	
-	override func stopLoading() {}
+	override func stopLoading() {
+		guard !isCompleted else { return }
+		
+		let cancelledError = URLError(.cancelled)
+		client?.urlProtocol(self, didFailWithError: cancelledError)
+		isCompleted = true
+	}
 }

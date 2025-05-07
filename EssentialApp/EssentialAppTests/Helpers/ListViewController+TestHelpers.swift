@@ -1,16 +1,11 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import UIKit
 import EssentialFeediOS
 
 extension ListViewController {
-	public override func loadViewIfNeeded() {
-		super.loadViewIfNeeded()
-		
-		tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
-	}
 	
 	func simulateUserInitiatedReload() {
 		refreshControl?.simulatePullToRefresh()
@@ -40,6 +35,47 @@ extension ListViewController {
 		let index = IndexPath(row: row, section: section)
 		return ds?.tableView(tableView, cellForRowAt: index)
 	}
+	
+	func simulateAppearance() {
+		if !isViewLoaded {
+			loadViewIfNeeded()
+		}
+		// Dejamos la simulación de viewWillAppear/Appear comentada por ahora,
+		// ya que la estrategia principal es loadViewIfNeeded y el FakeRefreshControl.
+		// viewWillAppear(false)
+		// viewDidAppear(false)
+	}
+	
+	public func replaceRefreshControlWithFakeForiOS17Support() {
+		let fake = FakeRefreshControl()
+		
+		if let originalRefreshControl = self.refreshControl {
+			originalRefreshControl.allTargets.forEach { target in
+				originalRefreshControl.actions(forTarget: target, forControlEvent: UIControl.Event.valueChanged)?.forEach { action in
+					fake.addTarget(target, action: Selector(action), for: UIControl.Event.valueChanged)
+				}
+			}
+			
+			// --- INICIO DEL CAMBIO ---
+			// Se elimina la condición: if originalRefreshControl.isRefreshing {
+			// Ahora llamamos a fake.beginRefreshing() directamente.
+			//
+			// Justificación:
+			// La carga inicial siempre se dispara en viewDidLoad -> refresh().
+			// Esta función de reemplazo se llama DESPUÉS de que esa carga inicial ha comenzado.
+			// Por lo tanto, asumimos que el FakeRefreshControl debe comenzar en estado "refrescando".
+			// El Presenter se encargará de llamar a endRefreshing() cuando la carga inicial
+			// (o cualquier carga posterior) se complete.
+			// Esto evita depender del estado de `originalRefreshControl.isRefreshing`,
+			// que puede no ser fiable si `beginRefreshing()` se llamó mientras el control
+			// estaba fuera de pantalla (lo que causa la advertencia de iOS).
+			fake.beginRefreshing()
+			// --- FIN DEL CAMBIO ---
+		}
+		
+		self.refreshControl = fake
+	}
+	
 }
 
 extension ListViewController {

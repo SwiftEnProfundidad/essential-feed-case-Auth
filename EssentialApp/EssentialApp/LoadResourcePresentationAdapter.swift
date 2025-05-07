@@ -1,5 +1,5 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import Combine
@@ -17,6 +17,10 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
 		self.loader = loader
 	}
 	
+	deinit {
+		cancellable?.cancel()
+	}
+	
 	func loadResource() {
 		guard !isLoading else { return }
 		
@@ -30,16 +34,19 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
 			})
 			.sink(
 				receiveCompletion: { [weak self] completion in
+					guard let self else { return }
+					
 					switch completion {
-					case .finished: break
-						
-					case let .failure(error):
-						self?.presenter?.didFinishLoading(with: error)
+						case .finished: break
+							
+						case let .failure(error):
+							self.presenter?.didFinishLoading(with: error)
 					}
 					
-					self?.isLoading = false
+					self.isLoading = false
 				}, receiveValue: { [weak self] resource in
-					self?.presenter?.didFinishLoading(with: resource)
+					guard let self else { return }
+					self.presenter?.didFinishLoading(with: resource)
 				})
 	}
 }
@@ -52,5 +59,6 @@ extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
 	func didCancelImageRequest() {
 		cancellable?.cancel()
 		cancellable = nil
+		isLoading = false
 	}
 }

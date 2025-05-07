@@ -1,16 +1,17 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 final class FeedViewAdapter: ResourceView {
 	private weak var controller: ListViewController?
 	private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 	private let selection: (FeedImage) -> Void
-	private let currentFeed: [FeedImage: CellController]
+	private var currentFeed: [FeedImage: CellController]
 	
 	private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
 	private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
@@ -20,15 +21,22 @@ final class FeedViewAdapter: ResourceView {
 		self.controller = controller
 		self.imageLoader = imageLoader
 		self.selection = selection
+		_ = Unmanaged.passUnretained(controller).toOpaque()
+	}
+	
+	deinit {
+		_ = controller.map { Unmanaged.passUnretained($0).toOpaque() }
+		currentFeed = [:]
 	}
 	
 	func display(_ viewModel: Paginated<FeedImage>) {
 		guard let controller = controller else { return }
 		
-		var currentFeed = self.currentFeed
+		var feedCellControllers = self.currentFeed
+		
 		let feed: [CellController] = viewModel.items.map { model in
-			if let controller = currentFeed[model] {
-				return controller
+			if let existingCellController = feedCellControllers[model] {
+				return existingCellController
 			}
 			
 			let adapter = ImageDataPresentationAdapter(loader: { [imageLoader] in
@@ -48,10 +56,12 @@ final class FeedViewAdapter: ResourceView {
 				errorView: WeakRefVirtualProxy(view),
 				mapper: UIImage.tryMake)
 			
-			let controller = CellController(id: model, view)
-			currentFeed[model] = controller
-			return controller
+			let cellController = CellController(id: model, view)
+			feedCellControllers[model] = cellController
+			return cellController
 		}
+		
+		self.currentFeed = feedCellControllers
 		
 		guard let loadMorePublisher = viewModel.loadMorePublisher else {
 			controller.display(feed)
@@ -63,7 +73,7 @@ final class FeedViewAdapter: ResourceView {
 		
 		loadMoreAdapter.presenter = LoadResourcePresenter(
 			resourceView: FeedViewAdapter(
-				currentFeed: currentFeed,
+				currentFeed: self.currentFeed,
 				controller: controller,
 				imageLoader: imageLoader,
 				selection: selection
