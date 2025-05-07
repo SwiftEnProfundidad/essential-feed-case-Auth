@@ -38,11 +38,13 @@ public protocol LoginFailureObserver {
 
 public final class UserLoginUseCase {
 	private let api: AuthAPI
+	private let tokenStorage: TokenStorage
 	private let successObserver: LoginSuccessObserver?
 	private let failureObserver: LoginFailureObserver?
 	
-	public init(api: AuthAPI, successObserver: LoginSuccessObserver? = nil, failureObserver: LoginFailureObserver? = nil) {
+	public init(api: AuthAPI, tokenStorage: TokenStorage, successObserver: LoginSuccessObserver? = nil, failureObserver: LoginFailureObserver? = nil) {
 		self.api = api
+		self.tokenStorage = tokenStorage
 		self.successObserver = successObserver
 		self.failureObserver = failureObserver
 	}
@@ -99,7 +101,6 @@ public final class UserLoginUseCase {
 		}
 	}
 	
-	// Función helper de validación de email (puedes mejorarla o moverla)
 	private func isValidEmail(_ email: String) -> Bool {
 		// Una expresión regular muy básica para emails.
 		// Deberías usar una más completa y probada para producción.

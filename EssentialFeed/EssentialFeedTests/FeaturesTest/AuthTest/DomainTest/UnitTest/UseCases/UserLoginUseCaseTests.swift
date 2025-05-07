@@ -193,6 +193,7 @@ final class UserLoginUseCaseTests: XCTestCase {
 		
 		let sut = UserLoginUseCase(
 			api: api,
+			tokenStorage: tokenStorage,
 			successObserver: successObserver,
 			failureObserver: failureObserver
 		)
