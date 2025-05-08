@@ -179,6 +179,7 @@
 		B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */; };
 		B4A921712DC981B100591F6E /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A921702DC981B100591F6E /* TokenStorageSpy.swift */; };
 		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
+		B4CE05382DCCD01700EAE847 /* OfflineLoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05372DCCD01700EAE847 /* OfflineLoginStore.swift */; };
 		B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */; };
 		B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
@@ -445,6 +446,7 @@
 		B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAssertHelpers.swift; sourceTree = "<group>"; };
 		B4A921702DC981B100591F6E /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
 		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
+		B4CE05372DCCD01700EAE847 /* OfflineLoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStore.swift; sourceTree = "<group>"; };
 		B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
 		B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParser.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
@@ -1092,6 +1094,7 @@
 		B4558F372DC9028300A2CE4B /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				B4CE05372DCCD01700EAE847 /* OfflineLoginStore.swift */,
 				B4D881782DC8FC1600843D79 /* RefreshTokenUseCase.swift */,
 				B400BE902DBD61E900A18EE5 /* UserLoginUseCase.swift */,
 			);
@@ -1763,6 +1766,7 @@
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				B46CA15F2DBEA28000CE9ADC /* PasswordRecoveryView.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
+				B4CE05382DCCD01700EAE847 /* OfflineLoginStore.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */,

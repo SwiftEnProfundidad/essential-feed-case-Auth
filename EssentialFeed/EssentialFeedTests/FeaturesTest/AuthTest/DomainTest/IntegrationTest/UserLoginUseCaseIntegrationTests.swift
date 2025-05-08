@@ -8,8 +8,9 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
 	
 	func test_login_doesNotCallAPI_whenEmailIsInvalid() async {
 		let api = AuthAPISpy()
+		let offlineStore = OfflineLoginStoreSpy()
 		let tokenStorage = TokenStorageSpy()
-		let sut = UserLoginUseCase(api: api, tokenStorage: tokenStorage)
+		let sut = UserLoginUseCase(api: api, tokenStorage: tokenStorage, offlineStore: offlineStore)
 		let credentials = LoginCredentials(email: "", password: "ValidPassword123")
 		_ = await sut.login(with: credentials)
 		XCTAssertFalse(api.wasCalled, "API should NOT be called when email is invalid")
@@ -17,8 +18,9 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
 	
 	func test_login_doesNotCallAPI_whenPasswordIsInvalid() async {
 		let api = AuthAPISpy()
+		let offlineStore = OfflineLoginStoreSpy()
 		let tokenStorage = TokenStorageSpy()
-		let sut = UserLoginUseCase(api: api, tokenStorage: tokenStorage)
+		let sut = UserLoginUseCase(api: api, tokenStorage: tokenStorage, offlineStore: offlineStore)
 		let credentials = LoginCredentials(email: "user@example.com", password: "   ")
 		_ = await sut.login(with: credentials)
 		XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")

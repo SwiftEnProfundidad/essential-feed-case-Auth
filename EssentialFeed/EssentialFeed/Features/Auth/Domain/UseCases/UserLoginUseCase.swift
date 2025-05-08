@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LoginCredentials {
+public struct LoginCredentials: Equatable {
 	public let email: String
 	public let password: String
 	public init(email: String, password: String) {
@@ -22,10 +22,11 @@ public protocol AuthAPI {
 
 public enum LoginError: Error, Equatable {
 	case invalidCredentials
-	case network
 	case invalidEmailFormat
 	case invalidPasswordFormat
-	case tokenStorageFailed
+	case network // Error genérico de red/API
+	case tokenStorageFailed // Error al guardar el token
+	case noConnectivity // Nuevo caso para sin conexión
 	case unknown
 }
 
@@ -40,12 +41,20 @@ public protocol LoginFailureObserver {
 public final class UserLoginUseCase {
 	private let api: AuthAPI
 	private let tokenStorage: TokenStorage
+	private let offlineStore: OfflineLoginStore
 	private let successObserver: LoginSuccessObserver?
 	private let failureObserver: LoginFailureObserver?
 	
-	public init(api: AuthAPI, tokenStorage: TokenStorage, successObserver: LoginSuccessObserver? = nil, failureObserver: LoginFailureObserver? = nil) {
+	public init(
+        api: AuthAPI,
+        tokenStorage: TokenStorage,
+        offlineStore: OfflineLoginStore,
+        successObserver: LoginSuccessObserver? = nil,
+        failureObserver: LoginFailureObserver? = nil
+    ) {
 		self.api = api
 		self.tokenStorage = tokenStorage
+		self.offlineStore = offlineStore
 		self.successObserver = successObserver
 		self.failureObserver = failureObserver
 	}
@@ -62,10 +71,10 @@ public final class UserLoginUseCase {
 		// Para que los tests pasen con "usuario_invalido", verificamos la ausencia de "@" o una estructura básica.
 		// Una validación muy básica que podría servir para el test "usuario_invalido"
 		// y aun así permitir emails válidos.
-		if !isValidEmail(email) {
-			failureObserver?.didFailLogin(error: .invalidEmailFormat)
-			return .failure(.invalidEmailFormat)
-		}
+		guard isValidEmail(email) else {
+            failureObserver?.didFailLogin(error: .invalidEmailFormat)
+            return .failure(.invalidEmailFormat)
+        }
 		
 		// VALIDACIÓN DE CONTRASEÑA
 		let password = credentials.password // Generalmente no se hace trim a las contraseñas antes de validarlas en el backend,
