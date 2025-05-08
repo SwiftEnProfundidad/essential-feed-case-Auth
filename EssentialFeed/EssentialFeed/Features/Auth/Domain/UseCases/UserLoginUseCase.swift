@@ -92,38 +92,27 @@ public final class UserLoginUseCase {
 		
 		switch result {
 			case .success(let response):
-				print("[LoginUseCase] API Success. Response token: \(response.token)")
 				let defaultTokenDuration: TimeInterval = 3600
 				let expiryDate = Date().addingTimeInterval(defaultTokenDuration)
 				
-				print("[LoginUseCase] Attempting to create Token object...")
 				let tokenToStore = Token(value: response.token, expiry: expiryDate)
-				print("[LoginUseCase] Token object created: \(tokenToStore.value)")
 				
 				do {
-					print("[LoginUseCase] Attempting: try await tokenStorage.save(token)...")
 					try await tokenStorage.save(tokenToStore)
-					print("[LoginUseCase] tokenStorage.save() SUCCEEDED.")
-					print("[LoginUseCase] Notifying successObserver and returning .success")
 					successObserver?.didLoginSuccessfully(response: response)
 					return .success(response)
 				} catch {
-					print("[LoginUseCase] tokenStorage.save() FAILED with error: \(error)")
-					print("[LoginUseCase] Notifying failureObserver and returning .failure(.tokenStorageFailed)")
 					failureObserver?.didFailLogin(error: .tokenStorageFailed)
 					return .failure(.tokenStorageFailed)
 				}
 				
 			case .failure(let error):
-				print("[LoginUseCase] API Failure. Error: \(error)")
 				failureObserver?.didFailLogin(error: error)
 				return .failure(error)
 		}
 	}
 	
 	private func isValidEmail(_ email: String) -> Bool {
-		// Una expresión regular muy básica para emails.
-		// Deberías usar una más completa y probada para producción.
 		let emailRegEx = #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"#
 		let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
 		return emailPred.evaluate(with: email)

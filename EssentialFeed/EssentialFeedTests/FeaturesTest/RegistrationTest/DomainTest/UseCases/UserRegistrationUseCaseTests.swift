@@ -238,26 +238,19 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 	}
 	
 	func test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError() async throws {
-		print("--- test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError START ---")
 		let httpClient = HTTPClientSpy()
 		let (sut, keychain, name, email, password, notifier, tokenStorage, offlineStore) = makeSUTWithDefaults(httpClient: httpClient)
 		let expectedUserData = UserRegistrationData(name: name, email: email, password: password)
 		
 		let registerTask = Task {
-			print("test_register_whenNoConnectivity: Calling sut.register")
 			let res = await sut.register(name: name, email: email, password: password)
-			print("test_register_whenNoConnectivity: sut.register returned \(res)")
 			return res
 		}
 		
-		print("test_register_whenNoConnectivity: Waiting for HTTP request")
 		await expectHTTPRequest(from: httpClient)
-		print("test_register_whenNoConnectivity: HTTP request received by spy. Completing with error.")
 		httpClient.complete(with: NSError(domain: NSURLErrorDomain, code: URLError.notConnectedToInternet.rawValue))
 		
-		print("test_register_whenNoConnectivity: Awaiting registerTask.value")
 		let result = await registerTask.value
-		print("test_register_whenNoConnectivity: registerTask.value received. Result: \(result)")
 		
 		XCTAssertEqual(offlineStore.messages.count, 1, "Expected to save data once to offline store")
 		if let firstMessage = offlineStore.messages.first {
@@ -284,8 +277,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		
 		XCTAssertEqual(keychain.saveSpy.saveCallCount, 0, "Keychain save should not be called on connectivity error")
 		XCTAssertTrue(tokenStorage.messages.isEmpty, "TokenStorage save should not be called on connectivity error")
-		
-		print("--- test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError END ---")
 	}
 	
 	private func makeSUTWithDefaults(
@@ -361,9 +352,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		file: StaticString = #file,
 		line: UInt = #line
 	) async {
-		print("--- assertRegistrationValidation START ---")
-		print("Input: name='\(name)', email='\(email)', password='\(password)', expectedError='\(expectedError)'")
-		
 		let keychain = makeKeychainFullSpy()
 		let validator = RegistrationValidatorStub() // Creamos el stub
 		validator.errorToReturn = expectedError    // <<-- CRUCIAL: Configurar el stub para que devuelva el error esperado
@@ -371,7 +359,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		let httpClient = HTTPClientSpy()
 		let tokenStorage = TokenStorageSpy()
 		
-		print("Creating SUT for assertRegistrationValidation")
 		let sut = UserRegistrationUseCase(
 			keychain: keychain,
 			tokenStorage: tokenStorage,
@@ -390,9 +377,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		trackForMemoryLeaks(tokenStorage, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		
-		print("Calling sut.register in assertRegistrationValidation")
 		let result = await sut.register(name: name, email: email, password: password)
-		print("sut.register returned: \(result)")
 		
 		switch result {
 			case .failure(let error as RegistrationValidationError):
@@ -407,7 +392,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
 			XCTAssertTrue(offlineStoreSpy.messages.isEmpty, "No OfflineRegistrationStore interaction should occur if validation fails", file: file, line: line)
 		}
-		print("--- assertRegistrationValidation END ---")
 	}
 	
 	private func expectHTTPRequest(from httpClient: HTTPClientSpy, timeout: TimeInterval = 1.0, file: StaticString = #file, line: UInt = #line) async {
@@ -544,7 +528,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 			self.errorToReturn = errorToReturn
 		}
 		func validate(name: String, email: String, password: String) -> RegistrationValidationError? {
-			print("RegistrationValidatorStub.validate called. Will return: \(String(describing: errorToReturn))")
 			return errorToReturn
 		}
 	}
