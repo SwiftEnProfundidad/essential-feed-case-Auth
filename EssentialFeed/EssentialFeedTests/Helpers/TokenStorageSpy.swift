@@ -1,38 +1,58 @@
-import EssentialFeed
+
+// TokenStorageSpy.swift
+// EssentialFeedTests
+//
+// Created by Alex on 8/5/2025.
+//
+
 import Foundation
+import EssentialFeed
 
-final class TokenStorageSpy: TokenStorage {
-    // (save ahora es save(_ token: Token))
-    // Si los mensajes solo distinguen entre load y save, podría quedar así
-    // o podrías añadir el token al mensaje de save si es relevante para tus tests.
-    enum Message: Equatable {
-        case loadRefreshToken
+public final class TokenStorageSpy: TokenStorage {
+    public enum Message: Equatable {
         case save(Token)
-    }
-    private(set) var messages = [Message]()
-
-    // Stubs para los valores de retorno y errores
-    var loadRefreshTokenStub: Result<String?, Error>?
-    var saveTokenError: Error?
-
-    func loadRefreshToken() async throws -> String? {
-        messages.append(.loadRefreshToken)
-        if let stub = loadRefreshTokenStub {
-            switch stub {
-            case .success(let tokenString):
-                return tokenString
-            case .failure(let error):
-                throw error
-            }
-        }
-        // Valor por defecto si no hay stub
-        return "any-stubbed-refresh-token"
+        case loadRefreshToken
     }
 
-    func save(_ token: Token) async throws {
-        messages.append(.save(token)) // Almacena el token para inspección si es necesario
+    private(set) public var messages = [Message]()
+    
+    // --- Save ---
+    public var saveTokenError: Error?
+
+    public func save(_ token: Token) async throws {
+        messages.append(.save(token))
         if let error = saveTokenError {
             throw error
         }
+    }
+    
+    public func completeSaveSuccessfully() {
+        saveTokenError = nil
+    }
+
+    public func completeSave(withError error: Error) {
+        saveTokenError = error
+    }
+
+    // --- Load Refresh Token ---
+    public var refreshTokenToReturn: String?
+    public var loadRefreshTokenError: Error?
+
+    public func loadRefreshToken() async throws -> String? {
+        messages.append(.loadRefreshToken)
+        if let error = loadRefreshTokenError {
+            throw error
+        }
+        return refreshTokenToReturn
+    }
+    
+    public func completeLoadRefreshToken(with token: String?) {
+        refreshTokenToReturn = token
+        loadRefreshTokenError = nil
+    }
+    
+    public func completeLoadRefreshToken(withError error: Error) {
+        loadRefreshTokenError = error
+        refreshTokenToReturn = nil
     }
 }
