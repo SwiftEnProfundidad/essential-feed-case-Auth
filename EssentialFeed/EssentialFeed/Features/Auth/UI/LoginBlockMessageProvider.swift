@@ -24,11 +24,13 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
             return "Could not connect. Please try again."
         case .unknown:
             return "Something went wrong. Please try again."
-					case .tokenStorageFailed:
-						return "Token storage failed."
-					case .noConnectivity:
-						return "No connectivity."
-				}
+        case .tokenStorageFailed:
+            return "Token storage failed."
+        case .noConnectivity:
+            return "No connectivity."
+        case .offlineStoreFailed:
+            return "Offline store failed."
+        }
     }
     public func message(for validation: LoginValidationError) -> String {
         switch validation {

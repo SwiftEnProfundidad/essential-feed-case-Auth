@@ -1,19 +1,18 @@
-
 import Foundation
 
 public enum KeychainSaveResult: Equatable {
-	case success
-	case duplicateItem
-	case failure
+    case success
+    case duplicateItem
+    case failure
 }
 
 public protocol KeychainSavable {
-	func save(data: Data, forKey key: String) -> KeychainSaveResult
-	func load(forKey key: String) -> Data?
+    func save(data: Data, forKey key: String) -> KeychainSaveResult
+    func load(forKey key: String) -> Data?
 }
 
 public protocol KeychainDeletable {
-	func delete(forKey key: String) -> Bool
+    func delete(forKey key: String) -> Bool
 }
 
 public protocol KeychainUpdatable {

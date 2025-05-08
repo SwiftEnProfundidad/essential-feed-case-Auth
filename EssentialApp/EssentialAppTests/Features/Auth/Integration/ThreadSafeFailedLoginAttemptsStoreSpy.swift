@@ -1,5 +1,5 @@
-import Foundation
 import EssentialFeed
+import Foundation
 
 public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
     private let queue = DispatchQueue(label: "ThreadSafeFailedLoginAttemptsStoreSpy.queue", attributes: .concurrent)
@@ -10,23 +10,23 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
     private var _capturedUsernames = [String]()
     private var _attempts: [String: Int] = [:]
     private var _lastAttemptTimes: [String: Date] = [:]
-    
+
     public var lastResetCount: Int { queue.sync { _lastResetCount } }
     public var getAttemptsCallCount: Int { queue.sync { _getAttemptsCallCount } }
     public var incrementAttemptsCallCount: Int { queue.sync { _incrementAttemptsCallCount } }
     public var resetAttemptsCallCount: Int { queue.sync { _resetAttemptsCallCount } }
     public var capturedUsernames: [String] { queue.sync { _capturedUsernames } }
     public var attempts: [String: Int] { queue.sync { _attempts } }
-    
+
     public func getAttempts(for username: String) -> Int {
         queue.sync(flags: .barrier) {
-					_ = _attempts[username, default: 0]
+            _ = _attempts[username, default: 0]
             _getAttemptsCallCount += 1
             _capturedUsernames.append(username)
             return _attempts[username, default: 0]
         }
     }
-    
+
     public func incrementAttempts(for username: String) {
         queue.sync(flags: .barrier) {
             _incrementAttemptsCallCount += 1
@@ -35,7 +35,7 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
             _lastAttemptTimes[username] = Date()
         }
     }
-    
+
     public func resetAttempts(for username: String) {
         queue.sync(flags: .barrier) {
             _lastResetCount = _incrementAttemptsCallCount
@@ -45,7 +45,7 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
             _lastAttemptTimes[username] = nil
         }
     }
-    
+
     public var incrementAttemptsSinceLastReset: Int {
         queue.sync { _incrementAttemptsCallCount - _lastResetCount }
     }

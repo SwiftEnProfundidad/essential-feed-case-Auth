@@ -1,7 +1,7 @@
 // Copyright © 2019 Essential Developer. All rights reserved.
 
-import XCTest
 import UIKit
+import XCTest
 
 extension XCTestCase {
     func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {

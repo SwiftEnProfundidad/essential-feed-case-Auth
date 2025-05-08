@@ -1,5 +1,5 @@
-import XCTest
 import EssentialApp
+import XCTest
 
 final class RealSessionManagerTests: XCTestCase {
     func test_isAuthenticated_queriesKeychainWithAuthTokenKey() {
@@ -8,14 +8,14 @@ final class RealSessionManagerTests: XCTestCase {
         _ = sut.isAuthenticated
         XCTAssertEqual(spy.getCalls, ["auth_token"])
     }
-    
+
     func test_isAuthenticated_returnsTrueWhenKeychainHasToken() {
         let spy = KeychainHelperSpy()
         spy.stubbedValue = "any_token"
         let sut = makeSUT(keychain: spy)
         XCTAssertTrue(sut.isAuthenticated)
     }
-    
+
     func test_isAuthenticated_returnsFalseWhenKeychainHasNoToken() {
         let spy = KeychainHelperSpy()
         spy.stubbedValue = nil

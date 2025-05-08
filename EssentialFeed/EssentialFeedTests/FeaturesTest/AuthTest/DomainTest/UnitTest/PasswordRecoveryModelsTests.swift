@@ -1,8 +1,7 @@
-import XCTest
 import EssentialFeed
+import XCTest
 
 final class PasswordRecoveryModelsTests: XCTestCase {
-    
     func test_init_setsEmail() {
         let email = "test@example.com"
         let sut = makeRequest(email: email)

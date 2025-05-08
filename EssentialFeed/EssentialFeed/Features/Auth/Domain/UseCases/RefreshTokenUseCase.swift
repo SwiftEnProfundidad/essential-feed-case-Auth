@@ -1,22 +1,22 @@
 import Foundation
 
 public protocol RefreshTokenUseCase {
-	func execute() async throws -> Token
+    func execute() async throws -> Token
 }
 
 public struct Token: Equatable {
-	public let value: String
-	public let expiry: Date
-	
-	public init(value: String, expiry: Date) {
-		self.value = value
-		self.expiry = expiry
-	}
-	
-	public static func == (lhs: Token, rhs: Token) -> Bool {
-		let tolerance: TimeInterval = 1.0 // 1 segundo
-		
-		return lhs.value == rhs.value &&
-		abs(lhs.expiry.timeIntervalSince(rhs.expiry)) < tolerance
-	}
+    public let value: String
+    public let expiry: Date
+
+    public init(value: String, expiry: Date) {
+        self.value = value
+        self.expiry = expiry
+    }
+
+    public static func == (lhs: Token, rhs: Token) -> Bool {
+        let tolerance: TimeInterval = 1.0 // 1 segundo
+
+        return lhs.value == rhs.value &&
+            abs(lhs.expiry.timeIntervalSince(rhs.expiry)) < tolerance
+    }
 }

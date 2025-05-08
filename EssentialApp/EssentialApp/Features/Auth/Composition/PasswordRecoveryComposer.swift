@@ -1,6 +1,6 @@
-import UIKit
-import SwiftUI
 import EssentialFeed
+import SwiftUI
+import UIKit
 
 public enum PasswordRecoveryComposer {
     public static func passwordRecoveryViewScreen() -> PasswordRecoveryScreen {

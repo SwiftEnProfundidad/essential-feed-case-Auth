@@ -1,7 +1,7 @@
-import XCTest
-import SwiftUI
 import EssentialApp
 import EssentialFeed
+import SwiftUI
+import XCTest
 
 final class PasswordRecoverySnapshotTests: XCTestCase {
     func test_passwordRecovery_success_light() {

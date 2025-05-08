@@ -400,6 +400,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0895DAA2234B3B980031BB2D /* Build configuration list for PBXNativeTarget "EssentialApp" */;
 			buildPhases = (
+				B4CE05412DCCE80800EAE847 /* ShellScript */,
 				0895DA7F234B3B950031BB2D /* Sources */,
 				0895DA80234B3B950031BB2D /* Frameworks */,
 				0895DA81234B3B950031BB2D /* Resources */,
@@ -418,6 +419,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0895DAA5234B3B980031BB2D /* Build configuration list for PBXNativeTarget "EssentialAppTests" */;
 			buildPhases = (
+				B4CE05422DCCE81200EAE847 /* ShellScript */,
 				0895DA95234B3B980031BB2D /* Sources */,
 				0895DA96234B3B980031BB2D /* Frameworks */,
 				0895DA97234B3B980031BB2D /* Resources */,
@@ -496,6 +498,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B4CE05412DCCE80800EAE847 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n# Determinar la ruta de SwiftLint y el archivo de configuración\nSWIFTLINT_EXECUTABLE=\"\"\n# Asumimos que .swiftlint.yml está en la raíz del repositorio, un nivel por encima de la carpeta del proyecto EssentialFeed\n# SRCROOT para el target EssentialFeed es /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed\n# Por lo tanto, ../.swiftlint.yml apunta a /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/.swiftlint.yml\nCONFIG_FILE=\"${SRCROOT}/../.swiftlint.yml\"\n\nif [[ \"$(uname -m)\" == \"arm64\" ]]; then\n  # Para Apple Silicon Macs (M1, M2, M3, etc.)\n  SWIFTLINT_EXECUTABLE=\"/opt/homebrew/bin/swiftlint\"\nelse\n  # Para Intel Macs\n  SWIFTLINT_EXECUTABLE=\"/usr/local/bin/swiftlint\"\nfi\n\n# Verificar si SwiftLint está instalado en la ruta esperada\nif [[ -f \"$SWIFTLINT_EXECUTABLE\" ]]; then\n  echo \"SwiftLint encontrado en $SWIFTLINT_EXECUTABLE. Ejecutando con configuración: $CONFIG_FILE\"\n  # Ejecutar SwiftLint para autocorregir. Si solo quieres que muestre errores/advertencias, cambia 'autocorrect' por 'lint'.\n  \"$SWIFTLINT_EXECUTABLE\" autocorrect --config \"$CONFIG_FILE\" --quiet\n  # El flag --quiet es para reducir la verbosidad si todo va bien. Puedes quitarlo para más detalle.\n  echo \"SwiftLint ejecutado.\"\nelse\n  echo \"warning: SwiftLint no fue encontrado en la ruta esperada ($SWIFTLINT_EXECUTABLE). Por favor, asegúrate de que esté instalado mediante Homebrew ('brew install swiftlint') y accesible en esa ruta.\"\nfi\n";
+		};
+		B4CE05422DCCE81200EAE847 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n# Determinar la ruta de SwiftLint y el archivo de configuración\nSWIFTLINT_EXECUTABLE=\"\"\n# Asumimos que .swiftlint.yml está en la raíz del repositorio, un nivel por encima de la carpeta del proyecto EssentialFeed\n# SRCROOT para el target EssentialFeed es /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed\n# Por lo tanto, ../.swiftlint.yml apunta a /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/.swiftlint.yml\nCONFIG_FILE=\"${SRCROOT}/../.swiftlint.yml\"\n\nif [[ \"$(uname -m)\" == \"arm64\" ]]; then\n  # Para Apple Silicon Macs (M1, M2, M3, etc.)\n  SWIFTLINT_EXECUTABLE=\"/opt/homebrew/bin/swiftlint\"\nelse\n  # Para Intel Macs\n  SWIFTLINT_EXECUTABLE=\"/usr/local/bin/swiftlint\"\nfi\n\n# Verificar si SwiftLint está instalado en la ruta esperada\nif [[ -f \"$SWIFTLINT_EXECUTABLE\" ]]; then\n  echo \"SwiftLint encontrado en $SWIFTLINT_EXECUTABLE. Ejecutando con configuración: $CONFIG_FILE\"\n  # Ejecutar SwiftLint para autocorregir. Si solo quieres que muestre errores/advertencias, cambia 'autocorrect' por 'lint'.\n  \"$SWIFTLINT_EXECUTABLE\" autocorrect --config \"$CONFIG_FILE\" --quiet\n  # El flag --quiet es para reducir la verbosidad si todo va bien. Puedes quitarlo para más detalle.\n  echo \"SwiftLint ejecutado.\"\nelse\n  echo \"warning: SwiftLint no fue encontrado en la ruta esperada ($SWIFTLINT_EXECUTABLE). Por favor, asegúrate de que esté instalado mediante Homebrew ('brew install swiftlint') y accesible en esa ruta.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0895DA7F234B3B950031BB2D /* Sources */ = {

@@ -1,6 +1,5 @@
-import Foundation
 import EssentialFeed
-
+import Foundation
 
 final class TokenParserSpy: TokenParser {
     func parse(from data: Data) throws -> Token {

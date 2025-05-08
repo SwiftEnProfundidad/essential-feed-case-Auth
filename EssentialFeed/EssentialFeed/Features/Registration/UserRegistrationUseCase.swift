@@ -5,7 +5,7 @@ public typealias RegistrationPersistenceInterfaces = KeychainProtocol & TokenSto
 public struct User: Equatable {
     public let name: String
     public let email: String
-    
+
     public init(name: String, email: String) {
         self.name = name
         self.email = email
@@ -16,7 +16,7 @@ public struct UserRegistrationData: Codable, Equatable {
     public let name: String
     public let email: String
     public let password: String
-    
+
     public init(name: String, email: String, password: String) {
         self.name = name
         self.email = email
@@ -93,7 +93,7 @@ public actor UserRegistrationUseCase {
     private let httpClient: HTTPClient
     private let registrationEndpoint: URL
     private let notifier: UserRegistrationNotifier?
-    
+
     public init(
         persistence: RegistrationPersistenceInterfaces,
         validator: RegistrationValidatorProtocol,
@@ -107,15 +107,15 @@ public actor UserRegistrationUseCase {
         self.registrationEndpoint = registrationEndpoint
         self.notifier = notifier
     }
-    
+
     public func register(name: String, email: String, password: String) async -> UserRegistrationResult {
         if let validationError = validator.validate(name: name, email: email, password: password) {
             notifier?.notifyRegistrationFailed(with: validationError)
             return .failure(validationError)
         }
-        
+
         let userData = UserRegistrationData(name: name, email: email, password: password)
-        
+
         do {
             var request = URLRequest(url: registrationEndpoint)
             request.httpMethod = "POST"
@@ -125,9 +125,9 @@ public actor UserRegistrationUseCase {
                 "password": userData.password
             ])
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
+
             let (data, httpResponse) = try await httpClient.send(request)
-            
+
             switch httpResponse.statusCode {
             case 201:
                 do {
@@ -135,12 +135,12 @@ public actor UserRegistrationUseCase {
                     decoder.dateDecodingStrategy = .iso8601
                     let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
                     let receivedToken = Token(value: serverResponse.token.value, expiry: serverResponse.token.expiry)
-                    
+
                     try await persistence.save(receivedToken)
                     _ = persistence.save(data: password.data(using: .utf8)!, forKey: email)
-                    
+
                     return .success(User(name: name, email: email))
-                    
+
                 } catch let tokenError as TokenParsingError {
                     notifier?.notifyRegistrationFailed(with: tokenError)
                     return .failure(tokenError)
@@ -163,16 +163,15 @@ public actor UserRegistrationUseCase {
                 notifier?.notifyRegistrationFailed(with: NetworkError.unknown)
                 return .failure(NetworkError.unknown)
             }
-        } catch let error as NetworkError {
-            notifier?.notifyRegistrationFailed(with: error)
-            return .failure(error)
         } catch {
             if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
                 do {
                     try await persistence.save(userData)
-                } catch {
-                    notifier?.notifyRegistrationFailed(with: error)
+                } catch let offlineStoreError {
+                    // Notificar el error específico del guardado offline si ocurre
+                    notifier?.notifyRegistrationFailed(with: offlineStoreError)
                 }
+                // Notificar SIEMPRE el error de no conectividad, como espera el test
                 notifier?.notifyRegistrationFailed(with: NetworkError.noConnectivity)
                 return .failure(NetworkError.noConnectivity)
             } else {

@@ -1,7 +1,7 @@
-import UIKit
-import SwiftUI
 import Combine
 import EssentialFeed
+import SwiftUI
+import UIKit
 
 public enum LoginComposer {
     private static var cancellables = Set<AnyCancellable>()

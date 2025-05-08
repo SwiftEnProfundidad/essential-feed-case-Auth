@@ -6,12 +6,12 @@ public protocol SessionManager {
 
 public final class RealSessionManager: SessionManager {
     private let keychain: KeychainStore
-    
-	public init(keychain: KeychainStore) {
+
+    public init(keychain: KeychainStore) {
         self.keychain = keychain
     }
-    
-	public var isAuthenticated: Bool {
+
+    public var isAuthenticated: Bool {
         return keychain.get("auth_token") != nil
     }
 }

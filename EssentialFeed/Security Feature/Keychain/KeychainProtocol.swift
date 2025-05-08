@@ -23,5 +23,3 @@ public protocol KeychainUpdatable {
 }
 
 public typealias KeychainFull = KeychainSavable & KeychainDeletable & KeychainUpdatable
-
-

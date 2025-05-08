@@ -1,18 +1,18 @@
-import XCTest
 import EssentialFeed
+import XCTest
 
 final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     func test_recoverPassword_deliversSuccess_onValidEmail() {
         let (sut, _) = makeSUT(apiResult: .success(PasswordRecoveryResponse(message: "OK")))
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
-        
+
         sut.recoverPassword(email: "test@example.com") { result in
             receivedResult = result
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
-        
+
         switch receivedResult {
         case let .success(response):
             XCTAssertEqual(response.message, "OK")
@@ -24,7 +24,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     func test_recoverPassword_deliversInvalidEmailError_onInvalidEmail() {
         let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.invalidEmailFormat))
         let receivedResult = recoverPasswordSync(sut: sut, email: "invalid")
-        
+
         switch receivedResult {
         case let .failure(error):
             XCTAssertEqual(error, PasswordRecoveryError.invalidEmailFormat)
@@ -36,7 +36,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     func test_recoverPassword_deliversEmailNotFoundError_onUnknownEmail() {
         let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.emailNotFound))
         let receivedResult = recoverPasswordSync(sut: sut, email: "unknown@example.com")
-        
+
         switch receivedResult {
         case let .failure(error):
             XCTAssertEqual(error, PasswordRecoveryError.emailNotFound)
@@ -49,13 +49,13 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
         let (sut, _) = makeSUT(apiResult: .failure(PasswordRecoveryError.network))
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
-        
+
         sut.recoverPassword(email: "test@example.com") { result in
             receivedResult = result
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
-        
+
         switch receivedResult {
         case let .failure(error):
             XCTAssertEqual(error, PasswordRecoveryError.network)
@@ -87,7 +87,6 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
         return (sut, api)
     }
 }
-
 
 // Stub API for testing
 private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {

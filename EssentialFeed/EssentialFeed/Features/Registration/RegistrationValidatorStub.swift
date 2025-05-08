@@ -1,7 +1,6 @@
-
 // REMOVE-OLD-PATH: /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed/EssentialFeed/Features/Registration/RegistrationValidatorStub.swift
 // ADD-NEW-PATH: /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed/EssentialFeed/Features/Registration/RegistrationValidator.swift
-// Copyright © 2025 Essential Developer. All rights reserved. 
+// Copyright © 2025 Essential Developer. All rights reserved.
 // (El copyright puede variar, lo mantengo como estaba en tu captura)
 
 import Foundation
@@ -25,7 +24,7 @@ public final class RegistrationValidator: RegistrationValidatorProtocol {
         if password.count < 8 {
             return .weakPassword
         }
-        
+
         return nil
     }
 }

@@ -1,10 +1,10 @@
-import XCTest
 import EssentialFeed
+import XCTest
 
 final class LoginViewModelTests: XCTestCase {
     func test_login_success() async {
         let mockAPI = MockAuthAPI()
-        mockAPI.loginHandler = { credentials in
+        mockAPI.loginHandler = { _ in
             .success(LoginResponse(token: "test-token"))
         }
         let useCase = UserLoginUseCase(api: mockAPI)
@@ -15,7 +15,7 @@ final class LoginViewModelTests: XCTestCase {
         viewModel.password = "claveSegura123"
 
         await viewModel.login()
-        
+
         XCTAssertTrue(viewModel.loginSuccess)
         XCTAssertNil(viewModel.errorMessage)
     }
@@ -33,7 +33,7 @@ final class LoginViewModelTests: XCTestCase {
         viewModel.password = "wrong"
 
         await viewModel.login()
-        
+
         XCTAssertFalse(viewModel.loginSuccess)
         XCTAssertEqual(viewModel.errorMessage, LoginError.invalidCredentials.localizedDescription)
     }
@@ -51,7 +51,7 @@ final class LoginViewModelTests: XCTestCase {
         viewModel.password = "claveSegura123"
 
         await viewModel.login()
-        
+
         XCTAssertFalse(viewModel.loginSuccess)
         XCTAssertEqual(viewModel.errorMessage, LoginError.network.localizedDescription)
     }

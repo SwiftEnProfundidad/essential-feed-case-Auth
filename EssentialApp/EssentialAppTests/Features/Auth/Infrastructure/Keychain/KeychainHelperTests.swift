@@ -1,5 +1,5 @@
-import XCTest
 import EssentialApp
+import XCTest
 
 final class KeychainHelperTests: XCTestCase {
     private let key = "test_key"

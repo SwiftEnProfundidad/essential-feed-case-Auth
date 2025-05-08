@@ -1,68 +1,68 @@
 // KeychainSpy.swift
 // Helpers para test unitario e integración de Keychain
 
-import Foundation
 import EssentialFeed
+import Foundation
 
 // MARK: - KeychainSaveSpy
 public final class KeychainSaveSpy: KeychainSavable {
-	public var receivedKey: String?
-	public var receivedData: Data?
-	public var saveResult: KeychainSaveResult = .success
-	public var saveCalled = false
-	public var saveCallCount = 0
-	public var lastData: Data?
-	public var lastKey: String?
-	public var simulatedError: Int?
-	
-	public init() {}
-	
-	public func save(data: Data, forKey key: String) -> KeychainSaveResult {
-		if let error = simulatedError {
-			if error == -25299 { // errSecDuplicateItem
-				return .duplicateItem
-			}
-			return .failure
-		}
-		saveCalled = true
-		saveCallCount += 1
-		lastData = data
-		lastKey = key
-		receivedKey = key
-		receivedData = data
-		return saveResult
-	}
-	
-	public func load(forKey key: String) -> Data? {
-		return receivedKey == key ? receivedData : nil
-	}
+    public var receivedKey: String?
+    public var receivedData: Data?
+    public var saveResult: KeychainSaveResult = .success
+    public var saveCalled = false
+    public var saveCallCount = 0
+    public var lastData: Data?
+    public var lastKey: String?
+    public var simulatedError: Int?
+
+    public init() {}
+
+    public func save(data: Data, forKey key: String) -> KeychainSaveResult {
+        if let error = simulatedError {
+            if error == -25299 { // errSecDuplicateItem
+                return .duplicateItem
+            }
+            return .failure
+        }
+        saveCalled = true
+        saveCallCount += 1
+        lastData = data
+        lastKey = key
+        receivedKey = key
+        receivedData = data
+        return saveResult
+    }
+
+    public func load(forKey key: String) -> Data? {
+        return receivedKey == key ? receivedData : nil
+    }
 }
 
 // MARK: - KeychainDeleteSpy
 public final class KeychainDeleteSpy: KeychainSavable, KeychainDeletable {
-	public var deleteCalled = false
-	public var lastDeletedKey: String?
-	public var deleteResult: Bool = true
-	/// Si se asigna, simula un error real de borrado y fuerza el path de error
-	public var simulatedDeleteError: Int? = nil
-	
-	public init() {}
-	
-	public func delete(forKey key: String) -> Bool {
-		deleteCalled = true
-		lastDeletedKey = key
-		if key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-			return false
-		}
-		if let _ = simulatedDeleteError {
-			return false // Simula error real
-		}
-		return deleteResult
-	}
-	
-	// Dummy implementations for KeychainSavable
-	public func save(data: Data, forKey key: String) -> KeychainSaveResult { .success }
-	public func load(forKey key: String) -> Data? { nil }
+    public var deleteCalled = false
+    public var lastDeletedKey: String?
+    public var deleteResult: Bool = true
+    /// Si se asigna, simula un error real de borrado y fuerza el path de error
+    public var simulatedDeleteError: Int?
+
+    public init() {}
+
+    public func delete(forKey key: String) -> Bool {
+        deleteCalled = true
+        lastDeletedKey = key
+        if key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return false
+        }
+        if let _ = simulatedDeleteError {
+            return false // Simula error real
+        }
+        return deleteResult
+    }
+
+    // Dummy implementations for KeychainSavable
+    public func save(data: Data, forKey key: String) -> KeychainSaveResult { .success }
+    public func load(forKey key: String) -> Data? { nil }
 }
 
 // MARK: - KeychainUpdateSpy
@@ -72,7 +72,7 @@ public final class KeychainUpdateSpy: KeychainSavable, KeychainUpdatable {
     public var lastUpdatedKey: String?
     public var lastUpdatedData: Data?
     public var updateStatus: OSStatus = errSecDuplicateItem // -25299 por defecto
-    public var existingKeys: (() -> Set<String>)? = nil // Permite consultar las claves existentes
+    public var existingKeys: (() -> Set<String>)? // Permite consultar las claves existentes
 
     public init() {}
 
@@ -103,14 +103,14 @@ public final class KeychainUpdateSpy: KeychainSavable, KeychainUpdatable {
 // MARK: - Helper Factory (Global)
 /// Global factory for KeychainFullSpy to be used in all tests (DRY, Clean Code)
 func makeKeychainFullSpy(strictMode: Bool = true) -> KeychainFullSpy {
-	let spy = KeychainFullSpy()
-	spy.strictMode = strictMode
-	return spy
+    let spy = KeychainFullSpy()
+    spy.strictMode = strictMode
+    return spy
 }
 
 public protocol KeychainSpyAux {
-	var saveResult: KeychainSaveResult { get set }
-	var updateStatus: OSStatus { get set }
+    var saveResult: KeychainSaveResult { get set }
+    var updateStatus: OSStatus { get set }
 }
 
 // MARK: - KeychainFullSpy
@@ -124,7 +124,7 @@ public final class KeychainFullSpy: KeychainFull, KeychainSpyAux {
     var storage: [String: Data] = [:] // Internal for test access
     private let storageLock = NSRecursiveLock()
     private var errorByKey: [String: Int] = [:]
-    private var _loadResult: Data?? = nil // nil = no override, .some(nil) = override a nil, .some(.some(data)) = override a data
+    private var _loadResult: Data?? // nil = no override, .some(nil) = override a nil, .some(.some(data)) = override a data
 
     // MARK: - Protocol Properties
     public var saveResult: KeychainSaveResult {

@@ -1,5 +1,5 @@
-import UIKit
 import SwiftUI
+import UIKit
 
 public enum AuthComposer {
     public static func authViewController(
