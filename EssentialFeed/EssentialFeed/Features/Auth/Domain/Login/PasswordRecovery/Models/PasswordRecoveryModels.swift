@@ -21,7 +21,6 @@ public enum PasswordRecoveryError: Error, Equatable {
     case emailNotFound
     case network
     case unknown
-    // Puedes añadir más errores según el backend
 }
 
 // MARK: - Protocolo de API para recuperación de contraseña

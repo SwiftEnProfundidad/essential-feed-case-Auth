@@ -34,10 +34,6 @@ public protocol RegistrationValidatorProtocol {
     func validate(name: String, email: String, password: String) -> RegistrationValidationError?
 }
 
-public enum UserRegistrationError: Error, Equatable {
-    case emailAlreadyInUse
-}
-
 public enum UserRegistrationResult {
     case success(User)
     case failure(Error)
