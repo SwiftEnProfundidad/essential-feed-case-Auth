@@ -280,21 +280,22 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 	}
 	
 	private func makeSUTWithDefaults(
-		httpClient: HTTPClient = HTTPClientSpy(),
-		tokenStorage: TokenStorage = TokenStorageSpy(),
-		offlineStore: OfflineRegistrationStore = OfflineRegistrationStoreSpy(),
-		notifier: UserRegistrationNotifier = UserRegistrationNotifierSpy(),
+		httpClient: HTTPClient = HTTPClientSpy(), // Asumo que HTTPClientSpy está definido o accesible
+		tokenStorage: TokenStorage = TokenStorageSpy(), // Asumo que TokenStorageSpy está definido o accesible
+		offlineStore: OfflineRegistrationStore = OfflineRegistrationStoreSpy(), // Asumo que OfflineRegistrationStoreSpy está definido o accesible
+		notifier: UserRegistrationNotifier = UserRegistrationNotifierSpy(), // Asumo que UserRegistrationNotifierSpy está definido o accesible
 		name: String = "Test User",
 		email: String = "test@email.com",
 		password: String = "Password123",
 		file: StaticString = #file, line: UInt = #line
 	) -> (sut: UserRegistrationUseCase, keychain: KeychainFullSpy, name: String, email: String, password: String, notifier: UserRegistrationNotifier, tokenStorage: TokenStorageSpy, offlineStore: OfflineRegistrationStoreSpy) {
-		let keychain = makeKeychainFullSpy()
-		let registrationEndpoint = anyURL()
+		let keychain = KeychainFullSpy() // Asumo que KeychainFullSpy está definido o accesible
+		let registrationEndpoint = anyURL() // Asumo que anyURL() está definido o accesible
 		let sut = UserRegistrationUseCase(
 			keychain: keychain,
 			tokenStorage: tokenStorage,
 			offlineStore: offlineStore,
+			// CHANGE: Usar RegistrationValidatorAlwaysValid para los defaults donde no se espera fallo de validación
 			validator: RegistrationValidatorAlwaysValid(),
 			httpClient: httpClient,
 			registrationEndpoint: registrationEndpoint,
@@ -307,6 +308,10 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		}
 		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
 			trackForMemoryLeaks(offlineStoreSpy, file: file, line: line)
+		}
+		// Asegúrate de que el notifier spy también se rastree si es una clase
+		if let notifierSpy = notifier as? UserRegistrationNotifierSpy {
+			trackForMemoryLeaks(notifierSpy, file: file, line: line)
 		}
 		return (sut, keychain, name, email, password, notifier, tokenStorage as! TokenStorageSpy, offlineStore as! OfflineRegistrationStoreSpy)
 	}
@@ -321,13 +326,14 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		let name = "Carlos"
 		let email = "carlos@email.com"
 		let password = "StrongPassword123"
-		let httpClient = HTTPClientDummy()
+		let httpClient = HTTPClientDummy() // Asumo que HTTPClientDummy está definido o accesible
 		let registrationEndpoint = URL(string: "https://test-register-endpoint.com")!
 		let sut = UserRegistrationUseCase(
 			keychain: keychain,
 			tokenStorage: tokenStorage,
 			offlineStore: offlineStore,
-			validator: RegistrationValidatorStub(),
+			// CHANGE: Usar RegistrationValidatorAlwaysValid si no se prueban fallos de validación aquí
+			validator: RegistrationValidatorAlwaysValid(),
 			httpClient: httpClient,
 			registrationEndpoint: registrationEndpoint
 		)
@@ -352,18 +358,22 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		file: StaticString = #file,
 		line: UInt = #line
 	) async {
+		// ... (prints de depuración si los quieres mantener) ...
+		
 		let keychain = makeKeychainFullSpy()
-		let validator = RegistrationValidatorStub() // Creamos el stub
-		validator.errorToReturn = expectedError    // <<-- CRUCIAL: Configurar el stub para que devuelva el error esperado
+		// CHANGE: Usar RegistrationValidatorTestStub, que tiene errorToReturn
+		let validator = RegistrationValidatorTestStub()
+		validator.errorToReturn = expectedError
 		
 		let httpClient = HTTPClientSpy()
 		let tokenStorage = TokenStorageSpy()
 		
+		// ... (print de depuración) ...
 		let sut = UserRegistrationUseCase(
 			keychain: keychain,
 			tokenStorage: tokenStorage,
 			offlineStore: offlineStore,
-			validator: validator, // Usar el stub configurado
+			validator: validator,
 			httpClient: httpClient,
 			registrationEndpoint: anyURL()
 		)
@@ -371,12 +381,14 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
 			trackForMemoryLeaks(offlineStoreSpy, file: file, line: line)
 		}
-		trackForMemoryLeaks(validator as AnyObject, file: file, line: line) // validator es una clase
+		// trackForMemoryLeaks(validator as AnyObject) // RegistrationValidatorTestStub es una clase
+		trackForMemoryLeaks(validator, file: file, line: line)
 		trackForMemoryLeaks(keychain, file: file, line: line)
 		trackForMemoryLeaks(httpClient, file: file, line: line)
 		trackForMemoryLeaks(tokenStorage, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		
+		// ... (prints y lógica del test como estaba) ...
 		let result = await sut.register(name: name, email: email, password: password)
 		
 		switch result {
@@ -392,6 +404,36 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
 			XCTAssertTrue(offlineStoreSpy.messages.isEmpty, "No OfflineRegistrationStore interaction should occur if validation fails", file: file, line: line)
 		}
+		// ... (prints de depuración si los quieres mantener) ...
+	}
+	
+	private func makeSUT(
+		offlineStore: OfflineRegistrationStore = OfflineRegistrationStoreSpy(),
+		file: StaticString = #file, line: UInt = #line
+	) -> (sut: UserRegistrationUseCase, httpClient: HTTPClientSpy) {
+		let httpClient = HTTPClientSpy()
+		let tokenStorage = TokenStorageSpy()
+		
+		let sut = UserRegistrationUseCase(
+			keychain: makeKeychainFullSpy(),
+			tokenStorage: tokenStorage,
+			offlineStore: offlineStore,
+			// CHANGE: Decide si aquí necesitas un stub configurable o uno que siempre pase.
+			// Si los tests que usan este makeSUT no prueban fallos de validación, RegistrationValidatorAlwaysValid() es más simple.
+			// Si sí prueban fallos de validación, entonces RegistrationValidatorTestStub().
+			// Por ahora, lo dejo como RegistrationValidatorAlwaysValid() para ser consistente.
+			validator: RegistrationValidatorAlwaysValid(),
+			httpClient: httpClient,
+			registrationEndpoint: URL(string: "https://test-register-endpoint.com")!,
+			notifier: nil // Asumo que para este makeSUT simple no se prueba el notifier
+		)
+		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
+			trackForMemoryLeaks(offlineStoreSpy, file: file, line: line)
+		}
+		trackForMemoryLeaks(sut, file: file, line: line)
+		trackForMemoryLeaks(httpClient, file: file, line: line)
+		trackForMemoryLeaks(tokenStorage, file: file, line: line)
+		return (sut, httpClient)
 	}
 	
 	private func expectHTTPRequest(from httpClient: HTTPClientSpy, timeout: TimeInterval = 1.0, file: StaticString = #file, line: UInt = #line) async {
@@ -414,49 +456,8 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		}
 	}
 	
-	private func makeSUT(
-		offlineStore: OfflineRegistrationStore = OfflineRegistrationStoreSpy(),
-		file: StaticString = #file, line: UInt = #line
-	) -> (sut: UserRegistrationUseCase, httpClient: HTTPClientSpy) {
-		let httpClient = HTTPClientSpy()
-		let tokenStorage = TokenStorageSpy()
-		
-		let sut = UserRegistrationUseCase(
-			keychain: makeKeychainFullSpy(),
-			tokenStorage: tokenStorage,
-			offlineStore: offlineStore,
-			validator: RegistrationValidatorStub(),
-			httpClient: httpClient,
-			registrationEndpoint: URL(string: "https://test-register-endpoint.com")!,
-			notifier: nil
-		)
-		if let offlineStoreSpy = offlineStore as? OfflineRegistrationStoreSpy {
-			trackForMemoryLeaks(offlineStoreSpy, file: file, line: line)
-		}
-		return (sut, httpClient)
-	}
-	
-	final class OfflineRegistrationStoreSpy: OfflineRegistrationStore {
-		enum Message: Equatable {
-			case save(UserRegistrationData)
-		}
-		
-		private(set) var messages = [Message]()
-		var saveError: Error?
-		
-		func save(_ data: UserRegistrationData) async throws {
-			if let error = saveError {
-				throw error
-			}
-			messages.append(.save(data))
-		}
-	}
-	
 	func makeKeychainFullSpy() -> KeychainFullSpy {
 		return KeychainFullSpy()
-	}
-	func anyURL() -> URL {
-		return URL(string: "https://test-register-endpoint.com")!
 	}
 	
 	private func makeToken(value: String = "any-test-token", expiryOffset: TimeInterval = 3600) -> EssentialFeed.Token {
@@ -487,48 +488,4 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 		return try encoder.encode(responsePayload)
 	}
 	
-	// MARK: - Helpers & Stubs
-	final class UserRegistrationNotifierSpy: UserRegistrationNotifier {
-		
-		private(set) var receivedErrors = [Error]()
-		var notifiedEmailInUse: Bool {
-			receivedErrors.contains { ($0 as? UserRegistrationError) == .emailAlreadyInUse }
-		}
-		var notifiedConnectivityError: Bool {
-			receivedErrors.contains { ($0 as? NetworkError) == .noConnectivity }
-		}
-		var wasNotified: Bool {
-			!receivedErrors.isEmpty
-		}
-		
-		private let onNotify: (() -> Void)?
-		
-		init(onNotify: (() -> Void)? = nil) {
-			self.onNotify = onNotify
-		}
-		
-		
-		func notifyRegistrationFailed(with error: Error) {
-			receivedErrors.append(error)
-			if (error as? UserRegistrationError) == .emailAlreadyInUse {
-				onNotify?()
-			}
-		}
-	}
-	
-	final class RegistrationValidatorAlwaysValid: RegistrationValidatorProtocol {
-		func validate(name: String, email: String, password: String) -> RegistrationValidationError? {
-			return nil
-		}
-	}
-	
-	final class RegistrationValidatorStub: RegistrationValidatorProtocol {
-		var errorToReturn: RegistrationValidationError?
-		init(errorToReturn: RegistrationValidationError? = nil) {
-			self.errorToReturn = errorToReturn
-		}
-		func validate(name: String, email: String, password: String) -> RegistrationValidationError? {
-			return errorToReturn
-		}
-	}
 }

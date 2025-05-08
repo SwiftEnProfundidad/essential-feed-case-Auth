@@ -152,7 +152,7 @@
 		B46CA1412DBE863800CE9ADC /* PasswordRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */; };
 		B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */; };
 		B46CA14D2DBE8E3900CE9ADC /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */; };
-		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */; };
+		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */; };
 		B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */; };
 		B46CA1572DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */; };
 		B46CA15B2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
@@ -168,12 +168,17 @@
 		B48838462DC66A7A0048CF98 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */; };
 		B48838482DC678930048CF98 /* FailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */; };
 		B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
+		B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */; };
+		B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */; };
+		B48D30082DCCB571002943D9 /* UserRegistrationNotifierSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */; };
+		B48D300A2DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */; };
 		B49D2E8C2DB8E7F800D36E0D /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */; };
 		B49D2E8E2DB8E98400D36E0D /* SystemSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */; };
 		B49EFABB2DB54B6F007B703C /* SystemKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42EB7002DAEBA17002FBC51 /* SystemKeychain.swift */; };
 		B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */; };
 		B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */; };
 		B4A921712DC981B100591F6E /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A921702DC981B100591F6E /* TokenStorageSpy.swift */; };
+		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
 		B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */; };
 		B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
@@ -414,7 +419,7 @@
 		B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenterTests.swift; sourceTree = "<group>"; };
 		B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenter.swift; sourceTree = "<group>"; };
 		B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecovery.swift; sourceTree = "<group>"; };
-		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorStub.swift; sourceTree = "<group>"; };
+		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorWithLogicStub.swift; sourceTree = "<group>"; };
 		B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationServerUseCaseTests.swift; sourceTree = "<group>"; };
 		B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryModelsTests.swift; sourceTree = "<group>"; };
 		B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -430,11 +435,16 @@
 		B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
 		B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
 		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
+		B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
+		B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationNotifierSpy.swift; sourceTree = "<group>"; };
+		B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorTestStub.swift; sourceTree = "<group>"; };
 		B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionManager.swift; sourceTree = "<group>"; };
 		B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemSessionManagerTests.swift; path = "EssentialFeedTests/Security Feature/Session/SystemSessionManagerTests.swift"; sourceTree = SOURCE_ROOT; };
 		B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainSecureStorage.swift; path = "../../../../Security Feature/Keychain/KeychainSecureStorage.swift"; sourceTree = "<group>"; };
 		B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAssertHelpers.swift; sourceTree = "<group>"; };
 		B4A921702DC981B100591F6E /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
+		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
 		B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
 		B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParser.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
@@ -677,7 +687,6 @@
 			isa = PBXGroup;
 			children = (
 				B4D6B2652DC8D70600F5A3FE /* FeaturesTest */,
-				B402E02D2DB8642D00B29ECF /* Session */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
 				0844768D21FCB23900439BE9 /* Helpers */,
 				08EF9D15250BB0C2004539C2 /* Shared Presentation */,
@@ -1101,9 +1110,29 @@
 		B46CA14F2DBE8F6500CE9ADC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */,
+				B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */,
+				B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */,
+				B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */,
+				B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */,
+				B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B48D30012DCCB006002943D9 /* IntegrationTest */ = {
+			isa = PBXGroup;
+			children = (
+				B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */,
+			);
+			path = IntegrationTest;
+			sourceTree = "<group>";
+		};
+		B48D30022DCCB016002943D9 /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				B4D6B27B2DC8F22000F5A3FE /* UseCases */,
+			);
+			path = UnitTest;
 			sourceTree = "<group>";
 		};
 		B4D6B25B2DC8D15400F5A3FE /* Domain */ = {
@@ -1216,9 +1245,10 @@
 		B4D6B2652DC8D70600F5A3FE /* FeaturesTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
-				B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */,
 				B4D6B2662DC8D70D00F5A3FE /* AuthTest */,
+				B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */,
+				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
+				B402E02D2DB8642D00B29ECF /* Session */,
 			);
 			path = FeaturesTest;
 			sourceTree = "<group>";
@@ -1288,7 +1318,8 @@
 		B4D6B2702DC8E21F00F5A3FE /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B27B2DC8F22000F5A3FE /* UseCases */,
+				B48D30022DCCB016002943D9 /* UnitTest */,
+				B48D30012DCCB006002943D9 /* IntegrationTest */,
 				B46CA14F2DBE8F6500CE9ADC /* Helpers */,
 			);
 			path = DomainTest;
@@ -1767,10 +1798,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorStub.swift in Sources */,
+				B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */,
 				B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */,
 				081C0DB122491E1200AC754E /* FeedCacheTestHelpers.swift in Sources */,
 				B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */,
+				B48D300A2DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift in Sources */,
 				B4754F372DCA04B6005592C5 /* TokenParserSpy.swift in Sources */,
 				08EF9D25250BBA25004539C2 /* SharedLocalizationTestHelpers.swift in Sources */,
 				080F9A2F2531DD6200EAD475 /* ImageCommentsEndpointTests.swift in Sources */,
@@ -1803,6 +1835,8 @@
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
+				B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */,
+				B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */,
 				B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */,
 				B46CA15B2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
 				B4EB10132DC96B4100A4DA55 /* HTTPClientDummy.swift in Sources */,
@@ -1811,10 +1845,12 @@
 				08EF9D33250BCA28004539C2 /* ImageCommentsLocalizationTests.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */,
+				B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */,
 				B47D59752DB39E8900034806 /* UserLoginUseCaseTests.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
+				B48D30082DCCB571002943D9 /* UserRegistrationNotifierSpy.swift in Sources */,
 				080F9A3F2531DDFB00EAD475 /* FeedEndpointTests.swift in Sources */,
 				B4558F362DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,

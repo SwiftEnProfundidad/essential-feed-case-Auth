@@ -36,7 +36,7 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
 			keychain: keychain,
 			tokenStorage: tokenStorage,
 			offlineStore: offlineStore,
-			validator: RegistrationValidatorStub(),
+			validator: RegistrationValidatorTestStub(),
 			httpClient: httpClient,
 			registrationEndpoint: URL(string: "https://test-register-endpoint.com")!
 		)
@@ -72,8 +72,4 @@ final class RegistrationHTTPClientSpy: HTTPClient {
 		else { return nil }
 		return json
 	}
-}
-
-final class OfflineRegistrationStoreSpy: OfflineRegistrationStore {
-	func save(_ data: UserRegistrationData) async throws {}
 }

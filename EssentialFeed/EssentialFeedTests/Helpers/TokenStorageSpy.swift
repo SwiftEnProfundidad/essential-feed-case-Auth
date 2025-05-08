@@ -5,9 +5,9 @@ final class TokenStorageSpy: TokenStorage {
 	// (save ahora es save(_ token: Token))
 	// Si los mensajes solo distinguen entre load y save, podría quedar así
 	// o podrías añadir el token al mensaje de save si es relevante para tus tests.
-	enum Message: Equatable { // Asegúrate de que Token sea Equatable si lo incluyes aquí
+	enum Message: Equatable {
 		case loadRefreshToken
-		case save(Token) // Asumiendo que Token es Equatable
+		case save(Token)
 	}
 	private(set) var messages = [Message]()
 	

@@ -1,7 +1,7 @@
 import Foundation
 import EssentialFeed
 
-final class RegistrationValidatorWithLogicStub: RegistrationValidatorProtocol { // O un nombre mejor que describa su propósito
+final class RegistrationValidatorWithLogicStub: RegistrationValidatorProtocol { 
     init() {}
     
     func validate(name: String, email: String, password: String) -> RegistrationValidationError? {

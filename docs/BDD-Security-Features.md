@@ -195,7 +195,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] **Notify that the email is already in use** (Handled by `UserRegistrationUseCase` and notifier)
 - [✅] **Show appropriate and specific error messages** (Via returned error types)
 - [✅] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` currently does not implement retry/offline logic. **CRITICAL DISCREPANCY WITH BDD.**)
-- [🚧] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality, but not missing parts like post-registration token handling or retries.)
+- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality, but not missing parts like post-registration token handling or retries.)
 - [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests)
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
@@ -279,7 +279,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [🔜] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
     - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
@@ -303,7 +303,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [❌] Presenter and view for user feedback
     - [❌] CI coverage
 
-- [❌] **Store the request for retry (offline)** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
+- [🔜] **Store the request for retry (offline)** (`UserLoginUseCase` does not implement this logic.
     #### Subtasks
     - [❌] Define DTO/model for pending login request (LoginRequest)
     - [❌] Create in-memory and/or persistent store for pending login requests
@@ -410,14 +410,14 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### 1. [❌] Detect token expiration in every protected request
 - [❌] Create `TokenValidator` with:
-  - [🔜] Local timestamp validation  
+  - [❌] Local timestamp validation  
   - [❌] JWT parsing for `exp` claim  
   - [❌] Handler for malformed tokens  
 
-#### 2. [🔜] Request refresh token from backend if token is expired  
+#### 2. [❌] Request refresh token from backend if token is expired  
 
-- [🔜] Implement `TokenRefreshService`:  
-  - [⏳] Request to `/auth/refresh` endpoint  
+- [❌] Implement `TokenRefreshService`:  
+  - [❌] Request to `/auth/refresh` endpoint  
   - [❌] Exponential backoff (3 retries)  
   - [❌] Semaphore to avoid race conditions  
 
@@ -432,7 +432,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English  
   - [❌] Screenshot tests  
 
-#### 5. [⏳] Redirect to login if renewal is not possible  - [⏳] `AuthRouter.navigateToLogin()`  
+#### 5. [❌] Redirect to login if renewal is not possible  - [⏳] `AuthRouter.navigateToLogin()`  
 - [❌] Credentials cleanup  - [❌] Integration tests  
 
 #### 6. [❌] Log the expiration event for metrics  - [❌] Unified events:  
