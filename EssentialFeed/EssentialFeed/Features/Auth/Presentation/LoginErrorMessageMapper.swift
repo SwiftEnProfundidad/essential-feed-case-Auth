@@ -16,6 +16,8 @@ public enum LoginErrorMessageMapper {
 				return "Could not connect. Please try again."
 			case .unknown:
 				return "Something went wrong. Please try again."
+			case .tokenStorageFailed:
+				return "Token storage failed. Please try again."
 		}
 	}
 }

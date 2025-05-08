@@ -25,6 +25,7 @@ public enum LoginError: Error, Equatable {
 	case network
 	case invalidEmailFormat
 	case invalidPasswordFormat
+	case tokenStorageFailed
 	case unknown
 }
 
@@ -38,11 +39,13 @@ public protocol LoginFailureObserver {
 
 public final class UserLoginUseCase {
 	private let api: AuthAPI
+	private let tokenStorage: TokenStorage
 	private let successObserver: LoginSuccessObserver?
 	private let failureObserver: LoginFailureObserver?
 	
-	public init(api: AuthAPI, successObserver: LoginSuccessObserver? = nil, failureObserver: LoginFailureObserver? = nil) {
+	public init(api: AuthAPI, tokenStorage: TokenStorage, successObserver: LoginSuccessObserver? = nil, failureObserver: LoginFailureObserver? = nil) {
 		self.api = api
+		self.tokenStorage = tokenStorage
 		self.successObserver = successObserver
 		self.failureObserver = failureObserver
 	}
@@ -89,20 +92,27 @@ public final class UserLoginUseCase {
 		
 		switch result {
 			case .success(let response):
-				successObserver?.didLoginSuccessfully(response: response)
-				return .success(response)
+				let defaultTokenDuration: TimeInterval = 3600
+				let expiryDate = Date().addingTimeInterval(defaultTokenDuration)
+				
+				let tokenToStore = Token(value: response.token, expiry: expiryDate)
+				
+				do {
+					try await tokenStorage.save(tokenToStore)
+					successObserver?.didLoginSuccessfully(response: response)
+					return .success(response)
+				} catch {
+					failureObserver?.didFailLogin(error: .tokenStorageFailed)
+					return .failure(.tokenStorageFailed)
+				}
+				
 			case .failure(let error):
-				// Solo notificar si el error no fue ya manejado por una validación de formato
-				// (aunque en este flujo, si llegamos aquí, la validación de formato ya pasó).
 				failureObserver?.didFailLogin(error: error)
 				return .failure(error)
 		}
 	}
 	
-	// Función helper de validación de email (puedes mejorarla o moverla)
 	private func isValidEmail(_ email: String) -> Bool {
-		// Una expresión regular muy básica para emails.
-		// Deberías usar una más completa y probada para producción.
 		let emailRegEx = #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"#
 		let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
 		return emailPred.evaluate(with: email)

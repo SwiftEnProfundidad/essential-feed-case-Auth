@@ -63,64 +63,98 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
 			self?.queue.async(flags: .barrier) {
 				guard let self = self else { return }
 				
-				let index = self.tasks.firstIndex(where: { $0.request == request }) ?? 0
-				if self.tasks[index].isCompleted {
-					let msg = "[HTTPClientSpy] ERROR: Attempting to assign continuation to an already completed task at index \(index)."
+				var taskIndexToAssignContinuation: Int?
+				for (index, task) in self.tasks.enumerated().reversed() { 
+					if task.request == request && !task.isCompleted { 
+						taskIndexToAssignContinuation = index
+						break
+					}
+				}
+				let indexToUse = taskIndexToAssignContinuation ?? (self.tasks.count - 1) 
+				
+				guard self.tasks.indices.contains(indexToUse) else {
+					let msg = "[HTTPClientSpy] ERROR: Index \(indexToUse) out of bounds for assigning continuation."
+					XCTFail(msg, file: #filePath, line: #line)
+					continuation.resume(throwing: NSError(domain: "HTTPClientSpy", code: -9998, userInfo: [NSLocalizedDescriptionKey: msg]))
+					return
+				}
+				
+				if self.tasks[indexToUse].isCompleted {
+					let msg = "[HTTPClientSpy] ERROR: Attempting to assign continuation to an already completed task at index \(indexToUse)."
 					XCTFail(msg, file: #filePath, line: #line)
 					continuation.resume(throwing: NSError(domain: "HTTPClientSpy", code: -9999, userInfo: [NSLocalizedDescriptionKey: msg]))
 					return
 				}
 				
-				self.tasks[index].completion = { result in
+				self.tasks[indexToUse].completion = { result in
 					continuation.resume(with: result)
 				}
-				
 			}
-			
 		}
-		
 	}
 	
-	func complete(with error: Error, at index: Int = 0) {
+	func complete(with error: Error, at optionalIndex: Int? = nil) { 
 		queue.async(flags: .barrier) {
-			guard self.tasks.indices.contains(index) else {
-				let message = "Index \(index) out of bounds (count: \(self.tasks.count))"
-				self._messages.append(.failure(message))
-				return
+			let indexToComplete: Int
+			if let explicitIndex = optionalIndex {
+				guard self.tasks.indices.contains(explicitIndex) else {
+					let message = "Index \(explicitIndex) out of bounds (count: \(self.tasks.count))"
+					self._messages.append(.failure(message))
+					return
+				}
+				indexToComplete = explicitIndex
+			} else {
+				guard let firstUncompletedIndex = self.tasks.firstIndex(where: { !$0.isCompleted }) else {
+					let msg = "[HTTPClientSpy] WARNING: No uncompleted task found to complete with error."
+					self._messages.append(.failure(msg))
+					return
+				}
+				indexToComplete = firstUncompletedIndex
 			}
 			
-			guard !self.tasks[index].isCompleted else {
-				let msg = "[HTTPClientSpy] WARNING: Attempt to complete an already completed task at index \(index) (error)."
+			guard !self.tasks[indexToComplete].isCompleted else {
+				let msg = "[HTTPClientSpy] WARNING: Attempt to complete an already completed task at index \(indexToComplete) (error)."
 				assertionFailure(msg)
 				return
 			}
 			
-			self.tasks[index].isCompleted = true
-			let completion = self.tasks[index].completion
-			self.tasks[index].completion = { _ in }
+			self.tasks[indexToComplete].isCompleted = true
+			let completion = self.tasks[indexToComplete].completion
+			self.tasks[indexToComplete].completion = { _ in } 
 			
 			completion(.failure(error))
 			self._messages.append(.success)
 		}
 	}
 	
-	func complete(with data: Data, response: HTTPURLResponse, at index: Int = 0) {
+	func complete(with data: Data, response: HTTPURLResponse, at optionalIndex: Int? = nil) { 
 		queue.async(flags: .barrier) {
-			guard self.tasks.indices.contains(index) else {
-				let message = "Index \(index) out of bounds (count: \(self.tasks.count))"
-				self._messages.append(.failure(message))
-				return
+			let indexToComplete: Int
+			if let explicitIndex = optionalIndex {
+				guard self.tasks.indices.contains(explicitIndex) else {
+					let message = "Index \(explicitIndex) out of bounds (count: \(self.tasks.count))"
+					self._messages.append(.failure(message))
+					return
+				}
+				indexToComplete = explicitIndex
+			} else {
+				guard let firstUncompletedIndex = self.tasks.firstIndex(where: { !$0.isCompleted }) else {
+					let msg = "[HTTPClientSpy] WARNING: No uncompleted task found to complete with data."
+					self._messages.append(.failure(msg))
+					return
+				}
+				indexToComplete = firstUncompletedIndex
 			}
 			
-			guard !self.tasks[index].isCompleted else {
-				let msg = "[HTTPClientSpy] WARNING: Attempt to complete an already completed task at index \(index) (success)."
+			guard !self.tasks[indexToComplete].isCompleted else {
+				let msg = "[HTTPClientSpy] WARNING: Attempt to complete an already completed task at index \(indexToComplete) (success)."
 				assertionFailure(msg)
 				return
 			}
 			
-			self.tasks[index].isCompleted = true
-			let completion = self.tasks[index].completion
-			self.tasks[index].completion = { _ in }
+			self.tasks[indexToComplete].isCompleted = true
+			let completion = self.tasks[indexToComplete].completion
+			self.tasks[indexToComplete].completion = { _ in } 
 			
 			completion(.success((data, response)))
 			self._messages.append(.success)
