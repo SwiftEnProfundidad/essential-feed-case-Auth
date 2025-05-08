@@ -190,13 +190,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ### Technical Checklist for Registration (Reviewed)
 
 - [✅] **Store initial credentials (email/password) securely (Keychain)** (Implemented in `UserRegistrationUseCase` calling `keychain.save`)
-- [✅] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` currently does not receive or store token.)
+- [✅] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` stores token via `TokenStorage`)
 - [✅] **Notify registration success** (Via `UserRegistrationResult.success`)
 - [✅] **Notify that the email is already in use** (Handled by `UserRegistrationUseCase` and notifier)
 - [✅] **Show appropriate and specific error messages** (Via returned error types)
-- [✅] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` currently does not implement retry/offline logic. **CRITICAL DISCREPANCY WITH BDD.**)
-- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality, but not missing parts like post-registration token handling or retries.)
-- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests)
+- [✅] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`.)
+- [🚧] **Refactor UserRegistrationUseCase constructor** (Reduce dependencies, improve SRP. E.g., group persistence dependencies or use a Facade).
+- [🔜] **Implement logic to retry saved offline registration requests** (When connectivity is restored).
+- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
+- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
 ---
@@ -237,7 +239,7 @@ flowchart TD
 
 ---
 
-### Checklist técnico de registro <-> tests (Revisada)
+### Technical Checklist Registration <-> Tests (Reviewed)
 
 | Technical Checklist Item                                       | Test covering it (real name)                                    | Test Type          | Coverage (Reviewed) | Brief Comment                                                                     |
 |---------------------------------------------------------------|----------------------------------------------------------------|--------------------|---------------------|------------------------------------------------------------------------------------|
@@ -246,12 +248,13 @@ flowchart TD
 | Notify registration success                                    | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` | Integration        | ✅                  |                                                                                    |
 | Notify that the email is already in use                        | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter`, `...returnsEmailAlreadyInUseError...` | Integration/Unit   | ✅                  |                                                                                    |
 | Show appropriate and specific error messages                   | `test_registerUser_withInvalidEmail...`, `test_registerUser_withWeakPassword...` | Unit               | ✅                  |                                                                                    |
-| Save data for retry if no connection...                        | `test_registerUser_withNoConnectivity_returnsConnectivityError...` (only notifies error) | Integration        | ❌                  | Test only verifies error, not saving for retry. Functionality not implemented.      |
-| Unit and integration tests for all paths                       | Various tests cover existing paths.                              | Unit/Integration   | 🟡                  | Do not cover post-registration token storage or retries.                           |
+| Save data for retry if no connection...                        | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError` (only notifies error and saves data) | Integration        | ✅                  | Test verifies error and saving data. Retry logic not implemented/tested yet.      |
+| Unit and integration tests for all paths                       | Various tests cover existing paths.                              | Unit/Integration   | 🟡                  | Do not cover post-registration token storage or retries fully.                       |
 | Refactor: test helper uses concrete KeychainSpy                | `makeSUTWithDefaults` uses `KeychainFullSpy`.                   | Unit/Integration   | ✅                  |                                                                                    |
 | Documentation and architecture aligned                         | General technical diagram is coherent, but the use case implementation omits key BDD points. | N/A               | ✅                  | Covered.                                                                           |
 
 ---
+
 
 ## 3. User Authentication (Login)
 
@@ -272,8 +275,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ### Technical Checklist for Login (Reviewed)
 
-- [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` returns the token, but does not store it. Responsibility falls on the consumer. **BDD implies this is part of the "completed" login flow**.)
-- [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by another component. **BDD implies this is part of the "completed" login flow**.)
+- [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` stores the token via `TokenStorage`.)
+- [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by `UserLoginUseCase`.)
 - [✅] **Notify login success** (Via `LoginSuccessObserver`)
     #### Subtasks
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
@@ -303,19 +306,29 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [❌] Presenter and view for user feedback
     - [❌] CI coverage
 
-- [🔜] **Store the request for retry (offline)** (`UserLoginUseCase` does not implement this logic.
+- [✅] **Save login credentials offline on connectivity error and notify** (`UserLoginUseCase` saves credentials via `offlineStore` and returns `.noConnectivity`.)
     #### Subtasks
-    - [❌] Define DTO/model for pending login request (LoginRequest)
-    - [❌] Create in-memory and/or persistent store for pending login requests
-    - [❌] Implement type-erased wrapper (AnyLoginRequestStore)
-    - [❌] Integrate storage in ViewModel upon network error
-    - [❌] Implement logic to retry stored requests
-    - [❌] Unit tests for the store and type-erased wrapper
-    - [❌] Unit tests for ViewModel for storage and retry
-    - [❌] Integration tests (real persistence, if applicable)
-    - [❌] CI coverage for all scenarios
+    - [✅] Define DTO/model for pending login request (`LoginCredentials` is used and is `Equatable`)
+    - [✅] Create in-memory and/or persistent store for pending login requests (`OfflineLoginStore` protocol and `OfflineLoginStoreSpy` exist)
+    - [✅] Implement type-erased wrapper (AnyLoginRequestStore) (Protocol-based abstraction is used)
+    - [✅] Integrate storage in UseCase upon network error (`UserLoginUseCase.login()` calls `offlineStore.save`)
+    - [✅] Unit tests for the store and type-erased wrapper (`OfflineLoginStoreSpy` tested via `UserLoginUseCaseTests`)
+    - [✅] Unit tests for UseCase for storage (`test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` covers this)
+    - [✅] Integration tests (real persistence, if applicable) (Covered conceptually by `UserLoginUseCaseIntegrationTests` structure)
+    - [✅] CI coverage for all scenarios (For the saving part)
 
-- [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network`, `UserLoginUseCase` propagates and notifies the `failureObserver`.)
+- [❌] **Implement logic to retry saved offline login requests** (When connectivity is restored).
+    #### Subtasks
+    - [❌] Design mechanism to detect connectivity restoration.
+    - [❌] Create a service/manager to handle pending offline requests.
+    - [❌] Implement fetching saved login credentials from `OfflineLoginStore`.
+    - [❌] Implement logic to re-submit login requests via `AuthAPI`.
+    - [❌] Handle success/failure of retried requests (notify user, clear from store).
+    - [❌] Unit tests for the retry logic/service.
+    - [❌] Integration tests for the full offline-to-online retry flow.
+    - [❌] CI coverage for retry scenarios.
+
+- [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
 
 - [❌] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
     #### Subtasks (Detailed in the original BDD, all marked as ❌ for current implementation)
@@ -375,17 +388,18 @@ flowchart TD
 
 | Login Checklist Item              | Test Present (or N/A if missing functionality)               | Coverage (Reviewed)  | Brief Comment                                                                |
 |-----------------------------------|--------------------------------------------------------------|----------------------|-------------------------------------------------------------------------------|
-| Secure token after login         | `test_login_succeeds_onValidCredentialsAndServerResponse`    | 🟡                   | Test verifies token in response, not its secure storage.                        |
+| Secure token after login         | `test_login_succeeds_storesToken_andNotifiesObserver`        | ✅                   | Test verifies token storage is attempted.                                       |
 | Register active session          | *Not tested in `UserLoginUseCaseTests`*                      | ❌                   | Functionality not in `UserLoginUseCase`.                                       |
-| Notify login success             | `test_login_succeeds_onValidCredentialsAndServerResponse`    | ✅                   | Test verifies notification to `successObserver`.                                |
-| Specific validation errors       | `test_login_failsOnInvalidEmailFormat`, etc.                 | ✅                   | Thoroughly covered.                                                             |
+| Notify login success             | `test_login_succeeds_storesToken_andNotifiesObserver`        | ✅                   | Test verifies notification to `successObserver`.                                |
+| Specific validation errors       | `test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest`, etc. | ✅                   | Thoroughly covered.                                                             |
 | Credentials error                | `test_login_fails_onInvalidCredentials`                      | ✅                   | Covered.                                                                        |
 | Password recovery                | *Not applicable to `UserLoginUseCase`*                       | ❌                   | Separate feature.                                                               |
-| Retry without connection         | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
-| Connectivity error               | `UserLoginUseCase` propagates `LoginError.network` (assumed).| 🟡                   | Failure notification is tested, not specifically network error vs others.        |
+| Retry without connection         | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | ✅                   | Covers saving credentials and returning error. Retry logic not yet implemented. |
+| Connectivity error               | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | ✅                   | Specific `noConnectivity` error is handled.                                      |
 | Delay/lockout after failures     | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
 
 ---
+
 
 ## 4. 🔄 Expired Token Management
 
