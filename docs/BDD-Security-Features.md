@@ -198,7 +198,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] **Refactor UserRegistrationUseCase constructor** (Reduce dependencies, improve SRP. E.g., group persistence dependencies or use a Facade).
 - [🚧] **Implement logic to retry saved offline registration requests** (When connectivity is restored).
 - [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
-- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
+- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) 
+    // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
 ---
