@@ -66,37 +66,29 @@ public final class UserLoginUseCase {
 			failureObserver?.didFailLogin(error: .invalidEmailFormat)
 			return .failure(.invalidEmailFormat)
 		}
-		// Validación de formato de email simple (deberías usar una más robusta si es necesario)
-		// Por ejemplo, una expresión regular o un validador dedicado.
-		// Para que los tests pasen con "usuario_invalido", verificamos la ausencia de "@" o una estructura básica.
-		// Una validación muy básica que podría servir para el test "usuario_invalido"
-		// y aun así permitir emails válidos.
 		guard isValidEmail(email) else {
             failureObserver?.didFailLogin(error: .invalidEmailFormat)
             return .failure(.invalidEmailFormat)
         }
 		
 		// VALIDACIÓN DE CONTRASEÑA
-		let password = credentials.password // Generalmente no se hace trim a las contraseñas antes de validarlas en el backend,
-																				// pero para la validación de formato local "solo espacios" sí.
+		let password = credentials.password
 		
-		if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !password.isEmpty { // Si es solo espacios pero no vacía
+		if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !password.isEmpty {
 			failureObserver?.didFailLogin(error: .invalidPasswordFormat)
 			return .failure(.invalidPasswordFormat)
 		}
 		
-		if password.isEmpty { // Si es completamente vacía
+		if password.isEmpty {
 			failureObserver?.didFailLogin(error: .invalidPasswordFormat)
 			return .failure(.invalidPasswordFormat)
 		}
 		
-		// Asumiendo una longitud mínima de 6 caracteres para que pase el test "12345"
 		if password.count < 6 {
 			failureObserver?.didFailLogin(error: .invalidPasswordFormat)
 			return .failure(.invalidPasswordFormat)
 		}
 		
-		// Si todas las validaciones pasan, entonces sí llamamos a la API:
 		let result = await api.login(with: credentials)
 		
 		switch result {
@@ -116,6 +108,16 @@ public final class UserLoginUseCase {
 				}
 				
 			case .failure(let error):
+                if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
+                    do {
+                        try await offlineStore.save(credentials: credentials)
+                        failureObserver?.didFailLogin(error: .noConnectivity)
+                        return .failure(.noConnectivity)
+                    } catch {
+                        failureObserver?.didFailLogin(error: .noConnectivity)
+                        return .failure(.noConnectivity)
+                    }
+                }
 				failureObserver?.didFailLogin(error: error)
 				return .failure(error)
 		}

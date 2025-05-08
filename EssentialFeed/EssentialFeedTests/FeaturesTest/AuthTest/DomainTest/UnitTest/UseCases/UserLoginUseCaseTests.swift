@@ -186,48 +186,48 @@ final class UserLoginUseCaseTests: XCTestCase {
 		successObserver: LoginSuccessObserverSpy,
 		failureObserver: LoginFailureObserverSpy,
 		tokenStorage: TokenStorageSpy,
-        offlineStore: OfflineLoginStoreSpy 
+		offlineStore: OfflineLoginStoreSpy
 	) {
 		let api = AuthAPISpy()
 		let successObserver = LoginSuccessObserverSpy()
 		let failureObserver = LoginFailureObserverSpy()
 		let tokenStorage = TokenStorageSpy()
-        let offlineStore = OfflineLoginStoreSpy() 
+		let offlineStore = OfflineLoginStoreSpy()
 		
 		let sut = UserLoginUseCase(
 			api: api,
 			tokenStorage: tokenStorage,
-            offlineStore: offlineStore, 
+			offlineStore: offlineStore,
 			successObserver: successObserver,
 			failureObserver: failureObserver
 		)
-        
+		
 		trackForMemoryLeaks(api, file: file, line: line)
 		trackForMemoryLeaks(successObserver, file: file, line: line)
 		trackForMemoryLeaks(failureObserver, file: file, line: line)
 		trackForMemoryLeaks(tokenStorage, file: file, line: line)
-        trackForMemoryLeaks(offlineStore, file: file, line: line)
+		trackForMemoryLeaks(offlineStore, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		
-        return (sut, api, successObserver, failureObserver, tokenStorage, offlineStore)
+		return (sut, api, successObserver, failureObserver, tokenStorage, offlineStore)
 	}
 }
 
 // MARK: - Helpers & Spies
 
 public final class OfflineLoginStoreSpy: OfflineLoginStore {
-    enum Message: Equatable {
-        case save(LoginCredentials)
-    }
-    private(set) var messages = [Message]()
-    var saveError: Error?
-    
+	enum Message: Equatable {
+		case save(LoginCredentials)
+	}
+	private(set) var messages = [Message]()
+	var saveError: Error?
+	
 	public func save(credentials: LoginCredentials) async throws {
-        if let error = saveError {
-            throw error
-        }
-        messages.append(.save(credentials))
-    }
+		if let error = saveError {
+			throw error
+		}
+		messages.append(.save(credentials))
+	}
 }
 
 final class LoginSuccessObserverSpy: LoginSuccessObserver {
