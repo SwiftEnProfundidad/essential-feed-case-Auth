@@ -196,8 +196,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] **Show appropriate and specific error messages** (Via returned error types)
 - [✅] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`.)
 - [✅] **Refactor UserRegistrationUseCase constructor** (Reduce dependencies, improve SRP. E.g., group persistence dependencies or use a Facade).
-- [🚧] **Implement logic to retry saved offline registration requests** (When connectivity is restored).
-- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
+- [🚧] **Implement logic to retry saved offline registration requests** (When connectivity is restored)
+    - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
+    - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
+    - [🚧] whenApiCallFails → keeps data, returns `.registrationFailed`
+    - [🔜] whenTokenStorageFails → returns `.tokenStorageFailed`
+    - [🔜] whenDeleteFails → returns `.offlineStoreDeleteFailed`- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
 - [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) 
     // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)

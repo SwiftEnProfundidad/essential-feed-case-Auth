@@ -48,14 +48,16 @@ public final class RetryOfflineRegistrationsUseCase {
 					do {
 						let expiryDate = Date().addingTimeInterval(3600)
 						let tokenToStore = Token(value: response.token, expiry: expiryDate)
-						
 						try await tokenStorage.save(tokenToStore)
+					} catch {
+						results.append(.failure(.tokenStorageFailed(error)))
+						continue // pasa al siguiente dato
+					}
+					do {
 						try await offlineStore.delete(data)
 						results.append(.success(()))
-					} catch let tokenError {
-						results.append(.failure(.tokenStorageFailed(tokenError)))
-					} catch let deleteError {
-						results.append(.failure(.offlineStoreDeleteFailed(deleteError)))
+					} catch {
+						results.append(.failure(.offlineStoreDeleteFailed(error)))
 					}
 				case .failure(let registrationError):
 					results.append(.failure(.registrationFailed(registrationError)))
