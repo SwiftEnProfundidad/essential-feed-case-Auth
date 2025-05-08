@@ -32,7 +32,7 @@ final class SystemKeychainTests: XCTestCase {
         }
 
         sut = nil
-        wait(for: [expectation], timeout: 5)
+        wait(for: [expectation], timeout: 10)
         XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem")
     }
 

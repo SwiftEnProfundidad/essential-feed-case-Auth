@@ -231,7 +231,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
     func test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError() async throws {
         let httpClient = HTTPClientSpy()
         let (sut, name, email, password, notifier, returnedPersistenceSpy) = makeSUTWithDefaults(httpClient: httpClient, persistence: RegistrationPersistenceSpy())
-        let expectedUserData = UserRegistrationData(name: name, email: email, password: password)
+              let expectedUserData = UserRegistrationData(name: name, email: email, password: password)
 
         let registerTask = Task {
             let res = await sut.register(name: name, email: email, password: password)
