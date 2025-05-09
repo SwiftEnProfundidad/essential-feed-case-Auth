@@ -200,8 +200,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
     - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
     - [✅] whenApiCallFails → keeps data, returns `.registrationFailed`
-    - [🚧] whenTokenStorageFails → returns `.tokenStorageFailed`
-    - [🔜] whenDeleteFails → returns `.offlineStoreDeleteFailed`- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
+    - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
+    - [🚧] whenDeleteFails → returns `.offlineStoreDeleteFailed`- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
 - [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) 
     // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)

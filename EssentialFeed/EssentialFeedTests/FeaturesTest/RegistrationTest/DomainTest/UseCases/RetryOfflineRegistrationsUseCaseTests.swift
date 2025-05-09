@@ -89,7 +89,38 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         XCTAssertEqual(spies.authAPI.registrationRequests, [offlineData], "API debería recibir el registro")
     }
 
-    // --- Helpers ---
+    // MARK: - whenTokenStorageFails
+    func test_execute_whenTokenStorageFails_keepsDataAndReturnsTokenStorageFailed() async {
+        let (sut, spies) = makeSUT()
+
+        // Registro offline pendiente
+        let offlineData = UserRegistrationData(name: "Ana", email: "ana@mail.com", password: "ValidPassword!1")
+        spies.offlineStore.completeLoadAll(with: [offlineData])
+
+        // El API responde éxito
+        let apiResponse = UserRegistrationResponse(userID: "user-ana", token: "token-ana", refreshToken: "refresh-ana")
+        spies.authAPI.completeRegistrationSuccessfully(with: apiResponse)
+
+        // El tokenStorage fallará
+        struct DummyError: Swift.Error {}
+        spies.tokenStorage.completeSave(withError: DummyError())
+
+        // Act
+        let results = await sut.execute()
+
+        // Assert
+        XCTAssertEqual(results.count, 1)
+        if case .failure(.tokenStorageFailed) = results.first {
+            // OK
+        } else {
+            XCTFail("Expected .tokenStorageFailed")
+        }
+
+        // No debe borrarse del store
+        XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Solo loadAll, sin delete")
+    }
+
+    // MARK: Helpers
 
     private struct Spies {
         let offlineStore: OfflineRegistrationStoreSpy // Este será el spy compartido

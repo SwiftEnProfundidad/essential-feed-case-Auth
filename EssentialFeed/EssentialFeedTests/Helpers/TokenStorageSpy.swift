@@ -16,7 +16,6 @@ public final class TokenStorageSpy: TokenStorage {
 
     private(set) public var messages = [Message]()
     
-    // --- Save ---
     public var saveTokenError: Error?
 
     public func save(_ token: Token) async throws {
@@ -34,7 +33,6 @@ public final class TokenStorageSpy: TokenStorage {
         saveTokenError = error
     }
 
-    // --- Load Refresh Token ---
     public var refreshTokenToReturn: String?
     public var loadRefreshTokenError: Error?
 
