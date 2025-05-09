@@ -78,10 +78,13 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         let authAPISpy = AuthAPISpy() 
         let tokenStorageSpy = TokenStorageSpy() 
         
+        // El caso de uso ahora exige ambos protocolos (login + registration),
+        // AuthAPISpy los conforma, así que lo usamos dos veces.
         let sut = RetryOfflineRegistrationsUseCase(
             offlineStore: offlineStoreSpy,
             authAPI: authAPISpy,
-            tokenStorage: tokenStorageSpy
+            tokenStorage: tokenStorageSpy,
+            userRegistration: authAPISpy
         )
         
         trackForMemoryLeaks(sut, file: file, line: line)
