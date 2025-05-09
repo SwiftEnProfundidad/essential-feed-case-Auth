@@ -65,6 +65,30 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         }
     }
 
+    func test_execute_whenApiCallFails_keepsDataAndReturnsRegistrationFailed() async {
+        let (sut, spies) = makeSUT()
+
+        let offlineData = UserRegistrationData(name: "Bob", email: "bob@mail.com", password: "ValidPassword123!")
+        spies.offlineStore.completeLoadAll(with: [offlineData])
+
+        let expectedError = UserRegistrationError.emailAlreadyInUse
+        spies.authAPI.completeRegistration(with: expectedError)
+
+        let results = await sut.execute()
+
+        XCTAssertEqual(results.count, 1)
+        if case let .failure(.registrationFailed(receivedError))? = results.first {
+            XCTAssertEqual(receivedError, expectedError)
+        } else {
+            XCTFail("Expected .registrationFailed error")
+        }
+
+        // No se debe borrar del store ni guardar token
+        XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Solo debería intentarse loadAll, sin delete")
+        XCTAssertEqual(spies.tokenStorage.messages.count, 0, "No debería intentar guardar token")
+        XCTAssertEqual(spies.authAPI.registrationRequests, [offlineData], "API debería recibir el registro")
+    }
+
     // --- Helpers ---
 
     private struct Spies {

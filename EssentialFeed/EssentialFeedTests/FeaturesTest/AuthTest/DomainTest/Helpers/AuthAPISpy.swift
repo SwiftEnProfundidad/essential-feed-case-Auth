@@ -30,4 +30,8 @@ public final class AuthAPISpy: UserLoginAPI, UserRegistrationAPI {
     public func completeRegistrationSuccessfully(with response: UserRegistrationResponse) {
         registrationResult = .success(response)
     }
+
+    func completeRegistration(with error: UserRegistrationError) {
+        registrationResult = .failure(error)
+    }
 }
