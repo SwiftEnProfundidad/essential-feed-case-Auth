@@ -1,7 +1,3 @@
-// RetryOfflineRegistrationsUseCaseTests.swift
-// EssentialFeedTests
-//
-// Created by Alex on 8/5/2025.
 
 import XCTest
 import EssentialFeed
@@ -9,7 +5,7 @@ import EssentialFeed
 final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 	
 	func test_execute_whenNoOfflineRegistrations_doesNotAttemptApiCallAndCompletesSuccessfully() async {
-		let (sut, spies) = makeSUT() // makeSUT ahora usará el OfflineRegistrationStoreSpy compartido
+		let (sut, spies) = makeSUT()
 		spies.offlineStore.completeLoadAll(with: [])
 		
 		let results = await sut.execute()
@@ -21,15 +17,13 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 	}
 	
 	func test_execute_whenOneOfflineRegistrationExists_AndApiCallSucceeds_savesTokenAndDeletesFromOfflineStore() async {
-		let (sut, spies) = makeSUT() // makeSUT ahora usará el OfflineRegistrationStoreSpy compartido
+		let (sut, spies) = makeSUT()
 		
 		let offlineData = UserRegistrationData(name: "Test User", email: "test@example.com", password: "ValidPassword123!")
 		spies.offlineStore.completeLoadAll(with: [offlineData])
 		
-		// Asumimos que UserRegistrationResponse y UserRegistrationError son accesibles
 		let expectedApiResponse = UserRegistrationResponse(userID: "user-123", token: "new-auth-token", refreshToken: "new-refresh-token")
-		spies.authAPI.completeRegistrationSuccessfully(with: expectedApiResponse) // Necesita existir en AuthAPISpy
-		
+		spies.authAPI.completeRegistrationSuccessfully(with: expectedApiResponse)
 		spies.tokenStorage.completeSaveSuccessfully()
 		spies.offlineStore.completeDeletionSuccessfully() // Necesita existir en el OfflineRegistrationStoreSpy compartido
 		
@@ -49,8 +43,6 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 				return
 		}
 		
-		// Esta aserción depende de que el enum Message en el OfflineRegistrationStoreSpy compartido
-		// sea Equatable y tenga los casos .loadAll y .delete(UserRegistrationData).
 		XCTAssertEqual(spies.offlineStore.messages, [.loadAll, .delete(offlineData)], "Expected loadAll then delete from offlineStore")
 		XCTAssertEqual(spies.authAPI.registrationRequests.count, 1, "Expected one call to authAPI.register")
 		XCTAssertEqual(spies.authAPI.registrationRequests.first, offlineData, "AuthAPI was called with correct data")
@@ -83,25 +75,22 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 			XCTFail("Expected .registrationFailed error")
 		}
 		
-		// No se debe borrar del store ni guardar token
 		XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Should call loadAll only, without delete")
 		XCTAssertEqual(spies.tokenStorage.messages.count, 0, "Should not attempt to save token")
 		XCTAssertEqual(spies.authAPI.registrationRequests, [offlineData], "API should receive the registration")
 	}
 	
 	// MARK: - whenTokenStorageFails
+	
 	func test_execute_whenTokenStorageFails_keepsDataAndReturnsTokenStorageFailed() async {
 		let (sut, spies) = makeSUT()
 		
-		// Registro offline pendiente
 		let offlineData = UserRegistrationData(name: "Ana", email: "ana@mail.com", password: "ValidPassword!1")
 		spies.offlineStore.completeLoadAll(with: [offlineData])
 		
-		// El API responde éxito
 		let apiResponse = UserRegistrationResponse(userID: "user-ana", token: "token-ana", refreshToken: "refresh-ana")
 		spies.authAPI.completeRegistrationSuccessfully(with: apiResponse)
 		
-		// El tokenStorage fallará
 		struct DummyError: Swift.Error {}
 		spies.tokenStorage.completeSave(withError: DummyError())
 		
@@ -118,6 +107,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 	}
 	
 	// MARK: - whenDeleteFails
+	
 	func test_execute_whenDeleteFails_keepsDataAndReturnsOfflineStoreDeleteFailed() async {
 		let (sut, spies) = makeSUT()
 		
@@ -154,7 +144,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 	}
 	
 	private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RetryOfflineRegistrationsUseCase, spies: Spies) {
-		let offlineStoreSpy = OfflineRegistrationStoreSpy() // Conforma a OfflineRegistrationStoreCRUD
+		let offlineStoreSpy = OfflineRegistrationStoreSpy()
 		let authAPISpy = AuthAPISpy()
 		let tokenStorageSpy = TokenStorageSpy()
 		

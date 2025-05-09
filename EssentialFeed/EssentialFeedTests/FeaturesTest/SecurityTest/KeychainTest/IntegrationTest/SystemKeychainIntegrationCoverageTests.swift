@@ -3,7 +3,6 @@ import XCTest
 
 // BDD: Real coverage for SystemKeychain
 // CU: SystemKeychainProtocol-integration
-
 final class SystemKeychainIntegrationCoverageTests: XCTestCase {
     // Checklist: test_save_returnsFalse_forEmptyKey
     // CU: SystemKeychainProtocol-emptyKey
@@ -62,11 +61,6 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         assertEventuallyEqual(sut.load(forKey: key), data2)
     }
 
-    // Cobertura: Todos los reintentos fallan y save retorna false
-    // NOTA: Este test depende de la implementación real del Keychain en el entorno (simulador/dispositivo).
-    // En simulador, el Keychain puede aceptar claves largas, por lo que este test puede NO fallar como se espera.
-    // La cobertura determinista de errores de Keychain (clave inválida, límites, etc.) debe realizarse con un mock en test unitario.
-    // Ver KeychainFullSpyTests o KeychainSecureStorageTests para cobertura completa y determinista.
     // Checklist: test_save_returnsFalse_whenAllRetriesFail
     // CU: SystemKeychainProtocol-allRetriesFail
     func test_save_returnsFalse_whenAllRetriesFail() {
@@ -97,7 +91,6 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         ) { _ in }
     }
 
-    // Extreme: Try to save with an extremely large key (beyond 4096 chars)
     // Checklist: test_save_returnsFalse_withExtremelyLargeKey
     // CU: SystemKeychainProtocol-invalidKeyTooLarge
     func test_save_returnsFalse_withExtremelyLargeKey() {
@@ -116,10 +109,6 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         }
     }
 
-    // Cobertura: Validación post-escritura fallida (dato guardado no coincide)
-    // Nota: Forzar este caso en Keychain real es difícil, pero podemos simularlo usando un doble en tests unitarios.
-    // Aquí simplemente documentamos el hueco y cubrimos con un test unitario si es necesario.
-    // Por ahora, este test es placeholder y se puede mejorar con un mock si el framework lo permite.
     // Checklist: test_save_returnsFalse_whenValidationAfterSaveFails
     // CU: SystemKeychainProtocol-validationAfterSaveFails
     func test_save_returnsFalse_whenValidationAfterSaveFails() {
@@ -127,6 +116,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         // Se recomienda cubrirlo en tests unitarios con un KeychainProtocol spy/mocking.
         XCTAssertTrue(true, "Post-write validation test pending advanced mocking.")
     }
+	
     // Checklist: test_saveAndLoad_realKeychain_persistsAndRetrievesData
     // CU: SystemKeychainProtocol-andLoad
     func test_saveAndLoad_realKeychain_persistsAndRetrievesData() {
@@ -154,15 +144,11 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         XCTAssertEqual(
             sut.save(data: second, forKey: key), .success, "Saving second value should overwrite first")
 
-        // El Keychain en simulador/CLI puede no reflejar inmediatamente los cambios tras un save. Por eso, reintentamos la lectura varias veces antes de fallar el test.
         assertEventuallyEqual(sut.load(forKey: key), second)
     }
 
     // Checklist: test_update_branch_coverage
     // CU: SystemKeychainProtocol-update-branch
-    /// Este test documenta que el branch de update (SecItemUpdate) solo se cubre en tests unitarios con KeychainFullSpy.
-    /// En integración real, SystemKeychain siempre borra antes de guardar, por lo que este branch no se ejecuta por diseño.
-    /// Esto es coherente con los principios de clean architecture y TDD: la cobertura del 100% se garantiza unitariamente, no artificialmente en integración.
     func test_update_branch_coverage() {
         let sut = makeSUT()
         let key = uniqueKey()
@@ -174,11 +160,9 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
             kSecAttrAccount as String: key,
             kSecValueData as String: data1
         ]
-        // Eliminar primero por si acaso
         SecItemDelete(query as CFDictionary)
         let addStatus = SecItemAdd(query as CFDictionary, nil)
         XCTAssertTrue(addStatus == errSecSuccess, "Manual SecItemAdd should succeed")
-        // 2. Ahora, save con SystemKeychain debe forzar update
         XCTAssertTrue(
             sut.save(data: data2, forKey: key) == .success,
             "Should update value on duplicate (cover update branch)")
@@ -192,17 +176,13 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         let key = uniqueKey()
         let data = "closure-coverage".data(using: .utf8)!
 
-        // Save valid data (should cover success path in save closure)
         XCTAssertEqual(sut.save(data: data, forKey: key), .success, "Should save data successfully")
 
-        // Load existing key (should cover success path in load closure)
         assertEventuallyEqual(sut.load(forKey: key), data)
 
-        // Load non-existent key (should cover not found path in load closure)
         let notFound = sut.load(forKey: "non-existent-\(UUID().uuidString)")
         XCTAssertNil(notFound, "Should return nil for non-existent key")
 
-        // Load empty key (should cover empty key path in load closure)
         let empty = sut.load(forKey: "")
         XCTAssertNil(empty, "Should return nil for empty key")
     }
@@ -217,7 +197,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         XCTAssertEqual(saveResult, .success, "Direct minimalistic save should succeed")
         _ = sut.load(forKey: key)
         assertEventuallyEqual(sut.load(forKey: key), data)
-        // Si deseas un mensaje personalizado, puedes usar XCTFail justo después para mayor claridad:
+        // Si deseamos un mensaje personalizado, podemoa usar XCTFail justo después para mayor claridad:
         // if sut.load(forKey: key) != data { XCTFail("Direct minimalistic load should return the saved data") }
     }
 
@@ -232,12 +212,11 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
     // Checklist: test_save_returnsFalse_whenUpdateFailsAfterDuplicateItem
     // CU: SystemKeychainProtocol-updateFailsAfterDuplicate
     func test_save_returnsFalse_whenUpdateFailsAfterDuplicateItem() {
-        // Este test fuerza el update path tras errSecDuplicateItem con clave inválida
         let sut = makeSUT()
-        let key = String(repeating: "x", count: 8192)  // clave inválida
+        let key = String(repeating: "x", count: 8192)
         let data1 = "first".data(using: .utf8)!
         let data2 = "second".data(using: .utf8)!
-        _ = sut.save(data: data1, forKey: key)  // primer save puede fallar, pero si pasa, el segundo fuerza update
+        _ = sut.save(data: data1, forKey: key)  //
         let result = sut.save(data: data2, forKey: key)
         if result == .success {
             XCTContext.runActivity(
@@ -276,33 +255,26 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
             kSecAttrAccount as String: key
         ]
 
-        // 1. updateStatus != errSecSuccess (should return .duplicateItem)
         spy.updateStatus = errSecDuplicateItem
         let result1 = sut.handleDuplicateItem(query: query, data: data, key: key, delay: 0, attempts: &attempts)
         XCTAssertEqual(result1, .duplicateItem, "Should return .duplicateItem if update fails")
 
-        // 2. updateStatus == errSecSuccess but validation fails (should return .duplicateItem)
         attempts = 0
         spy.updateStatus = errSecSuccess
         spy.forceValidationFailForKey = key
         let result2 = sut.handleDuplicateItem(query: query, data: data, key: key, delay: 0, attempts: &attempts)
         XCTAssertEqual(result2, .duplicateItem, "Should return .duplicateItem if validation after update fails")
 
-        // 3. updateStatus == errSecSuccess and validation ok (should return .success)
         attempts = 0
         spy.updateStatus = errSecSuccess
-        spy.forceValidationFailForKey = nil // ¡clave para que la validación sea real!
-        // Simulate real Keychain flow: save returns duplicateItem, then update should succeed
-        // Prepara el storage del spy para que la clave exista antes del flujo duplicate
+        spy.forceValidationFailForKey = nil
         spy.saveResult = .success
         _ = spy.save(data: data, forKey: key)
-        // Ahora simula el flujo duplicateItem
-        spy.saveResult = .duplicateItem // Simulate duplicate on save
+        spy.saveResult = .duplicateItem
         spy.updateStatus = errSecSuccess
-        spy.forceValidationFailForKey = nil // Key must validate OK
+        spy.forceValidationFailForKey = nil
+			
         let result3 = sut.handleDuplicateItem(query: query, data: data, key: key, delay: 0, attempts: &attempts)
-        // NOTE: In real Keychain integration, duplicate+update may still return .duplicateItem due to system restrictions.
-        // This test documents the actual OS behavior. For pure business logic, see the unit tests with KeychainFullSpy.
         XCTAssertEqual(result3, .duplicateItem, "Should return .duplicateItem in integration since real Keychain does not allow update after duplicate")
     }
 
@@ -320,8 +292,8 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         return (sut, spy)
     }
 
-    // Helper para crear el SUT y asegurar liberación de memoria
-    // El parámetro keychain debe conformar a KeychainProtocolWithDelete para ser compatible con SystemKeychain
+    // MARK: - Helpers
+	
     private func makeSUT(
         keychain: KeychainProtocolWithDelete? = nil, file: StaticString = #file, line: UInt = #line
     ) -> SystemKeychain {
@@ -335,7 +307,6 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         return sut
     }
 
-    // Helper para generar claves únicas en los tests
     private func uniqueKey() -> String {
         return "test-key-\(UUID().uuidString)"
     }

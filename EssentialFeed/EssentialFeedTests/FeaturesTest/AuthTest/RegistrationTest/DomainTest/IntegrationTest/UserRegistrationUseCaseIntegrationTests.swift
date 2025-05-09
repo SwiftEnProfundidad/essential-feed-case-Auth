@@ -2,8 +2,8 @@ import EssentialFeed
 import XCTest
 
 class UserRegistrationUseCaseIntegrationTests: XCTestCase {
+	
     func test_register_withSuccessfulServerResponse_savesTokenAndCredentials() async throws {
-        // Arrange
         let uniqueUser = UserRegistrationData.makeUnique()
         let expectedToken = Token.make()
 
@@ -36,14 +36,12 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         trackForMemoryLeaks(persistenceSpy, file: #file, line: #line)
         trackForMemoryLeaks(notifierSpy, file: #file, line: #line)
 
-        // Act
         let result = await sut.register(
             name: uniqueUser.name,
             email: uniqueUser.email,
             password: uniqueUser.password
         )
 
-        // Assert
         switch result {
         case .success(let registeredUser):
             XCTAssertEqual(registeredUser.name, uniqueUser.name)
@@ -70,7 +68,6 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
     }
 
     func test_register_withNoConnectivity_savesToOfflineStore_andNotifies() async throws {
-        // Arrange
         let uniqueUser = UserRegistrationData.makeUnique()
         let connectivityError = NSError(domain: NSURLErrorDomain, code: URLError.notConnectedToInternet.rawValue)
 
@@ -94,14 +91,12 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         trackForMemoryLeaks(notifierSpy, file: #file, line: #line)
         trackForMemoryLeaks(validator, file: #file, line: #line)
 
-        // Act
         let result = await sut.register(
             name: uniqueUser.name,
             email: uniqueUser.email,
             password: uniqueUser.password
         )
 
-        // Assert
         switch result {
         case .success:
             XCTFail("Se esperaba un fallo por conectividad, pero se obtuvo éxito.")
@@ -125,8 +120,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         }
     }
 
-    // TODO: Considerar añadir tests de integración para otros errores de servidor (409, 500) si se ve necesario,
-    // aunque los unit tests ya los cubren bien.
+    // TODO: Considerar añadir tests de integración para otros errores de servidor (409, 500) si se ve necesario, aunque los unit tests ya los cubren bien.
 }
 
 private class IntegrationPersistenceSpy: KeychainProtocol, TokenStorage, OfflineRegistrationStore {

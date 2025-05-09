@@ -1,5 +1,3 @@
-// CU: Seguridad de almacenamiento en Keychain
-// Checklist: Validar operaciones seguras en Keychain
 
 import EssentialFeed
 import XCTest
@@ -13,13 +11,9 @@ final class SystemKeychainIntegrationTests: XCTestCase {
         let testKey = uniqueTestKey()
         let testData = uniqueTestData()
         let sut = makeSystemKeychainSUT(testKey: testKey)
-        // Save
-        XCTAssertEqual(
-            sut.save(data: testData, forKey: testKey), .success, "Should save data in real Keychain")
-        // Load
+        XCTAssertEqual(sut.save(data: testData, forKey: testKey), .success, "Should save data in real Keychain")
         let loaded = sut.load(forKey: testKey)
         XCTAssertEqual(loaded, testData, "Should load the same data from real Keychain")
-        // Delete
         XCTAssertTrue(sut.delete(forKey: testKey), "Should delete key from real Keychain")
         XCTAssertNil(sut.load(forKey: testKey), "Should not load deleted key from real Keychain")
     }
@@ -58,7 +52,6 @@ final class SystemKeychainIntegrationTests: XCTestCase {
 
     // MARK: - Helpers
 
-    // Centralized factory/helper for SUT and test key/data
     func makeSystemKeychainSUT(testKey: String) -> SystemKeychain {
         let sut = SystemKeychain()
         _ = sut.delete(forKey: testKey)  // Ensure clean state before test

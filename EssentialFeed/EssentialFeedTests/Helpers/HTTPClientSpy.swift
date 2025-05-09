@@ -21,7 +21,6 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         fileprivate(set) var isCompleted = false
     }
 
-    // --- Propiedades públicas para inspección en tests ---
     public var requests: [URLRequest] {
         queue.sync { _requests }
     }

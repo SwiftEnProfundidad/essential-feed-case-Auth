@@ -1,8 +1,8 @@
 import XCTest
 
 public extension XCTestCase {
-    /// Helper para reintentar comparaciones con espera (asincronía Keychain, operaciones async, etc)
-    func assertEventuallyEqual<T: Equatable>(
+
+	func assertEventuallyEqual<T: Equatable>(
         _ expression1: @autoclosure @escaping () -> T?,
         _ expression2: @autoclosure @escaping () -> T?,
         timeout: TimeInterval = 0.5,

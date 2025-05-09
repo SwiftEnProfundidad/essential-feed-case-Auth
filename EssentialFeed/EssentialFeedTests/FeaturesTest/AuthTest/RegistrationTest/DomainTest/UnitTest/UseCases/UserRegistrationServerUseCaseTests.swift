@@ -23,26 +23,27 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
     }
 
     // MARK: - Helpers
+	
     private func makeSUT(
         file: StaticString = #file, line: UInt = #line
     ) -> (sut: UserRegistrationUseCase, httpClient: RegistrationHTTPClientSpy, persistenceSpy: RegistrationPersistenceSpy, notifierSpy: UserRegistrationNotifierSpy) {
         let httpClient = RegistrationHTTPClientSpy()
         let persistenceSpy = RegistrationPersistenceSpy()
-        let notifierSpy = UserRegistrationNotifierSpy() // Asegúrate que este Spy esté definido y sea correcto
-        let validatorStub = RegistrationValidatorTestStub() // Asegúrate que este Stub esté definido y sea correcto
+        let notifierSpy = UserRegistrationNotifierSpy()
+        let validatorStub = RegistrationValidatorTestStub()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,            // Primero persistence
-            validator: validatorStub,               // Luego validator
-            httpClient: httpClient,                 // Luego httpClient (nombre del parámetro en el init)
+            persistence: persistenceSpy,
+            validator: validatorStub,
+            httpClient: httpClient,
             registrationEndpoint: URL(string: "https://test-register-endpoint.com")!,
-            notifier: notifierSpy                   // Notifier al final (o según el init)
+            notifier: notifierSpy
         )
         trackForMemoryLeaks(httpClient, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(persistenceSpy, file: file, line: line)
         trackForMemoryLeaks(notifierSpy, file: file, line: line)
-        // trackForMemoryLeaks(validatorStub, file: file, line: line) // Si validatorStub es una clase
+        // trackForMemoryLeaks(validatorStub, file: file, line: line)
         return (sut, httpClient, persistenceSpy, notifierSpy)
     }
 }
@@ -72,12 +73,11 @@ final class RegistrationHTTPClientSpy: HTTPClient {
 }
 
 final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
-    // --- Conformance to KeychainProtocol (which is KeychainSavable) ---
     var keychainSaveDataCalls = [(data: Data, key: String)]()
     var keychainSaveResults: [KeychainSaveResult] = []
     func save(data: Data, forKey key: String) -> KeychainSaveResult {
         keychainSaveDataCalls.append((data, key))
-        guard !keychainSaveResults.isEmpty else { return .success } // Devuelve .success si no hay nada preconfigurado
+        guard !keychainSaveResults.isEmpty else { return .success }
         return keychainSaveResults.removeFirst()
     }
     
@@ -88,10 +88,8 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         return keychainLoadDataToReturn
     }
 
-    // --- Conformance to TokenStorage ---
     var tokenStorageSaveTokenCalls = [Token]()
     var tokenStorageShouldSaveError = false
-    
     func save(_ token: Token) async throws {
         if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
         tokenStorageSaveTokenCalls.append(token)
@@ -103,8 +101,7 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         if tokenStorageShouldLoadRefreshTokenThrowError { throw TestError(id: "loadRefreshTokenError") }
         return refreshTokenToLoad
     }
-
-    // --- Conformance to OfflineRegistrationStore ---
+	
     var offlineStoreSaveCalls = [UserRegistrationData]()
     var offlineStoreShouldSaveThrowError = false
     func save(_ data: UserRegistrationData) async throws {
@@ -113,7 +110,7 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
     }
 
     // --- Métodos Adicionales del Spy (no estrictamente de RegistrationPersistenceInterfaces) ---
-    // Mantén estos si tus tests dependen de ellos o si el spy se usa en otros contextos.
+    // Mantener estos si los tests dependen de ellos o si el spy se usa en otros contextos.
 
     // Para LoginCredentials (si se reutiliza)
     // func save(credentials: LoginCredentials) async throws {}
@@ -123,13 +120,13 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
     // Para KeychainDeletable (si el spy necesita ser más completo que solo KeychainSavable)
     var keychainDeleteKeyCalls = [String]()
     var keychainDeleteResults: [Bool] = []
+	
     func delete(forKey key: String) -> Bool { // Este método NO es parte de KeychainSavable, solo de KeychainFull/Deletable
         keychainDeleteKeyCalls.append(key)
         guard !keychainDeleteResults.isEmpty else { return true } // Devuelve true por defecto si no hay nada preconfigurado
         return keychainDeleteResults.removeFirst()
     }
     
-    // Métodos extra para TokenStorage que NO están en el protocolo TokenStorage que me mostraste
     var tokenStorageSaveRefreshTokenCalls = [String?]()
     // func save(refreshToken: String?) async throws { ... }
     
@@ -142,8 +139,5 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
     var tokenStorageDeleteRefreshTokenCalled = false
     // func deleteRefreshToken() async throws { tokenStorageDeleteRefreshTokenCalled = true }
 }
-
-// Asegúrate que UserRegistrationNotifierSpy y RegistrationValidatorTestStub estén definidos y sean correctos.
-// struct TestError: Error { let id: String } // Ya lo tienes o está accesible.
 
 struct TestError: Error { let id: String }

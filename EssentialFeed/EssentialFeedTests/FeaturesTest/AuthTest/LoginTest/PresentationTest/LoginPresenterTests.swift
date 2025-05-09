@@ -1,12 +1,9 @@
-// CU: LoginPresenter
-// Technical Checklist (BDD):
-// 1. Notifies the view of login success
-// 2. Clears previous error messages on success
-// 3. Does not crash if successView or errorClearingView are nil
 
 import EssentialFeed
 import XCTest
 
+// CU: LoginPresenter
+// Technical Checklist (BDD):
 final class LoginPresenterTests: XCTestCase {
     func test_didLoginSuccessfully_notifiesViewAndCleansErrors() {
         let (sut, view) = makeSUTWithUnifiedSpy()
@@ -29,7 +26,6 @@ final class LoginPresenterTests: XCTestCase {
     func test_didLoginSuccessfully_doesNotCrashIfViewsAreNil() {
         let sut = LoginPresenter(successView: nil, errorClearingView: nil)
         sut.didLoginSuccessfully()
-        // No assert needed, just ensure no crash
     }
 
     // MARK: - Helpers

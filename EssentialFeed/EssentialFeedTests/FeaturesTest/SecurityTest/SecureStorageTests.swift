@@ -1,17 +1,10 @@
-//
-//  SecureStorageTests.swift
-//  EssentialFeedTests
-//
-//  Created on 15/04/2025.
-//
 
 import EssentialFeed
 import XCTest
+
 // CU: SystemKeychain
-// CU: Seguridad de almacenamiento
-// Checklist: Verificar operaciones seguras de almacenamiento y recuperación
+// Checklist: Verify system keychain operations are secure and reliable
 final class SecureStorageTests: XCTestCase {
-    // MARK: - Init Tests
 
     func test_init_doesNotMessageStoreUponCreation() {
         let (_, store, encryptionService) = makeSUT()
@@ -20,8 +13,6 @@ final class SecureStorageTests: XCTestCase {
         XCTAssertTrue(encryptionService.encryptedData.isEmpty, "Expected no encryption messages")
         XCTAssertTrue(encryptionService.decryptedData.isEmpty, "Expected no decryption messages")
     }
-
-    // MARK: - Protection Level Tests
 
     func test_protectionLevel_returnsHighForUnreadableData() {
         let (sut, _, _) = makeSUT()
@@ -71,8 +62,6 @@ final class SecureStorageTests: XCTestCase {
 
         XCTAssertEqual(level, .low, "Expected low protection for public data")
     }
-
-    // MARK: - Save Tests
 
     func test_save_encryptsAndStoresHighProtectionData() {
         let (sut, store, encryptionService) = makeSUT()

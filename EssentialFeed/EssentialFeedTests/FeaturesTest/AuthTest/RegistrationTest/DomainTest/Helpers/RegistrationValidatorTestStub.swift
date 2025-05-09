@@ -1,6 +1,3 @@
-//
-// Copyright © 2025 Essential Developer. All rights reserved.
-//
 
 import EssentialFeed
 import Foundation

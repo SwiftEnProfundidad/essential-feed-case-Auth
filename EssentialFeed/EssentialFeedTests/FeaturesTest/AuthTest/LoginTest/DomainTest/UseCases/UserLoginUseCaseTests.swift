@@ -161,7 +161,7 @@ final class UserLoginUseCaseTests: XCTestCase {
 		let apiResponse = LoginResponse(token: expectedTokenValue)
 		api.stubbedResult = .success(apiResponse)
 		
-		let storageError = NSError(domain: "TokenStorageError", code: 1) // Este es el error que el Spy simula
+		let storageError = NSError(domain: "TokenStorageError", code: 1)
 		tokenStorage.saveTokenError = storageError
 		
 		let result = await sut.login(with: credentials)
@@ -169,13 +169,15 @@ final class UserLoginUseCaseTests: XCTestCase {
 		switch result {
 			case .success:
 				XCTFail("Expected failure due to token storage error, got success")
-			case .failure(let error): // 'error' aquí es de tipo LoginError
-				
+			case .failure(let error):
 				XCTAssertEqual(error, LoginError.tokenStorageFailed, "Expected token storage error")
 		}
+		
 		XCTAssertFalse(successObserver.didNotifySuccess, "Success observer should NOT be notified if token storage fails")
 		XCTAssertEqual(tokenStorage.messages.count, 1, "Expected TokenStorage save attempt")
 	}
+	
+	// MARK: - Helpers
 	
 	private func makeSUT(
 		file: StaticString = #file, line: UInt = #line
@@ -212,7 +214,7 @@ final class UserLoginUseCaseTests: XCTestCase {
 	}
 }
 
-// MARK: - Helpers & Spies
+// MARK: - Spies
 
 public final class OfflineLoginStoreSpy: OfflineLoginStore {
 	enum Message: Equatable {

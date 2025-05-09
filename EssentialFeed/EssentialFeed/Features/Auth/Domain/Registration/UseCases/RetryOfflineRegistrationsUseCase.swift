@@ -1,7 +1,3 @@
-// RetryOfflineRegistrationsUseCase.swift
-// EssentialFeed
-//
-// Created by Alex on 8/5/2025.
 
 import Foundation
 

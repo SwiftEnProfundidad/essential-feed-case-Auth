@@ -4,7 +4,6 @@ import EssentialFeed
 import XCTest
 
 final class SystemKeychainTests: XCTestCase {
-    // MARK: - Concurrency and Thread Safety
 
     // Checklist: Thread Safety
     // CU: SystemKeychain-save-concurrent
@@ -36,8 +35,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem")
     }
 
-    // MARK: - Validation after Save (Simulated Corruption)
-
     // Checklist: Validation after Save
     // CU: SystemKeychain-save-validationAfterSave
     func test_save_returnsFailure_whenValidationAfterSaveFails_dueToCorruption() {
@@ -52,8 +49,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(result, .failure, "Save should return failure if validation after save fails due to corruption")
     }
 
-    // MARK: - Duplicate Item and Update Fails
-
     // Checklist: Duplicate Item and Update Fails
     // CU: SystemKeychain-save-duplicateItem
     func test_save_returnsDuplicateItem_whenUpdateFailsAfterDuplicate() {
@@ -66,8 +61,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(result, .duplicateItem, "Should return duplicateItem when update fails after duplicate")
     }
 
-    // MARK: - Error Fallback (NoFallback Strategy)
-
     // Checklist: Error Fallback
     // CU: SystemKeychain-save-noFallback
     func test_save_onNoFallbackStrategy_alwaysReturnsFailure() {
@@ -78,7 +71,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(result, .failure, "NoFallback should always return failure on save")
     }
 
-    // MARK: - Edge Cases: Empty Key/Data
     func test_save_returnsFailure_forEmptyKeyOrData() {
         let sut = makeSUT()
         let data = "irrelevant".data(using: .utf8)!
@@ -86,7 +78,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(sut.save(data: Data(), forKey: uniqueKey()), .failure, "Saving with empty data should fail")
     }
 
-    // MARK: - Unicode Keys and Large Data
     func test_save_supportsUnicodeKeys_andLargeBinaryData() {
         let sut = makeSUT()
         let unicodeKey = "🔑-ключ-密钥-llave"
@@ -97,7 +88,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(loaded, data, "Loaded data should match saved data for unicode key")
     }
 
-    // MARK: - Helpers/Factories Edge Cases
     func test_save_and_delete_withEdgeCaseKeys_andHelpers() {
         let (sut, _) = makeSpySUT()
         let emptyKey = ""
@@ -109,7 +99,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertFalse(sut.delete(forKey: spacesKey), "Should fail to delete with spaces key")
     }
 
-    // MARK: - Borrado de clave inexistente
     func test_delete_returnsTrue_whenKeyDoesNotExist() {
         let (sut, spy) = makeSpySUT()
         let key = uniqueKey()
@@ -481,15 +470,9 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(resultEmptyData, errSecParam, "Should return errSecParam for empty data")
     }
 
-    // NOTE: Due to the current SystemKeychain implementation, the error path for delete cannot be unit tested.
-    // The production code calls the system API directly, so only the success path is covered here.
-    // To cover the error path, either refactor production to delegate to the injected keychain or use integration tests.
     // Checklist: _delete covers success and failure paths
     // CU: SystemKeychain-_delete-success, SystemKeychain-_delete-failure
     func test__delete_onSystemKeychain_returnsTrueOnSuccess() {
-        // NOTE: Due to the current SystemKeychain implementation, the error path for delete cannot be unit tested.
-        // The production code calls the system API directly, so only the success path is covered here.
-        // To cover the error path, either refactor production to delegate to the injected keychain or use integration tests.
         let spy = makeKeychainFullSpy()
         let sut = SystemKeychain(keychain: spy)
         let keySuccess = uniqueKey()
@@ -499,10 +482,7 @@ final class SystemKeychainTests: XCTestCase {
         spy.deleteSpy.simulatedDeleteError = nil
         spy.updateStatus = errSecSuccess
         XCTAssertTrue(sut.delete(forKey: keySuccess), "Should return true when deletion succeeds")
-        // Path error real NO se puede cubrir en unit test debido a la implementación de producción.
     }
-
-    // MARK: Cobertura explícita de constructores y métodos base para SystemKeychain y NoFallback
 
     // CU: SecureStorage (SystemKeychain) - Checklist: Explicit constructor coverage
     // Checklist: Explicit constructor coverage
@@ -531,7 +511,6 @@ final class SystemKeychainTests: XCTestCase {
         XCTAssertEqual(sut.save(data: data, forKey: "irrelevant"), KeychainSaveResult.failure)
     }
 
-    // MARK: - Internal Closures Coverage
 
     // Checklist: _save returns failure for empty key
     // CU: SystemKeychain-save-emptyKey
@@ -561,8 +540,6 @@ final class SystemKeychainTests: XCTestCase {
         let sut = makeSUT()
         XCTAssertNil(sut.load(forKey: ""), "Should return nil when loading with empty key")
     }
-
-    // MARK: - handleDuplicateItem branch coverage
 
     // Checklist: _save returns success when handleDuplicateItem succeeds and validation succeeds
     // CU: SystemKeychain-save-success
@@ -643,7 +620,7 @@ final class SystemKeychainTests: XCTestCase {
     }
 }
 
-// MARK: - Helpers y Mocks
+// MARK: - Helpers
 
 extension SystemKeychainTests {
     fileprivate func makeSystemKeychain() -> SystemKeychain {
@@ -695,6 +672,7 @@ extension SystemKeychainTests {
     }
 
     // MARK: - DeleteFailKeychain
+	
     private class DeleteFailKeychain: KeychainFull {
         func load(forKey key: String) -> Data? { return nil }
         func save(data: Data, forKey key: String) -> KeychainSaveResult { KeychainSaveResult.success }
