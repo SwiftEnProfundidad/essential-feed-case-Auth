@@ -244,20 +244,23 @@ flowchart TD
 
 ---
 
+
 ### Technical Checklist Registration <-> Tests (Reviewed)
 
-| Technical Checklist Item                                       | Test covering it (real name)                                    | Test Type          | Coverage (Reviewed) | Brief Comment                                                                     |
-|---------------------------------------------------------------|----------------------------------------------------------------|--------------------|---------------------|------------------------------------------------------------------------------------|
-| Store initial credentials securely (Keychain)                  | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit) | Integration        | ✅                  | Test verifies success, not explicitly storage in Keychain but assumed.             |
-| Store authentication token received...                         | *No tests for this*                                             | N/A                | ❌                  | Functionality not implemented.                                                     |
-| Notify registration success                                    | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` | Integration        | ✅                  |                                                                                    |
-| Notify that the email is already in use                        | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter`, `...returnsEmailAlreadyInUseError...` | Integration/Unit   | ✅                  |                                                                                    |
-| Show appropriate and specific error messages                   | `test_registerUser_withInvalidEmail...`, `test_registerUser_withWeakPassword...` | Unit               | ✅                  |                                                                                    |
-| Save data for retry if no connection...                        | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError` (only notifies error and saves data) | Integration        | ✅                  | Test verifies error and saving data. Retry logic not implemented/tested yet.      |
-| Unit and integration tests for all paths                       | Various tests cover existing paths.                              | Unit/Integration   | 🟡                  | Do not cover post-registration token storage or retries fully.                       |
-| Refactor: test helper uses concrete KeychainSpy                | `makeSUTWithDefaults` uses `KeychainFullSpy`.                   | Unit/Integration   | ✅                  |                                                                                    |
-| Documentation and architecture aligned                         | General technical diagram is coherent, but the use case implementation omits key BDD points. | N/A               | ✅                  | Covered.                                                                           |
-
+| Technical Checklist Item                                                                                                   | Test covering it (real name)                                                                                                      | Test Type          | Coverage (Reviewed) | Brief Comment                                                                                         |
+|-----------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|--------------------|---------------------|--------------------------------------------------------------------------------------------------------|
+| Store initial credentials securely (Keychain)                                                                               | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit)                                               | Integration        | ✅                  | Test verifies success; Keychain write asserted via `KeychainFullSpy`.                                  |
+| Store authentication token received (OAuth/JWT) securely after registration                                                 | `test_registerUser_withValidData_storesAuthToken`                                                                                  | Unit / Integration | ✅                  | `UserRegistrationUseCase` saves token via `TokenStorage`; spy confirms call.                           |
+| Notify registration success                                                                                                 | `test_registerUser_withValidData_notifiesSuccessObserver`                                                                          | Integration        | ✅                  | Success path notifies observer.                                                                       |
+| Notify that the email is already in use                                                                                     | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter` <br> `test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError` | Unit / Integration | ✅                  | Both UI-level and domain-level notification covered.                                                   |
+| Show appropriate and specific error messages                                                                                | `test_registerUser_withInvalidEmail_returnsInvalidEmailError`, <br>`test_registerUser_withWeakPassword_returnsWeakPasswordError`   | Unit               | ✅                  | Domain errors map one-to-one to presentation.                                                          |
+| Save data for retry if no connection and notify error                                                                       | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError`                                              | Integration        | ✅                  | Error `.noConnectivity` returned and data persisted via `OfflineRegistrationStoreSpy`.                 |
+| **Implement logic to retry saved offline registration requests** (When connectivity is restored)                            | `RetryOfflineRegistrationsUseCaseTests` (5 tests: *no data*, *success*, *api fails*, *token fails*, *delete fails*)                | Unit               | ✅                  | All sub-cases covered; verifies side-effects on store & token storage.                                 |
+| Refactor `UserRegistrationUseCase` constructor (group persistence deps / SRP)                                               | Compilation + all `UserRegistrationUseCase*Tests` pass                                                                             | N/A                | ✅                  | Constructor now receives `RegistrationPersistenceInterfaces` typealias.                                |
+| Unit and integration tests for all paths (happy/sad path)                                                                   | Entire `UserRegistrationUseCaseTests`, `UserRegistrationUseCaseIntegrationTests`, `RetryOfflineRegistrationsUseCaseTests`          | Unit / Integration | ✅                  | Every path now exercised, including offline save + retry logic.                                       |
+| Refactor: test helper uses concrete `KeychainSpy` for clear asserts                                                         | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
+| Documentation and architecture aligned                                                                                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
+                                                                         
 ---
 
 
@@ -288,6 +291,13 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
     - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+        - [🚧] Define test scene/composer that wires Login UI + UseCase with spies
+        - [🔜] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [🔜] Capturar snapshot de la pantalla de éxito y añadir referencia
+        - [🔜] Write sad-path integration test (API error → failureObserver → UI shows error)
+        - [🔜] Capturar snapshot de la pantalla de error y añadir referencia
+        - [🔜] Ensure tests run in CI (update scheme + record on first run)
+
     - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
