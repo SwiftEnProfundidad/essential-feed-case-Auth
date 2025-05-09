@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -170,81 +169,5 @@ final class SecureStorageTests: XCTestCase {
         trackForMemoryLeaks(encryptionService, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store, encryptionService)
-    }
-}
-
-private class SecureStoreSpy: SecureStore {
-    enum ReceivedMessage: Equatable {
-        case save(key: String, value: Data)
-        case retrieve(key: String)
-        case delete(key: String)
-    }
-
-    private(set) var receivedMessages: [ReceivedMessage] = []
-    private var stubbedSaveResults: [String: Result<Void, Error>] = [:]
-    private var stubbedRetrievalResults: [String: Result<Data, Error>] = [:]
-    private var stubbedDeleteResults: [String: Result<Void, Error>] = [:]
-
-    func save(_ data: Data, forKey key: String) throws {
-        receivedMessages.append(.save(key: key, value: data))
-        if let result = stubbedSaveResults[key] {
-            switch result {
-            case .success: return
-            case let .failure(error): throw error
-
-            }
-        }
-    }
-
-    func retrieve(forKey key: String) throws -> Data {
-        receivedMessages.append(.retrieve(key: key))
-        if let result = stubbedRetrievalResults[key] {
-            switch result {
-            case let .success(data): return data
-            case let .failure(error): throw error
-            }
-        }
-        throw NSError(domain: "test", code: 0)
-    }
-
-    func delete(forKey key: String) throws {
-        receivedMessages.append(.delete(key: key))
-        if let result = stubbedDeleteResults[key], case let .failure(error) = result {
-            throw error
-        }
-    }
-
-    func stubSave(forKey key: String, with result: Result<Void, Error>) {
-        stubbedSaveResults[key] = result
-    }
-
-    func stubRetrieval(forKey key: String, with result: Result<Data, Error>) {
-        stubbedRetrievalResults[key] = result
-    }
-
-    func stubDelete(forKey key: String, with result: Result<Void, Error>) {
-        stubbedDeleteResults[key] = result
-    }
-}
-
-private class EncryptionServiceSpy: EncryptionService {
-    private(set) var encryptedData: [Data] = []
-    private(set) var decryptedData: [Data] = []
-    var stubbedError: Error?
-
-    func encrypt(_ data: Data) throws -> Data {
-        if let error = stubbedError {
-            throw error
-        }
-        encryptedData.append(data)
-        return Data(data.reversed())
-    }
-
-    func decrypt(_ data: Data) throws -> Data {
-        if let error = stubbedError {
-            throw error
-        }
-        decryptedData.append(data)
-        return Data(data.reversed())
     }
 }
