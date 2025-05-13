@@ -1,4 +1,3 @@
-
 import EssentialApp
 import EssentialFeed
 import SwiftUI
@@ -12,7 +11,10 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         sut.simulateUserEntering(username: "user", password: "pass")
         await sut.simulateTapOnLoginButton()
         sut.waitForLoginSuccessAlert()
-        assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "LOGIN_SUCCESS_NOTIFICATION_light")
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
+            named: "LOGIN_SUCCESS_NOTIFICATION_light"
+        )
     }
 
     func test_loginError_showsErrorNotification() async {
@@ -22,12 +24,42 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         sut.simulateUserEntering(username: "user", password: "wrongpass")
         await sut.simulateTapOnLoginButton()
         sut.waitForLoginSuccessAlert()
-        assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "LOGIN_ERROR_NOTIFICATION_light")
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "LOGIN_ERROR_NOTIFICATION_light"
+        )
+    }
+
+    func test_loginNetworkError_showsNetworkErrorNotification() async {
+        let sut = makeSUT(authenticate: { _, _ in
+            .failure(.network)
+        })
+        sut.simulateUserEntering(username: "user", password: "pass")
+        await sut.simulateTapOnLoginButton()
+        sut.waitForLoginSuccessAlert()
+        record(
+            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
+            named: "LOGIN_NETWORK_ERROR_NOTIFICATION_light"
+        )
+    }
+
+    func test_loginUnknownError_showsGenericErrorNotification() async {
+        let sut = makeSUT(authenticate: { _, _ in
+            .failure(.unknown)
+        })
+        sut.simulateUserEntering(username: "user", password: "pass")
+        await sut.simulateTapOnLoginButton()
+        sut.waitForLoginSuccessAlert()
+        record(
+            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
+            named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION_light"
+        )
     }
 
     // MARK: Helpers
 
-    private func makeSUT(authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>) -> LoginTestHarness {
+    private func makeSUT(
+        authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>
+    ) -> LoginTestHarness {
         LoginTestHarness(authenticate: authenticate)
     }
 }
