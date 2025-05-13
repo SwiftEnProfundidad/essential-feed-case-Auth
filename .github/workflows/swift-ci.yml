@@ -19,4 +19,4 @@ jobs:
           swiftformat .
           git diff --exit-code || (echo "SwiftFormat found issues. Please run swiftformat locally." && exit 1)
       - name: Build and test
-        run: xcodebuild -workspace EssentialApp/EssentialApp.xcworkspace -scheme EssentialApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' test
+        run: xcodebuild -workspace EssentialApp/EssentialApp.xcworkspace -scheme EssentialApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' CODE_SIGNING_ALLOWED=NO test
