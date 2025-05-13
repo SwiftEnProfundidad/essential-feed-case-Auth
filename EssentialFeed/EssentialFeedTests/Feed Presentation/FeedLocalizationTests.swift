@@ -12,5 +12,4 @@ final class FeedLocalizationTests: XCTestCase {
 
         assertLocalizedKeyAndValuesExist(in: bundle, table)
     }
-
 }

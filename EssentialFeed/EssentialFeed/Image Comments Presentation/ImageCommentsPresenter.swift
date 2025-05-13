@@ -22,10 +22,12 @@ public struct ImageCommentViewModel: Hashable {
 
 public final class ImageCommentsPresenter {
     public static var title: String {
-        NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
-                          tableName: "ImageComments",
-                          bundle: Bundle(for: Self.self),
-                          comment: "Title for the image comments view")
+        NSLocalizedString(
+            "IMAGE_COMMENTS_VIEW_TITLE",
+            tableName: "ImageComments",
+            bundle: Bundle(for: Self.self),
+            comment: "Title for the image comments view"
+        )
     }
 
     public static func map(
@@ -42,7 +44,8 @@ public final class ImageCommentsPresenter {
             ImageCommentViewModel(
                 message: comment.message,
                 date: formatter.localizedString(for: comment.createdAt, relativeTo: currentDate),
-                username: comment.username)
+                username: comment.username
+            )
         })
     }
 }

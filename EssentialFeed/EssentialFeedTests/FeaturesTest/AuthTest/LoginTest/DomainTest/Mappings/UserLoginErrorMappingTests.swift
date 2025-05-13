@@ -1,11 +1,9 @@
-
 import EssentialFeed
 import XCTest
 
 // CU: Autenticación de Usuario
 // Checklist: Mapping de errores a mensajes claros y específicos para el usuario final
 final class UserLoginErrorMappingTests: XCTestCase {
-
     func test_errorMapping_returnsCorrectMessageForEachError() {
         // Given
         let cases: [(LoginError, String)] = [

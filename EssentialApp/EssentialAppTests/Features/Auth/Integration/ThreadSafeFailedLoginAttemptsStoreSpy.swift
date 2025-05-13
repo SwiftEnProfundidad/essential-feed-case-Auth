@@ -49,6 +49,7 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
     public var incrementAttemptsSinceLastReset: Int {
         queue.sync { _incrementAttemptsCallCount - _lastResetCount }
     }
+
     public func lastAttemptTime(for username: String) -> Date? {
         queue.sync { _lastAttemptTimes[username] }
     }

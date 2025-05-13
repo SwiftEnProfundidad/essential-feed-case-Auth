@@ -1,16 +1,15 @@
-
 import Foundation
 
 public protocol OfflineRegistrationStore {
-	func save(_ data: UserRegistrationData) async throws
+    func save(_ data: UserRegistrationData) async throws
 }
 
 public protocol OfflineRegistrationLoader {
-	func loadAll() async throws -> [UserRegistrationData]
+    func loadAll() async throws -> [UserRegistrationData]
 }
 
 public protocol OfflineRegistrationDeleter {
-	func delete(_ data: UserRegistrationData) async throws
+    func delete(_ data: UserRegistrationData) async throws
 }
 
-public typealias OfflineRegistrationStoreCRUD = OfflineRegistrationStore & OfflineRegistrationLoader & OfflineRegistrationDeleter
+public typealias OfflineRegistrationStoreCRUD = OfflineRegistrationDeleter & OfflineRegistrationLoader & OfflineRegistrationStore

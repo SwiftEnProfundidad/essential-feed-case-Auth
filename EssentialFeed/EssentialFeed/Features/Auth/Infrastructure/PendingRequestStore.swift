@@ -16,7 +16,7 @@ public protocol PendingRequestRemover {
     func removeAll()
 }
 
-public typealias PendingRequestStore = PendingRequestSaver & PendingRequestLoader & PendingRequestRemover
+public typealias PendingRequestStore = PendingRequestLoader & PendingRequestRemover & PendingRequestSaver
 
 public final class InMemoryPendingRequestStore<Request: Codable & Equatable>: PendingRequestStore {
     private var requests: [Request] = []

@@ -6,13 +6,13 @@ import UIKit
 
 public final class ErrorView: UIButton {
     public var message: String? {
-        get { return isVisible ? title(for: .normal) : nil }
+        get { isVisible ? title(for: .normal) : nil }
         set { setMessageAnimated(newValue) }
     }
 
     public var onHide: (() -> Void)?
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         configure()
     }
@@ -38,11 +38,11 @@ public final class ErrorView: UIButton {
     }
 
     private var isVisible: Bool {
-        return alpha > 0
+        alpha > 0
     }
 
     private func setMessageAnimated(_ message: String?) {
-        if let message = message {
+        if let message {
             showAnimated(message)
         } else {
             hideMessageAnimated()
@@ -64,7 +64,8 @@ public final class ErrorView: UIButton {
             animations: { self.alpha = 0 },
             completion: { completed in
                 if completed { self.hideMessage() }
-            })
+            }
+        )
     }
 
     private func hideMessage() {

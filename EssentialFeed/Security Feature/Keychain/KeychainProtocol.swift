@@ -22,4 +22,4 @@ public protocol KeychainUpdatable {
     func update(data: Data, forKey key: String) -> Bool
 }
 
-public typealias KeychainFull = KeychainSavable & KeychainDeletable & KeychainUpdatable
+public typealias KeychainFull = KeychainDeletable & KeychainSavable & KeychainUpdatable

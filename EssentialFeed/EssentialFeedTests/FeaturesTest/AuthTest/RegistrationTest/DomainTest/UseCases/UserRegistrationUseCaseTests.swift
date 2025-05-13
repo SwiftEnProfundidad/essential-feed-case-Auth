@@ -116,7 +116,7 @@ private func assertRegistrationValidation(
     let result = await sut.register(name: name, email: email, password: password)
 
     switch result {
-    case .failure(let error as RegistrationValidationError):
+    case let .failure(error as RegistrationValidationError):
         XCTAssertEqual(error, expectedError, "Expected validation error \(expectedError), got \(error)", file: file, line: line)
     default:
         XCTFail("Expected failure with \(expectedError), got \(result) instead", file: file, line: line)

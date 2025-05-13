@@ -8,8 +8,8 @@ func assertLocalizedKeyAndValuesExist(in presentationBundle: Bundle, _ table: St
     let localizationBundles = allLocalizationBundles(in: presentationBundle, file: file, line: line)
     let localizedStringKeys = allLocalizedStringKeys(in: localizationBundles, table: table, file: file, line: line)
 
-    localizationBundles.forEach { (bundle, localization) in
-        localizedStringKeys.forEach { key in
+    for (bundle, localization) in localizationBundles {
+        for key in localizedStringKeys {
             let localizedString = bundle.localizedString(forKey: key, value: nil, table: table)
 
             if localizedString == key {
@@ -24,7 +24,7 @@ func assertLocalizedKeyAndValuesExist(in presentationBundle: Bundle, _ table: St
 private typealias LocalizedBundle = (bundle: Bundle, localization: String)
 
 private func allLocalizationBundles(in bundle: Bundle, file: StaticString = #filePath, line: UInt = #line) -> [LocalizedBundle] {
-    return bundle.localizations.compactMap { localization in
+    bundle.localizations.compactMap { localization in
         guard
             let path = bundle.path(forResource: localization, ofType: "lproj"),
             let localizedBundle = Bundle(path: path)
@@ -38,7 +38,7 @@ private func allLocalizationBundles(in bundle: Bundle, file: StaticString = #fil
 }
 
 private func allLocalizedStringKeys(in bundles: [LocalizedBundle], table: String, file: StaticString = #filePath, line: UInt = #line) -> Set<String> {
-    return bundles.reduce([]) { (acc, current) in
+    bundles.reduce([]) { acc, current in
         guard
             let path = current.bundle.path(forResource: table, ofType: "strings"),
             let strings = NSDictionary(contentsOfFile: path),

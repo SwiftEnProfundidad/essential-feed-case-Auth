@@ -225,7 +225,7 @@ class CommentsUIIntegrationTests: XCTestCase {
     }
 
     private func makeComment(message: String = "any message", username: String = "any username") -> ImageComment {
-        return ImageComment(id: UUID(), message: message, createdAt: Date(), username: username)
+        ImageComment(id: UUID(), message: message, createdAt: Date(), username: username)
     }
 
     private func assertThat(_ sut: ListViewController, isRendering comments: [ImageComment], file: StaticString = #filePath, line: UInt = #line) {
@@ -238,7 +238,7 @@ class CommentsUIIntegrationTests: XCTestCase {
 
         let viewModel = ImageCommentsPresenter.map(comments)
 
-        viewModel.comments.enumerated().forEach { index, comment in
+        for (index, comment) in viewModel.comments.enumerated() {
             XCTAssertEqual(sut.commentMessage(at: index), comment.message, "message at \(index)", file: file, line: line)
             XCTAssertEqual(sut.commentDate(at: index), comment.date, "date at \(index)", file: file, line: line)
             XCTAssertEqual(sut.commentUsername(at: index), comment.username, "username at \(index)", file: file, line: line)
@@ -249,7 +249,7 @@ class CommentsUIIntegrationTests: XCTestCase {
         private var requests = [PassthroughSubject<[ImageComment], Error>]()
 
         var loadCommentsCallCount: Int {
-            return requests.count
+            requests.count
         }
 
         func loadPublisher() -> AnyPublisher<[ImageComment], Error> {

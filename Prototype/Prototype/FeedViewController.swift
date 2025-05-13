@@ -31,8 +31,8 @@ final class FeedViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return feed.count
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        feed.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -41,7 +41,6 @@ final class FeedViewController: UITableViewController {
         cell.configure(with: model)
         return cell
     }
-
 }
 
 extension FeedImageCell {

@@ -12,14 +12,14 @@ public final class SystemKeychain: KeychainFull {
     // Implementación única conforme al protocolo KeychainFull
     public func load(forKey key: String) -> Data? {
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
-            return _load(forKey: key)
+            _load(forKey: key)
         } else {
-            return queue.sync { _load(forKey: key) }
+            queue.sync { _load(forKey: key) }
         }
     }
 
     private func _load(forKey key: String) -> Data? {
-        if let keychain = keychain {
+        if let keychain {
             return keychain.load(forKey: key)
         }
         guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
@@ -45,7 +45,7 @@ public final class SystemKeychain: KeychainFull {
     /// Deletes a value from the Keychain for a given key.
     /// - Returns: true if the item was deleted or not found, false if the key is invalid or deletion failed.
     public func delete(forKey key: String) -> Bool {
-        if let keychain = keychain {
+        if let keychain {
             return keychain.delete(forKey: key)
         }
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
@@ -68,15 +68,15 @@ public final class SystemKeychain: KeychainFull {
     /// Añade robustez ante condiciones de carrera y latencias del sistema.
     public func save(data: Data, forKey key: String) -> KeychainSaveResult {
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
-            return _save(data: data, forKey: key)
+            _save(data: data, forKey: key)
         } else {
-            return queue.sync { _save(data: data, forKey: key) }
+            queue.sync { _save(data: data, forKey: key) }
         }
     }
 
     private func _save(data: Data, forKey key: String) -> KeychainSaveResult {
         guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !data.isEmpty else { return .failure }
-        if let keychain = keychain {
+        if let keychain {
             _ = keychain.delete(forKey: key)
             return saveWithKeychain(keychain, data: data, key: key)
         }
@@ -120,14 +120,18 @@ public final class SystemKeychain: KeychainFull {
     }
 
     private func makeQuery(forKey key: String) -> [String: Any] {
-        [kSecClass as String: kSecClassGenericPassword,
-         kSecAttrAccount as String: key]
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key
+        ]
     }
 
     private func makeQueryWithData(forKey key: String, data: Data) -> [String: Any] {
-        [kSecClass as String: kSecClassGenericPassword,
-         kSecAttrAccount as String: key,
-         kSecValueData as String: data]
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key,
+            kSecValueData as String: data
+        ]
     }
 
     private func isDataPersisted(forKey key: String, data: Data) -> Bool {
@@ -141,9 +145,9 @@ public final class SystemKeychain: KeychainFull {
 
     public func update(data: Data, forKey key: String) -> OSStatus {
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
-            return _update(data: data, forKey: key)
+            _update(data: data, forKey: key)
         } else {
-            return queue.sync { _update(data: data, forKey: key) }
+            queue.sync { _update(data: data, forKey: key) }
         }
     }
 
@@ -184,10 +188,11 @@ public final class SystemKeychain: KeychainFull {
 /// Implementación que siempre falla, utilizada como fallback por defecto
 public final class NoFallback: KeychainSavable {
     public init() {}
-    public func save(data: Data, forKey key: String) -> KeychainSaveResult {
-        return .failure
+    public func save(data _: Data, forKey _: String) -> KeychainSaveResult {
+        .failure
     }
-    public func load(forKey key: String) -> Data? {
-        return nil
+
+    public func load(forKey _: String) -> Data? {
+        nil
     }
 }

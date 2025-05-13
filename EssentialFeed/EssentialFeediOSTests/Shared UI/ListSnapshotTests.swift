@@ -2,12 +2,11 @@
 // Copyright © 2020 Essential Developer. All rights reserved.
 //
 
-import XCTest
-import EssentialFeediOS
 import EssentialFeed
+import EssentialFeediOS
+import XCTest
 
 class ListSnapshotTests: XCTestCase {
-
     func test_emptyList() {
         let sut = makeSUT()
 
@@ -39,7 +38,6 @@ class ListSnapshotTests: XCTestCase {
     }
 
     private func emptyList() -> [CellController] {
-        return []
+        []
     }
-
 }

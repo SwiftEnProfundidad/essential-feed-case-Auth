@@ -1,0 +1,22 @@
+name: Swift CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+      - name: Run SwiftFormat (fail if not clean)
+        run: |
+          swiftformat .
+          git diff --exit-code || (echo "SwiftFormat found issues. Please run swiftformat locally." && exit 1)
+      - name: Build and test
+        run: xcodebuild -workspace EssentialFeed.xcworkspace -scheme EssentialFeed -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' test

@@ -80,5 +80,4 @@ class CacheFeedUseCaseTests: XCTestCase {
             XCTAssertEqual(error as NSError?, expectedError, file: file, line: line)
         }
     }
-
 }

@@ -17,7 +17,7 @@ class LoginLockingIntegrationTests: XCTestCase {
         )
 
         // Act & Assert - Fase 1: Bloqueo
-        for attempt in 1...5 {
+        for attempt in 1 ... 5 {
             await attemptLogin(with: sut, username: testUsername)
             XCTAssertNotNil(sut.errorMessage, "Should show error on attempt \(attempt)")
         }

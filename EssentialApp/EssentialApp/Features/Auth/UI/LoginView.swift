@@ -44,8 +44,7 @@ public struct LoginView: View {
                 })
             )
         }
-        .onAppear {
-        }
+        .onAppear {}
     }
 }
 

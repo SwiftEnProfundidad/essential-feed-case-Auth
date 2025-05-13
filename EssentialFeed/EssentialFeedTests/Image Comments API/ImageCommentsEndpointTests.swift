@@ -15,5 +15,4 @@ class ImageCommentsEndpointTests: XCTestCase {
 
         XCTAssertEqual(received, expected)
     }
-
 }

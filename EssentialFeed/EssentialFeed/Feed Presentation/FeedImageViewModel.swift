@@ -7,7 +7,7 @@ public struct FeedImageViewModel {
     public let location: String?
 
     public var hasLocation: Bool {
-        return location != nil
+        location != nil
     }
 
     public init(description: String?, location: String?) {

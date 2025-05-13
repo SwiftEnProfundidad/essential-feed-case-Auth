@@ -1,6 +1,5 @@
-
-import Foundation
 import EssentialFeed
+import Foundation
 
 public final class TokenStorageSpy: TokenStorage {
     public enum Message: Equatable {
@@ -8,8 +7,8 @@ public final class TokenStorageSpy: TokenStorage {
         case loadRefreshToken
     }
 
-    private(set) public var messages = [Message]()
-    
+    public private(set) var messages = [Message]()
+
     public var saveTokenError: Error?
 
     public func save(_ token: Token) async throws {
@@ -18,7 +17,7 @@ public final class TokenStorageSpy: TokenStorage {
             throw error
         }
     }
-    
+
     public func completeSaveSuccessfully() {
         saveTokenError = nil
     }
@@ -37,12 +36,12 @@ public final class TokenStorageSpy: TokenStorage {
         }
         return refreshTokenToReturn
     }
-    
+
     public func completeLoadRefreshToken(with token: String?) {
         refreshTokenToReturn = token
         loadRefreshTokenError = nil
     }
-    
+
     public func completeLoadRefreshToken(withError error: Error) {
         loadRefreshTokenError = error
         refreshTokenToReturn = nil

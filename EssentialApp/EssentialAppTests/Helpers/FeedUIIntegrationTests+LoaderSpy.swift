@@ -9,6 +9,7 @@ import Foundation
 
 class LoaderSpy {
     // MARK: - FeedLoader
+
     private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
 
     var loadFeedCallCount: Int = 0
@@ -36,6 +37,7 @@ class LoaderSpy {
     }
 
     // MARK: - LoadMoreFeedLoader
+
     private var loadMoreRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
 
     var loadMoreCallCount: Int = 0
@@ -79,7 +81,7 @@ class LoaderSpy {
     private var imagePublishers = [URL: PassthroughSubject<Data, Error>]()
 
     func imageLoaderPublisher() -> (URL) -> AnyPublisher<Data, Error> {
-        return { [weak self] url in
+        { [weak self] url in
             let publisher = PassthroughSubject<Data, Error>()
             self?.imagePublishers[url] = publisher
             self?.loadedImageURLs.append(url)
@@ -99,7 +101,7 @@ class LoaderSpy {
     }
 
     private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
+        NSError(domain: "any error", code: 0)
     }
 }
 

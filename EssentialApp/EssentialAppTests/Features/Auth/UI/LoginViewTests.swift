@@ -5,13 +5,11 @@ import XCTest
 
 final class LoginViewTests: XCTestCase {
     func test_login_withInvalidEmail_showsValidationError() async {
-        // Arrange
         let viewModel = makeSUT(authenticate: { _, _ in .failure(.invalidEmailFormat) }, blockMessageProvider: DefaultLoginBlockMessageProvider())
         viewModel.username = "invalid-email"
         viewModel.password = "password"
-        // Act
+
         await viewModel.login()
-        // Assert
         XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.")
     }
 
@@ -76,17 +74,14 @@ final class LoginViewTests: XCTestCase {
         await viewModel.login()
         XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
 
-        // Simulate user correcting email
         viewModel.username = "new@email.com"
         XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing username, but got: \(viewModel.errorMessage ?? "nil")")
 
-        // Put error back
         viewModel.username = "user@email.com"
         viewModel.password = "wrongpass"
         await viewModel.login()
         XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
 
-        // Simulate user correcting password
         viewModel.password = "newpassword"
         XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing password")
     }
@@ -98,7 +93,6 @@ final class LoginViewTests: XCTestCase {
         await viewModel.login()
         XCTAssertTrue(viewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
 
-        // Now simulate failed login
         let failingVM = makeSUT()
         failingVM.username = "user@email.com"
         failingVM.password = "wrongpass"
@@ -107,14 +101,12 @@ final class LoginViewTests: XCTestCase {
     }
 
     func test_successfulLogin_clearsPreviousErrorMessage() async {
-        // First attempt: error
         let failingViewModel = makeSUT()
         failingViewModel.username = "user@email.com"
         failingViewModel.password = "wrongpass"
         await failingViewModel.login()
         XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
 
-        // Second attempt: success, using new ViewModel
         let successViewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) })
         successViewModel.username = "user@email.com"
         successViewModel.password = "password"
@@ -202,9 +194,9 @@ final class LoginViewTests: XCTestCase {
     func test_errorMessage_isClearedOnLoginSuccess() async {
         let viewModel = makeSUT(authenticate: { _, password in
             if password == "fail" {
-                return .failure(.invalidCredentials)
+                .failure(.invalidCredentials)
             } else {
-                return .success(LoginResponse(token: "token"))
+                .success(LoginResponse(token: "token"))
             }
         }, blockMessageProvider: DefaultLoginBlockMessageProvider())
         viewModel.username = "user@email.com"
@@ -322,22 +314,17 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "password"
 
-        // Act: Simulate login with network error
         await viewModel.login()
 
-        // Assert: Request should be stored
         XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
 
-        // Simulate next authentication is successful
         viewModel.authenticate = { (username: String, password: String) -> Result<LoginResponse, LoginError> in
             authenticateCalls.append((username, password))
             return .success(LoginResponse(token: "token"))
         }
 
-        // Act: Retry stored requests
         await viewModel.retryPendingRequests()
 
-        // Assert: Request should be removed from store and login should be successful
         XCTAssertEqual(pendingStore.loadAll(), [])
         XCTAssertTrue(viewModel.loginSuccess)
         XCTAssertEqual(authenticateCalls.count, 2)
@@ -350,7 +337,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
 
-        for _ in 1...maxAttempts {
+        for _ in 1 ... maxAttempts {
             await viewModel.login()
         }
 
@@ -369,12 +356,10 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
 
-        // Perform previous attempts without measuring time
-        for _ in 1..<maxAttempts {
+        for _ in 1 ..< maxAttempts {
             await viewModel.login()
         }
 
-        // Attempt that should block account and apply delay
         let startTime = Date()
         await viewModel.login()
         let elapsed = Date().timeIntervalSince(startTime)
@@ -382,7 +367,6 @@ final class LoginViewTests: XCTestCase {
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after max failed attempts")
         XCTAssertGreaterThanOrEqual(elapsed, 0.5, "Expected minimum delay of 0.5 seconds but got \(elapsed)")
 
-        // Additional attempt should NOT apply delay again
         let nextStart = Date()
         await viewModel.login()
         let nextElapsed = Date().timeIntervalSince(nextStart)
@@ -411,7 +395,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
 
-        for _ in 1...maxAttempts {
+        for _ in 1 ... maxAttempts {
             await viewModel.login()
         }
 
@@ -455,16 +439,15 @@ final class LoginViewTests: XCTestCase {
             maxFailedAttempts: 3
         )
 
-        // Lock account
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password" // Add password to avoid validation
-        for _ in 1...3 { await viewModel.login() }
+        for _ in 1 ... 3 {
+            await viewModel.login()
+        }
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after 3 failed attempts")
 
-        // Manual unlock
         viewModel.unlockAfterRecovery()
 
-        // Verifications
         XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after calling unlockAfterRecovery()")
         XCTAssertNil(viewModel.errorMessage, "Error message should be nil after unlock")
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "resetAttempts should be called exactly once")
@@ -477,18 +460,17 @@ final class LoginViewTests: XCTestCase {
             maxFailedAttempts: 5
         )
 
-        // 4 failed attempts
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-pass"
-        for _ in 1...4 { await viewModel.login() }
+        for _ in 1 ... 4 {
+            await viewModel.login()
+        }
         XCTAssertEqual(spyStore.attempts["user@test.com"], 4, "Should record 4 failed attempts")
 
-        // Successful 5th attempt
         viewModel.password = "correct-pass"
         viewModel.authenticate = { _, _ in .success(LoginResponse(token: "valid-token")) }
         await viewModel.login()
 
-        // Verifications
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "Should reset counter after success")
         XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Counter should be 0 after success")
     }
@@ -500,20 +482,18 @@ final class LoginViewTests: XCTestCase {
             maxFailedAttempts: 3
         )
 
-        // Bloqueo inicial (3 intentos fallidos)
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-pass"
-        for _ in 1...3 { await viewModel.login() }
+        for _ in 1 ... 3 {
+            await viewModel.login()
+        }
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should lock after 3 failed attempts")
 
-        // Desbloqueo manual
         viewModel.unlockAfterRecovery()
         XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after recovery")
 
-        // Nuevo intento fallido post-desbloqueo
         await viewModel.login()
 
-        // Verificaciones
         XCTAssertEqual(spyStore.attempts["user@test.com"], 1, "Counter should restart at 1 after unlock")
         XCTAssertEqual(spyStore.incrementAttemptsCallCount, 4, "Should increment attempts for new failures")
     }
@@ -525,19 +505,20 @@ final class LoginViewTests: XCTestCase {
             maxFailedAttempts: 3
         )
 
-        // Primer ciclo: Bloqueo + Desbloqueo
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-pass"
-        for _ in 1...3 { await viewModel.login() } // Bloquea
+        for _ in 1 ... 3 {
+            await viewModel.login()
+        } // Bloquea
         XCTAssertTrue(viewModel.isLoginBlocked)
         viewModel.unlockAfterRecovery() // Desbloquea
 
-        // Segundo ciclo: Bloqueo + Desbloqueo
-        for _ in 1...3 { await viewModel.login() } // Bloquea de nuevo
+        for _ in 1 ... 3 {
+            await viewModel.login()
+        } // Bloquea de nuevo
         XCTAssertTrue(viewModel.isLoginBlocked)
         viewModel.unlockAfterRecovery()
 
-        // Verificaciones
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 2, "Should reset attempts twice")
         XCTAssertEqual(spyStore.incrementAttemptsCallCount, 6, "Should increment attempts for all failures")
         XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Final counter should be zero")
@@ -546,11 +527,9 @@ final class LoginViewTests: XCTestCase {
     func test_blockMessageProvider_showsContextualMessages() {
         let provider = DefaultLoginBlockMessageProvider()
 
-        // Verificar mensaje de máximo intentos
         let maxAttemptsMessage = provider.messageForMaxAttemptsReached()
         XCTAssertEqual(maxAttemptsMessage, "Too many attempts. Please wait 5 minutes or reset your password.")
 
-        // Verificar mensaje de error genérico
         let invalidCredentialsMessage = provider.message(for: .invalidCredentials)
         XCTAssertEqual(invalidCredentialsMessage, "Invalid credentials.")
     }
@@ -566,7 +545,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "wrong-pass"
 
         await withTaskGroup(of: Void.self) { group in
-            for _ in 1...100 {
+            for _ in 1 ... 100 {
                 group.addTask { await viewModel.login() }
             }
         }
@@ -589,13 +568,11 @@ final class LoginViewTests: XCTestCase {
             authenticate: { _, _ in .failure(.invalidCredentials) }
         )
 
-        // 1. Provocar error
         viewModel.username = "test@fail.com"
         viewModel.password = "wrongpass"
         await viewModel.login()
         XCTAssertNotNil(viewModel.errorMessage)
 
-        // 2. Simular nueva entrada
         viewModel.username = "new@input.com"
         XCTAssertNil(viewModel.errorMessage)
     }
@@ -629,5 +606,4 @@ final class LoginViewTests: XCTestCase {
             recoveryScreenShown = true
         }
     }
-
 }

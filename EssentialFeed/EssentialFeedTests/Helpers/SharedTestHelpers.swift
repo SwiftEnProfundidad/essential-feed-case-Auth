@@ -5,15 +5,15 @@
 import Foundation
 
 func anyNSError() -> NSError {
-    return NSError(domain: "any error", code: 0)
+    NSError(domain: "any error", code: 0)
 }
 
 func anyURL() -> URL {
-    return URL(string: "http://any-url.com")!
+    URL(string: "http://any-url.com")!
 }
 
 func anyData() -> Data {
-    return Data("any data".utf8)
+    Data("any data".utf8)
 }
 
 func makeItemsJSON(_ items: [[String: Any]]) -> Data {
@@ -29,14 +29,14 @@ extension HTTPURLResponse {
 
 extension Date {
     func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
+        self + seconds
     }
 
     func adding(minutes: Int, calendar: Calendar = Calendar(identifier: .gregorian)) -> Date {
-        return calendar.date(byAdding: .minute, value: minutes, to: self)!
+        calendar.date(byAdding: .minute, value: minutes, to: self)!
     }
 
     func adding(days: Int, calendar: Calendar = Calendar(identifier: .gregorian)) -> Date {
-        return calendar.date(byAdding: .day, value: days, to: self)!
+        calendar.date(byAdding: .day, value: days, to: self)!
     }
 }

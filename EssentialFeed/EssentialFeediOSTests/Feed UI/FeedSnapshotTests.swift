@@ -2,12 +2,11 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import XCTest
-import EssentialFeediOS
 import EssentialFeed
+import EssentialFeediOS
+import XCTest
 
 class FeedSnapshotTests: XCTestCase {
-
     func test_feedWithContent() {
         let sut = makeSUT()
 
@@ -59,7 +58,7 @@ class FeedSnapshotTests: XCTestCase {
     }
 
     private func feedWithContent() -> [ImageStub] {
-        return [
+        [
             ImageStub(
                 description: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritage-protected landmark.",
                 location: "East Side Gallery\nMemorial in Berlin, Germany",
@@ -74,7 +73,7 @@ class FeedSnapshotTests: XCTestCase {
     }
 
     private func feedWithFailedImageLoading() -> [ImageStub] {
-        return [
+        [
             ImageStub(
                 description: nil,
                 location: "Cannon Street, London",
@@ -110,7 +109,6 @@ class FeedSnapshotTests: XCTestCase {
             CellController(id: UUID(), loadMore)
         ]
     }
-
 }
 
 private extension ListViewController {
@@ -133,14 +131,15 @@ private class ImageStub: FeedImageCellControllerDelegate {
     init(description: String?, location: String?, image: UIImage?) {
         self.viewModel = FeedImageViewModel(
             description: description,
-            location: location)
+            location: location
+        )
         self.image = image
     }
 
     func didRequestImage() {
         controller?.display(ResourceLoadingViewModel(isLoading: false))
 
-        if let image = image {
+        if let image {
             controller?.display(image)
             controller?.display(ResourceErrorViewModel(message: .none))
         } else {

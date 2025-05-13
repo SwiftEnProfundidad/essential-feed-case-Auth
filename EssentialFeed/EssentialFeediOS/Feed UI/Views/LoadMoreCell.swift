@@ -5,7 +5,6 @@
 import UIKit
 
 public class LoadMoreCell: UITableViewCell {
-
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .medium)
         contentView.addSubview(spinner)
@@ -55,5 +54,4 @@ public class LoadMoreCell: UITableViewCell {
         get { messageLabel.text }
         set { messageLabel.text = newValue }
     }
-
 }

@@ -23,7 +23,7 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
     }
 
     // MARK: - Helpers
-	
+
     private func makeSUT(
         file: StaticString = #file, line: UInt = #line
     ) -> (sut: UserRegistrationUseCase, httpClient: RegistrationHTTPClientSpy, persistenceSpy: RegistrationPersistenceSpy, notifierSpy: UserRegistrationNotifierSpy) {
@@ -80,7 +80,7 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         guard !keychainSaveResults.isEmpty else { return .success }
         return keychainSaveResults.removeFirst()
     }
-    
+
     var keychainLoadKeyCalls = [String]()
     var keychainLoadDataToReturn: Data?
     func load(forKey key: String) -> Data? {
@@ -94,14 +94,14 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
         tokenStorageSaveTokenCalls.append(token)
     }
-    
+
     var refreshTokenToLoad: String?
     var tokenStorageShouldLoadRefreshTokenThrowError = false
     func loadRefreshToken() async throws -> String? {
         if tokenStorageShouldLoadRefreshTokenThrowError { throw TestError(id: "loadRefreshTokenError") }
         return refreshTokenToLoad
     }
-	
+
     var offlineStoreSaveCalls = [UserRegistrationData]()
     var offlineStoreShouldSaveThrowError = false
     func save(_ data: UserRegistrationData) async throws {
@@ -116,26 +116,26 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
     // func save(credentials: LoginCredentials) async throws {}
     // func loadCredentials() async -> LoginCredentials? { nil }
     // func deleteCredentials() async throws {}
-    
+
     // Para KeychainDeletable (si el spy necesita ser más completo que solo KeychainSavable)
     var keychainDeleteKeyCalls = [String]()
     var keychainDeleteResults: [Bool] = []
-	
+
     func delete(forKey key: String) -> Bool { // Este método NO es parte de KeychainSavable, solo de KeychainFull/Deletable
         keychainDeleteKeyCalls.append(key)
         guard !keychainDeleteResults.isEmpty else { return true } // Devuelve true por defecto si no hay nada preconfigurado
         return keychainDeleteResults.removeFirst()
     }
-    
+
     var tokenStorageSaveRefreshTokenCalls = [String?]()
     // func save(refreshToken: String?) async throws { ... }
-    
+
     var tokenToLoad: Token?
     // func loadToken() async -> Token? { return tokenToLoad }
-    
+
     var tokenStorageDeleteTokenCalled = false
     // func deleteToken() async throws { tokenStorageDeleteTokenCalled = true }
-    
+
     var tokenStorageDeleteRefreshTokenCalled = false
     // func deleteRefreshToken() async throws { tokenStorageDeleteRefreshTokenCalled = true }
 }

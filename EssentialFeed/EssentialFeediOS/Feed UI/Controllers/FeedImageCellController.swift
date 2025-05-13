@@ -2,8 +2,8 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import UIKit
 import EssentialFeed
+import UIKit
 
 public protocol FeedImageCellControllerDelegate {
     func didRequestImage()
@@ -26,12 +26,11 @@ public final class FeedImageCellController: NSObject {
 }
 
 extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, UITableViewDataSourcePrefetching {
-
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         1
     }
 
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt _: IndexPath) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
         cell?.locationContainer.isHidden = !viewModel.hasLocation
         cell?.locationLabel.text = viewModel.location
@@ -44,19 +43,19 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         return cell!
     }
 
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
         selection()
     }
 
-    public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_: UITableView, didEndDisplaying _: UITableViewCell, forRowAt _: IndexPath) {
         cancelLoad()
     }
 
-    public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    public func tableView(_: UITableView, prefetchRowsAt _: [IndexPath]) {
         delegate.didRequestImage()
     }
 
-    public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+    public func tableView(_: UITableView, cancelPrefetchingForRowsAt _: [IndexPath]) {
         cancelLoad()
     }
 

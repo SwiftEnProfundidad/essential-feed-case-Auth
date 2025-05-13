@@ -48,7 +48,7 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
     }
 
     private func failed() -> Result<Void, Error> {
-        return .failure(LocalFeedImageDataLoader.SaveError.failed)
+        .failure(LocalFeedImageDataLoader.SaveError.failed)
     }
 
     private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: Result<Void, Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -60,13 +60,14 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
         case (.success, .success):
             break
 
-        case (.failure(let receivedError as LocalFeedImageDataLoader.SaveError),
-              .failure(let expectedError as LocalFeedImageDataLoader.SaveError)):
+        case let (
+            .failure(receivedError as LocalFeedImageDataLoader.SaveError),
+            .failure(expectedError as LocalFeedImageDataLoader.SaveError)
+        ):
             XCTAssertEqual(receivedError, expectedError, file: file, line: line)
 
         default:
             XCTFail("Expected result \(expectedResult), got \(receivedResult) instead", file: file, line: line)
         }
     }
-
 }

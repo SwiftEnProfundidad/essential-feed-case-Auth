@@ -44,7 +44,7 @@ extension ManagedFeedImage {
     }
 
     var local: LocalFeedImage {
-        return LocalFeedImage(id: id, description: imageDescription, location: location, url: url)
+        LocalFeedImage(id: id, description: imageDescription, location: location, url: url)
     }
 
     override func prepareForDeletion() {

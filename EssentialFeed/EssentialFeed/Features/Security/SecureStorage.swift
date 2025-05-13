@@ -23,7 +23,7 @@ public protocol EncryptionService {
     func decrypt(_ data: Data) throws -> Data
 }
 
-public typealias SecureStore = SecureStoreWriter & SecureStoreReader & SecureStoreDeleter
+public typealias SecureStore = SecureStoreDeleter & SecureStoreReader & SecureStoreWriter
 
 public final class SecureStorage {
     private let store: SecureStore
@@ -36,7 +36,7 @@ public final class SecureStorage {
 
     public func protectionLevel(for data: Data) -> SecureStorageProtectionLevel {
         guard let content = String(data: data, encoding: .utf8) else {
-            return .high  // Si no podemos determinar el contenido, usamos el nivel más alto por seguridad
+            return .high // Si no podemos determinar el contenido, usamos el nivel más alto por seguridad
         }
 
         let lowercaseContent = content.lowercased()
@@ -61,7 +61,7 @@ public final class SecureStorage {
         }
 
         if capitalizedWords.count >= 2 {
-            return .medium  // Probablemente un nombre completo
+            return .medium // Probablemente un nombre completo
         }
 
         return .low

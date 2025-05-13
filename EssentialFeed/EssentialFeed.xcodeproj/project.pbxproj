@@ -1594,6 +1594,7 @@
 			buildPhases = (
 				080EDEEC21B6DA7E00813479 /* Headers */,
 				B4CE05392DCCE61B00EAE847 /* ShellScript */,
+				B417AE432DCF4A2C0096D12B /* Run Script */,
 				080EDEED21B6DA7E00813479 /* Sources */,
 				080EDEEE21B6DA7E00813479 /* Frameworks */,
 				080EDEEF21B6DA7E00813479 /* Resources */,
@@ -1900,6 +1901,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		B417AE432DCF4A2C0096D12B /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${DERIVED_FILE_DIR}/swiftformat.done",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
+		};
 		B4CE05392DCCE61B00EAE847 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -2491,6 +2512,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2522,6 +2544,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2546,6 +2569,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2567,6 +2591,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2587,6 +2612,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2608,6 +2634,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2629,6 +2656,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2650,6 +2678,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2675,6 +2704,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2705,6 +2735,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2730,6 +2761,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2752,6 +2784,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2776,6 +2809,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2804,6 +2838,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2832,6 +2867,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2855,6 +2891,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;

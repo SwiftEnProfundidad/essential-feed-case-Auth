@@ -4,7 +4,6 @@ import XCTest
 // CU: Seguridad de almacenamiento en Keychain
 // Checklist: Validar operaciones seguras en Keychain
 final class KeychainSecureStorageTests: XCTestCase {
-	
     func test_saveData_succeeds_whenKeychainSavesSuccessfully() {
         let (sut, keychain, _, _) = makeDefaultSUT()
         let key = "test-key"
@@ -78,7 +77,7 @@ final class KeychainSecureStorageTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeDefaultSUT(file: StaticString = #file, line: UInt = #line) -> (KeychainSecureStorage, KeychainFullSpy, KeychainFullSpy, KeychainFullSpy) {
-        return makeSUT(
+        makeSUT(
             keychain: makeKeychainFullSpy(),
             fallback: makeKeychainFullSpy(),
             alternative: makeKeychainFullSpy(),
@@ -99,5 +98,4 @@ final class KeychainSecureStorageTests: XCTestCase {
         trackForMemoryLeaks(alternative, file: file, line: line)
         return (sut, keychain, fallback, alternative)
     }
-
 }

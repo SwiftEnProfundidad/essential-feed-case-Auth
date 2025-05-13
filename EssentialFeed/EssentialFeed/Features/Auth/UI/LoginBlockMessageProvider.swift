@@ -9,38 +9,41 @@ public protocol LoginBlockMessageProvider {
 
 public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
     public init() {}
-    public func message(forAttempts attempts: Int, maxAttempts: Int) -> String {
-        return "Too many attempts. Please wait 5 minutes or reset your password."
+    public func message(forAttempts _: Int, maxAttempts _: Int) -> String {
+        "Too many attempts. Please wait 5 minutes or reset your password."
     }
+
     public func message(for error: LoginError) -> String {
         switch error {
         case .invalidCredentials:
-            return "Invalid credentials."
+            "Invalid credentials."
         case .invalidEmailFormat:
-            return "Email format is invalid."
+            "Email format is invalid."
         case .invalidPasswordFormat:
-            return "Password cannot be empty."
+            "Password cannot be empty."
         case .network:
-            return "Could not connect. Please try again."
+            "Could not connect. Please try again."
         case .unknown:
-            return "Something went wrong. Please try again."
+            "Something went wrong. Please try again."
         case .tokenStorageFailed:
-            return "Token storage failed."
+            "Token storage failed."
         case .noConnectivity:
-            return "No connectivity."
+            "No connectivity."
         case .offlineStoreFailed:
-            return "Offline store failed."
+            "Offline store failed."
         }
     }
+
     public func message(for validation: LoginValidationError) -> String {
         switch validation {
         case .emptyEmail, .invalidEmailFormat:
-            return "Email format is invalid."
+            "Email format is invalid."
         case .emptyPassword, .invalidPasswordFormat:
-            return "Password cannot be empty."
+            "Password cannot be empty."
         }
     }
+
     public func messageForMaxAttemptsReached() -> String {
-        return "Too many attempts. Please wait 5 minutes or reset your password."
+        "Too many attempts. Please wait 5 minutes or reset your password."
     }
 }

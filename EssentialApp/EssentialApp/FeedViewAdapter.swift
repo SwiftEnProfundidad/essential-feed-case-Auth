@@ -30,7 +30,7 @@ final class FeedViewAdapter: ResourceView {
     }
 
     func display(_ viewModel: Paginated<FeedImage>) {
-        guard let controller = controller else { return }
+        guard let controller else { return }
 
         var feedCellControllers = self.currentFeed
 
@@ -48,13 +48,15 @@ final class FeedViewAdapter: ResourceView {
                 delegate: adapter,
                 selection: { [selection] in
                     selection(model)
-                })
+                }
+            )
 
             adapter.presenter = LoadResourcePresenter(
                 resourceView: WeakRefVirtualProxy(view),
                 loadingView: WeakRefVirtualProxy(view),
                 errorView: WeakRefVirtualProxy(view),
-                mapper: UIImage.tryMake)
+                mapper: UIImage.tryMake
+            )
 
             let cellController = CellController(id: model, view)
             feedCellControllers[model] = cellController
@@ -79,7 +81,8 @@ final class FeedViewAdapter: ResourceView {
                 selection: selection
             ),
             loadingView: WeakRefVirtualProxy(loadMore),
-            errorView: WeakRefVirtualProxy(loadMore))
+            errorView: WeakRefVirtualProxy(loadMore)
+        )
 
         let loadMoreSection = [CellController(id: UUID(), loadMore)]
 

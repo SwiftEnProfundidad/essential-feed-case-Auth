@@ -150,5 +150,4 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
             XCTFail("Expected result \(expectedResult), got \(receivedResult) instead", file: file, line: line)
         }
     }
-
 }

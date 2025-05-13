@@ -83,7 +83,6 @@ extension FeedStoreSpecs where Self: XCTestCase {
 
         expect(sut, toRetrieve: .success(.none), file: file, line: line)
     }
-
 }
 
 extension FeedStoreSpecs where Self: XCTestCase {

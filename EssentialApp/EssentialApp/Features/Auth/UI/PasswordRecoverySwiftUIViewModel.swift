@@ -18,9 +18,9 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
     public var feedbackTitle: String {
         if isSuccess {
-            return "Éxito"
+            "Éxito"
         } else {
-            return "Error"
+            "Error"
         }
     }
 
@@ -40,7 +40,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         guard !email.isEmpty else { return }
         lastRequestedEmail = email
         recoveryUseCase.recoverPassword(email: email) { [weak self] (result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) in
-            guard let self = self, self.email == self.lastRequestedEmail else { return }
+            guard let self, self.email == self.lastRequestedEmail else { return }
             self.presenter?.didRecoverPassword(with: result)
         }
     }
@@ -53,8 +53,9 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 }
 
 // MARK: - PasswordRecoveryView
-extension PasswordRecoverySwiftUIViewModel {
-    public func display(_ viewModel: PasswordRecoveryViewModel) {
+
+public extension PasswordRecoverySwiftUIViewModel {
+    func display(_ viewModel: PasswordRecoveryViewModel) {
         feedbackMessage = viewModel.message
         isSuccess = viewModel.isSuccess
         showingFeedback = true

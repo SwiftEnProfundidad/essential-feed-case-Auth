@@ -14,7 +14,7 @@ extension FeedUIIntegrationTests {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
         }
 
-        feed.enumerated().forEach { index, image in
+        for (index, image) in feed.enumerated() {
             assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
         }
 

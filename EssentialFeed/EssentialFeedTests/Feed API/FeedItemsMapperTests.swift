@@ -36,13 +36,15 @@ class FeedItemsMapperTests: XCTestCase {
     func test_map_deliversItemsOn200HTTPResponseWithJSONItems() throws {
         let item1 = makeItem(
             id: UUID(),
-            imageURL: URL(string: "http://a-url.com")!)
+            imageURL: URL(string: "http://a-url.com")!
+        )
 
         let item2 = makeItem(
             id: UUID(),
             description: "a description",
             location: "a location",
-            imageURL: URL(string: "http://another-url.com")!)
+            imageURL: URL(string: "http://another-url.com")!
+        )
 
         let json = makeItemsJSON([item1.json, item2.json])
 
@@ -65,5 +67,4 @@ class FeedItemsMapperTests: XCTestCase {
 
         return (item, json)
     }
-
 }

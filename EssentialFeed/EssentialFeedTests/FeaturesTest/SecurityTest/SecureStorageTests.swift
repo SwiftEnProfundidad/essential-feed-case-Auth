@@ -4,7 +4,6 @@ import XCTest
 // CU: SystemKeychain
 // Checklist: Verify system keychain operations are secure and reliable
 final class SecureStorageTests: XCTestCase {
-
     func test_init_doesNotMessageStoreUponCreation() {
         let (_, store, encryptionService) = makeSUT()
 
@@ -26,7 +25,7 @@ final class SecureStorageTests: XCTestCase {
         let (sut, _, _) = makeSUT()
         let sensitiveKeywords = ["password123", "token123", "secret_key", "auth_token", "credentials123"]
 
-        sensitiveKeywords.forEach { keyword in
+        for keyword in sensitiveKeywords {
             let data = keyword.data(using: .utf8)!
             let level = sut.protectionLevel(for: data)
             XCTAssertEqual(level, .high, "Expected high protection for sensitive keyword: \(keyword)")
@@ -37,7 +36,7 @@ final class SecureStorageTests: XCTestCase {
         let (sut, _, _) = makeSUT()
         let personalKeywords = ["John Doe", "email@test.com", "phone: 123456", "address: street", "birth: 01/01/2000"]
 
-        personalKeywords.forEach { keyword in
+        for keyword in personalKeywords {
             let data = keyword.data(using: .utf8)!
             let level = sut.protectionLevel(for: data)
             XCTAssertEqual(level, .medium, "Expected medium protection for personal data: \(keyword)")

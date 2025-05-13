@@ -2,7 +2,6 @@ import EssentialFeed
 import XCTest
 
 class UserRegistrationUseCaseIntegrationTests: XCTestCase {
-	
     func test_register_withSuccessfulServerResponse_savesTokenAndCredentials() async throws {
         let uniqueUser = UserRegistrationData.makeUnique()
         let expectedToken = Token.make()
@@ -43,7 +42,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         )
 
         switch result {
-        case .success(let registeredUser):
+        case let .success(registeredUser):
             XCTAssertEqual(registeredUser.name, uniqueUser.name)
             XCTAssertEqual(registeredUser.email, uniqueUser.email)
 
@@ -62,7 +61,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
             XCTAssertTrue(persistenceSpy.offlineStoreMessages.isEmpty)
             XCTAssertTrue(notifierSpy.receivedErrors.isEmpty, "Expected no errors to be notified on success")
 
-        case .failure(let error):
+        case let .failure(error):
             XCTFail("Expected successful registration, got \(error) instead")
         }
     }
@@ -101,7 +100,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         case .success:
             XCTFail("Se esperaba un fallo por conectividad, pero se obtuvo éxito.")
 
-        case .failure(let error):
+        case let .failure(error):
             XCTAssertEqual(error as? NetworkError, .noConnectivity, "El error devuelto debe ser .noConnectivity")
 
             XCTAssertEqual(persistenceSpy.offlineStoreMessages.count, 1, "OfflineRegistrationStoreSpy debe intentar guardar los datos una vez")
@@ -143,6 +142,7 @@ private class IntegrationPersistenceSpy: KeychainProtocol, TokenStorage, Offline
         case save(Token)
         case loadRefreshToken
     }
+
     var tokenStorageMessages = [TokenStorageMessage]()
     var saveTokenError: Error?
     var loadRefreshTokenCallsCount = 0
@@ -168,6 +168,7 @@ private class IntegrationPersistenceSpy: KeychainProtocol, TokenStorage, Offline
     enum OfflineStoreMessage: Equatable {
         case save(UserRegistrationData)
     }
+
     var offlineStoreMessages = [OfflineStoreMessage]()
     var saveOfflineDataError: Error?
 
@@ -184,10 +185,12 @@ private struct ServerAuthResponse: Codable {
         let name: String
         let email: String
     }
+
     struct TokenPayload: Codable {
         let value: String
         let expiry: Date
     }
+
     let user: UserPayload
     let token: TokenPayload
 }

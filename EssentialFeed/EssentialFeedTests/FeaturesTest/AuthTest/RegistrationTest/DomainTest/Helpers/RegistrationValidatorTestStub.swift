@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 
@@ -11,13 +10,13 @@ public final class RegistrationValidatorTestStub: RegistrationValidatorProtocol 
         self.errorToReturn = errorToReturn
     }
 
-    public func validate(name: String, email: String, password: String) -> RegistrationValidationError? {
-        return errorToReturn
+    public func validate(name _: String, email _: String, password _: String) -> RegistrationValidationError? {
+        errorToReturn
     }
 }
 
 final class RegistrationValidatorAlwaysValid: RegistrationValidatorProtocol {
-    func validate(name: String, email: String, password: String) -> RegistrationValidationError? {
-        return nil
+    func validate(name _: String, email _: String, password _: String) -> RegistrationValidationError? {
+        nil
     }
 }

@@ -11,11 +11,13 @@ public final class LoginViewModel: ObservableObject {
             if oldValue != username { errorMessage = nil }
         }
     }
+
     @Published public var password: String = "" {
         didSet {
             if oldValue != password { errorMessage = nil }
         }
     }
+
     @Published public var errorMessage: String?
     @Published public var loginSuccess: Bool = false
     @Published public var isLoginBlocked = false
@@ -97,7 +99,7 @@ public final class LoginViewModel: ObservableObject {
                 isLoginBlocked = false
             }
             onAuthenticated?()
-        case .failure(let error):
+        case let .failure(error):
             await handleFailedLogin(username: trimmedUsername, error: error)
             if case .network = error {
                 let request = LoginRequest(username: trimmedUsername, password: trimmedPassword)
@@ -132,7 +134,7 @@ public final class LoginViewModel: ObservableObject {
         let attempts = failedAttemptsStore.getAttempts(for: username)
 
         await MainActor.run { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             if attempts < self.maxFailedAttempts {
                 self.errorMessage = self.blockMessageProvider.message(for: error)
             } else {
@@ -156,7 +158,7 @@ public final class LoginViewModel: ObservableObject {
 
     private static func isValidPassword(_ password: String) -> Bool {
         // Validación mínima: al menos 8 caracteres
-        return password.count >= 8
+        password.count >= 8
     }
 
     private func checkAccountUnlock(for username: String) {

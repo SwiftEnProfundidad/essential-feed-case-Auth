@@ -35,7 +35,7 @@ class URLProtocolStub: URLProtocol {
         }
     }
 
-    override class func canInit(with request: URLRequest) -> Bool {
+    override class func canInit(with _: URLRequest) -> Bool {
         true
     }
 

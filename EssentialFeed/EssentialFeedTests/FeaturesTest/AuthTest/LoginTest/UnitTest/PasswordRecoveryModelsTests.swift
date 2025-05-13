@@ -15,9 +15,11 @@ final class PasswordRecoveryModelsTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
     private func makeRequest(email: String) -> PasswordRecoveryRequest {
         PasswordRecoveryRequest(email: email)
     }
+
     private func makeResponse(message: String) -> PasswordRecoveryResponse {
         PasswordRecoveryResponse(message: message)
     }

@@ -21,5 +21,4 @@ class FeedPresenterTests: XCTestCase {
         }
         return value
     }
-
 }

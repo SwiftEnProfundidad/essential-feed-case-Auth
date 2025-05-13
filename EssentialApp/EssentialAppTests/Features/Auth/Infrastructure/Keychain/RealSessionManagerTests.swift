@@ -24,6 +24,7 @@ final class RealSessionManagerTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
     private func makeSUT(keychain: KeychainStore, file: StaticString = #file, line: UInt = #line) -> RealSessionManager {
         let sut = RealSessionManager(keychain: keychain)
         trackForMemoryLeaks(sut, file: file, line: line)

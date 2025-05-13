@@ -136,29 +136,32 @@ flowchart TD
     B -- returns String? or void, no error mapping granular --> A
 ```
 
-#### 🗂️ Tabla de trazabilidad técnica <-> tests (Revisada)
+#### 🗂️ Technical Traceability Table <-> Tests (Reviewed) 
 
-| 🛠️ Subtarea técnica (BDD Original)                                    | ✅ Test que la cubre (real/propuesto)                     | Tipo de test         | Estado (Revisado) | Comentario Breve                                                                 |
+| 🛠️ Technical Task (BDD Original)                                    | ✅ Test that covers it (real/proposed)                     | Test Type         | Status (Reviewed) | Brief Comment                                                                 |
 |-----------------------------------------------------------------------|-----------------------------------------------------------|----------------------|-------------------|----------------------------------------------------------------------------------|
-| Determinar nivel de protección necesario para cada dato                 | *No directamente testeable a nivel de `KeychainHelper`*     | *Configuración*      | 🟡                | Depende de cómo se usa `KeychainHelper` y los atributos por defecto de Keychain. |
-| Encriptar la información antes de almacenar si es necesario             | *Keychain lo hace por defecto*                            | *Sistema Operativo*  | ✅                | No es responsabilidad de `KeychainHelper` implementar la encriptación.        |
-| Almacenar en Keychain con configuración adecuada                        | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integración          | ✅                | Para Strings.                                                                    |
-| Verificar que la información se almacena correctamente                  | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integración          | ✅                | Para Strings.                                                                    |
-| Intentar almacenamiento alternativo si falla el Keychain                | *No implementado*                                         | N/A                  | ❌                | `KeychainHelper` no tiene lógica de fallback.                                   |
-| Notificar error si persiste el fallo                                    | *No implementado*                                         | N/A                  | 🟡                | `KeychainHelper.get` devuelve `nil`, no errores específicos.                     |
-| Limpiar datos corruptos y solicitar nueva autenticación                 | *No implementado*                                         | N/A                  | ❌                | Lógica de aplicación, no de `KeychainHelper`.                                   |
-| Eliminar correctamente valores previos antes de guardar uno nuevo       | `test_set_overwritesPreviousValue` (`KeychainHelperTests`)| Integración          | ✅                |                                                                                  |
-| Soportar claves unicode y datos binarios grandes                        | `KeychainHelperTests` usa Strings.                        | Integración          | 🟡                | `KeychainHelper` limitado a Strings. Soporte binario requeriría cambios.       |
-| Robustez ante concurrencia                                              | *No hay tests específicos de concurrencia*                  | Integración          | 🟡                | Operaciones Keychain individuales son atómicas. `KeychainHelper` no añade más. |
-| Cover all possible Keychain API error codes                | `KeychainHelperTests` covers `nil` on get.                  | Unit/Integration    | 🟡                | No granular mapping of `OSStatus`.                                               |
-| Return 'false' if the key is empty                        | *Not explicitly tested*                                     | Unit                | 🟡                | Depends on Keychain API behavior with empty keys.                                |
-| Return 'false' if the data is empty                       | `KeychainHelperTests` does not test saving empty string.    | Unit                | 🟡                |                                                                                  |
-| Return 'false' if the key contains only spaces            | *Not explicitly tested*                                     | Unit                | 🟡                |                                                                                  |
-| Return 'false' if the Keychain operation fails (simulated)| `test_get_returnsNilForNonexistentKey`                      | Unit/Integration    | ✅                | Covers the "not found" case.                                                     |
-| Real persistence: save and load in Keychain               | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration         | ✅                |                                                                                  |
-| Force duplicate error and ensure `handleDuplicateItem` is executed | *Not applicable*                                    | N/A                 | ✅                | `KeychainHelper` prevents duplicates by deleting first.                          |
-| Validate that `handleDuplicateItem` returns correctly...  | *Not applicable*                                            | N/A                 | ✅                |                                                                                  |
-| Ensure the `NoFallback` strategy returns `.failure` and `nil`... | *Not implemented*                                   | N/A                 | ❌                | No fallback strategy.                                                            |
+| 🟡 Determine the necessary protection level for each piece of data                  | *Not directly testable at the `KeychainHelper` level*                  | *Configuration*   | 🟡                | Depends on how `KeychainHelper` is used and the default Keychain attributes.   |
+| 🟡 Encrypt the information before storing if necessary              | *Keychain does it by default*                                           | *Operating System*| ✅                | It is not the responsibility of `KeychainHelper` to implement encryption.             |
+| Store in Keychain with proper configuration                         | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
+| Verify that the information is stored correctly                      | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
+| Attempt alternative storage if Keychain fails                | *No fallback logic in `KeychainHelper`*                            | N/A               | ❌                | *Not implemented*                                                                |
+| Notify error if failure persists                                    | *No implementado*                                   | N/A               | 🟡                | *Not implemented*                                                                |
+| Clean up corrupted data and request new authentication                 | *No implementado*                                   | N/A               | ❌                | Application logic, not `KeychainHelper`.                                   |
+| Properly delete previous values before saving a new one       | `test_set_overwritesPreviousValue` (`KeychainHelperTests`)               | Integration        | ✅                |                                                                              |    |
+| Support unicode keys and large binary data                        | `KeychainHelperTests` uses Strings. Binary support would require changes.   | Integration        | 🟡                | `KeychainHelper` limited to Strings. Binary support would require changes.       |
+| Robustness against concurrency                                             | *No specific concurrency tests*                                     | Integration        | 🟡                | Individual Keychain operations are atomic. `KeychainHelper` adds no more. | Unit/Integration    | 🟡                | No granular mapping of `OSStatus`.                                               |
+| Return 'false' if the key is empty                                      | *Not explicitly tested*                                                    | Unit               | 🟡                | Depends on Keychain API behavior with empty keys.                             |   |
+| Return 'false' if the data is empty                                     | `KeychainHelperTests` does not test saving empty string.                   | Unit               | 🟡                |                                                                              |    |
+| Return 'false' if the key contains only spaces                          | *Not explicitly tested*                                                    | Unit               | 🟡                |                                                                              |    |
+| Return 'false' if the Keychain operation fails (simulated)              | `test_get_returnsNilForNonexistentKey`                                     | Unit/Integration   | ✅                | Covers the "not found" case.                                                |     |
+| Real persistence: save and load in Keychain                             | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)                 | Integration        | ✅                |                                                                              |    |
+| Force duplicate error and ensure `handleDuplicateItem` is executed      | *Not applicable*                                                           | N/A               | ✅                | `KeychainHelper` prevents duplicates by deleting first.                       |   |
+| Validate that `handleDuplicateItem` returns correctly...                | *Not applicable*                                                           | N/A               | ✅                |                                                                              |
+| Ensure the `NoFallback` strategy returns `.failure` and `nil`...        | *Not implemented*                                                          | N/A               | ❌                | No fallback strategy.                                                         |   |
+| Cover all internal error paths and edge cases of helpers/factories used in tests | `KeychainHelperTests` covers basic CRUD and non-existent keys cases. | Unit               | ✅                |                                                                              |    |
+| Execute internal save, delete, and load closures                        | No complex closures in `KeychainHelper`.                                  | Unit               | ✅                |                                                                              |    |
+| Real integration test with system Keychain                              | Covered by `KeychainHelperTests`.                                     | Integration        | ✅                |                                                                              |    |
+| Coverage of all critical code branches                                  | For `KeychainHelper`, the main CRUD branches are covered in tests.        | Unit               | ✅                |                                                                              |    |
 
 ---
 
@@ -203,7 +206,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
 - [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) 
-    // *Nota: esto parece referirse a KeychainSpy, pero en UserRegistration usamos OfflineStoreSpy y TokenStorageSpy. Quizás este ítem es más genérico.*
+    // *Note: this seems to refer to KeychainSpy, but in UserRegistration we use OfflineStoreSpy and TokenStorageSpy. Maybe this item is more generic.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
 ---
@@ -293,9 +296,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
         - [🚧] Write happy-path integration test (valid creds → successObserver → UI shows success state)
-        - [🔜] Capturar snapshot de la pantalla de éxito y añadir referencia
+        - [🔜] Capture a snapshot of the success screen and add a reference
         - [🔜] Write sad-path integration test (API error → failureObserver → UI shows error)
-        - [🔜] Capturar snapshot de la pantalla de error y añadir referencia
+        - [🔜] Capture a snapshot of the error screen and add a reference
         - [🔜] Ensure tests run in CI (update scheme + record on first run)
 
     - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
@@ -381,7 +384,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-### Flujo del diagrama técnico login
+### Login Technical Diagram Flow
 
 ```mermaid
 flowchart TD
@@ -390,12 +393,12 @@ flowchart TD
     C --> D[LoginValidator]
     C --> E[HTTPClient]
     
-    E -- Token Exitoso --> F[Token Almacenado y Sesión Activa]
-    F --> G[UI: Notificar Login Exitoso]
+    E -- Successful Token --> F[Token Stored and Active Session]
+    F --> G[UI: Notify Successful Login]
 
-    E -- Credenciales Inválidas --> H[UI: Notificar Error Credenciales]
-    E -- Error Conectividad --> I[UI: Notificar Error Conexión]
-    E -- Otro Error Servidor --> J[UI: Notificar Error General]
+    E -- Invalid Credentials --> H[UI: Notify Credentials Error]
+    E -- Connectivity Error --> I[UI: Notify Connection Error]
+    E -- Other Server Error --> J[UI: Notify General Error]
 
 ``` 
 

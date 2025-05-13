@@ -7,15 +7,15 @@ import Foundation
 import UIKit
 
 func anyNSError() -> NSError {
-    return NSError(domain: "any error", code: 0)
+    NSError(domain: "any error", code: 0)
 }
 
 func anyURL() -> URL {
-    return URL(string: "http://any-url.com")!
+    URL(string: "http://any-url.com")!
 }
 
 func anyData() -> Data {
-    return Data("any data".utf8)
+    Data("any data".utf8)
 }
 
 // ADD: Helper para obtener datos PNG "estabilizados"
@@ -25,11 +25,11 @@ public func stabilizedPNGData(for color: UIColor) -> Data {
 }
 
 func uniqueFeed() -> [FeedImage] {
-    return [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
+    [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
 }
 
 private class DummyView: ResourceView {
-    func display(_ viewModel: Any) {}
+    func display(_: Any) {}
 }
 
 var loadError: String {

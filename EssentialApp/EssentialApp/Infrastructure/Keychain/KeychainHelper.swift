@@ -20,13 +20,11 @@ public final class KeychainHelper: KeychainStore {
 
     public func set(_ value: String, for key: String) {
         let data = value.data(using: .utf8)!
-        // Delete any existing item
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
         SecItemDelete(query as CFDictionary)
-        // Add new item
         let attributes: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,

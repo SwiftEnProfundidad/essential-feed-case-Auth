@@ -2,9 +2,8 @@ import EssentialFeed
 import Foundation
 
 final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegistrationLoader, OfflineRegistrationDeleter {
-
     // MARK: - Message tracking
-	
+
     enum Message: Equatable {
         case save(UserRegistrationData)
         case loadAll
@@ -14,7 +13,7 @@ final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegist
     private(set) var messages: [Message] = []
 
     // MARK: - Stubbed results / errors
-	
+
     var saveError: Swift.Error?
     private var loadAllResult: Result<[UserRegistrationData], Swift.Error> = .success([])
     var deleteError: Swift.Error?
@@ -29,9 +28,9 @@ final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegist
     func loadAll() async throws -> [UserRegistrationData] {
         messages.append(.loadAll)
         switch loadAllResult {
-        case .success(let registrations):
+        case let .success(registrations):
             return registrations
-        case .failure(let error):
+        case let .failure(error):
             throw error
         }
     }

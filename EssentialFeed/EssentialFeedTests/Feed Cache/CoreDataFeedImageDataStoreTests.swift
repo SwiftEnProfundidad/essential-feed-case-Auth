@@ -54,22 +54,22 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
     }
 
     private func notFound() -> Result<Data?, Error> {
-        return .success(.none)
+        .success(.none)
     }
 
     private func found(_ data: Data) -> Result<Data?, Error> {
-        return .success(data)
+        .success(data)
     }
 
     private func localImage(url: URL) -> LocalFeedImage {
-        return LocalFeedImage(id: UUID(), description: "any", location: "any", url: url)
+        LocalFeedImage(id: UUID(), description: "any", location: "any", url: url)
     }
 
     private func expect(_ sut: CoreDataFeedStore, toCompleteRetrievalWith expectedResult: Result<Data?, Error>, for url: URL, file: StaticString = #filePath, line: UInt = #line) {
         let receivedResult = Result { try sut.retrieve(dataForURL: url) }
 
         switch (receivedResult, expectedResult) {
-        case let (.success( receivedData), .success(expectedData)):
+        case let (.success(receivedData), .success(expectedData)):
             XCTAssertEqual(receivedData, expectedData, file: file, line: line)
 
         default:
@@ -86,5 +86,4 @@ class CoreDataFeedImageDataStoreTests: XCTestCase {
             XCTFail("Failed to insert \(data) with error \(error)", file: file, line: line)
         }
     }
-
 }

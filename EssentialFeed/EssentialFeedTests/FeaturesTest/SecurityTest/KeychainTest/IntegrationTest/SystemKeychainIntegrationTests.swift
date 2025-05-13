@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -19,6 +18,7 @@ final class SystemKeychainIntegrationTests: XCTestCase {
     }
 
     // MARK: - Error Handling
+
     // Checklist:
     func test_save_fails_withEmptyKey() {
         let testKey = uniqueTestKey()
@@ -45,7 +45,8 @@ final class SystemKeychainIntegrationTests: XCTestCase {
         let testData = uniqueTestData()
         let sut = makeSystemKeychainSUT(testKey: testKey)
         XCTAssertEqual(
-            sut.save(data: testData, forKey: testKey), .success, "Should save data in real Keychain")
+            sut.save(data: testData, forKey: testKey), .success, "Should save data in real Keychain"
+        )
         let loaded = sut.load(forKey: testKey)
         XCTAssertEqual(loaded, testData, "Should persist and load data between saves")
     }
@@ -54,16 +55,15 @@ final class SystemKeychainIntegrationTests: XCTestCase {
 
     func makeSystemKeychainSUT(testKey: String) -> SystemKeychain {
         let sut = SystemKeychain()
-        _ = sut.delete(forKey: testKey)  // Ensure clean state before test
+        _ = sut.delete(forKey: testKey) // Ensure clean state before test
         return sut
     }
 
     func uniqueTestKey() -> String {
-        return "integration-test-key-\(UUID().uuidString)"
+        "integration-test-key-\(UUID().uuidString)"
     }
 
     func uniqueTestData() -> Data {
-        return "integration-data-\(UUID().uuidString)".data(using: .utf8)!
+        "integration-data-\(UUID().uuidString)".data(using: .utf8)!
     }
-
 }

@@ -4,7 +4,7 @@
 
 import Foundation
 
-public final class ImageCommentsMapper {
+public enum ImageCommentsMapper {
     private struct Root: Decodable {
         private let items: [Item]
 
@@ -40,6 +40,6 @@ public final class ImageCommentsMapper {
     }
 
     private static func isOK(_ response: HTTPURLResponse) -> Bool {
-        (200...299).contains(response.statusCode)
+        (200 ... 299).contains(response.statusCode)
     }
 }

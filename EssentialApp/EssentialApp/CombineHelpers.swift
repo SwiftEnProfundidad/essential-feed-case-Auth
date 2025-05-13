@@ -9,7 +9,7 @@ import Foundation
 public extension Paginated {
     init(items: [Item], loadMorePublisher: (() -> AnyPublisher<Self, Error>)?) {
         self.init(items: items, loadMore: loadMorePublisher.map { publisher in
-            return { completion in
+            { completion in
                 publisher().subscribe(Subscribers.Sink(receiveCompletion: { result in
                     if case let .failure(error) = result {
                         completion(.failure(error))
@@ -22,7 +22,7 @@ public extension Paginated {
     }
 
     var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
-        guard let loadMore = loadMore else { return nil }
+        guard let loadMore else { return nil }
 
         return {
             Deferred {
@@ -62,7 +62,7 @@ public extension FeedImageDataLoader {
     typealias Publisher = AnyPublisher<Data, Error>
 
     func loadImageDataPublisher(from url: URL) -> Publisher {
-        return Deferred {
+        Deferred {
             Future { completion in
                 completion(Result {
                     try self.loadImageData(from: url)

@@ -109,5 +109,4 @@ class LoadResourcePresenterTests: XCTestCase {
             messages.insert(.display(resourceViewModel: viewModel))
         }
     }
-
 }

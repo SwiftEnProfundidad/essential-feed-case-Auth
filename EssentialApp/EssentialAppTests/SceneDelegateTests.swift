@@ -6,6 +6,7 @@
 import EssentialFeediOS
 import SwiftUI
 import XCTest
+
 class SceneDelegateTests: XCTestCase {
     func test_configureWindow_setsWindowAsKeyAndVisible() {
         let window = UIWindowSpy()
@@ -31,10 +32,12 @@ class SceneDelegateTests: XCTestCase {
                 "Expected a feed controller as top view controller, got \(String(describing: topController)) instead"
             )
         } else if let hosting = root,
-                  String(describing: type(of: hosting)).contains("UIHostingController") {
+                  String(describing: type(of: hosting)).contains("UIHostingController")
+        {
             XCTAssertTrue(
                 String(describing: type(of: hosting)).contains("LoginView"),
-                "Expected a SwiftUI LoginView as root in UIHostingController")
+                "Expected a SwiftUI LoginView as root in UIHostingController"
+            )
         } else {
             XCTFail("Unexpected rootViewController type: \(String(describing: root))")
         }
@@ -47,5 +50,4 @@ class SceneDelegateTests: XCTestCase {
             makeKeyAndVisibleCallCount = 1
         }
     }
-
 }

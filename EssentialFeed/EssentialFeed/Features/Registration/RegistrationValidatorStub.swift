@@ -4,6 +4,7 @@
 // (El copyright puede variar, lo mantengo como estaba en tu captura)
 
 import Foundation
+
 // import EssentialFeed // No es necesario importar el propio módulo aquí
 
 // CHANGE: Renombrar la clase a RegistrationValidator y hacerla public si es necesario

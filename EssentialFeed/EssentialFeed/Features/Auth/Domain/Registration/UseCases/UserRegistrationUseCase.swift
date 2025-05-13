@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias RegistrationPersistenceInterfaces = KeychainProtocol & TokenStorage & OfflineRegistrationStore
+public typealias RegistrationPersistenceInterfaces = KeychainProtocol & OfflineRegistrationStore & TokenStorage
 
 public struct User: Equatable {
     public let name: String
@@ -48,15 +48,15 @@ public enum NetworkError: Error, Equatable {
     public var errorDescription: String? {
         switch self {
         case .invalidResponse:
-            return "Invalid server response."
-        case .clientError(let statusCode):
-            return "Client error with status code: \(statusCode)."
-        case .serverError(let statusCode):
-            return "Server error with status code: \(statusCode)."
+            "Invalid server response."
+        case let .clientError(statusCode):
+            "Client error with status code: \(statusCode)."
+        case let .serverError(statusCode):
+            "Server error with status code: \(statusCode)."
         case .noConnectivity:
-            return "No internet connection."
+            "No internet connection."
         case .unknown:
-            return "An unknown error occurred."
+            "An unknown error occurred."
         }
     }
 }
@@ -75,10 +75,12 @@ private struct ServerAuthResponse: Codable {
         let name: String
         let email: String
     }
+
     struct TokenPayload: Codable {
         let value: String
         let expiry: Date
     }
+
     let user: UserPayload
     let token: TokenPayload
 }
@@ -147,11 +149,11 @@ public actor UserRegistrationUseCase {
             case 409:
                 notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
                 return .failure(UserRegistrationError.emailAlreadyInUse)
-            case 400..<500:
+            case 400 ..< 500:
                 let clientError = NetworkError.clientError(statusCode: httpResponse.statusCode)
                 notifier?.notifyRegistrationFailed(with: clientError)
                 return .failure(clientError)
-            case 500..<600:
+            case 500 ..< 600:
                 let serverError = NetworkError.serverError(statusCode: httpResponse.statusCode)
                 notifier?.notifyRegistrationFailed(with: serverError)
                 return .failure(serverError)

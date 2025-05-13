@@ -4,9 +4,8 @@
 
 import UIKit
 
-extension UIView {
-
-    public func makeContainer() -> UIView {
+public extension UIView {
+    func makeContainer() -> UIView {
         let container = UIView()
         container.backgroundColor = .clear
         container.addSubview(self)
@@ -21,5 +20,4 @@ extension UIView {
 
         return container
     }
-
 }

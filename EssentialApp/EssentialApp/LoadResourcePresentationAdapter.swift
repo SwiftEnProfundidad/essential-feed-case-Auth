@@ -47,7 +47,8 @@ final class LoadResourcePresentationAdapter<Resource, View: ResourceView> {
                 }, receiveValue: { [weak self] resource in
                     guard let self else { return }
                     self.presenter?.didFinishLoading(with: resource)
-                })
+                }
+            )
     }
 }
 

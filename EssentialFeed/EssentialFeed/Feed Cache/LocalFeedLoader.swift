@@ -21,8 +21,8 @@ extension LocalFeedLoader: FeedCache {
     }
 }
 
-extension LocalFeedLoader {
-    public func load() throws -> [FeedImage] {
+public extension LocalFeedLoader {
+    func load() throws -> [FeedImage] {
         if let cache = try store.retrieve(), FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
             return cache.feed.toModels()
         }
@@ -44,14 +44,14 @@ extension LocalFeedLoader {
     }
 }
 
-private extension Array where Element == FeedImage {
+private extension [FeedImage] {
     func toLocal() -> [LocalFeedImage] {
-        return map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
+        map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
     }
 }
 
-private extension Array where Element == LocalFeedImage {
+private extension [LocalFeedImage] {
     func toModels() -> [FeedImage] {
-        return map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
+        map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
     }
 }

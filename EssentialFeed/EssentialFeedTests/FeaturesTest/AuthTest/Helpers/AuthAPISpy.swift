@@ -1,6 +1,3 @@
-//
-// Copyright 2025 Essential Developer. All rights reserved.
-//
 
 import EssentialFeed
 import Foundation
@@ -10,10 +7,10 @@ public final class AuthAPISpy: UserLoginAPI, UserRegistrationAPI {
     var stubbedResult: Result<LoginResponse, LoginError>?
     private(set) var wasCalled = false
 
-    private(set) public var registrationRequests = [UserRegistrationData]()
+    public private(set) var registrationRequests = [UserRegistrationData]()
     public var registrationResult: Result<UserRegistrationResponse, UserRegistrationError>?
 
-	public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+    public func login(with _: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         wasCalled = true
         guard let result = stubbedResult else {
             XCTFail("API should NOT be called for invalid input. Provide a stubbedResult only when expected.")

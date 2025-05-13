@@ -10,10 +10,10 @@ public struct ResourceErrorViewModel {
     }
 
     public static var noError: ResourceErrorViewModel {
-        return ResourceErrorViewModel(message: nil)
+        ResourceErrorViewModel(message: nil)
     }
 
     public static func error(message: String) -> ResourceErrorViewModel {
-        return ResourceErrorViewModel(message: message)
+        ResourceErrorViewModel(message: message)
     }
 }

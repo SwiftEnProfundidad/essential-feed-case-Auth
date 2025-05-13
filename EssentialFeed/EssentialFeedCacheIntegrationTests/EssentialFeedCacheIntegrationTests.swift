@@ -2,11 +2,10 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import XCTest
 import EssentialFeed
+import XCTest
 
 class EssentialFeedCacheIntegrationTests: XCTestCase {
-
     override func setUp() {
         super.setUp()
 
@@ -178,11 +177,10 @@ class EssentialFeedCacheIntegrationTests: XCTestCase {
     }
 
     private func testSpecificStoreURL() -> URL {
-        return cachesDirectory().appendingPathComponent("\(type(of: self)).store")
+        cachesDirectory().appendingPathComponent("\(type(of: self)).store")
     }
 
     private func cachesDirectory() -> URL {
-        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
-
 }

@@ -5,7 +5,6 @@
 import XCTest
 
 extension XCTestCase {
-
     func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
         let snapshotURL = makeSnapshotURL(named: name, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
@@ -43,7 +42,7 @@ extension XCTestCase {
     }
 
     private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
-        return URL(fileURLWithPath: String(describing: file))
+        URL(fileURLWithPath: String(describing: file))
             .deletingLastPathComponent()
             .appendingPathComponent("snapshots")
             .appendingPathComponent("\(name).png")
@@ -57,5 +56,4 @@ extension XCTestCase {
 
         return data
     }
-
 }

@@ -11,7 +11,7 @@ extension ListViewController {
     }
 
     var isShowingLoadingIndicator: Bool {
-        return refreshControl?.isRefreshing == true
+        refreshControl?.isRefreshing == true
     }
 
     func simulateErrorViewTap() {
@@ -19,7 +19,7 @@ extension ListViewController {
     }
 
     var errorMessage: String? {
-        return errorView.message
+        errorView.message
     }
 
     func numberOfRows(in section: Int) -> Int {
@@ -49,7 +49,7 @@ extension ListViewController {
         let fake = FakeRefreshControl()
 
         if let originalRefreshControl = self.refreshControl {
-            originalRefreshControl.allTargets.forEach { target in
+            for target in originalRefreshControl.allTargets {
                 originalRefreshControl.actions(forTarget: target, forControlEvent: UIControl.Event.valueChanged)?.forEach { action in
                     fake.addTarget(target, action: Selector(action), for: UIControl.Event.valueChanged)
                 }
@@ -74,7 +74,6 @@ extension ListViewController {
 
         self.refreshControl = fake
     }
-
 }
 
 extension ListViewController {
@@ -104,7 +103,7 @@ extension ListViewController {
 extension ListViewController {
     @discardableResult
     func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
-        return feedImageView(at: index) as? FeedImageCell
+        feedImageView(at: index) as? FeedImageCell
     }
 
     @discardableResult
@@ -153,11 +152,11 @@ extension ListViewController {
     }
 
     var isShowingLoadMoreFeedIndicator: Bool {
-        return loadMoreFeedCell()?.isLoading == true
+        loadMoreFeedCell()?.isLoading == true
     }
 
     var loadMoreFeedErrorMessage: String? {
-        return loadMoreFeedCell()?.message
+        loadMoreFeedCell()?.message
     }
 
     var canLoadMoreFeed: Bool {
@@ -169,7 +168,7 @@ extension ListViewController {
     }
 
     func renderedFeedImageData(at index: Int) -> Data? {
-        return simulateFeedImageViewVisible(at: index)?.renderedImage
+        simulateFeedImageViewVisible(at: index)?.renderedImage
     }
 
     func numberOfRenderedFeedImageViews() -> Int {

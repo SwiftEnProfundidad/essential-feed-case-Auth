@@ -401,6 +401,7 @@
 			buildConfigurationList = 0895DAA2234B3B980031BB2D /* Build configuration list for PBXNativeTarget "EssentialApp" */;
 			buildPhases = (
 				B4CE05412DCCE80800EAE847 /* ShellScript */,
+				B417AE442DCF4AFD0096D12B /* Run Script */,
 				0895DA7F234B3B950031BB2D /* Sources */,
 				0895DA80234B3B950031BB2D /* Frameworks */,
 				0895DA81234B3B950031BB2D /* Resources */,
@@ -500,6 +501,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		B417AE442DCF4AFD0096D12B /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${DERIVED_FILE_DIR}/swiftformat.done",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
+		};
 		B4CE05412DCCE80800EAE847 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -754,6 +775,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -773,6 +795,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -794,6 +817,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -817,6 +841,7 @@
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

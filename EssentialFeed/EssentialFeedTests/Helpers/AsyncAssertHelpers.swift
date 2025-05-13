@@ -1,8 +1,7 @@
 import XCTest
 
 public extension XCTestCase {
-
-	func assertEventuallyEqual<T: Equatable>(
+    func assertEventuallyEqual<T: Equatable>(
         _ expression1: @autoclosure @escaping () -> T?,
         _ expression2: @autoclosure @escaping () -> T?,
         timeout: TimeInterval = 0.5,

@@ -235,7 +235,7 @@ class FeedUIIntegrationTests: XCTestCase {
 
         let urlsLoadedInitially = loader.loadedImageURLs
 
-        urlsLoadedInitially.forEach { url in
+        for url in urlsLoadedInitially {
             loader.completeImageLoading(for: url)
         }
         if !urlsLoadedInitially.isEmpty {
@@ -327,11 +327,11 @@ class FeedUIIntegrationTests: XCTestCase {
     }
 
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
-        return FeedImage(id: UUID(), description: description, location: location, url: url)
+        FeedImage(id: UUID(), description: description, location: location, url: url)
     }
 
     private func anyImageData() -> Data {
-        return UIImage.make(withColor: .red).pngData()!
+        UIImage.make(withColor: .red).pngData()!
     }
 
     private func stabilizedPNGData(for color: UIColor) -> Data {

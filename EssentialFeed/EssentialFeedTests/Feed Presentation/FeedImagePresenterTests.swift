@@ -14,5 +14,4 @@ class FeedImagePresenterTests: XCTestCase {
         XCTAssertEqual(viewModel.description, image.description)
         XCTAssertEqual(viewModel.location, image.location)
     }
-
 }

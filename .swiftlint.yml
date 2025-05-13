@@ -1,0 +1,128 @@
+
+// SwiftLint Configuration File
+
+// Reglas que se activan explícitamente (además de las default que no están en disabled_rules)
+opt_in_rules:
+  - empty_count                     # Prefiere `isEmpty` sobre `count == 0`
+  - explicit_init                   # Requiere `MyType.init()` en lugar de `MyType()` para structs
+  - fatal_error_message             # Asegura que `fatalError` tenga un mensaje
+  - force_unwrapping                # AÑADIDO: Para que la configuración de severidad aplique
+  - force_cast                      # AÑADIDO: Para que la configuración de severidad aplique
+  - force_try                       # AÑADIDO: Para que la configuración de severidad aplique
+  - function_default_parameter_at_end # Parámetros con default al final
+  - implicitly_unwrapped_optional   # Evitar IUO a menos que sea necesario (IBOutlet) -> considera severidad 'warning' o 'error'
+  - missing_docs                    # Para documentación
+  # - nslocalizedstring_key         # Si usas NSLocalizedString con frecuencia y quieres validar las keys
+  - private_action                  # @IBAction debe ser private
+  - private_outlet                  # @IBOutlet debe ser private
+  - redundant_discardable_let       # Evitar `let _ = foo()` si `foo()` es `@discardableResult`
+  - sorted_imports                  # Ordenar los imports alfabéticamente
+  - strict_fileprivate              # Usar `private` en lugar de `fileprivate` cuando sea posible
+  - toggle_bool                     # Prefiere `boolean.toggle()` sobre `boolean = !boolean`
+  # --- Sugerencias adicionales opcionales ---
+  - explicit_acl                    # Requiere modificadores de acceso explícitos
+  - explicit_type_interface         # Requiere tipos explícitos para claridad
+  - closure_parameter_position      # Consistencia en closures
+  - let_var_whitespace              # Espaciado en asignaciones
+  - syntactic_sugar                 # Prefiere `Int?` sobre `Optional<Int>`, etc.
+  - unused_closure_parameter        # Advierte sobre parámetros de closure no usados
+  - unused_optional_binding         # Advierte sobre `if let _ = ...` no usado
+  - vertical_whitespace_opening_braces # Línea en blanco antes de la llave de apertura
+  - nimble_operator                 # Específico para tests con Nimble, si lo usas
+
+// Reglas que se desactivan (las que vienen por defecto y no quieres)
+disabled_rules:
+  - todo                            # Desactivar si quieres permitir TODOs temporalmente, sino eliminar para que sea warning/error
+  # - trailing_whitespace           # Considera mantenerla activa para limpieza, pero tu config la ajusta
+  # - identifier_name               # Ya la configuras abajo, así que no necesitas deshabilitarla aquí
+
+// Directorios a incluir en el linting
+included:
+  - EssentialApp/EssentialApp       # Código fuente de la App
+  - EssentialApp/EssentialAppTests  # Tests de la App
+  - EssentialFeed/EssentialFeed     # Código fuente del Módulo EssentialFeed
+  - EssentialFeed/EssentialFeedTests  # Tests del Módulo EssentialFeed
+  # Añade aquí otras rutas si tienes más módulos o carpetas con código Swift que lintar,
+  # siempre relativas a la raíz del proyecto (donde está .swiftlint.yml)
+
+// Directorios y archivos a excluir del linting
+excluded:
+  - Carthage
+  - Pods
+  - fastlane
+  - build
+  - .build
+  - "**/Generated/**" # Patrón para cualquier carpeta "Generated" en cualquier nivel
+  - ".git"
+  - ".github"
+  - "essential-feed-case-study/venv" # Excluir el entorno virtual de Python si está en el proyecto
+
+// Configuración de reglas específicas
+line_length:
+  warning: 120
+  error: 200 # CHANGED: Increased from 160
+  ignores_comments: true
+  ignores_urls: true
+
+cyclomatic_complexity:
+  warning: 10 # Límite para complejidad ciclomática (número de caminos)
+  error: 15
+
+function_body_length:
+  warning: 50 # Líneas en el cuerpo de una función
+  error: 70
+
+file_length:
+  warning: 450 # Líneas en un archivo
+  error: 700 # CHANGED: Increased from 650
+
+type_body_length:
+  warning: 300 # Líneas en el cuerpo de una class/struct/enum
+  error: 600 # CHANGED: Increased from 400
+
+missing_docs:
+  # applies_to_default_imports: true
+  severity: warning
+  # included: # Puedes ser más específico si quieres
+  #   - "Sources/**/*.swift"
+
+identifier_name:
+  min_length: # Longitud mínima
+    warning: 3
+  max_length: # Longitud máxima
+    warning: 45
+    error: 60
+  excluded: # Nombres permitidos aunque no cumplan las reglas de longitud/formato
+    - id
+    - x
+    - y
+    - z
+    - i
+    - j
+    - k
+    - vc # View Controller
+    - vm # View Model
+    - sut # System Under Test (común en tests)
+  # allowed_symbols: ["_"]
+  # validates_start_with_lowercase: true
+
+trailing_whitespace:
+  ignores_empty_lines: true
+  ignores_comments: true
+
+// Reglas de severidad crítica (asegúrate que estén en opt_in_rules si son opt-in)
+force_cast: warning # CHANGED: from error
+force_try: warning # CHANGED: from error
+force_unwrapping: warning # CHANGED: from error
+
+// Regla para 'print'
+custom_rules:
+  no_print:
+    included: ".*\\.swift" # Aplica a todos los archivos Swift
+    excluded: # Excluye los directorios de Test
+      - "EssentialApp/EssentialAppTests/.*"
+      - "EssentialFeed/EssentialFeedTests/.*"
+    name: "No Print Statements"
+    regex: "print\\s*\\(" # Busca la función print(
+    message: "Use a proper logging framework instead of print()."
+    severity: warning # CHANGED: from error

@@ -2,11 +2,10 @@
 //  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
-import XCTest
 import EssentialFeed
+import XCTest
 
 class EssentialFeedAPIEndToEndTests: XCTestCase {
-
     func test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData() async {
         switch await getFeedResult() {
         case let .success(imageFeed)?:
@@ -43,31 +42,31 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) async -> Swift.Result<[FeedImage], Error>? {
+    private func getFeedResult(file _: StaticString = #filePath, line _: UInt = #line) async -> Swift.Result<[FeedImage], Error>? {
         let client = ephemeralClient()
 
         do {
             let (data, response) = try await client.send(URLRequest(url: feedTestServerURL))
-            return .success(try FeedItemsMapper.map(data, from: response))
+            return try .success(FeedItemsMapper.map(data, from: response))
         } catch {
             return .failure(error)
         }
     }
 
-    private func getFeedImageDataResult(file: StaticString = #filePath, line: UInt = #line) async -> Result<Data, Error>? {
+    private func getFeedImageDataResult(file _: StaticString = #filePath, line _: UInt = #line) async -> Result<Data, Error>? {
         let client = ephemeralClient()
         let url = feedTestServerURL.appendingPathComponent("73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")
 
         do {
             let (data, response) = try await client.send(URLRequest(url: url))
-            return .success(try FeedImageDataMapper.map(data, from: response))
+            return try .success(FeedImageDataMapper.map(data, from: response))
         } catch {
             return .failure(error)
         }
     }
 
     private var feedTestServerURL: URL {
-        return URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
     }
 
     private func ephemeralClient(file: StaticString = #filePath, line: UInt = #line) -> HTTPClient {
@@ -77,15 +76,16 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
 
     private func expectedImage(at index: Int) -> FeedImage {
-        return FeedImage(
+        FeedImage(
             id: id(at: index),
             description: description(at: index),
             location: location(at: index),
-            url: imageURL(at: index))
+            url: imageURL(at: index)
+        )
     }
 
     private func id(at index: Int) -> UUID {
-        return UUID(uuidString: [
+        UUID(uuidString: [
             "73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6",
             "BA298A85-6275-48D3-8315-9C8F7C1CD109",
             "5A0D45B3-8E26-4385-8C5D-213E160A5E3C",
@@ -98,7 +98,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
 
     private func description(at index: Int) -> String? {
-        return [
+        [
             "Description 1",
             nil,
             "Description 3",
@@ -111,7 +111,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
 
     private func location(at index: Int) -> String? {
-        return [
+        [
             "Location 1",
             "Location 2",
             nil,
@@ -124,6 +124,6 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     }
 
     private func imageURL(at index: Int) -> URL {
-        return URL(string: "https://url-\(index+1).com")!
+        URL(string: "https://url-\(index + 1).com")!
     }
 }

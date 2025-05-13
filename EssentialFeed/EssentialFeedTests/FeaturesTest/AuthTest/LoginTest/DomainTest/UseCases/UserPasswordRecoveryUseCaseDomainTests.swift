@@ -65,6 +65,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
     private func recoverPasswordSync(sut: UserPasswordRecoveryUseCase, email: String) -> Result<PasswordRecoveryResponse, PasswordRecoveryError>? {
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
@@ -94,7 +95,8 @@ private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         self.result = result
     }
-    func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+
+    func recover(email _: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
     }
 }

@@ -12,6 +12,6 @@ public final class RealSessionManager: SessionManager {
     }
 
     public var isAuthenticated: Bool {
-        return keychain.get("auth_token") != nil
+        keychain.get("auth_token") != nil
     }
 }

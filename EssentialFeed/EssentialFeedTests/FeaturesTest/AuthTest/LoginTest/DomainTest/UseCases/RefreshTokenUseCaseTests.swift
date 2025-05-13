@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -11,7 +10,7 @@ final class RefreshTokenUseCaseTests: XCTestCase {
     }
 
     func test_execute_sendsCorrectRequest() async throws {
-			let (sut, client, storage, _) = makeSUT() // parserSpy es tu TokenParserSpy
+        let (sut, client, storage, _) = makeSUT() // parserSpy es tu TokenParserSpy
         let refreshURLFromSUT = URL(string: "https://any-refresh-url.com")!
 
         storage.completeLoadRefreshToken(with: "any-valid-refresh-token")
@@ -22,11 +21,11 @@ final class RefreshTokenUseCaseTests: XCTestCase {
         Task {
             var attempts = 0
             let maxAttempts = 100 // Evitar un bucle infinito si algo va muy mal (100 * 10ms = 1s)
-            while client.requests.isEmpty && !executeTask.isCancelled && attempts < maxAttempts {
+            while client.requests.isEmpty, !executeTask.isCancelled, attempts < maxAttempts {
                 try? await Task.sleep(nanoseconds: 10_000_000) // 10 ms
                 attempts += 1
             }
-            
+
             if !client.requests.isEmpty {
                 requestRegistered.fulfill()
             } else {
@@ -53,17 +52,17 @@ final class RefreshTokenUseCaseTests: XCTestCase {
 
         XCTAssertEqual(receivedToken, expectedTokenAfterParsing, "El token recibido no coincide con el esperado del parserSpy.")
         XCTAssertEqual(storage.messages.count, 2, "Se esperaban 2 mensajes en TokenStorageSpy")
-			
+
         if storage.messages.count == 2 {
             XCTAssertEqual(storage.messages[0], .loadRefreshToken)
             XCTAssertEqual(storage.messages[1], .save(expectedTokenAfterParsing))
         }
-        
+
         XCTAssertEqual(client.requests.count, 1)
     }
 
     // MARK: - Helpers
-	
+
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line

@@ -53,10 +53,12 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         let data2 = "data2".data(using: .utf8)!
         // Guarda primero para crear el ítem
         XCTAssertEqual(
-            sut.save(data: data1, forKey: key), .success, "Saving first value should succeed")
+            sut.save(data: data1, forKey: key), .success, "Saving first value should succeed"
+        )
         // Guarda de nuevo para forzar errSecDuplicateItem y cubrir el update
         XCTAssertEqual(
-            sut.save(data: data2, forKey: key), .success, "Saving duplicate key should update value")
+            sut.save(data: data2, forKey: key), .success, "Saving duplicate key should update value"
+        )
         // Verifica que el valor actualizado es el esperado
         assertEventuallyEqual(sut.load(forKey: key), data2)
     }
@@ -71,7 +73,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         if result == .success {
             XCTContext.runActivity(
                 named:
-                    "Environment allowed saving an invalid key (simulator does not replicate real Keychain limits). Full coverage is provided in unit tests with a mock."
+                "Environment allowed saving an invalid key (simulator does not replicate real Keychain limits). Full coverage is provided in unit tests with a mock."
             ) { _ in }
         } else {
             XCTAssertEqual(result, .failure, "Save was expected to fail due to invalid key.")
@@ -87,7 +89,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         _ = sut.save(data: data, forKey: key)
         XCTContext.runActivity(
             named:
-                "Environment allowed saving a key with null characters. Full coverage is provided in unit tests with a mock."
+            "Environment allowed saving a key with null characters. Full coverage is provided in unit tests with a mock."
         ) { _ in }
     }
 
@@ -101,11 +103,12 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         if result == .success {
             XCTContext.runActivity(
                 named:
-                    "Environment allowed saving an extremely large key. Full coverage is provided in unit tests with a mock."
+                "Environment allowed saving an extremely large key. Full coverage is provided in unit tests with a mock."
             ) { _ in }
         } else {
             XCTAssertEqual(
-                result, .failure, "Saving with extremely large key should fail and force all retries")
+                result, .failure, "Saving with extremely large key should fail and force all retries"
+            )
         }
     }
 
@@ -116,7 +119,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         // Se recomienda cubrirlo en tests unitarios con un KeychainProtocol spy/mocking.
         XCTAssertTrue(true, "Post-write validation test pending advanced mocking.")
     }
-	
+
     // Checklist: test_saveAndLoad_realKeychain_persistsAndRetrievesData
     // CU: SystemKeychainProtocol-andLoad
     func test_saveAndLoad_realKeychain_persistsAndRetrievesData() {
@@ -140,9 +143,11 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         let first = "first".data(using: .utf8)!
         let second = "after".data(using: .utf8)!
         XCTAssertEqual(
-            sut.save(data: first, forKey: key), .success, "Saving first value should succeed")
+            sut.save(data: first, forKey: key), .success, "Saving first value should succeed"
+        )
         XCTAssertEqual(
-            sut.save(data: second, forKey: key), .success, "Saving second value should overwrite first")
+            sut.save(data: second, forKey: key), .success, "Saving second value should overwrite first"
+        )
 
         assertEventuallyEqual(sut.load(forKey: key), second)
     }
@@ -165,7 +170,8 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         XCTAssertTrue(addStatus == errSecSuccess, "Manual SecItemAdd should succeed")
         XCTAssertTrue(
             sut.save(data: data2, forKey: key) == .success,
-            "Should update value on duplicate (cover update branch)")
+            "Should update value on duplicate (cover update branch)"
+        )
         assertEventuallyEqual(sut.load(forKey: key), data2)
     }
 
@@ -216,7 +222,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         let key = String(repeating: "x", count: 8192)
         let data1 = "first".data(using: .utf8)!
         let data2 = "second".data(using: .utf8)!
-        _ = sut.save(data: data1, forKey: key)  //
+        _ = sut.save(data: data1, forKey: key) //
         let result = sut.save(data: data2, forKey: key)
         if result == .success {
             XCTContext.runActivity(
@@ -224,7 +230,8 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
             ) { _ in }
         } else {
             XCTAssertEqual(
-                result, .failure, "Should return .failure when update fails after duplicate item error")
+                result, .failure, "Should return .failure when update fails after duplicate item error"
+            )
         }
     }
 
@@ -273,7 +280,7 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         spy.saveResult = .duplicateItem
         spy.updateStatus = errSecSuccess
         spy.forceValidationFailForKey = nil
-			
+
         let result3 = sut.handleDuplicateItem(query: query, data: data, key: key, delay: 0, attempts: &attempts)
         XCTAssertEqual(result3, .duplicateItem, "Should return .duplicateItem in integration since real Keychain does not allow update after duplicate")
     }
@@ -293,21 +300,20 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
     }
 
     // MARK: - Helpers
-	
+
     private func makeSUT(
         keychain: KeychainProtocolWithDelete? = nil, file: StaticString = #file, line: UInt = #line
     ) -> SystemKeychain {
-        let sut: SystemKeychain
-        if let keychain = keychain {
-            sut = SystemKeychain(keychain: keychain)
+        let sut = if let keychain {
+            SystemKeychain(keychain: keychain)
         } else {
-            sut = SystemKeychain()
+            SystemKeychain()
         }
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 
     private func uniqueKey() -> String {
-        return "test-key-\(UUID().uuidString)"
+        "test-key-\(UUID().uuidString)"
     }
 }

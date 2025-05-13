@@ -4,7 +4,7 @@ final class FakeRefreshControl: UIRefreshControl {
     private var _isRefreshing: Bool = false
 
     override var isRefreshing: Bool {
-        return _isRefreshing
+        _isRefreshing
     }
 
     override func beginRefreshing() {

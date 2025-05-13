@@ -19,7 +19,8 @@ private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         self.result = result
     }
-    func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+
+    func recover(email _: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
     }
 }

@@ -31,5 +31,4 @@ class FeedImageDataMapperTests: XCTestCase {
 
         XCTAssertEqual(result, nonEmptyData)
     }
-
 }

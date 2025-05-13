@@ -9,9 +9,7 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         if !pending.isEmpty {
             let msg = "[HTTPClientSpy] WARNING: There are \(pending.count) tasks with uncompleted continuations on deinit."
             XCTFail(msg, file: #filePath, line: #line)
-        } else {
-        }
-
+        } else {}
     }
 
     struct Task: Identifiable {
@@ -48,7 +46,6 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
 
     public var messages: [Message] {
         queue.sync { _messages }
-
     }
 
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -60,11 +57,11 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
 
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             self?.queue.async(flags: .barrier) {
-                guard let self = self else { return }
+                guard let self else { return }
 
                 var taskIndexToAssignContinuation: Int?
                 for (index, task) in self.tasks.enumerated().reversed() {
-                    if task.request == request && !task.isCompleted {
+                    if task.request == request, !task.isCompleted {
                         taskIndexToAssignContinuation = index
                         break
                     }
@@ -159,7 +156,6 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
             self._messages.append(.success)
         }
     }
-
 }
 
 // MARK: - Dummy-like extension
@@ -172,7 +168,7 @@ extension HTTPClientSpy {
             code: -1,
             userInfo: [NSLocalizedDescriptionKey: "Dummy implementation should not be called in tests"]
         )
-        let indices: [Int] = queue.sync { tasks.enumerated().filter { !$0.element.isCompleted }.map { $0.offset } }
+        let indices: [Int] = queue.sync { tasks.enumerated().filter { !$0.element.isCompleted }.map(\.offset) }
         for index in indices {
             complete(with: error, at: index)
         }

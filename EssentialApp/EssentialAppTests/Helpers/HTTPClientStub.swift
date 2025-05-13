@@ -43,7 +43,7 @@ class HTTPClientStub: HTTPClient {
         switch stub(request) {
         case .success(let (data, response)):
             return (data, response)
-        case .failure(let error):
+        case let .failure(error):
             throw error
         }
     }

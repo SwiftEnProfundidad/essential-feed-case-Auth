@@ -2,12 +2,11 @@
 // Copyright © 2020 Essential Developer. All rights reserved.
 //
 
-import XCTest
-import EssentialFeediOS
 import EssentialFeed
+import EssentialFeediOS
+import XCTest
 
 class ImageCommentsSnapshotTests: XCTestCase {
-
     func test_listWithComments() {
         let sut = makeSUT()
 
@@ -35,7 +34,7 @@ class ImageCommentsSnapshotTests: XCTestCase {
     }
 
     private func commentControllers() -> [ImageCommentCellController] {
-        return [
+        [
             ImageCommentCellController(
                 model: ImageCommentViewModel(
                     message: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritage-protected landmark.",
@@ -59,5 +58,4 @@ class ImageCommentsSnapshotTests: XCTestCase {
             )
         ]
     }
-
 }

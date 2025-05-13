@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 
@@ -40,6 +39,7 @@ final class SecureStoreSpy: SecureStore {
     }
 
     // MARK: - Stubbing helpers
+
     func stubSave(forKey key: String, with result: Result<Void, Error>) {
         stubbedSaveResults[key] = result
     }
