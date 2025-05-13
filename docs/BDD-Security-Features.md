@@ -280,7 +280,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - Invalid data error (email/password format).
 - Incorrect credentials error.
 - Connection error (**with retry handling if applicable**).
-- **(Optional, but recommended) Apply delay/lockout after multiple failed attempts.**
 
 ---
 
@@ -297,9 +296,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
         - [❓] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
-        - [🚧] Write sad-path integration test (API error → failureObserver → UI shows error)
-        - [🔜] Capture a snapshot of the error screen and add a reference
-        - [🔜] Ensure tests run in CI (update scheme + record on first run)
+        - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
+        - [✅] Capture a snapshot of the error screen and add a reference
+        - [✅] Ensure tests run in CI (update scheme + record on first run)
 
     - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
 
@@ -348,10 +347,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
 
-- [❌] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
+- [🚧] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
     #### Subtasks (Detailed in the original BDD, all marked as ❌ for current implementation)
-    - [❌] Define DTO/model for failed login attempts (FailedLoginAttempt)
-    - [❌] Create in-memory and/or persistent store for failed attempts (FailedLoginAttemptStore)
+    - [🚧] Define DTO/model for failed login attempts (FailedLoginAttempt)
+    - [🔜] Create in-memory and/or persistent store for failed attempts (FailedLoginAttemptStore)
     - [❌] Implement type-erased wrapper (AnyFailedLoginAttemptStore)
     - [❌] Integrate failed attempt logging in UserLoginUseCase (when not a format error)
     - [❌] Implement logic to query recent failed attempts (e.g., last 5 minutes)
