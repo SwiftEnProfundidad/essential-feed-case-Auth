@@ -15,6 +15,10 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
             snapshot: sut.snapshot(for: .iPhone13(style: .light)),
             named: "LOGIN_SUCCESS_NOTIFICATION_light"
         )
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
+            named: "LOGIN_SUCCESS_NOTIFICATION_dark"
+        )
     }
 
     func test_loginError_showsErrorNotification() async {
@@ -27,6 +31,9 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         assert(
             snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "LOGIN_ERROR_NOTIFICATION_light"
         )
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "LOGIN_ERROR_NOTIFICATION_dark"
+        )
     }
 
     func test_loginNetworkError_showsNetworkErrorNotification() async {
@@ -36,9 +43,13 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         sut.simulateUserEntering(username: "user", password: "pass")
         await sut.simulateTapOnLoginButton()
         sut.waitForLoginSuccessAlert()
-        record(
+        assert(
             snapshot: sut.snapshot(for: .iPhone13(style: .light)),
             named: "LOGIN_NETWORK_ERROR_NOTIFICATION_light"
+        )
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
+            named: "LOGIN_NETWORK_ERROR_NOTIFICATION_dark"
         )
     }
 
@@ -49,9 +60,13 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         sut.simulateUserEntering(username: "user", password: "pass")
         await sut.simulateTapOnLoginButton()
         sut.waitForLoginSuccessAlert()
-        record(
+        assert(
             snapshot: sut.snapshot(for: .iPhone13(style: .light)),
             named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION_light"
+        )
+        assert(
+            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
+            named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark"
         )
     }
 

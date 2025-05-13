@@ -58,20 +58,26 @@
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
-		B489910E2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
-		B489910F2DD3D8FD00A94850 /* LOGIN_IDLE_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */; };
-		B48991102DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
-		B48991112DD3D8FD00A94850 /* LOGIN_IDLE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */; };
-		B48991122DD3D8FD00A94850 /* LOGIN_LOADING_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */; };
-		B48991132DD3D8FD00A94850 /* LOGIN_ERROR_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */; };
-		B48991142DD3D8FD00A94850 /* LOGIN_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */; };
-		B48991152DD3D8FD00A94850 /* LOGIN_LOADING_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */; };
-		B48991162DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */; };
-		B48991172DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */; };
-		B48991182DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
-		B48991192DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */; };
-		B489911A2DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */; };
-		B489911B2DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
+		B48991302DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
+		B48991312DD3E41300A94850 /* LOGIN_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */; };
+		B48991322DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
+		B48991332DD3E41300A94850 /* LOGIN_SUCCESS_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */; };
+		B48991342DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */; };
+		B48991352DD3E41300A94850 /* LOGIN_ERROR_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */; };
+		B48991362DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
+		B48991372DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */; };
+		B48991382DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */; };
+		B48991392DD3E41300A94850 /* LOGIN_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */; };
+		B489913A2DD3E41300A94850 /* LOGIN_BLOCKED_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */; };
+		B489913B2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */; };
+		B489913C2DD3E41300A94850 /* LOGIN_LOADING_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */; };
+		B489913D2DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */; };
+		B489913E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
+		B489913F2DD3E41300A94850 /* LOGIN_IDLE_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */; };
+		B48991402DD3E41300A94850 /* LOGIN_LOADING_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */; };
+		B48991412DD3E41300A94850 /* LOGIN_IDLE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */; };
+		B48991422DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */; };
+		B48991432DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
@@ -163,20 +169,26 @@
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
-		B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_dark.png; sourceTree = "<group>"; };
-		B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_light.png; sourceTree = "<group>"; };
-		B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_dark.png; sourceTree = "<group>"; };
-		B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_light.png; sourceTree = "<group>"; };
-		B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_dark.png; sourceTree = "<group>"; };
-		B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_light.png; sourceTree = "<group>"; };
-		B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_dark.png; sourceTree = "<group>"; };
-		B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_light.png; sourceTree = "<group>"; };
-		B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_dark.png; sourceTree = "<group>"; };
-		B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_light.png; sourceTree = "<group>"; };
-		B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
-		B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
+		B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_dark.png; sourceTree = "<group>"; };
+		B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_light.png; sourceTree = "<group>"; };
+		B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_dark.png; sourceTree = "<group>"; };
+		B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_light.png; sourceTree = "<group>"; };
+		B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
+		B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_dark.png; sourceTree = "<group>"; };
+		B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_light.png; sourceTree = "<group>"; };
+		B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_dark.png; sourceTree = "<group>"; };
+		B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_light.png; sourceTree = "<group>"; };
+		B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
+		B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_dark.png; sourceTree = "<group>"; };
+		B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_light.png; sourceTree = "<group>"; };
+		B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_dark.png; sourceTree = "<group>"; };
+		B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
+		B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
+		B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
@@ -339,20 +351,26 @@
 		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
 			isa = PBXGroup;
 			children = (
-				B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */,
-				B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */,
-				B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */,
-				B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */,
-				B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */,
-				B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */,
-				B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */,
-				B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */,
-				B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */,
-				B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */,
-				B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */,
-				B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
-				B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */,
-				B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
+				B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */,
+				B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */,
+				B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */,
+				B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */,
+				B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */,
+				B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */,
+				B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */,
+				B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */,
+				B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */,
+				B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */,
+				B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */,
+				B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */,
+				B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */,
+				B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */,
+				B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */,
+				B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
+				B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */,
+				B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */,
+				B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */,
+				B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
 			);
 			path = snapshots;
 			sourceTree = "<group>";
@@ -534,20 +552,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B489910E2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
-				B489910F2DD3D8FD00A94850 /* LOGIN_IDLE_light.png in Resources */,
-				B48991102DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
-				B48991112DD3D8FD00A94850 /* LOGIN_IDLE_dark.png in Resources */,
-				B48991122DD3D8FD00A94850 /* LOGIN_LOADING_light.png in Resources */,
-				B48991132DD3D8FD00A94850 /* LOGIN_ERROR_light.png in Resources */,
-				B48991142DD3D8FD00A94850 /* LOGIN_ERROR_dark.png in Resources */,
-				B48991152DD3D8FD00A94850 /* LOGIN_LOADING_dark.png in Resources */,
-				B48991162DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png in Resources */,
-				B48991172DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png in Resources */,
-				B48991182DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
-				B48991192DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png in Resources */,
-				B489911A2DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png in Resources */,
-				B489911B2DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */,
+				B48991302DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
+				B48991312DD3E41300A94850 /* LOGIN_ERROR_dark.png in Resources */,
+				B48991322DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */,
+				B48991332DD3E41300A94850 /* LOGIN_SUCCESS_dark.png in Resources */,
+				B48991342DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png in Resources */,
+				B48991352DD3E41300A94850 /* LOGIN_ERROR_light.png in Resources */,
+				B48991362DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
+				B48991372DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png in Resources */,
+				B48991382DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png in Resources */,
+				B48991392DD3E41300A94850 /* LOGIN_SUCCESS_light.png in Resources */,
+				B489913A2DD3E41300A94850 /* LOGIN_BLOCKED_light.png in Resources */,
+				B489913B2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png in Resources */,
+				B489913C2DD3E41300A94850 /* LOGIN_LOADING_dark.png in Resources */,
+				B489913D2DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png in Resources */,
+				B489913E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
+				B489913F2DD3E41300A94850 /* LOGIN_IDLE_light.png in Resources */,
+				B48991402DD3E41300A94850 /* LOGIN_LOADING_light.png in Resources */,
+				B48991412DD3E41300A94850 /* LOGIN_IDLE_dark.png in Resources */,
+				B48991422DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png in Resources */,
+				B48991432DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
