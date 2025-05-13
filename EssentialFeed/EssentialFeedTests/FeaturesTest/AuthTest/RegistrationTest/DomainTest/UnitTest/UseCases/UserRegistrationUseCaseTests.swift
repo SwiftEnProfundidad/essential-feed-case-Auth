@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import Security
 import XCTest
@@ -405,9 +406,9 @@ final class UserRegistrationUseCaseTests: XCTestCase {
     private class RegistrationPersistenceSpy: KeychainProtocol, TokenStorage, OfflineRegistrationStore {
         var saveKeychainDataCalls = [(data: Data, key: String)]()
         var saveKeychainReturnValues: [KeychainSaveResult] = []
-        var loadKeychainDataCalls = [String]() // Para el método load
+        var loadKeychainDataCalls = [String]()
         var dataToReturnForLoad: Data?
-        var keychainErrorForLoad: Error? // No es parte de KeychainSavable, pero útil si el load fallara por otra razón
+        var keychainErrorForLoad: Error?
 
         func save(data: Data, forKey key: String) -> KeychainSaveResult {
             saveKeychainDataCalls.append((data, key))
@@ -457,7 +458,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 
         func save(_ data: UserRegistrationData) async throws {
             if let error = saveOfflineDataError {
-                offlineStoreMessages.append(.save(data)) // Registrar el intento aunque falle
+                offlineStoreMessages.append(.save(data))
                 throw error
             }
             offlineStoreMessages.append(.save(data))

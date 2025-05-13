@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import XCTest
 
@@ -51,15 +52,15 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         let key = "duplicate-key-\(UUID().uuidString)"
         let data1 = "data1".data(using: .utf8)!
         let data2 = "data2".data(using: .utf8)!
-        // Guarda primero para crear el ítem
+
         XCTAssertEqual(
             sut.save(data: data1, forKey: key), .success, "Saving first value should succeed"
         )
-        // Guarda de nuevo para forzar errSecDuplicateItem y cubrir el update
+
         XCTAssertEqual(
             sut.save(data: data2, forKey: key), .success, "Saving duplicate key should update value"
         )
-        // Verifica que el valor actualizado es el esperado
+
         assertEventuallyEqual(sut.load(forKey: key), data2)
     }
 
@@ -203,8 +204,9 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         XCTAssertEqual(saveResult, .success, "Direct minimalistic save should succeed")
         _ = sut.load(forKey: key)
         assertEventuallyEqual(sut.load(forKey: key), data)
-        // Si deseamos un mensaje personalizado, podemoa usar XCTFail justo después para mayor claridad:
-        // if sut.load(forKey: key) != data { XCTFail("Direct minimalistic load should return the saved data") }
+        if sut.load(forKey: key) != data {
+            XCTFail("Direct minimalistic load should return the saved data")
+        }
     }
 
     // Checklist: test_NoFallback_save_alwaysReturnsFalse

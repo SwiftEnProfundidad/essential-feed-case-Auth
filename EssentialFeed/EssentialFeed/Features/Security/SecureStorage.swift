@@ -36,24 +36,21 @@ public final class SecureStorage {
 
     public func protectionLevel(for data: Data) -> SecureStorageProtectionLevel {
         guard let content = String(data: data, encoding: .utf8) else {
-            return .high // Si no podemos determinar el contenido, usamos el nivel más alto por seguridad
+            return .high
         }
 
         let lowercaseContent = content.lowercased()
 
-        // Palabras clave que indican datos sensibles (contraseñas, tokens, claves)
         let sensitiveKeywords = ["password", "token", "key", "secret", "auth", "credentials"]
         if sensitiveKeywords.contains(where: { lowercaseContent.contains($0) }) {
             return .high
         }
 
-        // Datos personales (nombres, emails, teléfonos)
         let personalKeywords = ["name", "email", "phone", "address", "birth"]
         if personalKeywords.contains(where: { lowercaseContent.contains($0) }) {
             return .medium
         }
 
-        // Detectar nombres propios (palabras que comienzan con mayúscula)
         let words = content.split(separator: " ")
         let capitalizedWords = words.filter { word in
             guard let firstChar = word.first else { return false }
@@ -61,7 +58,7 @@ public final class SecureStorage {
         }
 
         if capitalizedWords.count >= 2 {
-            return .medium // Probablemente un nombre completo
+            return .medium
         }
 
         return .low

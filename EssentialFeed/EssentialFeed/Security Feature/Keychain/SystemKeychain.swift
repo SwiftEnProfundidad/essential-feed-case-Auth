@@ -1,15 +1,12 @@
 import Foundation
+
 import Security
 
-// MARK: - SystemKeychain
-
-/// Implementación del Keychain usando las APIs del sistema
 public final class SystemKeychain: KeychainFull {
     private let keychain: KeychainFull?
     private let queue = DispatchQueue(label: "SystemKeychain.SerialQueue")
     private static let queueKey = DispatchSpecificKey<Void>()
 
-    // Implementación única conforme al protocolo KeychainFull
     public func load(forKey key: String) -> Data? {
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
             _load(forKey: key)
@@ -42,8 +39,6 @@ public final class SystemKeychain: KeychainFull {
         queue.setSpecific(key: SystemKeychain.queueKey, value: ())
     }
 
-    /// Deletes a value from the Keychain for a given key.
-    /// - Returns: true if the item was deleted or not found, false if the key is invalid or deletion failed.
     public func delete(forKey key: String) -> Bool {
         if let keychain {
             return keychain.delete(forKey: key)
@@ -65,7 +60,6 @@ public final class SystemKeychain: KeychainFull {
         return status == errSecSuccess || status == errSecItemNotFound
     }
 
-    /// Añade robustez ante condiciones de carrera y latencias del sistema.
     public func save(data: Data, forKey key: String) -> KeychainSaveResult {
         if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
             _save(data: data, forKey: key)
@@ -97,7 +91,7 @@ public final class SystemKeychain: KeychainFull {
 
     private func saveDirectly(data: Data, key: String) -> KeychainSaveResult {
         let maxAttempts = 5
-        let delay: useconds_t = 20000 // 20ms entre reintentos
+        let delay: useconds_t = 20000
         var attempts = 0
         while attempts < maxAttempts {
             let query = makeQuery(forKey: key)
@@ -185,7 +179,6 @@ public final class SystemKeychain: KeychainFull {
 
 // MARK: - NoFallback
 
-/// Implementación que siempre falla, utilizada como fallback por defecto
 public final class NoFallback: KeychainSavable {
     public init() {}
     public func save(data _: Data, forKey _: String) -> KeychainSaveResult {

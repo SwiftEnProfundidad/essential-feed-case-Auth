@@ -1,4 +1,3 @@
-// SystemKeychainTests.swift
 
 import EssentialFeed
 import XCTest
@@ -8,7 +7,7 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-concurrent
     func test_save_isThreadSafe_underConcurrentAccess() {
         var sut: SystemKeychain? = makeSUT()
-        let key = uniqueKey()
+        let key: String = uniqueKey()
         let data = "concurrent-data".data(using: .utf8)!
         let queue = DispatchQueue(label: "test.concurrent", attributes: .concurrent)
         let expectation = expectation(description: "Concurrent saves")
@@ -21,7 +20,7 @@ final class SystemKeychainTests: XCTestCase {
                     expectation.fulfill()
                     return
                 }
-                let result = sut.save(data: data, forKey: key)
+                let result: KeychainSaveResult = sut.save(data: data, forKey: key)
                 resultsLock.lock()
                 results.append(result)
                 resultsLock.unlock()
@@ -31,89 +30,106 @@ final class SystemKeychainTests: XCTestCase {
 
         sut = nil
         wait(for: [expectation], timeout: 10)
-        XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem")
+        XCTAssertTrue(
+            results.allSatisfy { $0 == .success || $0 == .duplicateItem },
+            "All concurrent saves should succeed or be duplicateItem"
+        )
     }
 
     // Checklist: Validation after Save
     // CU: SystemKeychain-save-validationAfterSave
     func test_save_returnsFailure_whenValidationAfterSaveFails_dueToCorruption() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = .success
-        let data = "expected".data(using: .utf8)!
-        let key = uniqueKey()
+        let data: Data = "expected".data(using: .utf8)!
+        let key: String = uniqueKey()
         spy.willValidateAfterSave = { [weak spy] corruptedKey in
             spy?.simulateCorruption(forKey: corruptedKey)
         }
-        let result = sut.save(data: data, forKey: key)
-        XCTAssertEqual(result, .failure, "Save should return failure if validation after save fails due to corruption")
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+        XCTAssertEqual(
+            result, .failure,
+            "Save should return failure if validation after save fails due to corruption"
+        )
     }
 
     // Checklist: Duplicate Item and Update Fails
     // CU: SystemKeychain-save-duplicateItem
     func test_save_returnsDuplicateItem_whenUpdateFailsAfterDuplicate() {
-        let (sut, spy) = makeSpySUT()
-        let data = "data".data(using: .utf8)!
-        let key = uniqueKey()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
+        let data: Data = "data".data(using: .utf8)!
+        let key: String = uniqueKey()
         spy.saveResult = .duplicateItem
         spy.updateStatus = errSecDuplicateItem
-        let result = sut.save(data: data, forKey: key)
-        XCTAssertEqual(result, .duplicateItem, "Should return duplicateItem when update fails after duplicate")
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+        XCTAssertEqual(
+            result, .duplicateItem, "Should return duplicateItem when update fails after duplicate"
+        )
     }
 
     // Checklist: Error Fallback
     // CU: SystemKeychain-save-noFallback
     func test_save_onNoFallbackStrategy_alwaysReturnsFailure() {
-        let sut = makeNoFallback()
-        let data = "irrelevant".data(using: .utf8)!
-        let key = uniqueKey()
-        let result = sut.save(data: data, forKey: key)
+        let sut: NoFallback = makeNoFallback()
+        let data: Data = "irrelevant".data(using: .utf8)!
+        let key: String = uniqueKey()
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(result, .failure, "NoFallback should always return failure on save")
     }
 
     func test_save_returnsFailure_forEmptyKeyOrData() {
-        let sut = makeSUT()
-        let data = "irrelevant".data(using: .utf8)!
+        let sut: SystemKeychain = makeSUT()
+        let data: Data = "irrelevant".data(using: .utf8)!
         XCTAssertEqual(sut.save(data: data, forKey: ""), .failure, "Saving with empty key should fail")
-        XCTAssertEqual(sut.save(data: Data(), forKey: uniqueKey()), .failure, "Saving with empty data should fail")
+        XCTAssertEqual(
+            sut.save(data: Data(), forKey: uniqueKey()), .failure, "Saving with empty data should fail"
+        )
     }
 
     func test_save_supportsUnicodeKeys_andLargeBinaryData() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         let unicodeKey = "🔑-ключ-密钥-llave"
         let data = Data((0 ..< 100_000).map { _ in UInt8.random(in: 0 ... 255) })
         let result = sut.save(data: data, forKey: unicodeKey)
         XCTAssertEqual(result, .success, "Should save large binary data with unicode key successfully")
-        let loaded = sut.load(forKey: unicodeKey)
+        let loaded: Data? = sut.load(forKey: unicodeKey)
         XCTAssertEqual(loaded, data, "Loaded data should match saved data for unicode key")
     }
 
     func test_save_and_delete_withEdgeCaseKeys_andHelpers() {
-        let (sut, _) = makeSpySUT()
+        let (sut, _): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         let emptyKey = ""
         let spacesKey = "   "
-        let normalData = "data".data(using: .utf8)!
-        XCTAssertEqual(sut.save(data: normalData, forKey: emptyKey), .failure, "Should fail to save with empty key")
-        XCTAssertEqual(sut.save(data: normalData, forKey: spacesKey), .failure, "Should fail to save with spaces key")
+        let normalData: Data = "data".data(using: .utf8)!
+        XCTAssertEqual(
+            sut.save(data: normalData, forKey: emptyKey), .failure, "Should fail to save with empty key"
+        )
+        XCTAssertEqual(
+            sut.save(data: normalData, forKey: spacesKey), .failure, "Should fail to save with spaces key"
+        )
         XCTAssertFalse(sut.delete(forKey: emptyKey), "Should fail to delete with empty key")
         XCTAssertFalse(sut.delete(forKey: spacesKey), "Should fail to delete with spaces key")
     }
 
     func test_delete_returnsTrue_whenKeyDoesNotExist() {
-        let (sut, spy) = makeSpySUT()
-        let key = uniqueKey()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
+        let key: String = uniqueKey()
         spy.deleteSpy.deleteResult = true
         spy.updateStatus = errSecSuccess
-        XCTAssertTrue(sut.delete(forKey: key), "Should return true when deleting non-existent key (Keychain semantics)")
+        XCTAssertTrue(
+            sut.delete(forKey: key),
+            "Should return true when deleting non-existent key (Keychain semantics)"
+        )
     }
 
     // Checklist: Delegates to injected keychain and returns its result
     // CU: SystemKeychain-save-delegation
     func test_save_delegatesToKeychainProtocol_andReturnsSpyResult() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.success
-        let data = "data".data(using: .utf8)!
+        let data: Data = "data".data(using: .utf8)!
         let key = "spy-key"
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertTrue(spy.saveSpy.saveCalled, "Should call save on spy")
         XCTAssertEqual(spy.saveSpy.lastData, data, "Should pass correct data to spy")
         XCTAssertEqual(spy.saveSpy.lastKey, key, "Should pass correct key to spy")
@@ -123,10 +139,11 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save returns false if injected keychain fails
     // CU: SystemKeychain-save-keychainFailure
     func test_save_returnsDuplicateItem_onKeychainFailure() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.duplicateItem
         spy.updateStatus = errSecDuplicateItem // Simula que el update también falla
-        let result = sut.save(data: "irrelevant".data(using: .utf8)!, forKey: "fail-key")
+        let key = "fail-key"
+        let result: KeychainSaveResult = sut.save(data: "irrelevant".data(using: .utf8)!, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.duplicateItem, "Should return duplicateItem on keychain failure"
         )
@@ -135,14 +152,14 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save returns false if post-write validation fails
     // CU: SystemKeychain-save-validationAfterSaveFails
     func test_save_returnsFailure_whenValidationAfterSaveFails() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.success
-        let data = "expected".data(using: .utf8)!
+        let data: Data = "expected".data(using: .utf8)!
         let key = "key"
         spy.willValidateAfterSave = { [weak spy] (corruptedKey: String) in
             spy?.simulateCorruption(forKey: corruptedKey)
         }
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.failure,
             "Save result should be KeychainSaveResult.failure if validation fails"
@@ -152,13 +169,13 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save returns false if delete fails before save
     // CU: SystemKeychainProtocolWithDeleteFails
     func test_save_returnsFailure_ifDeleteFailsBeforeSave() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.success
         spy.deleteSpy.deleteResult = false
-        let data = "irrelevant".data(using: .utf8)!
+        let data: Data = "irrelevant".data(using: .utf8)!
         let key = "delete-fails"
         _ = spy.save(data: "old-data".data(using: .utf8)!, forKey: key)
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.failure,
             "Save should return KeychainSaveResult.failure if delete fails"
@@ -168,10 +185,10 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save supports large binary data
     // CU: SystemKeychain-save-largeBinary
     func test_save_supportsLargeBinaryData() {
-        let sut = makeSUT()
-        let key = uniqueKey()
+        let sut: SystemKeychain = makeSUT()
+        let key: String = uniqueKey()
         let data = Data((0 ..< 100_000).map { _ in UInt8.random(in: 0 ... 255) })
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.success,
             "Save should handle large binary data and return KeychainSaveResult.success"
@@ -181,11 +198,11 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save is thread safe under concurrent access
     // CU: SystemKeychain-save-concurrent
     func test_save_isThreadSafeUnderConcurrentAccess() {
-        let sut = makeSUT()
-        let key = uniqueKey()
-        let data1 = "thread-1".data(using: .utf8)!
-        let data2 = "thread-2".data(using: .utf8)!
-        let exp = expectation(description: "concurrent saves")
+        let sut: SystemKeychain = makeSUT()
+        let key: String = uniqueKey()
+        let data1: Data = "thread-1".data(using: .utf8)!
+        let data2: Data = "thread-2".data(using: .utf8)!
+        let exp: XCTestExpectation = expectation(description: "concurrent saves")
         exp.expectedFulfillmentCount = 2
         DispatchQueue.global().async {
             _ = sut.save(data: data1, forKey: key)
@@ -196,17 +213,17 @@ final class SystemKeychainTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 2.0)
-        let loaded = sut.load(forKey: key)
+        let loaded: Data? = sut.load(forKey: key)
         XCTAssertNotNil(loaded, "Final value should not be nil after concurrent writes")
     }
 
     // Checklist: Save supports unicode keys
     // CU: SystemKeychain-save-unicodeKey
     func test_save_supportsUnicodeKeys() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         let key = "🔑-ключ-密钥-llave"
-        let data = "unicode-data".data(using: .utf8)!
-        let result = sut.save(data: data, forKey: key)
+        let data: Data = "unicode-data".data(using: .utf8)!
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.success,
             "Save should support unicode keys and return KeychainSaveResult.success"
@@ -216,14 +233,14 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save overwrites previous value (forces update path)
     // CU: SystemKeychain-save-overwriteUpdate
     func test_save_overwritesPreviousValue_forcesUpdatePath() {
-        let sut = makeSUT()
-        let key = uniqueKey()
-        let data1 = "first".data(using: .utf8)!
-        let data2 = "second".data(using: .utf8)!
+        let sut: SystemKeychain = makeSUT()
+        let key: String = uniqueKey()
+        let data1: Data = "first".data(using: .utf8)!
+        let data2: Data = "second".data(using: .utf8)!
         XCTAssertEqual(
             sut.save(data: data1, forKey: key), KeychainSaveResult.success, "Should save initial data"
         )
-        let result = sut.save(data: data2, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data2, forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.success,
             "Save should handle update and return KeychainSaveResult.success"
@@ -233,16 +250,16 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Save returns false for empty data
     // CU: SystemKeychain-save-emptyData
     func test_save_returnsFailure_forEmptyData() {
-        let sut = makeSUT()
-        let result = sut.save(data: Data(), forKey: anyKey())
+        let sut: SystemKeychain = makeSUT()
+        let result: KeychainSaveResult = sut.save(data: Data(), forKey: anyKey())
         XCTAssertEqual(result, KeychainSaveResult.failure, "Saving empty data should fail")
     }
 
     // Checklist: Save returns false for empty key
     // CU: SystemKeychain-save-emptyKey
     func test_save_returnsFailure_forEmptyKey() {
-        let sut = makeSUT()
-        let result = sut.save(data: anyData(), forKey: "")
+        let sut: SystemKeychain = makeSUT()
+        let result: KeychainSaveResult = sut.save(data: anyData(), forKey: "")
         XCTAssertEqual(result, KeychainSaveResult.failure, "Saving with empty key should fail")
     }
 
@@ -255,9 +272,9 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-veryLongKey
     // Checklist: test_save_returnsBool_forVeryLongKey
     func test_save_returnsSuccess_forVeryLongKey() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         let key = String(repeating: "k", count: 1024)
-        let result = sut.save(data: anyData(), forKey: key)
+        let result: KeychainSaveResult = sut.save(data: anyData(), forKey: key)
         XCTAssertEqual(
             result, KeychainSaveResult.success,
             "Result should be KeychainSaveResult.success for very long key"
@@ -267,10 +284,10 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychainProtocolWithDeletePrevious
     // Checklist: test_save_deletesPreviousValueBeforeSavingNewOne
     func test_save_deletesPreviousValueBeforeSavingNewOne() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.success
-        let key = anyKey()
-        let data = anyData()
+        let key: String = anyKey()
+        let data: Data = anyData()
         _ = sut.save(data: data, forKey: key)
         XCTAssertTrue(spy.deleteCalled, "Should delete previous value before saving new one")
         XCTAssertEqual(spy.lastDeletedKey, key, "Should delete the correct key")
@@ -279,10 +296,10 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-unicodeAndLargeData
     // Checklist: test_save_supportsUnicodeKeysAndLargeBinaryData
     func test_save_supportsUnicodeKeysAndLargeBinaryData() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         let unicodeKey = "🔑-ключ-密钥-llave"
         let largeData = Data((0 ..< 10000).map { _ in UInt8.random(in: 0 ... 255) })
-        let result = sut.save(data: largeData, forKey: unicodeKey)
+        let result: KeychainSaveResult = sut.save(data: largeData, forKey: unicodeKey)
         XCTAssertEqual(
             result, KeychainSaveResult.success,
             "Saving with unicode key and large data should not crash and should return KeychainSaveResult.success"
@@ -292,14 +309,14 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-threadSafe
     // Checklist: test_save_isThreadSafe
     func test_save_isThreadSafe() {
-        let sut = makeSUT()
-        let key = uniqueKey()
-        let data1 = "1".data(using: .utf8)!
-        let data2 = "2".data(using: .utf8)!
-        let data3 = "3".data(using: .utf8)!
-        let data4 = "4".data(using: .utf8)!
-        let data5 = "5".data(using: .utf8)!
-        let allData = [data1, data2, data3, data4, data5]
+        let sut: SystemKeychain = makeSUT()
+        let key: String = uniqueKey()
+        let data1: Data = "1".data(using: .utf8)!
+        let data2: Data = "2".data(using: .utf8)!
+        let data3: Data = "3".data(using: .utf8)!
+        let data4: Data = "4".data(using: .utf8)!
+        let data5: Data = "5".data(using: .utf8)!
+        let allData: [Data] = [data1, data2, data3, data4, data5]
         let possibleValues: [Data?] = [nil] + allData
         let queue = DispatchQueue(label: "test", attributes: .concurrent)
         let group = DispatchGroup()
@@ -311,7 +328,7 @@ final class SystemKeychainTests: XCTestCase {
             }
         }
         group.wait()
-        let loaded = sut.load(forKey: key)
+        let loaded: Data? = sut.load(forKey: key)
         XCTAssertTrue(
             possibleValues.contains(loaded), "Value should be one of the written values or nil"
         )
@@ -320,7 +337,7 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-specificKeychainErrors
     // Checklist: test_save_handlesSpecificKeychainErrors
     func test_save_handlesSpecificKeychainErrors() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.duplicateItem
         spy.updateStatus = errSecDuplicateItem // Ensure update fails so KeychainSaveResult.duplicateItem is returned
         spy.saveSpy.simulatedError = -25299 // errSecDuplicateItem
@@ -352,30 +369,36 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-update-success, SystemKeychain-update-invalidInput
     func test_update_onSystemKeychain_withValidAndInvalidInput() {
         let sut = makeSystemKeychain()
-        let key = uniqueKey()
+        let key: String = uniqueKey()
         let data = "original".data(using: .utf8)!
         let updated = "updated".data(using: .utf8)!
         // Path éxito: guarda, luego actualiza
         XCTAssertEqual(
             sut.save(data: data, forKey: key), KeychainSaveResult.success, "Should save initial data"
         )
-        XCTAssertEqual(sut.update(data: updated, forKey: key), errSecSuccess, "Should update data for valid key")
+        XCTAssertEqual(
+            sut.update(data: updated, forKey: key), errSecSuccess, "Should update data for valid key"
+        )
         XCTAssertEqual(sut.load(forKey: key), updated, "Should load updated data")
         // Path error: clave vacía
-        XCTAssertEqual(sut.update(data: data, forKey: ""), errSecParam, "Should return errSecParam for empty key")
+        XCTAssertEqual(
+            sut.update(data: data, forKey: ""), errSecParam, "Should return errSecParam for empty key"
+        )
         // Path error: data vacío
-        XCTAssertEqual(sut.update(data: Data(), forKey: key), errSecParam, "Should return errSecParam for empty data")
+        XCTAssertEqual(
+            sut.update(data: Data(), forKey: key), errSecParam, "Should return errSecParam for empty data"
+        )
     }
 
     func test_save_onSystemKeychain_withDuplicateItem_andUpdateFails_returnsDuplicateItem() {
-        let (sut, spy) = makeSpySUT()
-        let data = "data".data(using: .utf8)!
-        let key = uniqueKey()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
+        let data: Data = "data".data(using: .utf8)!
+        let key: String = uniqueKey()
         spy.saveResult = .duplicateItem
         spy.updateStatus = errSecDuplicateItem
         spy.loadResult = nil
         // No hace falta manipular storage, update falla y el spy devuelve duplicateItem
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, .duplicateItem,
             "Should return duplicateItem when update fails after duplicate item error"
@@ -386,8 +409,8 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-delete-success, SystemKeychain-delete-emptyKey
     func test_delete_onSystemKeychain_withValidAndInvalidInput() {
         let sut = makeSystemKeychain()
-        let key = uniqueKey()
-        let data = "data".data(using: .utf8)!
+        let key: String = uniqueKey()
+        let data: Data = "data".data(using: .utf8)!
         // Guardar primero para poder borrar
         XCTAssertEqual(
             sut.save(data: data, forKey: key), KeychainSaveResult.success,
@@ -402,7 +425,7 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: _save covers validation for empty key and data
     // CU: SystemKeychain-_save-emptyKey, SystemKeychain-_save-emptyData, SystemKeychain-_save-success
     func test__save_onSystemKeychain_validatesInputAndSavesCorrectly() {
-        let (sut, _) = makeSpySUT()
+        let (sut, _): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         let validKey = uniqueKey()
         let validData = "data".data(using: .utf8)!
         // Path éxito
@@ -421,10 +444,10 @@ final class SystemKeychainTests: XCTestCase {
     }
 
     func test_noFallback_save_alwaysReturnsFailure() {
-        let sut = makeNoFallback()
-        let data = "irrelevant".data(using: .utf8)!
-        let key = uniqueKey()
-        // Assert: NoFallback.save always returns .failure
+        let sut: NoFallback = makeNoFallback()
+        let data: Data = "irrelevant".data(using: .utf8)!
+        let key: String = uniqueKey()
+
         XCTAssertEqual(
             sut.save(data: data, forKey: key),
             KeychainSaveResult.failure,
@@ -433,9 +456,9 @@ final class SystemKeychainTests: XCTestCase {
     }
 
     func test_noFallback_load_alwaysReturnsNil() {
-        let sut = makeNoFallback()
-        let key = uniqueKey()
-        // Assert: NoFallback.load always returns nil
+        let sut: NoFallback = makeNoFallback()
+        let key: String = uniqueKey()
+
         XCTAssertNil(
             sut.load(forKey: key),
             "NoFallback should always return nil on load"
@@ -444,29 +467,29 @@ final class SystemKeychainTests: XCTestCase {
 
     func test_noFallback_save_and_load_alwaysFail() {
         let fallback = makeNoFallback()
-        let key = uniqueKey()
-        let data = "irrelevant".data(using: .utf8)!
-        // Save siempre falla
+        let key: String = uniqueKey()
+        let data: Data = "irrelevant".data(using: .utf8)!
+
         XCTAssertEqual(
             fallback.save(data: data, forKey: key), KeychainSaveResult.failure,
             "NoFallback should always return KeychainSaveResult.failure on save"
         )
-        // Load siempre es nil
+
         XCTAssertNil(fallback.load(forKey: key), "NoFallback should always return nil on load")
-        // Init no lanza excepción
         XCTAssertNotNil(fallback, "NoFallback should be initializable")
     }
 
     // Checklist: handleDuplicateItem covers max attempts
     // CU: SystemKeychain-handleDuplicateItem-maxAttempts
     func test_handleDuplicateItem_returnsDuplicateItem_whenMaxAttemptsReached() {
-        let (sut, spy) = makeSpySUT()
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
         spy.saveResult = KeychainSaveResult.duplicateItem
-        spy.updateStatus = errSecDuplicateItem // Forzar que nunca se consiga actualizar
-        let data = "data".data(using: .utf8)!
-        let key = uniqueKey()
-        // Simula el save varias veces para forzar los reintentos
-        let result = sut.save(data: data, forKey: key)
+        spy.updateStatus = errSecDuplicateItem
+
+        let data: Data = "data".data(using: .utf8)!
+        let key: String = uniqueKey()
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+
         XCTAssertEqual(
             result, KeychainSaveResult.duplicateItem,
             "Should return KeychainSaveResult.duplicateItem after max duplicate attempts"
@@ -479,10 +502,10 @@ final class SystemKeychainTests: XCTestCase {
         let sut = makeSystemKeychain()
         let validKey = uniqueKey()
         let validData = "data".data(using: .utf8)!
-        // Path error: clave vacía
         let resultEmptyKey = sut.update(data: validData, forKey: "")
+
         XCTAssertEqual(resultEmptyKey, errSecParam, "Should return errSecParam for empty key")
-        // Path error: data vacío
+
         let resultEmptyData = sut.update(data: Data(), forKey: validKey)
         XCTAssertEqual(resultEmptyData, errSecParam, "Should return errSecParam for empty data")
     }
@@ -490,10 +513,10 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: _delete covers success and failure paths
     // CU: SystemKeychain-_delete-success, SystemKeychain-_delete-failure
     func test__delete_onSystemKeychain_returnsTrueOnSuccess() {
-        let spy = makeKeychainFullSpy()
+        let spy: KeychainFullSpy = makeKeychainFullSpy()
         let sut = SystemKeychain(keychain: spy)
         let keySuccess = uniqueKey()
-        // Path éxito
+
         _ = spy.save(data: "irrelevant".data(using: .utf8)!, forKey: keySuccess)
         spy.deleteSpy.deleteResult = true
         spy.deleteSpy.simulatedDeleteError = nil
@@ -523,46 +546,48 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SecureStorage (NoFallback strategy) - Checklist: Always returns failure
     // Checklist: Always returns failure
     func test_save_onNoFallback_alwaysReturnsFailure() {
-        let sut = makeNoFallback()
-        let data = "irrelevant".data(using: .utf8)!
+        let sut: NoFallback = makeNoFallback()
+        let data: Data = "irrelevant".data(using: .utf8)!
         XCTAssertEqual(sut.save(data: data, forKey: "irrelevant"), KeychainSaveResult.failure)
     }
 
     // Checklist: _save returns failure for empty key
     // CU: SystemKeychain-save-emptyKey
     func test__save_returnsFailureOnEmptyKey() {
-        let sut = makeSUT()
-        let data = "data".data(using: .utf8)!
+        let sut: SystemKeychain = makeSUT()
+        let data: Data = "data".data(using: .utf8)!
         XCTAssertEqual(sut.save(data: data, forKey: ""), .failure, "Should fail to save with empty key")
     }
 
     // Checklist: _save returns failure for empty data
     // CU: SystemKeychain-save-emptyData
     func test__save_returnsFailureOnEmptyData() {
-        let sut = makeSUT()
-        XCTAssertEqual(sut.save(data: Data(), forKey: "key"), .failure, "Should fail to save with empty data")
+        let sut: SystemKeychain = makeSUT()
+        XCTAssertEqual(
+            sut.save(data: Data(), forKey: "key"), .failure, "Should fail to save with empty data"
+        )
     }
 
     // Checklist: _delete returns false for empty key
     // CU: SystemKeychain-delete-emptyKey
     func test__delete_returnsFalseOnEmptyKey() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         XCTAssertFalse(sut.delete(forKey: ""), "Should fail to delete with empty key")
     }
 
     // Checklist: _load returns nil for empty key
     // CU: SystemKeychain-load-emptyKey
     func test__load_returnsNilOnEmptyKey() {
-        let sut = makeSUT()
+        let sut: SystemKeychain = makeSUT()
         XCTAssertNil(sut.load(forKey: ""), "Should return nil when loading with empty key")
     }
 
     // Checklist: _save returns success when handleDuplicateItem succeeds and validation succeeds
     // CU: SystemKeychain-save-success
     func test_save_returnsSuccess_whenHandleDuplicateItemSucceedsAndValidationSucceeds() {
-        let (sut, spy) = makeSpySUT()
-        let key = uniqueKey()
-        let data = "data".data(using: .utf8)!
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
+        let key: String = uniqueKey()
+        let data: Data = "data".data(using: .utf8)!
         spy.saveResult = .duplicateItem
         spy.loadResult = nil // Ensure no interference from previous loadResult
         var attempts = 0
@@ -572,18 +597,23 @@ final class SystemKeychainTests: XCTestCase {
             return true
         }
         spy.willValidateAfterSave = nil // No corruption
-        let result = sut.save(data: data, forKey: key)
-        XCTAssertEqual(result, .success, "Should return success if updateStatus == errSecSuccess and validation succeed in handleDuplicateItem")
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+        XCTAssertEqual(
+            result, .success,
+            "Should return success if updateStatus == errSecSuccess and validation succeed in handleDuplicateItem"
+        )
         XCTAssertEqual(attempts, 1, "Should have retried once")
-        XCTAssertEqual(spy.storage[key], data, "Spy storage should contain the updated data after success")
+        XCTAssertEqual(
+            spy.storage[key], data, "Spy storage should contain the updated data after success"
+        )
     }
 
     // Checklist: _save returns duplicateItem when handleDuplicateItem succeeds but validation fails
     // CU: SystemKeychain-save-duplicateItem
     func test_save_returnsFailure_whenHandleDuplicateItemSucceedsButValidationFails() {
-        let (sut, spy) = makeSpySUT()
-        let key = uniqueKey()
-        let data = "data".data(using: .utf8)!
+        let (sut, spy): (SystemKeychain, KeychainFullSpy) = makeSpySUT()
+        let key: String = uniqueKey()
+        let data: Data = "data".data(using: .utf8)!
         spy.saveResult = .duplicateItem
         spy.loadResult = nil // Ensure no interference from previous loadResult
         var attempts = 0
@@ -592,23 +622,31 @@ final class SystemKeychainTests: XCTestCase {
             spy?.storage[key] = data // Ensure the spy updates the storage
             return true
         }
-        // Simulate corruption right before validation
+
         spy.willValidateAfterSave = { [weak spy] corruptedKey in
             spy?.storage[corruptedKey] = nil
         }
-        let result = sut.save(data: data, forKey: key)
-        XCTAssertEqual(result, .failure, "Should return failure if updateStatus == errSecSuccess succeeds but validation fails in handleDuplicateItem")
-        XCTAssertEqual(attempts, 2, "Should have retried twice (once for initial update, once for retry after failed validation)")
-        XCTAssertNil(spy.storage[key], "Spy storage should not contain the data after simulated corruption")
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+        XCTAssertEqual(
+            result, .failure,
+            "Should return failure if updateStatus == errSecSuccess succeeds but validation fails in handleDuplicateItem"
+        )
+        XCTAssertEqual(
+            attempts, 2,
+            "Should have retried twice (once for initial update, once for retry after failed validation)"
+        )
+        XCTAssertNil(
+            spy.storage[key], "Spy storage should not contain the data after simulated corruption"
+        )
     }
 
     // Checklist: Factory simulates corruption
     // CU: SystemKeychain-factory-simulatesCorruption
     func test_factory_simulatesCorruption() {
-        let spy = makeKeychainFullSpy()
-        let sut = makeSUT(keychain: spy)
+        let spy: KeychainFullSpy = makeKeychainFullSpy()
+        let sut: SystemKeychain = makeSUT(keychain: spy)
         let key = "corrupt-key"
-        let value = "data".data(using: .utf8)!
+        let value: Data = "data".data(using: .utf8)!
         _ = sut.save(data: value, forKey: key)
         spy.simulateCorruption(forKey: key)
         XCTAssertNil(sut.load(forKey: key), "Should return nil for corrupted key")
@@ -617,10 +655,10 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Factory handles unicode keys
     // CU: SystemKeychain-factory-handlesUnicodeKeys
     func test_factory_handlesUnicodeKeys() {
-        let spy = makeKeychainFullSpy()
-        let sut = makeSUT(keychain: spy)
+        let spy: KeychainFullSpy = makeKeychainFullSpy()
+        let sut: SystemKeychain = makeSUT(keychain: spy)
         let key = "🔑-ключ-鍵"
-        let value = "unicode-data".data(using: .utf8)!
+        let value: Data = "unicode-data".data(using: .utf8)!
         XCTAssertEqual(sut.save(data: value, forKey: key), .success, "Should save with unicode key")
         XCTAssertEqual(sut.load(forKey: key), value, "Should load with unicode key")
     }
@@ -628,8 +666,8 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Factory handles large data
     // CU: SystemKeychain-factory-handlesLargeData
     func test_factory_handlesLargeData() {
-        let spy = makeKeychainFullSpy()
-        let sut = makeSUT(keychain: spy)
+        let spy: KeychainFullSpy = makeKeychainFullSpy()
+        let sut: SystemKeychain = makeSUT(keychain: spy)
         let key = "large-key"
         let value = Data(repeating: 0xFF, count: 1024 * 1024) // 1 MB
         XCTAssertEqual(sut.save(data: value, forKey: key), .success, "Should save large data")
@@ -651,11 +689,12 @@ private extension SystemKeychainTests {
     func makeSUT(
         keychain: KeychainProtocolWithDelete? = nil, file: StaticString = #file, line: UInt = #line
     ) -> SystemKeychain {
-        let sut = if let keychain {
-            SystemKeychain(keychain: keychain)
-        } else {
-            SystemKeychain()
-        }
+        let sut =
+            if let keychain {
+                SystemKeychain(keychain: keychain)
+            } else {
+                SystemKeychain()
+            }
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
@@ -663,7 +702,7 @@ private extension SystemKeychainTests {
     func makeSpySUT(file: StaticString = #file, line: UInt = #line) -> (
         sut: SystemKeychain, spy: KeychainFullSpy
     ) {
-        let spy = makeKeychainFullSpy()
+        let spy: KeychainFullSpy = makeKeychainFullSpy()
         let sut = SystemKeychain(keychain: spy)
         trackForMemoryLeaks(spy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -682,7 +721,7 @@ private extension SystemKeychainTests {
         file: StaticString = #file, line: UInt = #line
     ) {
         spy.loadResult = loadResult
-        let result = sut.save(data: data, forKey: key)
+        let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(
             result, expected,
             "Should return \(expected) when loadResult is \(String(describing: loadResult))", file: file,

@@ -1,3 +1,4 @@
+
 import EssentialApp
 import XCTest
 
@@ -38,7 +39,7 @@ final class KeychainHelperTests: XCTestCase {
 
     func test_delete_nonexistentKey_doesNotCrash() {
         let sut = makeSUT()
-        sut.delete(key) // Should not throw or crash
+        sut.delete(key)
         XCTAssertNil(sut.get(key))
     }
 

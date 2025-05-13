@@ -1,12 +1,6 @@
-//
-// Copyright © 2025 Essential Developer. All rights reserved.
-//
 
 import Foundation
 
-// MARK: - KeychainSecureStorage
-
-/// Clase que gestiona el almacenamiento seguro con múltiples estrategias de fallback
 public final class KeychainSecureStorage {
     private let keychain: KeychainSavable
     private let fallback: KeychainSavable

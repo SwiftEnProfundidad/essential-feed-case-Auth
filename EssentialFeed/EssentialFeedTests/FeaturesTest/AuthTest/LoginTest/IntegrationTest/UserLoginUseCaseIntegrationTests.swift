@@ -1,9 +1,8 @@
+
 import EssentialFeed
 import XCTest
 
 final class UserLoginUseCaseIntegrationTests: XCTestCase {
-    // MARK: - Tests
-
     func test_login_doesNotCallAPI_whenEmailIsInvalid() async {
         let (sut, api, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "ValidPassword123")
@@ -20,22 +19,6 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
 
     // TODO: Si existe Keychain/secure storage en el flujo, añadir spy y test equivalente:
     // func test_login_doesNotAccessKeychain_whenValidationFails() async { ... }
-
-    // MARK: - Spies (válidos para todos los tests de esta clase)
-
-    private final class LoginSuccessObserverSpy: LoginSuccessObserver {
-        private(set) var receivedResponses = [LoginResponse]()
-        func didLoginSuccessfully(response: LoginResponse) {
-            receivedResponses.append(response)
-        }
-    }
-
-    private final class LoginFailureObserverSpy: LoginFailureObserver {
-        private(set) var receivedErrors = [LoginError]()
-        func didFailLogin(error: LoginError) {
-            receivedErrors.append(error)
-        }
-    }
 
     // MARK: - Helpers
 
@@ -70,5 +53,21 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
 
         return (sut, api, successSpy, failureSpy)
+    }
+
+    // MARK: - Spies (válidos para todos los tests de esta clase)
+
+    private final class LoginSuccessObserverSpy: LoginSuccessObserver {
+        private(set) var receivedResponses = [LoginResponse]()
+        func didLoginSuccessfully(response: LoginResponse) {
+            receivedResponses.append(response)
+        }
+    }
+
+    private final class LoginFailureObserverSpy: LoginFailureObserver {
+        private(set) var receivedErrors = [LoginError]()
+        func didFailLogin(error: LoginError) {
+            receivedErrors.append(error)
+        }
     }
 }

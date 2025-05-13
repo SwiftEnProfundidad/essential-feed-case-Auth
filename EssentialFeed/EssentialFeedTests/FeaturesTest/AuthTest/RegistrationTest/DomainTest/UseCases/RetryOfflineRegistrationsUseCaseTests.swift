@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import XCTest
 
@@ -23,7 +24,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         let expectedApiResponse = UserRegistrationResponse(userID: "user-123", token: "new-auth-token", refreshToken: "new-refresh-token")
         spies.authAPI.completeRegistrationSuccessfully(with: expectedApiResponse)
         spies.tokenStorage.completeSaveSuccessfully()
-        spies.offlineStore.completeDeletionSuccessfully() // Necesita existir en el OfflineRegistrationStoreSpy compartido
+        spies.offlineStore.completeDeletionSuccessfully()
 
         let results = await sut.execute()
 

@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import Foundation
 
@@ -52,7 +53,7 @@ public final class KeychainDeleteSpy: KeychainSavable, KeychainDeletable {
         if key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return false
         }
-        if let _ = simulatedDeleteError {
+        if simulatedDeleteError != nil {
             return false // Simula error real
         }
         return deleteResult
@@ -114,14 +115,14 @@ public final class KeychainFullSpy: KeychainFull, KeychainSpyAux {
     // MARK: - Properties
 
     public var forceValidationFailForKey: String?
-    public var strictMode: Bool = false
+    public var strictMode = false
     public var deleteSpy = KeychainDeleteSpy()
     public var saveSpy = KeychainSaveSpy()
     public var updateSpy = KeychainUpdateSpy()
-    var storage: [String: Data] = [:] // Internal for test access
-    private let storageLock = NSRecursiveLock()
-    private var errorByKey: [String: Int] = [:]
-    private var _loadResult: Data?? // nil = no override, .some(nil) = override a nil, .some(.some(data)) = override a data
+    var storage: [String: Data] = [:]
+    let storageLock = NSRecursiveLock()
+    var errorByKey: [String: Int] = [:]
+    var _loadResult: Data??
 
     // MARK: - Protocol Properties
 
@@ -185,7 +186,8 @@ public final class KeychainFullSpy: KeychainFull, KeychainSpyAux {
     public func save(data: Data, forKey key: String) -> KeychainSaveResult {
         if !strictMode { return saveSpy.save(data: data, forKey: key) }
         guard isValidInput(key: key, data: data) else { return .failure }
-        storageLock.lock(); defer { storageLock.unlock() }
+        storageLock.lock()
+        defer { storageLock.unlock() }
         guard ensureNoDuplicate(forKey: key) else { return .failure }
         return performSave(data: data, forKey: key)
     }
@@ -243,7 +245,9 @@ public final class KeychainFullSpy: KeychainFull, KeychainSpyAux {
     public func update(data: Data, forKey key: String) -> OSStatus {
         if let handler = customUpdateHandler {
             if handler(data, key) {
-                storageLock.lock(); storage[key] = data; storageLock.unlock()
+                storageLock.lock()
+                storage[key] = data
+                storageLock.unlock()
                 return errSecSuccess
             } else {
                 return errSecDuplicateItem

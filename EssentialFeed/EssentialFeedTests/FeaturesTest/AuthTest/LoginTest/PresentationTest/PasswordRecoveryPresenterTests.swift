@@ -1,5 +1,3 @@
-// CU: PasswordRecoveryPresenter
-// Checklist:
 
 import EssentialFeed
 import XCTest

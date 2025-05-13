@@ -1,3 +1,4 @@
+
 import Combine
 import EssentialApp
 import EssentialFeed
@@ -49,6 +50,8 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "password"
         await viewModel.login()
         XCTAssertTrue(viewModel.loginSuccess)
+        XCTAssertNil(viewModel.errorMessage)
+        XCTAssertFalse(viewModel.isLoginBlocked)
     }
 
     func test_login_networkError_showsNetworkErrorMessage() async {
@@ -246,7 +249,7 @@ final class LoginViewTests: XCTestCase {
     func test_login_withInvalidPasswordFormat_showsValidationError() async {
         let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
         viewModel.username = "user@email.com"
-        viewModel.password = "short" // Less than 8 characters
+        viewModel.password = "short"
         await viewModel.login()
         XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
         XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
@@ -267,13 +270,13 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "password"
         await viewModel.login()
         XCTAssertEqual(viewModel.errorMessage, "Could not connect. Please try again.", "Expected network error message after failed login")
-        // Edit username
+
         viewModel.username = "user2@email.com"
         XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing username")
-        // Simulate error again
+
         viewModel.username = "user@email.com"
         await viewModel.login()
-        // Edit password
+
         viewModel.password = "newpassword"
         XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing password")
     }
@@ -297,7 +300,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "password"
         await viewModel.login()
         XCTAssertTrue(authenticatedCalled, "Expected authenticated event to be sent after successful login")
-        _ = cancellable // Retain while in scope
+        _ = cancellable
     }
 
     func test_login_networkError_storesPendingRequest_and_canRetryLater() async {
@@ -422,10 +425,10 @@ final class LoginViewTests: XCTestCase {
 
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
-        await viewModel.login() // Simulate failure to increment attempts
+        await viewModel.login()
 
         viewModel.password = "correct-password"
-        await viewModel.login() // Now should reset
+        await viewModel.login()
 
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 1)
         XCTAssertEqual(spyStore.capturedUsernames.last, "user@test.com")
@@ -440,7 +443,7 @@ final class LoginViewTests: XCTestCase {
         )
 
         viewModel.username = "user@test.com"
-        viewModel.password = "wrong-password" // Add password to avoid validation
+        viewModel.password = "wrong-password"
         for _ in 1 ... 3 {
             await viewModel.login()
         }
@@ -511,7 +514,7 @@ final class LoginViewTests: XCTestCase {
             await viewModel.login()
         } // Bloquea
         XCTAssertTrue(viewModel.isLoginBlocked)
-        viewModel.unlockAfterRecovery() // Desbloquea
+        viewModel.unlockAfterRecovery()
 
         for _ in 1 ... 3 {
             await viewModel.login()
@@ -538,7 +541,7 @@ final class LoginViewTests: XCTestCase {
         let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
         let viewModel = makeSUT(
             authenticate: { _, _ in .failure(.invalidCredentials) }, failedAttemptsStore: spyStore,
-            maxFailedAttempts: 100 // Fuerza fallos
+            maxFailedAttempts: 100
         )
 
         viewModel.username = "user@test.com"

@@ -26,7 +26,6 @@ public final class LoginViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var delayTask: Task<Void, Never>?
 
-    /// Closure de autenticación asíncrona (production y tests)
     public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
     private let pendingRequestStore: AnyLoginRequestStore?
     private let failedAttemptsStore: FailedLoginAttemptsStore
@@ -202,3 +201,5 @@ public final class LoginViewModel: ObservableObject {
         delayTask?.cancel()
     }
 }
+
+extension LoginViewModel: LoginViewModelProtocol {}

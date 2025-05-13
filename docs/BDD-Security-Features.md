@@ -295,8 +295,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] The user can see and understand the success message (UI responsibility)
     - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
-        - [🚧] Write happy-path integration test (valid creds → successObserver → UI shows success state)
-        - [🔜] Capture a snapshot of the success screen and add a reference
+        - [❓] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [🚧] Capture a snapshot of the success screen and add a reference
         - [🔜] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [🔜] Capture a snapshot of the error screen and add a reference
         - [🔜] Ensure tests run in CI (update scheme + record on first run)

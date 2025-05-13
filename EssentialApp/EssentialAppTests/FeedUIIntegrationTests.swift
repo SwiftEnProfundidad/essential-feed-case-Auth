@@ -72,10 +72,7 @@ class FeedUIIntegrationTests: XCTestCase {
     func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut, loader) = makeSUT()
 
-        // The initial refresh should be triggered by viewDidLoad -> refresh()
-        // Let's give it a very brief moment to ensure all synchronous setup in makeSUT,
-        // including the first call to onRefresh and subsequent display calls, completes.
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.06)) // Increased delay slightly from 0.05 to 0.06
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.06))
 
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view appears and refresh cycle starts")
 
@@ -84,8 +81,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 
         sut.simulateUserInitiatedReload()
-        // After simulateUserInitiatedReload, the loader is called, which should trigger the indicator
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.05)) // Increased delay slightly
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.05))
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 
         loader.completeFeedLoadingWithError(at: 1)
@@ -231,7 +227,7 @@ class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
 
         loader.completeFeedLoading(with: [image0, image1], isLastPage: true, at: 0)
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1)) // Deja que las cargas iniciales/prefetching agresivo ocurran
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
 
         let urlsLoadedInitially = loader.loadedImageURLs
 

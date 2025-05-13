@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import XCTest
 
@@ -10,7 +11,7 @@ final class RefreshTokenUseCaseTests: XCTestCase {
     }
 
     func test_execute_sendsCorrectRequest() async throws {
-        let (sut, client, storage, _) = makeSUT() // parserSpy es tu TokenParserSpy
+        let (sut, client, storage, _) = makeSUT()
         let refreshURLFromSUT = URL(string: "https://any-refresh-url.com")!
 
         storage.completeLoadRefreshToken(with: "any-valid-refresh-token")
@@ -20,9 +21,9 @@ final class RefreshTokenUseCaseTests: XCTestCase {
         let requestRegistered = expectation(description: "Request registered")
         Task {
             var attempts = 0
-            let maxAttempts = 100 // Evitar un bucle infinito si algo va muy mal (100 * 10ms = 1s)
+            let maxAttempts = 100
             while client.requests.isEmpty, !executeTask.isCancelled, attempts < maxAttempts {
-                try? await Task.sleep(nanoseconds: 10_000_000) // 10 ms
+                try? await Task.sleep(nanoseconds: 10_000_000)
                 attempts += 1
             }
 
@@ -33,7 +34,7 @@ final class RefreshTokenUseCaseTests: XCTestCase {
             }
         }
 
-        await fulfillment(of: [requestRegistered], timeout: 1.5) // Aumentamos ligeramente el timeout por si acaso
+        await fulfillment(of: [requestRegistered], timeout: 1.5)
 
         guard let firstRequest = client.requests.first else {
             XCTFail("No request registered in HTTPClientSpy. executeTask might have failed before making a network call (e.g., due to an error thrown by sut.execute()).")

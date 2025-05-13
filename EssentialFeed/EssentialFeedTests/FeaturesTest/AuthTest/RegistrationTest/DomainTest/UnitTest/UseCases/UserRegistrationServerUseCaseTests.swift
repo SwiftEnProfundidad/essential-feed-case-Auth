@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import Foundation
 import XCTest
@@ -123,7 +124,7 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
 
     func delete(forKey key: String) -> Bool { // Este método NO es parte de KeychainSavable, solo de KeychainFull/Deletable
         keychainDeleteKeyCalls.append(key)
-        guard !keychainDeleteResults.isEmpty else { return true } // Devuelve true por defecto si no hay nada preconfigurado
+        guard !keychainDeleteResults.isEmpty else { return true }
         return keychainDeleteResults.removeFirst()
     }
 

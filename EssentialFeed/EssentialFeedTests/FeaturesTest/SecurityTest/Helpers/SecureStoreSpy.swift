@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import Foundation
 
@@ -8,10 +9,10 @@ final class SecureStoreSpy: SecureStore {
         case delete(key: String)
     }
 
-    private(set) var receivedMessages: [ReceivedMessage] = []
-    private var stubbedSaveResults: [String: Result<Void, Error>] = [:]
-    private var stubbedRetrievalResults: [String: Result<Data, Error>] = [:]
-    private var stubbedDeleteResults: [String: Result<Void, Error>] = [:]
+    private(set) var receivedMessages: [ReceivedMessage] = .init()
+    private var stubbedSaveResults: [String: Result<Void, Error>] = .init()
+    private var stubbedRetrievalResults: [String: Result<Data, Error>] = .init()
+    private var stubbedDeleteResults: [String: Result<Void, Error>] = .init()
 
     func save(_ data: Data, forKey key: String) throws {
         receivedMessages.append(.save(key: key, value: data))

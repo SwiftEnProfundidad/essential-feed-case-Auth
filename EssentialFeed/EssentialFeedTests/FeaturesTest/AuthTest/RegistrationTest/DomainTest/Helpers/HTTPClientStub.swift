@@ -1,7 +1,7 @@
+
 import EssentialFeed
 import Foundation
 
-// CHANGE: HTTPClientStub ahora se conforma al nuevo protocolo HTTPClient
 class HTTPClientStub: HTTPClient {
     private let stub: (URLRequest) -> Result<(Data, HTTPURLResponse), Error>
 

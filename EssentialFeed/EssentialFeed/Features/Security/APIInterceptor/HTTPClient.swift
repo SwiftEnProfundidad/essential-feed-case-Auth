@@ -8,7 +8,6 @@ public protocol HTTPClient {
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse)
 }
 
-// Extensión para mantener métodos antiguos (opcional, solo durante transición)
 public extension HTTPClient {
     @available(*, deprecated, message: "Migrar a send(_:) async")
     func get(from url: URL) async throws -> (Data, HTTPURLResponse) {

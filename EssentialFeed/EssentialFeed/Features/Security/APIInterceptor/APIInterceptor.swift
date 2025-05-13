@@ -44,7 +44,6 @@ public final class APIInterceptor: HTTPClient {
     }
 
     private func isUnauthorized(_ error: Error) -> Bool {
-        // Implementa la lógica real según tu error HTTPClient
         if let urlError = error as? URLError, urlError.code == .userAuthenticationRequired {
             return true
         }

@@ -1,8 +1,7 @@
+
 import EssentialFeed
 import XCTest
 
-// CU: LoginPresenter
-// Technical Checklist (BDD):
 final class LoginPresenterTests: XCTestCase {
     func test_didLoginSuccessfully_notifiesViewAndCleansErrors() {
         let (sut, view) = makeSUTWithUnifiedSpy()
@@ -41,6 +40,8 @@ final class LoginPresenterTests: XCTestCase {
         let sut = LoginPresenter(successView: successSpy, errorClearingView: errorSpy)
         return (sut, successSpy, errorSpy)
     }
+
+    // MARK: - Test Doubles
 
     private class LoginViewSpy: LoginSuccessPresentingView, LoginErrorClearingPresentingView {
         private(set) var didShowLoginSuccess = false

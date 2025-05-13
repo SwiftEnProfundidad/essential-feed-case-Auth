@@ -1,9 +1,9 @@
+
 import EssentialFeed
 import XCTest
 
 final class UserPasswordRecoveryIntegrationTests: XCTestCase {
     func test_recovery_succeeds_withValidEmail_andNotifiesSuccess() async {
-        // Arrange
         let (sut, api) = makeSUT()
         let validEmail = "user@example.com"
         api.result = .success(PasswordRecoveryResponse(message: "OK"))
@@ -15,13 +15,11 @@ final class UserPasswordRecoveryIntegrationTests: XCTestCase {
             }
         }
 
-        // Assert
         XCTAssertEqual(api.requestedEmails, [validEmail])
         XCTAssertEqual(receivedResponse?.message, "OK")
     }
 
     func test_recovery_fails_withInvalidEmailFormat_andDoesNotSendRequest() async {
-        // Arrange
         let (sut, api) = makeSUT()
         let invalidEmail = "invalid-email-format"
         var receivedError: PasswordRecoveryError?
@@ -32,13 +30,11 @@ final class UserPasswordRecoveryIntegrationTests: XCTestCase {
             }
         }
 
-        // Assert
         XCTAssertEqual(api.requestedEmails, [])
         XCTAssertEqual(receivedError, .invalidEmailFormat)
     }
 
     func test_recovery_fails_withUnregisteredEmail_andNotifiesFailure() async {
-        // Arrange
         let (sut, api) = makeSUT()
         let validEmail = "notfound@example.com"
         api.result = .failure(.emailNotFound)
@@ -50,13 +46,11 @@ final class UserPasswordRecoveryIntegrationTests: XCTestCase {
             }
         }
 
-        // Assert
         XCTAssertEqual(api.requestedEmails, [validEmail])
         XCTAssertEqual(receivedError, .emailNotFound)
     }
 
     func test_recovery_fails_onConnectivityError_andNotifiesFailure() async {
-        // Arrange
         let (sut, api) = makeSUT()
         let validEmail = "user@example.com"
         api.result = .failure(.network)
@@ -68,7 +62,6 @@ final class UserPasswordRecoveryIntegrationTests: XCTestCase {
             }
         }
 
-        // Assert
         XCTAssertEqual(api.requestedEmails, [validEmail])
         XCTAssertEqual(receivedError, .network)
     }

@@ -11,8 +11,6 @@ import XCTest
 
 class CommentsUIIntegrationTests: XCTestCase {
     func test_commentsView_hasTitle() {
-        // CHANGE: sut y loader se definen dentro de un autoreleasepool
-        // para asegurar su desasignación antes de que termine el test.
         autoreleasepool {
             let (sut, _) = makeSUT()
             sut.loadViewIfNeeded()
@@ -47,36 +45,14 @@ class CommentsUIIntegrationTests: XCTestCase {
             sut!.simulateUserInitiatedReload()
             XCTAssertEqual(loader!.loadCommentsCallCount, 3, "Expected yet another loading request once user initiates another reload")
         }
-        // sut y loader deberían ser nil ahora debido al autoreleasepool
-        // y a que sus referencias fuertes dentro del pool se han ido.
-        // trackForMemoryLeaks se basa en que el objeto YA NO EXISTA cuando se llama.
-        // Esto es inherentemente difícil de trackear directamente para variables locales
-        // sin un `addTeardownBlock` o similar. La forma en que XCTestCase+MemoryLeakTracking
-        // funciona es mejor para propiedades de instancia que se nilifican en tearDown.
-
-        // Por ahora, confiaremos en que el autoreleasepool ayuda, y si las fugas persisten,
-        // el helper de XCTestCase+MemoryLeakTracking que usas con #filePath y #line
-        // podría necesitar que los objetos se pasen como `inout` o que se nilifiquen explícitamente
-        // antes de llamar a trackForMemoryLeaks(objetoNilificado).
-
-        // Vamos a simplificar y quitar las llamadas explícitas a trackForMemoryLeaks de aquí
-        // confiando en la configuración del "fork" donde esto no causaba problemas de fugas.
-        // La clave es que el sut/loader no sean retenidos por closures fuertes más allá de su vida útil.
     }
 
     func test_loadingCommentsIndicator_isVisibleWhileLoadingComments() {
-        // No es necesario el autoreleasepool aquí si makeSUT ya usa trackForMemoryLeaks
-        // y las variables sut/loader son locales al test.
         let (sut, loader) = makeSUT()
 
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
 
-        // ADD: Forzar explícitamente el estado de refresco en el FakeRefreshControl
-        // ya que la carga inicial se ha disparado por loadViewIfNeeded -> refresh.
-        // Esto es necesario porque, sin una UIWindow, el UIRefreshControl original
-        // podría no haber entrado en estado 'isRefreshing', por lo que el Fake
-        // no lo heredaría.
         if let fakeRefreshControl = sut.refreshControl as? FakeRefreshControl {
             fakeRefreshControl.beginRefreshing()
         }
@@ -86,7 +62,7 @@ class CommentsUIIntegrationTests: XCTestCase {
         loader.completeCommentsLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
 
-        sut.simulateUserInitiatedReload() // Esto debería llamar a beginRefreshing() en el FakeRefreshControl
+        sut.simulateUserInitiatedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
 
         loader.completeCommentsLoadingWithError(at: 1)
@@ -204,12 +180,8 @@ class CommentsUIIntegrationTests: XCTestCase {
             })
 
             sut?.loadViewIfNeeded()
-            // La carga se inicia, el adapter retiene el publisher.
         }
-        // Al salir del autoreleasepool, si sut es la única referencia fuerte al ListViewController
-        // y el ListViewController no tiene ciclos de retención fuertes (ej. a través de su adapter),
-        // debería desasignarse.
-        sut = nil // Asegura que la referencia local se rompa.
+        sut = nil
 
         XCTAssertEqual(cancelCallCount, 1, "Expected cancel event on deinit")
     }

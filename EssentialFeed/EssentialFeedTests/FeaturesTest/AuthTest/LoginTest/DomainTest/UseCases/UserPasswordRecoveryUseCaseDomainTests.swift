@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import XCTest
 
@@ -89,7 +90,8 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 }
 
-// Stub API for testing
+// MARK: - Stub API for testing
+
 private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     private let result: Result<PasswordRecoveryResponse, PasswordRecoveryError>
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {

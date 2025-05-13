@@ -39,6 +39,9 @@
 		0895DAAD234B3F7E0031BB2D /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; };
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF92F52555A15B006B7E7D /* NullStore.swift */; };
+		B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44823382DD3A226009E59A5 /* LoginUIComposer.swift */; };
+		B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */; };
+		B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */; };
 		B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2032DBD6ABC0078F27B /* LoginComposer.swift */; };
 		B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2052DBD6ABC0078F27B /* LoginView.swift */; };
 		B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2022DBD6ABC0078F27B /* AuthComposer.swift */; };
@@ -130,13 +133,15 @@
 		08B5033925346BE1003FF218 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		08B5033B25346BFE003FF218 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		08CF92F52555A15B006B7E7D /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
+		B44823382DD3A226009E59A5 /* LoginUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUIComposer.swift; sourceTree = "<group>"; };
+		B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUISnapshotTests.swift; sourceTree = "<group>"; };
+		B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelAdapterTest.swift; sourceTree = "<group>"; };
 		B449F2022DBD6ABC0078F27B /* AuthComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthComposer.swift; sourceTree = "<group>"; };
 		B449F2032DBD6ABC0078F27B /* LoginComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginComposer.swift; sourceTree = "<group>"; };
 		B449F2052DBD6ABC0078F27B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
 		B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryComposer.swift; sourceTree = "<group>"; };
 		B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryScreen.swift; sourceTree = "<group>"; };
-		B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = EssentialApp/Features/Auth/UI/PasswordRecoveryScreen.swift; sourceTree = SOURCE_ROOT; };
 		B46DAAB82DC22A780080160E /* LoginViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewTests.swift; sourceTree = "<group>"; };
 		B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4702E272DC146390055B3D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -268,6 +273,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B44823402DD3AD14009E59A5 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
 		B4702E2F2DC150710055B3D9 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
@@ -330,8 +343,7 @@
 				B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */,
 				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
 				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
-				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
-				B46DAAB62DC18CE00080160E /* PasswordRecoveryScreen.swift */,
+				B44823382DD3A226009E59A5 /* LoginUIComposer.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -339,6 +351,7 @@
 		B4D6B2592DC8D07900F5A3FE /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				B44823402DD3AD14009E59A5 /* Presentation */,
 				B4D6B2572DC8D07900F5A3FE /* Composition */,
 				B4D6B2582DC8D07900F5A3FE /* UI */,
 			);
@@ -367,10 +380,12 @@
 			isa = PBXGroup;
 			children = (
 				B4D0FE632DBEEEE000033FF3 /* snapshots */,
+				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
 				B46DAAB82DC22A780080160E /* LoginViewTests.swift */,
 				B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */,
 				B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */,
 				B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */,
+				B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -400,7 +415,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0895DAA2234B3B980031BB2D /* Build configuration list for PBXNativeTarget "EssentialApp" */;
 			buildPhases = (
-				B4CE05412DCCE80800EAE847 /* ShellScript */,
 				B417AE442DCF4AFD0096D12B /* Run Script */,
 				0895DA7F234B3B950031BB2D /* Sources */,
 				0895DA80234B3B950031BB2D /* Frameworks */,
@@ -420,7 +434,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0895DAA5234B3B980031BB2D /* Build configuration list for PBXNativeTarget "EssentialAppTests" */;
 			buildPhases = (
-				B4CE05422DCCE81200EAE847 /* ShellScript */,
 				0895DA95234B3B980031BB2D /* Sources */,
 				0895DA96234B3B980031BB2D /* Frameworks */,
 				0895DA97234B3B980031BB2D /* Resources */,
@@ -521,42 +534,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
 		};
-		B4CE05412DCCE80800EAE847 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\n# Determinar la ruta de SwiftLint y el archivo de configuración\nSWIFTLINT_EXECUTABLE=\"\"\n# Asumimos que .swiftlint.yml está en la raíz del repositorio, un nivel por encima de la carpeta del proyecto EssentialFeed\n# SRCROOT para el target EssentialFeed es /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed\n# Por lo tanto, ../.swiftlint.yml apunta a /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/.swiftlint.yml\nCONFIG_FILE=\"${SRCROOT}/../.swiftlint.yml\"\n\nif [[ \"$(uname -m)\" == \"arm64\" ]]; then\n  # Para Apple Silicon Macs (M1, M2, M3, etc.)\n  SWIFTLINT_EXECUTABLE=\"/opt/homebrew/bin/swiftlint\"\nelse\n  # Para Intel Macs\n  SWIFTLINT_EXECUTABLE=\"/usr/local/bin/swiftlint\"\nfi\n\n# Verificar si SwiftLint está instalado en la ruta esperada\nif [[ -f \"$SWIFTLINT_EXECUTABLE\" ]]; then\n  echo \"SwiftLint encontrado en $SWIFTLINT_EXECUTABLE. Ejecutando con configuración: $CONFIG_FILE\"\n  # Ejecutar SwiftLint para autocorregir. Si solo quieres que muestre errores/advertencias, cambia 'autocorrect' por 'lint'.\n  \"$SWIFTLINT_EXECUTABLE\" autocorrect --config \"$CONFIG_FILE\" --quiet\n  # El flag --quiet es para reducir la verbosidad si todo va bien. Puedes quitarlo para más detalle.\n  echo \"SwiftLint ejecutado.\"\nelse\n  echo \"warning: SwiftLint no fue encontrado en la ruta esperada ($SWIFTLINT_EXECUTABLE). Por favor, asegúrate de que esté instalado mediante Homebrew ('brew install swiftlint') y accesible en esa ruta.\"\nfi\n";
-		};
-		B4CE05422DCCE81200EAE847 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\n# Determinar la ruta de SwiftLint y el archivo de configuración\nSWIFTLINT_EXECUTABLE=\"\"\n# Asumimos que .swiftlint.yml está en la raíz del repositorio, un nivel por encima de la carpeta del proyecto EssentialFeed\n# SRCROOT para el target EssentialFeed es /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialFeed\n# Por lo tanto, ../.swiftlint.yml apunta a /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/.swiftlint.yml\nCONFIG_FILE=\"${SRCROOT}/../.swiftlint.yml\"\n\nif [[ \"$(uname -m)\" == \"arm64\" ]]; then\n  # Para Apple Silicon Macs (M1, M2, M3, etc.)\n  SWIFTLINT_EXECUTABLE=\"/opt/homebrew/bin/swiftlint\"\nelse\n  # Para Intel Macs\n  SWIFTLINT_EXECUTABLE=\"/usr/local/bin/swiftlint\"\nfi\n\n# Verificar si SwiftLint está instalado en la ruta esperada\nif [[ -f \"$SWIFTLINT_EXECUTABLE\" ]]; then\n  echo \"SwiftLint encontrado en $SWIFTLINT_EXECUTABLE. Ejecutando con configuración: $CONFIG_FILE\"\n  # Ejecutar SwiftLint para autocorregir. Si solo quieres que muestre errores/advertencias, cambia 'autocorrect' por 'lint'.\n  \"$SWIFTLINT_EXECUTABLE\" autocorrect --config \"$CONFIG_FILE\" --quiet\n  # El flag --quiet es para reducir la verbosidad si todo va bien. Puedes quitarlo para más detalle.\n  echo \"SwiftLint ejecutado.\"\nelse\n  echo \"warning: SwiftLint no fue encontrado en la ruta esperada ($SWIFTLINT_EXECUTABLE). Por favor, asegúrate de que esté instalado mediante Homebrew ('brew install swiftlint') y accesible en esa ruta.\"\nfi\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -571,6 +548,7 @@
 				B4EA898F2DC18B6E0010481A /* PasswordRecoveryScreen.swift in Sources */,
 				B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */,
 				B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */,
+				B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
@@ -589,6 +567,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
 				082C00062359E4C6008927D3 /* SharedTestHelpers.swift in Sources */,
 				088B441925309AA300D75AAD /* CommentsUIIntegrationTests.swift in Sources */,
@@ -604,6 +583,7 @@
 				B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
+				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */,
 				B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */,

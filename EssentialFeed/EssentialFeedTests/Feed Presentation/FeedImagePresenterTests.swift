@@ -5,7 +5,7 @@
 import EssentialFeed
 import XCTest
 
-class FeedImagePresenterTests: XCTestCase {
+final class FeedImagePresenterTests: XCTestCase {
     func test_map_createsViewModel() {
         let image = uniqueImage()
 

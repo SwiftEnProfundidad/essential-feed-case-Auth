@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import Foundation
 import XCTest
@@ -16,7 +17,7 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         let id = UUID()
         let request: URLRequest
         var completion: (Result<(Data, HTTPURLResponse), Error>) -> Void
-        fileprivate(set) var isCompleted = false
+        var isCompleted: Bool = false
     }
 
     public var requests: [URLRequest] {
@@ -31,10 +32,10 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         queue.sync { _requests.map { $0.allHTTPHeaderFields ?? [:] } }
     }
 
-    private var _requests = [URLRequest]()
-    fileprivate var tasks = [Task]()
-    private var _messages = [Message]()
-    fileprivate let queue = DispatchQueue(
+    private var _requests: [URLRequest] = .init()
+    private var tasks: [Task] = .init()
+    private var _messages: [Message] = .init()
+    private let queue: DispatchQueue = .init(
         label: "com.essentialdeveloper.HTTPClientSpy.queue",
         attributes: .concurrent
     )
@@ -161,7 +162,6 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
 // MARK: - Dummy-like extension
 
 extension HTTPClientSpy {
-    /// Completes all pending requests with a dummy error, simulating a dummy client.
     public func failAllPendingRequestsAsDummy() {
         let error = NSError(
             domain: "HTTPClientDummy",

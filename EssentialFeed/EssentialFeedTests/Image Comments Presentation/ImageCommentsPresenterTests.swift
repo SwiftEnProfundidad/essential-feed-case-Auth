@@ -5,7 +5,7 @@
 import EssentialFeed
 import XCTest
 
-class ImageCommentsPresenterTests: XCTestCase {
+final class ImageCommentsPresenterTests: XCTestCase {
     func test_title_isLocalized() {
         XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
     }
@@ -15,7 +15,7 @@ class ImageCommentsPresenterTests: XCTestCase {
         let calendar = Calendar(identifier: .gregorian)
         let locale = Locale(identifier: "en_US_POSIX")
 
-        let comments = [
+        let comments: [ImageComment] = [
             ImageComment(
                 id: UUID(),
                 message: "a message",

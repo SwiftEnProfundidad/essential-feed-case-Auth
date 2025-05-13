@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import SwiftUI
 import UIKit
@@ -13,7 +14,8 @@ public enum PasswordRecoveryComposer {
     }
 }
 
-// Stub para desarrollo
+// MARK: - Stub para desarrollo
+
 private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     private let result: Result<PasswordRecoveryResponse, PasswordRecoveryError>
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
