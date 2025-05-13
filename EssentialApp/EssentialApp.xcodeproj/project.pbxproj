@@ -52,21 +52,31 @@
 		B4702E292DC146390055B3D9 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E272DC146390055B3D9 /* KeychainHelper.swift */; };
 		B4702E2A2DC146390055B3D9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E282DC146390055B3D9 /* SessionManager.swift */; };
 		B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */; };
-		B4702E2E2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4702E2D2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
 		B4702E352DC153280055B3D9 /* KeychainHelperSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */; };
 		B4702E362DC153280055B3D9 /* RealSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */; };
 		B4702E382DC1553D0055B3D9 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E372DC1553D0055B3D9 /* KeychainStore.swift */; };
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
+		B489910E2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
+		B489910F2DD3D8FD00A94850 /* LOGIN_IDLE_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */; };
+		B48991102DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
+		B48991112DD3D8FD00A94850 /* LOGIN_IDLE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */; };
+		B48991122DD3D8FD00A94850 /* LOGIN_LOADING_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */; };
+		B48991132DD3D8FD00A94850 /* LOGIN_ERROR_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */; };
+		B48991142DD3D8FD00A94850 /* LOGIN_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */; };
+		B48991152DD3D8FD00A94850 /* LOGIN_LOADING_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */; };
+		B48991162DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */; };
+		B48991172DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */; };
+		B48991182DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
+		B48991192DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */; };
+		B489911A2DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */; };
+		B489911B2DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
 		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
-		B4D0FE642DBEEEE100033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
-		B4D0FE652DBEEEE100033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
-		B4D0FE662DBEEEE100033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
 		B4EA898F2DC18B6E0010481A /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */; };
 /* End PBXBuildFile section */
 
@@ -147,21 +157,31 @@
 		B4702E272DC146390055B3D9 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		B4702E282DC146390055B3D9 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperTests.swift; sourceTree = "<group>"; };
-		B4702E2D2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
 		B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperSpy.swift; sourceTree = "<group>"; };
 		B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealSessionManagerTests.swift; sourceTree = "<group>"; };
 		B4702E372DC1553D0055B3D9 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
+		B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_dark.png; sourceTree = "<group>"; };
+		B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_light.png; sourceTree = "<group>"; };
+		B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_dark.png; sourceTree = "<group>"; };
+		B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_light.png; sourceTree = "<group>"; };
+		B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_dark.png; sourceTree = "<group>"; };
+		B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_light.png; sourceTree = "<group>"; };
+		B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_dark.png; sourceTree = "<group>"; };
+		B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_light.png; sourceTree = "<group>"; };
+		B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_dark.png; sourceTree = "<group>"; };
+		B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_light.png; sourceTree = "<group>"; };
+		B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
+		B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
+		B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
-		B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
-		B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
 		B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = EssentialApp/Features/Auth/UI/PasswordRecoveryScreen.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -319,10 +339,20 @@
 		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
 			isa = PBXGroup;
 			children = (
-				B4702E2D2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png */,
-				B4D0FE602DBEEEE000033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
-				B4D0FE612DBEEEE000033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png */,
-				B4D0FE622DBEEEE000033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
+				B48991002DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png */,
+				B48991012DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png */,
+				B48991022DD3D8FD00A94850 /* LOGIN_ERROR_dark.png */,
+				B48991032DD3D8FD00A94850 /* LOGIN_ERROR_light.png */,
+				B48991042DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */,
+				B48991052DD3D8FD00A94850 /* LOGIN_IDLE_dark.png */,
+				B48991062DD3D8FD00A94850 /* LOGIN_IDLE_light.png */,
+				B48991072DD3D8FD00A94850 /* LOGIN_LOADING_dark.png */,
+				B48991082DD3D8FD00A94850 /* LOGIN_LOADING_light.png */,
+				B48991092DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png */,
+				B489910A2DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png */,
+				B489910B2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
+				B489910C2DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */,
+				B489910D2DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
 			);
 			path = snapshots;
 			sourceTree = "<group>";
@@ -504,10 +534,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4702E2E2DC14ED10055B3D9 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */,
-				B4D0FE642DBEEEE100033FF3 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
-				B4D0FE652DBEEEE100033FF3 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
-				B4D0FE662DBEEEE100033FF3 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
+				B489910E2DD3D8FD00A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
+				B489910F2DD3D8FD00A94850 /* LOGIN_IDLE_light.png in Resources */,
+				B48991102DD3D8FD00A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
+				B48991112DD3D8FD00A94850 /* LOGIN_IDLE_dark.png in Resources */,
+				B48991122DD3D8FD00A94850 /* LOGIN_LOADING_light.png in Resources */,
+				B48991132DD3D8FD00A94850 /* LOGIN_ERROR_light.png in Resources */,
+				B48991142DD3D8FD00A94850 /* LOGIN_ERROR_dark.png in Resources */,
+				B48991152DD3D8FD00A94850 /* LOGIN_LOADING_dark.png in Resources */,
+				B48991162DD3D8FD00A94850 /* LOGIN_SUCCESS_dark.png in Resources */,
+				B48991172DD3D8FD00A94850 /* LOGIN_SUCCESS_light.png in Resources */,
+				B48991182DD3D8FD00A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
+				B48991192DD3D8FD00A94850 /* LOGIN_BLOCKED_dark.png in Resources */,
+				B489911A2DD3D8FD00A94850 /* LOGIN_BLOCKED_light.png in Resources */,
+				B489911B2DD3D8FD00A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
