@@ -1374,7 +1374,5 @@ ensuring that they are only requested when necessary and that the user understan
 - [❌] Tests for all request flows and permission states.
 
 ---
-*(Diagram, Technical Flows, and Traceability to be developed)*
----
 
 
