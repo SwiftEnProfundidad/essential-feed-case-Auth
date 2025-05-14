@@ -11,11 +11,11 @@
 
 **Cobertura global:** 771 / 873 líneas (**88.3%**)
 
-## 🟢 Puntos fuertes
+## ✅ Strengths
 - Seguridad (Keychain, SecureStorage, Registro, Login): cobertura muy alta, tests unitarios e integración.
 - Cobertura de escenarios reales y edge cases principales.
 
-## 🟡 Áreas a reforzar
+## ⚠️ Areas to Improve
 - `SystemKeychain.swift`: mejorar cobertura en ramas asíncronas y errores raros.
 - Factories/helpers auxiliares: cubrir edge cases extremos.
 
