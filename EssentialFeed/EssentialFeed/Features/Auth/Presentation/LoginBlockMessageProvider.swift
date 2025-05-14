@@ -1,19 +1,29 @@
-
 import Foundation
 
-public enum LoginErrorMessageMapper {
-    public static func message(for error: Error) -> String {
+public protocol LoginBlockMessageProvider {
+    func message(forAttempts attempts: Int, maxAttempts: Int) -> String
+    func message(for error: Error) -> String
+}
+
+public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
+    public init() {}
+
+    public func message(forAttempts _: Int, maxAttempts _: Int) -> String {
+        "Too many attempts. Please wait 5 minutes or reset your password."
+    }
+
+    public func message(for error: Error) -> String {
         if let errorWithMessage = error as? LoginErrorType {
             return errorWithMessage.errorMessage()
         }
         if let loginError = error as? LoginError {
             switch loginError {
-            case .invalidEmailFormat:
-                return "Email format is invalid."
-            case .invalidPasswordFormat:
-                return "Password cannot be empty."
             case .invalidCredentials:
                 return "Invalid credentials."
+            case .invalidEmailFormat:
+                return "Invalid email format."
+            case .invalidPasswordFormat:
+                return "Password cannot be empty."
             case .network:
                 return "Could not connect. Please try again."
             case .unknown:

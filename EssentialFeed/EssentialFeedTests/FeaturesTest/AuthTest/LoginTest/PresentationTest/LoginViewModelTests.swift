@@ -29,7 +29,7 @@ final class LoginViewModelTests: XCTestCase {
 
         XCTAssertFalse(viewModel.loginSuccess)
 
-        let expectedInvalidMessage = DefaultLoginBlockMessageProvider().message(for: .invalidCredentials)
+        let expectedInvalidMessage = DefaultLoginBlockMessageProvider().message(for: LoginError.invalidCredentials)
         XCTAssertEqual(viewModel.errorMessage, expectedInvalidMessage)
     }
 
@@ -45,7 +45,7 @@ final class LoginViewModelTests: XCTestCase {
 
         XCTAssertFalse(viewModel.loginSuccess)
 
-        let expectedNetworkMessage = DefaultLoginBlockMessageProvider().message(for: .noConnectivity)
+        let expectedNetworkMessage = DefaultLoginBlockMessageProvider().message(for: LoginError.noConnectivity)
         XCTAssertEqual(viewModel.errorMessage, expectedNetworkMessage)
     }
 
@@ -61,10 +61,12 @@ final class LoginViewModelTests: XCTestCase {
         let successObserver = DummySuccessObserver()
         let failureObserver = DummyFailureObserver()
 
+        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
         let useCase = UserLoginUseCase(
             api: api,
             tokenStorage: tokenStorage,
             offlineStore: offlineStore,
+            failedAttemptsStore: failedAttemptsStore,
             successObserver: successObserver,
             failureObserver: failureObserver
         )
@@ -92,5 +94,5 @@ private final class DummySuccessObserver: LoginSuccessObserver {
 }
 
 private final class DummyFailureObserver: LoginFailureObserver {
-    func didFailLogin(error _: LoginError) {}
+    func didFailLogin(error _: Error) {}
 }

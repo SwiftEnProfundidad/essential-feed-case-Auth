@@ -1,3 +1,4 @@
+
 import Foundation
 
 public struct FailedLoginAttempt: Equatable, Codable {
@@ -9,7 +10,6 @@ public struct FailedLoginAttempt: Equatable, Codable {
         case invalidCredentials
         case networkError
         case unknownError
-        // Puedes añadir más razones según la lógica de negocio
     }
 
     public init(username: String, timestamp: Date = Date(), reason: Reason) {
