@@ -1,4 +1,4 @@
-name: EssentialFeed CI
+name: EssentialFeed & EssentialApp CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main, master, "feature/**" ]
 
 jobs:
-  build-and-test-ios:
+  test-essentialapp-ios:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -35,7 +35,7 @@ jobs:
             -enableCodeCoverage YES | tee build-and-test-ios.log | xcpretty
           cat build-and-test-ios.log
 
-  build-and-test-macos:
+  test-essentialfeed-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
