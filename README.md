@@ -1,7 +1,7 @@
 [![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/main/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
 [![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/feature/AuthModule/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
 
-# Essential App Case Study Whit Security
+# Essential App Case Study with Security Features
 ## App Architecture Diagram
 
 ![App Architecture Diagram](https://raw.githubusercontent.com/SwiftEnProfundidad/essential-feed-case-Auth/main/docs/images/AchitectureEssentialApp.png)
@@ -127,17 +127,17 @@ This document tracks the implementation of critical security features in the app
 | Emoji | Status           | Completion Criteria                                  |
 |-------|------------------|-----------------------------------------------------|
 | ✅    | **Completed**    | Implemented + tests (≥80%) + documented             |
-| 🟡    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
 | ❌    | **Pending**      | Not implemented or not found in current code.        |
 
 - ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
     - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
     - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
-    - [🟡] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
     - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
     - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
-    - [🟡] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
-    - [🟡] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
     - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
     - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
     - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
@@ -177,17 +177,17 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 | Emoji | Status          | Completion Criteria (Reviewed)                      |
 |-------|-----------------|----------------------------------------------------|
 | ✅    | **Completed**  | Implemented + tests (≥80%) + documented          |
-| 🟡    | **Partial**     | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**     | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
 | ❌    | **Pending**   | Not implemented or not found in the current code. |
 
 - ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
     - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
     - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
-    - [🟡] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
     - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
     - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
-    - [🟡] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
-    - [🟡] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
     - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
     - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
     - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
@@ -217,19 +217,19 @@ flowchart TD
 
 | 🛠️ Technical Task (BDD Original)                                    | ✅ Test that covers it (real/proposed)                     | Test Type         | Status (Reviewed) | Brief Comment                                                                 |
 |-----------------------------------------------------------------------|-----------------------------------------------------------|----------------------|-------------------|----------------------------------------------------------------------------------|
-| 🟡 Determine the necessary protection level for each piece of data                  | *Not directly testable at the `KeychainHelper` level*                  | *Configuration*   | 🟡                | Depends on how `KeychainHelper` is used and the default Keychain attributes.   |
-| 🟡 Encrypt the information before storing if necessary              | *Keychain does it by default*                                           | *Operating System*| ✅                | It is not the responsibility of `KeychainHelper` to implement encryption.             |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Determine the necessary protection level for each piece of data                  | *Not directly testable at the `KeychainHelper` level*                  | *Configuration*   | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | Depends on how `KeychainHelper` is used and the default Keychain attributes.   |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Encrypt the information before storing if necessary              | *Keychain does it by default*                                           | *Operating System*| ✅                | It is not the responsibility of `KeychainHelper` to implement encryption.             |
 | Store in Keychain with proper configuration                         | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
 | Verify that the information is stored correctly                      | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
 | Attempt alternative storage if Keychain fails                | *No fallback logic in `KeychainHelper`*                            | N/A               | ❌                | *Not implemented*                                                                |
-| Notify error if failure persists                                    | *Not implemented*                                   | N/A               | 🟡                | *Not implemented*                                                                |
+| Notify error if failure persists                                    | *Not implemented*                                   | N/A               | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | *Not implemented*                                                                |
 | Clean up corrupted data and request new authentication                 | *Not implemented*                                   | N/A               | ❌                | Application logic, not `KeychainHelper`.                                   |
 | Properly delete previous values before saving a new one       | `test_set_overwritesPreviousValue` (`KeychainHelperTests`)               | Integration        | ✅                |                                                                              |    |
-| Support unicode keys and large binary data                        | `KeychainHelperTests` uses Strings. Binary support would require changes.   | Integration        | 🟡                | `KeychainHelper` limited to Strings. Binary support would require changes.       |
-| Robustness against concurrency                                             | *No specific concurrency tests*                                     | Integration        | 🟡                | Individual Keychain operations are atomic. `KeychainHelper` adds no more. | Unit/Integration    | 🟡                | No granular mapping of `OSStatus`.                                               |
-| Return 'false' if the key is empty                                      | *Not explicitly tested*                                                    | Unit               | 🟡                | Depends on Keychain API behavior with empty keys.                             |   |
-| Return 'false' if the data is empty                                     | `KeychainHelperTests` does not test saving empty string.                   | Unit               | 🟡                |                                                                              |    |
-| Return 'false' if the key contains only spaces                          | *Not explicitly tested*                                                    | Unit               | 🟡                |                                                                              |    |
+| Support unicode keys and large binary data                        | `KeychainHelperTests` uses Strings. Binary support would require changes.   | Integration        | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | `KeychainHelper` limited to Strings. Binary support would require changes.       |
+| Robustness against concurrency                                             | *No specific concurrency tests*                                     | Integration        | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | Individual Keychain operations are atomic. `KeychainHelper` adds no more. | Unit/Integration    | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | No granular mapping of `OSStatus`.                                               |
+| Return 'false' if the key is empty                                      | *Not explicitly tested*                                                    | Unit               | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                | Depends on Keychain API behavior with empty keys.                             |   |
+| Return 'false' if the data is empty                                     | `KeychainHelperTests` does not test saving empty string.                   | Unit               | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                |                                                                              |    |
+| Return 'false' if the key contains only spaces                          | *Not explicitly tested*                                                    | Unit               | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.                |                                                                              |    |
 | Return 'false' if the Keychain operation fails (simulated)              | `test_get_returnsNilForNonexistentKey`                                     | Unit/Integration   | ✅                | Covers the "not found" case.                                                |     |
 | Real persistence: save and load in Keychain                             | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)                 | Integration        | ✅                |                                                                              |    |
 | Force duplicate error and ensure `handleDuplicateItem` is executed      | *Not applicable*                                                           | N/A               | ✅                | `KeychainHelper` prevents duplicates by deleting first.                       |   |
@@ -491,7 +491,7 @@ flowchart TD
 
 ---
 
-## 4. 🔄 Expired Token Management
+## 4. Expired Token Management
 
 ### Functional Narrative
 As an authenticated user,
@@ -531,12 +531,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [❌] Migration of existing tokens  
   - [❌] Security tests (Keychain Spy)  
 
-#### 4. [🟡] Notify the user if renewal fails  - [✅] Basic alerts (Snackbar)  
-- [🟡] Localized messages:  
+#### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  - [✅] Basic alerts (Snackbar)  
+- [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Localized messages:  
   - [✅] Spanish/English  
   - [❌] Screenshot tests  
 
-#### 5. [❌] Redirect to login if renewal is not possible  - [⏳] `AuthRouter.navigateToLogin()`  
+#### 5. [❌] Redirect to login if renewal is not possible  - [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
 - [❌] Credentials cleanup  - [❌] Integration tests  
 
 #### 6. [❌] Log the expiration event for metrics  - [❌] Unified events:  
@@ -592,7 +592,7 @@ flowchart TD
 
 ---
 
-## 5. 🔄 Password Recovery
+## 5. Password Recovery
 
 ### Functional Narrative
 As a user who has forgotten their password,
@@ -670,7 +670,7 @@ flowchart TD
 
 ---
 
-## 6. 🔄 Session Management
+## 6. Session Management
 
 ### Functional Narrative
 As a security-conscious user,
