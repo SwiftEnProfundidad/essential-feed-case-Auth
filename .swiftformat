@@ -1,0 +1,9 @@
+--indent 4
+--allman false
+--wraparguments before-first
+--wrapcollections before-first
+--self remove
+--commas inline
+--header ignore
+--disable redundantSelf
+--disable sortedImports

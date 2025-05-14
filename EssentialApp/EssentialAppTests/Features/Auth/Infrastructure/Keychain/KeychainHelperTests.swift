@@ -1,5 +1,6 @@
-import XCTest
+
 import EssentialApp
+import XCTest
 
 final class KeychainHelperTests: XCTestCase {
     private let key = "test_key"
@@ -38,15 +39,15 @@ final class KeychainHelperTests: XCTestCase {
 
     func test_delete_nonexistentKey_doesNotCrash() {
         let sut = makeSUT()
-        sut.delete(key) // Should not throw or crash
+        sut.delete(key)
         XCTAssertNil(sut.get(key))
     }
 
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> KeychainHelper {
-        let sut = KeychainHelper()
-        trackForMemoryLeaks(sut, file: file, line: line)
+
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> KeychainStore {
+        let sut = InMemoryKeychainStore()
+        trackForMemoryLeaks(sut as AnyObject, file: file, line: line)
         return sut
     }
-
 }

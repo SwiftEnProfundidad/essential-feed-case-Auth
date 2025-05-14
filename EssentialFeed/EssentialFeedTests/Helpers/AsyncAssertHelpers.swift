@@ -2,8 +2,7 @@
 import XCTest
 
 public extension XCTestCase {
-    /// Helper para reintentar comparaciones con espera (asincronía Keychain, operaciones async, etc)
-	func assertEventuallyEqual<T: Equatable>(
+    func assertEventuallyEqual<T: Equatable>(
         _ expression1: @autoclosure @escaping () -> T?,
         _ expression2: @autoclosure @escaping () -> T?,
         timeout: TimeInterval = 0.5,
@@ -19,8 +18,7 @@ public extension XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(interval))
             retryCount += 1
         } while Date() < deadline
-        
+
         XCTFail("Expected \(String(describing: expression2())) but got \(String(describing: lastValue))", file: file, line: line)
     }
 }
-

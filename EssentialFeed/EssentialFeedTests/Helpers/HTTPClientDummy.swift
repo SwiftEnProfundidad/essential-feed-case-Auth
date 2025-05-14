@@ -1,9 +1,10 @@
-import Foundation
+
 import EssentialFeed
+import Foundation
 
 public final class HTTPClientDummy: HTTPClient {
     public init() {}
-    public func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    public func send(_: URLRequest) async throws -> (Data, HTTPURLResponse) {
         throw NSError(
             domain: "HTTPClientDummy",
             code: -1,

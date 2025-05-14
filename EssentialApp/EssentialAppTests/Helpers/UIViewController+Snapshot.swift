@@ -1,3 +1,4 @@
+
 import UIKit
 
 struct SnapshotConfiguration {
@@ -5,11 +6,11 @@ struct SnapshotConfiguration {
     let style: UIUserInterfaceStyle
     let contentSize: CGSize?
 
-    static func iPhone13(style: UIUserInterfaceStyle = .light, contentSize: UIContentSizeCategory? = nil) -> SnapshotConfiguration {
-        return SnapshotConfiguration(
+    static func iPhone13(style: UIUserInterfaceStyle = .light, contentSize _: UIContentSizeCategory? = nil) -> SnapshotConfiguration {
+        SnapshotConfiguration(
             size: CGRect(x: 0, y: 0, width: 390, height: 844), // iPhone 13 size
             style: style,
-            contentSize: nil // Puedes añadir lógica para accesibilidad si lo necesitas
+            contentSize: nil
         )
     }
 }

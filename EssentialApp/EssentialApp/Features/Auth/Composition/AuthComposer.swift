@@ -1,11 +1,10 @@
-import UIKit
+
 import SwiftUI
+import UIKit
 
 public enum AuthComposer {
-    public static func authViewController(
-        onAuthenticated: @escaping () -> Void) -> UIViewController {
-        // For now, show the login flow. Registration can be added easily here.
-        let loginVC = LoginComposer.loginViewController(onAuthenticated: onAuthenticated)
+    public static func authViewController(onAuthenticated: @escaping () -> Void) -> UIViewController {
+        let loginVC = LoginComposer.composedViewController(onAuthenticated: onAuthenticated)
         return loginVC
     }
 }

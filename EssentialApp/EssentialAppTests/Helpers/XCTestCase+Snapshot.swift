@@ -1,7 +1,7 @@
 // Copyright © 2019 Essential Developer. All rights reserved.
 
-import XCTest
 import UIKit
+import XCTest
 
 extension XCTestCase {
     func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
@@ -41,7 +41,7 @@ extension XCTestCase {
     }
 
     private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
-        return URL(fileURLWithPath: String(describing: file))
+        URL(fileURLWithPath: String(describing: file))
             .deletingLastPathComponent()
             .appendingPathComponent("snapshots")
             .appendingPathComponent("\(name).png")

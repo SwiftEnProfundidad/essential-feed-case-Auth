@@ -1,6 +1,7 @@
-import UIKit
-import SwiftUI
+
 import EssentialFeed
+import SwiftUI
+import UIKit
 
 public enum PasswordRecoveryComposer {
     public static func passwordRecoveryViewScreen() -> PasswordRecoveryScreen {
@@ -13,13 +14,15 @@ public enum PasswordRecoveryComposer {
     }
 }
 
-// Stub para desarrollo
+// MARK: - Stub para desarrollo
+
 private class PasswordRecoveryAPIStub: PasswordRecoveryAPI {
     private let result: Result<PasswordRecoveryResponse, PasswordRecoveryError>
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         self.result = result
     }
-    func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+
+    func recover(email _: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
     }
 }

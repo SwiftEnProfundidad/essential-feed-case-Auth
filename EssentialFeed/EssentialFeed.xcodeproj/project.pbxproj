@@ -139,41 +139,59 @@
 		B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402E02E2DB864AF00B29ECF /* SessionManaging.swift */; };
 		B4153A6D2DC6811C00B40F51 /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */; };
 		B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */; };
-		B416724C2DCC0FA0007346FB /* OfflineRegistrationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B416724B2DCC0FA0007346FB /* OfflineRegistrationStore.swift */; };
+		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
+		B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
+		B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */; };
+		B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE362DCE02870096D12B /* TokenStorageSpy.swift */; };
+		B417AE3B2DCE09660096D12B /* SecureStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE392DCE09660096D12B /* SecureStoreSpy.swift */; };
+		B417AE3C2DCE09660096D12B /* EncryptionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE382DCE09660096D12B /* EncryptionServiceSpy.swift */; };
+		B417AE422DCE0B440096D12B /* LoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C62F2DBE222E00E738D3 /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62E2DBE222E00E738D3 /* LoginErrorMessageMapper.swift */; };
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6422DBE28E100E738D3 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B4558F362DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4558F352DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift */; };
+		B448233F2DD3A95F009E59A5 /* LoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233E2DD3A95F009E59A5 /* LoginViewModelProtocol.swift */; };
 		B4558F3A2DC9323300A2CE4B /* APIInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4558F392DC9323300A2CE4B /* APIInterceptor.swift */; };
 		B4558F3C2DC936C400A2CE4B /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4558F3B2DC936C400A2CE4B /* HTTPClient.swift */; };
 		B46CA1412DBE863800CE9ADC /* PasswordRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */; };
 		B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */; };
 		B46CA14D2DBE8E3900CE9ADC /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */; };
-		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */; };
+		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */; };
 		B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */; };
 		B46CA1572DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */; };
-		B46CA15B2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
 		B46CA15D2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */; };
 		B46CA15F2DBEA28000CE9ADC /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA15E2DBEA28000CE9ADC /* PasswordRecoveryView.swift */; };
 		B46DAAB52DC18C690080160E /* PasswordRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB42DC18C690080160E /* PasswordRecoveryViewModel.swift */; };
 		B46DEFC72DC7B34E00102B5A /* LoginValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */; };
 		B4754F372DCA04B6005592C5 /* TokenParserSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */; };
-		B47D59752DB39E8900034806 /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */; };
 		B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59792DB3D67F00034806 /* SecureStorageTests.swift */; };
 		B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */; };
 		B48838442DC65FD70048CF98 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838412DC65FD70048CF98 /* LoginRequest.swift */; };
 		B48838462DC66A7A0048CF98 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */; };
 		B48838482DC678930048CF98 /* FailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */; };
 		B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
+		B48991462DD3E7A000A94850 /* FailedLoginAttempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48991452DD3E7A000A94850 /* FailedLoginAttempt.swift */; };
+		B48991482DD3E85700A94850 /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48991472DD3E85700A94850 /* KeychainSecureStorage.swift */; };
+		B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */; };
+		B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */; };
+		B48D30082DCCB571002943D9 /* UserRegistrationNotifierSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */; };
+		B48D300A2DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */; };
 		B49D2E8C2DB8E7F800D36E0D /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */; };
 		B49D2E8E2DB8E98400D36E0D /* SystemSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */; };
 		B49EFABB2DB54B6F007B703C /* SystemKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42EB7002DAEBA17002FBC51 /* SystemKeychain.swift */; };
-		B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */; };
 		B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */; };
-		B4A921712DC981B100591F6E /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A921702DC981B100591F6E /* TokenStorageSpy.swift */; };
+		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
+		B4CE05482DCD0AED00EAE847 /* RetryOfflineRegistrationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05472DCD0AED00EAE847 /* RetryOfflineRegistrationsUseCase.swift */; };
+		B4CE054A2DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */; };
+		B4CE054E2DCD188800EAE847 /* OfflineLoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE054B2DCD188800EAE847 /* OfflineLoginStore.swift */; };
+		B4CE054F2DCD188800EAE847 /* UserRegistrationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE054D2DCD188800EAE847 /* UserRegistrationResponse.swift */; };
+		B4CE05542DCD1C2F00EAE847 /* UserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05532DCD1C2F00EAE847 /* UserLoginAPI.swift */; };
+		B4CE05562DCD1C7800EAE847 /* UserRegistrationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05552DCD1C7800EAE847 /* UserRegistrationAPI.swift */; };
+		B4CE055A2DCD204C00EAE847 /* LogingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05592DCD204C00EAE847 /* LogingError.swift */; };
+		B4CE055C2DCD20AC00EAE847 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE055B2DCD20AC00EAE847 /* LoginResponse.swift */; };
+		B4CE055E2DCD20BE00EAE847 /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE055D2DCD20BE00EAE847 /* LoginCredentials.swift */; };
 		B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */; };
 		B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
@@ -189,6 +207,9 @@
 		B4E5AC9C2DB578DB007B8F34 /* KeychainSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC9B2DB578DB007B8F34 /* KeychainSpy.swift */; };
 		B4EB10112DC9698000A4DA55 /* HTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */; };
 		B4EB10132DC96B4100A4DA55 /* HTTPClientDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EB10122DC96B4000A4DA55 /* HTTPClientDummy.swift */; };
+		B4EC32592DCD23DA00A9435A /* UserRegistrationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EC32582DCD23DA00A9435A /* UserRegistrationError.swift */; };
+		B4EC325B2DCD24DF00A9435A /* OfflineRegistrationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EC325A2DCD24DF00A9435A /* OfflineRegistrationStore.swift */; };
+		B4EC32642DCD2A1100A9435A /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EC32622DCD2A1100A9435A /* Token.swift */; };
 		B4F6AFE82DAE9DDA00D46FA8 /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F6AFE62DAE9DDA00D46FA8 /* SecureStorage.swift */; };
 /* End PBXBuildFile section */
 
@@ -360,7 +381,6 @@
 		08C4E987233E13CC00D939F8 /* FeedImageDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataStore.swift; sourceTree = "<group>"; };
 		08CFB1A8230C20B7008608CB /* FeedLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLocalizationTests.swift; sourceTree = "<group>"; };
 		08D917A022B92A5D003BC31B /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		08D917A322B92A5D003BC31B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08D917A822B92A5D003BC31B /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08D917AF22B92A5D003BC31B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08DB54D72544623300B98C3A /* LoadMoreCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreCellController.swift; sourceTree = "<group>"; };
@@ -399,7 +419,13 @@
 		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B402E02E2DB864AF00B29ECF /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
 		B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
-		B416724B2DCC0FA0007346FB /* OfflineRegistrationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStore.swift; sourceTree = "<group>"; };
+		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
+		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
+		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
+		B417AE362DCE02870096D12B /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
+		B417AE382DCE09660096D12B /* EncryptionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionServiceSpy.swift; sourceTree = "<group>"; };
+		B417AE392DCE09660096D12B /* SecureStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStoreSpy.swift; sourceTree = "<group>"; };
+		B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
 		B42EB7002DAEBA17002FBC51 /* SystemKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemKeychain.swift; path = "EssentialFeed/Security Feature/Keychain/SystemKeychain.swift"; sourceTree = SOURCE_ROOT; };
 		B442B75D2AB3451700284B92 /* KeychainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainProtocol.swift; path = "EssentialFeed/Security Feature/Keychain/KeychainProtocol.swift"; sourceTree = SOURCE_ROOT; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
@@ -407,34 +433,47 @@
 		B447C62E2DBE222E00E738D3 /* LoginErrorMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorMessageMapper.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
-		B4558F352DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
+		B448233E2DD3A95F009E59A5 /* LoginViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelProtocol.swift; sourceTree = "<group>"; };
 		B4558F392DC9323300A2CE4B /* APIInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInterceptor.swift; sourceTree = "<group>"; };
 		B4558F3B2DC936C400A2CE4B /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryModels.swift; sourceTree = "<group>"; };
 		B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenterTests.swift; sourceTree = "<group>"; };
 		B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenter.swift; sourceTree = "<group>"; };
 		B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecovery.swift; sourceTree = "<group>"; };
-		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorStub.swift; sourceTree = "<group>"; };
+		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorWithLogicStub.swift; sourceTree = "<group>"; };
 		B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationServerUseCaseTests.swift; sourceTree = "<group>"; };
 		B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryModelsTests.swift; sourceTree = "<group>"; };
-		B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
 		B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryIntegrationTests.swift; sourceTree = "<group>"; };
 		B46CA15E2DBEA28000CE9ADC /* PasswordRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryView.swift; sourceTree = "<group>"; };
 		B46DAAB42DC18C690080160E /* PasswordRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewModel.swift; sourceTree = "<group>"; };
 		B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginValidationError.swift; sourceTree = "<group>"; };
+		B470A0012DD4547F001661C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParserSpy.swift; sourceTree = "<group>"; };
-		B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B47D59792DB3D67F00034806 /* SecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageTests.swift; sourceTree = "<group>"; };
 		B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
 		B48838412DC65FD70048CF98 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
 		B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
 		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B48991452DD3E7A000A94850 /* FailedLoginAttempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttempt.swift; sourceTree = "<group>"; };
+		B48991472DD3E85700A94850 /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorage.swift; sourceTree = "<group>"; };
+		B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
+		B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
+		B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationNotifierSpy.swift; sourceTree = "<group>"; };
+		B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorTestStub.swift; sourceTree = "<group>"; };
 		B49D2E8B2DB8E7F800D36E0D /* SystemSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionManager.swift; sourceTree = "<group>"; };
 		B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SystemSessionManagerTests.swift; path = "EssentialFeedTests/Security Feature/Session/SystemSessionManagerTests.swift"; sourceTree = SOURCE_ROOT; };
-		B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainSecureStorage.swift; path = "../../../../Security Feature/Keychain/KeychainSecureStorage.swift"; sourceTree = "<group>"; };
 		B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAssertHelpers.swift; sourceTree = "<group>"; };
-		B4A921702DC981B100591F6E /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
+		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
+		B4CE05472DCD0AED00EAE847 /* RetryOfflineRegistrationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineRegistrationsUseCase.swift; sourceTree = "<group>"; };
+		B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryOfflineRegistrationsUseCaseTests.swift; path = EssentialFeedTests/FeaturesTest/AuthTest/RegistrationTest/DomainTest/UseCases/RetryOfflineRegistrationsUseCaseTests.swift; sourceTree = SOURCE_ROOT; };
+		B4CE054B2DCD188800EAE847 /* OfflineLoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStore.swift; sourceTree = "<group>"; };
+		B4CE054D2DCD188800EAE847 /* UserRegistrationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationResponse.swift; sourceTree = "<group>"; };
+		B4CE05532DCD1C2F00EAE847 /* UserLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginAPI.swift; sourceTree = "<group>"; };
+		B4CE05552DCD1C7800EAE847 /* UserRegistrationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationAPI.swift; sourceTree = "<group>"; };
+		B4CE05592DCD204C00EAE847 /* LogingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogingError.swift; sourceTree = "<group>"; };
+		B4CE055B2DCD20AC00EAE847 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		B4CE055D2DCD20BE00EAE847 /* LoginCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCredentials.swift; sourceTree = "<group>"; };
 		B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
 		B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParser.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
@@ -449,6 +488,9 @@
 		B4E5AC9B2DB578DB007B8F34 /* KeychainSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSpy.swift; sourceTree = "<group>"; };
 		B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientSpy.swift; sourceTree = "<group>"; };
 		B4EB10122DC96B4000A4DA55 /* HTTPClientDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientDummy.swift; sourceTree = "<group>"; };
+		B4EC32582DCD23DA00A9435A /* UserRegistrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationError.swift; sourceTree = "<group>"; };
+		B4EC325A2DCD24DF00A9435A /* OfflineRegistrationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStore.swift; sourceTree = "<group>"; };
+		B4EC32622DCD2A1100A9435A /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		B4F6AFE62DAE9DDA00D46FA8 /* SecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -677,7 +719,6 @@
 			isa = PBXGroup;
 			children = (
 				B4D6B2652DC8D70600F5A3FE /* FeaturesTest */,
-				B402E02D2DB8642D00B29ECF /* Session */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
 				0844768D21FCB23900439BE9 /* Helpers */,
 				08EF9D15250BB0C2004539C2 /* Shared Presentation */,
@@ -787,8 +828,6 @@
 		0844768D21FCB23900439BE9 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */,
-				B4A921702DC981B100591F6E /* TokenStorageSpy.swift */,
 				B4EB10122DC96B4000A4DA55 /* HTTPClientDummy.swift */,
 				B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */,
 				B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */,
@@ -973,7 +1012,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
-				08D917A322B92A5D003BC31B /* Info.plist */,
+				B470A0012DD4547F001661C6 /* Info.plist */,
 				080D8BC7251E251900602717 /* Shared UI */,
 				080D8C02251E28A400602717 /* Image Comments UI */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
@@ -1080,13 +1119,31 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
-		B4558F372DC9028300A2CE4B /* UseCases */ = {
+		B417AE2F2DCE00090096D12B /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				B4D881782DC8FC1600843D79 /* RefreshTokenUseCase.swift */,
-				B400BE902DBD61E900A18EE5 /* UserLoginUseCase.swift */,
+				B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */,
+				B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */,
+				B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */,
 			);
 			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B417AE332DCE00EF0096D12B /* Mappings */ = {
+			isa = PBXGroup;
+			children = (
+				B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */,
+			);
+			path = Mappings;
+			sourceTree = "<group>";
+		};
+		B417AE3A2DCE09660096D12B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B417AE382DCE09660096D12B /* EncryptionServiceSpy.swift */,
+				B417AE392DCE09660096D12B /* SecureStoreSpy.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		B4558F382DC9321300A2CE4B /* APIInterceptor */ = {
@@ -1101,21 +1158,59 @@
 		B46CA14F2DBE8F6500CE9ADC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorStub.swift */,
+				B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */,
+				B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */,
+				B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */,
+				B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */,
+				B48D30092DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B48991442DD3E75800A94850 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B48991452DD3E7A000A94850 /* FailedLoginAttempt.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B48D30012DCCB006002943D9 /* IntegrationTest */ = {
+			isa = PBXGroup;
+			children = (
+				B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */,
+				B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */,
+			);
+			path = IntegrationTest;
+			sourceTree = "<group>";
+		};
+		B48D30022DCCB016002943D9 /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				B4D6B27B2DC8F22000F5A3FE /* UseCases */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
+		B4CE05582DCD1FCE00EAE847 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC326C2DCD2CCB00A9435A /* PasswordRecovery */,
+				B4EC32682DCD2AD000A9435A /* Protocols */,
+				B4EC32672DCD2AA100A9435A /* Errors */,
+				B4EC32662DCD2A8900A9435A /* Models */,
+				B4EC325C2DCD280100A9435A /* UseCases */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		B4D6B25B2DC8D15400F5A3FE /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */,
-				B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */,
-				B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */,
-				B48838412DC65FD70048CF98 /* LoginRequest.swift */,
-				B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */,
-				B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */,
-				B4558F372DC9028300A2CE4B /* UseCases */,
+				B400BE962DBD61E900A18EE5 /* LoginViewModel.swift */,
+				B4EC325E2DCD285200A9435A /* Shared */,
+				B4EC32572DCD226E00A9435A /* Registration */,
+				B4CE05582DCD1FCE00EAE847 /* Login */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -1148,7 +1243,6 @@
 				B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */,
 				B48838472DC678930048CF98 /* FailedLoginAttemptsStore.swift */,
 				B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */,
-				B400BE962DBD61E900A18EE5 /* LoginViewModel.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1164,18 +1258,10 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		B4D6B2602DC8D15400F5A3FE /* Registration */ = {
-			isa = PBXGroup;
-			children = (
-				B416724B2DCC0FA0007346FB /* OfflineRegistrationStore.swift */,
-				B4D71EF12DAF1D34003A1316 /* UserRegistrationUseCase.swift */,
-			);
-			path = Registration;
-			sourceTree = "<group>";
-		};
 		B4D6B2612DC8D15400F5A3FE /* Security */ = {
 			isa = PBXGroup;
 			children = (
+				B48991442DD3E75800A94850 /* Domain */,
 				B4558F382DC9321300A2CE4B /* APIInterceptor */,
 				B4F6AFE62DAE9DDA00D46FA8 /* SecureStorage.swift */,
 				B4D6B2642DC8D23F00F5A3FE /* Session */,
@@ -1188,7 +1274,6 @@
 			isa = PBXGroup;
 			children = (
 				B4D6B25F2DC8D15400F5A3FE /* Auth */,
-				B4D6B2602DC8D15400F5A3FE /* Registration */,
 				B4D6B2612DC8D15400F5A3FE /* Security */,
 			);
 			path = Features;
@@ -1197,7 +1282,7 @@
 		B4D6B2632DC8D22400F5A3FE /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
-				B49EFABC2DB54D0B007B703C /* KeychainSecureStorage.swift */,
+				B48991472DD3E85700A94850 /* KeychainSecureStorage.swift */,
 				B442B75D2AB3451700284B92 /* KeychainProtocol.swift */,
 				B42EB7002DAEBA17002FBC51 /* SystemKeychain.swift */,
 			);
@@ -1216,9 +1301,9 @@
 		B4D6B2652DC8D70600F5A3FE /* FeaturesTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
-				B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */,
 				B4D6B2662DC8D70D00F5A3FE /* AuthTest */,
+				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
+				B402E02D2DB8642D00B29ECF /* Session */,
 			);
 			path = FeaturesTest;
 			sourceTree = "<group>";
@@ -1226,9 +1311,9 @@
 		B4D6B2662DC8D70D00F5A3FE /* AuthTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B2692DC8D72D00F5A3FE /* UITest */,
-				B4D6B2682DC8D71D00F5A3FE /* PresentationTest */,
-				B4D6B2672DC8D71600F5A3FE /* DomainTest */,
+				B4D6B26D2DC8DD2C00F5A3FE /* Helpers */,
+				B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */,
+				B4D6B2692DC8D72D00F5A3FE /* LoginTest */,
 			);
 			path = AuthTest;
 			sourceTree = "<group>";
@@ -1236,10 +1321,8 @@
 		B4D6B2672DC8D71600F5A3FE /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
-				B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */,
-				B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */,
-				B4D6B2772DC8F07E00F5A3FE /* UnitTest */,
-				B4D6B26D2DC8DD2C00F5A3FE /* Helpers */,
+				B417AE332DCE00EF0096D12B /* Mappings */,
+				B417AE2F2DCE00090096D12B /* UseCases */,
 			);
 			path = DomainTest;
 			sourceTree = "<group>";
@@ -1247,17 +1330,22 @@
 		B4D6B2682DC8D71D00F5A3FE /* PresentationTest */ = {
 			isa = PBXGroup;
 			children = (
+				B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */,
 				B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */,
 				B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */,
 			);
 			path = PresentationTest;
 			sourceTree = "<group>";
 		};
-		B4D6B2692DC8D72D00F5A3FE /* UITest */ = {
+		B4D6B2692DC8D72D00F5A3FE /* LoginTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6B2672DC8D71600F5A3FE /* DomainTest */,
+				B4D6B2682DC8D71D00F5A3FE /* PresentationTest */,
+				B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */,
+				B4D6B2772DC8F07E00F5A3FE /* UnitTest */,
 			);
-			path = UITest;
+			path = LoginTest;
 			sourceTree = "<group>";
 		};
 		B4D6B26A2DC8D73700F5A3FE /* RegistrationTest */ = {
@@ -1271,6 +1359,7 @@
 		B4D6B26B2DC8D74400F5A3FE /* SecurityTest */ = {
 			isa = PBXGroup;
 			children = (
+				B417AE3A2DCE09660096D12B /* Helpers */,
 				B47D59792DB3D67F00034806 /* SecureStorageTests.swift */,
 				B4E5AC952DB5785C007B8F34 /* KeychainTest */,
 			);
@@ -1281,6 +1370,8 @@
 			isa = PBXGroup;
 			children = (
 				B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */,
+				B417AE362DCE02870096D12B /* TokenStorageSpy.swift */,
+				B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1288,27 +1379,17 @@
 		B4D6B2702DC8E21F00F5A3FE /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B27B2DC8F22000F5A3FE /* UseCases */,
+				B48D30022DCCB016002943D9 /* UnitTest */,
+				B48D30012DCCB006002943D9 /* IntegrationTest */,
 				B46CA14F2DBE8F6500CE9ADC /* Helpers */,
 			);
 			path = DomainTest;
-			sourceTree = "<group>";
-		};
-		B4D6B2762DC8F06500F5A3FE /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				B47D59732DB39E4A00034806 /* UserLoginUseCaseTests.swift */,
-				B46CA15A2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift */,
-				B4558F352DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift */,
-			);
-			path = UseCases;
 			sourceTree = "<group>";
 		};
 		B4D6B2772DC8F07E00F5A3FE /* UnitTest */ = {
 			isa = PBXGroup;
 			children = (
 				B46CA1552DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift */,
-				B4D6B2762DC8F06500F5A3FE /* UseCases */,
 			);
 			path = UnitTest;
 			sourceTree = "<group>";
@@ -1367,6 +1448,140 @@
 			path = KeychainTest;
 			sourceTree = "<group>";
 		};
+		B4EC32572DCD226E00A9435A /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC326A2DCD2B9E00A9435A /* Errors */,
+				B4EC32692DCD2B6E00A9435A /* Models */,
+				B4EC325D2DCD283100A9435A /* UseCases */,
+				B4EC326B2DCD2BCB00A9435A /* Protocols */,
+				B4CE054D2DCD188800EAE847 /* UserRegistrationResponse.swift */,
+			);
+			path = Registration;
+			sourceTree = "<group>";
+		};
+		B4EC325C2DCD280100A9435A /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B4D881782DC8FC1600843D79 /* RefreshTokenUseCase.swift */,
+				B400BE902DBD61E900A18EE5 /* UserLoginUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B4EC325D2DCD283100A9435A /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B4CE05472DCD0AED00EAE847 /* RetryOfflineRegistrationsUseCase.swift */,
+				B4D71EF12DAF1D34003A1316 /* UserRegistrationUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B4EC325E2DCD285200A9435A /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC32632DCD2A1100A9435A /* Models */,
+				B4EC32652DCD2A2700A9435A /* Protocols */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		B4EC32632DCD2A1100A9435A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC32622DCD2A1100A9435A /* Token.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B4EC32652DCD2A2700A9435A /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B448233E2DD3A95F009E59A5 /* LoginViewModelProtocol.swift */,
+				B4D0D3E42DCB8EBB00CA2504 /* TokenParser.swift */,
+				B4D0D3E22DCB8C1700CA2504 /* TokenStorage.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B4EC32662DCD2A8900A9435A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B48838412DC65FD70048CF98 /* LoginRequest.swift */,
+				B4CE055B2DCD20AC00EAE847 /* LoginResponse.swift */,
+				B4CE055D2DCD20BE00EAE847 /* LoginCredentials.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B4EC32672DCD2AA100A9435A /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */,
+				B4CE05592DCD204C00EAE847 /* LogingError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B4EC32682DCD2AD000A9435A /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B4CE054B2DCD188800EAE847 /* OfflineLoginStore.swift */,
+				B4CE05532DCD1C2F00EAE847 /* UserLoginAPI.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B4EC32692DCD2B6E00A9435A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B4EC326A2DCD2B9E00A9435A /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC32582DCD23DA00A9435A /* UserRegistrationError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B4EC326B2DCD2BCB00A9435A /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B4CE05552DCD1C7800EAE847 /* UserRegistrationAPI.swift */,
+				B4EC325A2DCD24DF00A9435A /* OfflineRegistrationStore.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B4EC326C2DCD2CCB00A9435A /* PasswordRecovery */ = {
+			isa = PBXGroup;
+			children = (
+				B4EC326E2DCD2CDA00A9435A /* Models */,
+				B4EC326D2DCD2CD200A9435A /* UseCases */,
+			);
+			path = PasswordRecovery;
+			sourceTree = "<group>";
+		};
+		B4EC326D2DCD2CD200A9435A /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA14C2DBE8E3900CE9ADC /* PasswordRecovery.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B4EC326E2DCD2CDA00A9435A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B46CA1402DBE863800CE9ADC /* PasswordRecoveryModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1392,6 +1607,7 @@
 			buildConfigurationList = 080EDF0521B6DA7E00813479 /* Build configuration list for PBXNativeTarget "EssentialFeed" */;
 			buildPhases = (
 				080EDEEC21B6DA7E00813479 /* Headers */,
+				B417AE432DCF4A2C0096D12B /* Run Script */,
 				080EDEED21B6DA7E00813479 /* Sources */,
 				080EDEEE21B6DA7E00813479 /* Frameworks */,
 				080EDEEF21B6DA7E00813479 /* Resources */,
@@ -1690,6 +1906,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B417AE432DCF4A2C0096D12B /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${DERIVED_FILE_DIR}/swiftformat.done",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		080EDEED21B6DA7E00813479 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1699,14 +1938,19 @@
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				B4D8817B2DC8FC4500843D79 /* TokenRefreshService.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
+				B4CE05562DCD1C7800EAE847 /* UserRegistrationAPI.swift in Sources */,
+				B4CE05482DCD0AED00EAE847 /* RetryOfflineRegistrationsUseCase.swift in Sources */,
+				B48991462DD3E7A000A94850 /* FailedLoginAttempt.swift in Sources */,
 				08C0880E21E4EF2900ACFB30 /* FeedItemsMapper.swift in Sources */,
 				B46DEFC72DC7B34E00102B5A /* LoginValidationError.swift in Sources */,
 				B4D881792DC8FC1700843D79 /* RefreshTokenUseCase.swift in Sources */,
 				B40098352DB022350081699A /* UserRegistrationUseCase.swift in Sources */,
 				087148C4232BFCF100D6BE1A /* FeedImageViewModel.swift in Sources */,
 				B447C62F2DBE222E00E738D3 /* LoginErrorMessageMapper.swift in Sources */,
+				B4CE05542DCD1C2F00EAE847 /* UserLoginAPI.swift in Sources */,
 				08EF9D29250BBC6C004539C2 /* ResourceErrorView.swift in Sources */,
 				08E546CC24F9631300C64FAE /* FeedImageDataMapper.swift in Sources */,
+				B4EC32642DCD2A1100A9435A /* Token.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				08DB5510254467FC00B98C3A /* Paginated.swift in Sources */,
 				B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */,
@@ -1714,6 +1958,7 @@
 				08285AF4228BFAFF000A8987 /* FeedStore.xcdatamodeld in Sources */,
 				B46CA1412DBE863800CE9ADC /* PasswordRecoveryModels.swift in Sources */,
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
+				B4CE055A2DCD204C00EAE847 /* LogingError.swift in Sources */,
 				08EF9D2F250BC9A5004539C2 /* ImageCommentsPresenter.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
@@ -1721,6 +1966,8 @@
 				08346CEF24F93BC400A9F17C /* ImageCommentsMapper.swift in Sources */,
 				08EF9D1A250BB15C004539C2 /* LoadResourcePresenter.swift in Sources */,
 				B4F6AFE82DAE9DDA00D46FA8 /* SecureStorage.swift in Sources */,
+				B4CE054E2DCD188800EAE847 /* OfflineLoginStore.swift in Sources */,
+				B4CE054F2DCD188800EAE847 /* UserRegistrationResponse.swift in Sources */,
 				B4D0D3E52DCB8EBB00CA2504 /* TokenParser.swift in Sources */,
 				B48838482DC678930048CF98 /* FailedLoginAttemptsStore.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
@@ -1728,13 +1975,15 @@
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0889B0FA2530B0AA00FEAB5A /* ImageCommentsEndpoint.swift in Sources */,
 				B4153A6D2DC6811C00B40F51 /* PasswordRecoveryPresenter.swift in Sources */,
+				B4CE055E2DCD20BE00EAE847 /* LoginCredentials.swift in Sources */,
 				B48838462DC66A7A0048CF98 /* AnyLoginRequestStore.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				B46CA15F2DBEA28000CE9ADC /* PasswordRecoveryView.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,
+				B4EC32592DCD23DA00A9435A /* UserRegistrationError.swift in Sources */,
 				087148B6232BEAAF00D6BE1A /* FeedPresenter.swift in Sources */,
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
-				B49EFABD2DB54D0B007B703C /* KeychainSecureStorage.swift in Sources */,
+				B4EC325B2DCD24DF00A9435A /* OfflineRegistrationStore.swift in Sources */,
 				08EF9D27250BBC1B004539C2 /* ResourceLoadingView.swift in Sources */,
 				B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */,
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
@@ -1742,17 +1991,19 @@
 				B400BE982DBD61E900A18EE5 /* LoginViewModel.swift in Sources */,
 				B400BE992DBD61E900A18EE5 /* UserLoginUseCase.swift in Sources */,
 				B4558F3A2DC9323300A2CE4B /* APIInterceptor.swift in Sources */,
+				B4CE055C2DCD20AC00EAE847 /* LoginResponse.swift in Sources */,
+				B448233F2DD3A95F009E59A5 /* LoginViewModelProtocol.swift in Sources */,
 				B400BE9C2DBD61E900A18EE5 /* LoginPresenter.swift in Sources */,
 				B400BE9E2DBD61E900A18EE5 /* LoginPresentation.swift in Sources */,
 				B46CA14D2DBE8E3900CE9ADC /* PasswordRecovery.swift in Sources */,
 				B48838442DC65FD70048CF98 /* LoginRequest.swift in Sources */,
-				B416724C2DCC0FA0007346FB /* OfflineRegistrationStore.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
 				B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */,
 				B4D0D3E32DCB8C1800CA2504 /* TokenStorage.swift in Sources */,
 				087148BD232BEC6700D6BE1A /* ResourceErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
 				B49D2E8C2DB8E7F800D36E0D /* SystemSessionManager.swift in Sources */,
+				B48991482DD3E85700A94850 /* KeychainSecureStorage.swift in Sources */,
 				087148BB232BEC1200D6BE1A /* ResourceLoadingViewModel.swift in Sources */,
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
@@ -1767,13 +2018,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorStub.swift in Sources */,
+				B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */,
 				B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */,
 				081C0DB122491E1200AC754E /* FeedCacheTestHelpers.swift in Sources */,
 				B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */,
+				B48D300A2DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift in Sources */,
 				B4754F372DCA04B6005592C5 /* TokenParserSpy.swift in Sources */,
 				08EF9D25250BBA25004539C2 /* SharedLocalizationTestHelpers.swift in Sources */,
 				080F9A2F2531DD6200EAD475 /* ImageCommentsEndpointTests.swift in Sources */,
+				B417AE422DCE0B440096D12B /* LoginViewModelTests.swift in Sources */,
 				08805A19233A9F8600509F19 /* URLProtocolStub.swift in Sources */,
 				B4EB10112DC9698000A4DA55 /* HTTPClientSpy.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
@@ -1786,7 +2039,6 @@
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
 				B4E5AC972DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift in Sources */,
-				B4A921712DC981B100591F6E /* TokenStorageSpy.swift in Sources */,
 				B4E5AC982DB5785C007B8F34 /* SystemKeychainTests.swift in Sources */,
 				B4E5AC99B2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift in Sources */,
 				B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */,
@@ -1803,20 +2055,28 @@
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
+				B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */,
+				B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */,
 				B49EFABF2DB552DC007B703C /* AsyncAssertHelpers.swift in Sources */,
-				B46CA15B2DBE9BC100CE9ADC /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
 				B4EB10132DC96B4100A4DA55 /* HTTPClientDummy.swift in Sources */,
 				08EF9D1E250BB77A004539C2 /* SharedLocalizationTests.swift in Sources */,
 				086044FC233E1A3B005ECD22 /* FeedImageDataStoreSpy.swift in Sources */,
 				08EF9D33250BCA28004539C2 /* ImageCommentsLocalizationTests.swift in Sources */,
+				B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */,
+				B417AE3B2DCE09660096D12B /* SecureStoreSpy.swift in Sources */,
+				B417AE3C2DCE09660096D12B /* EncryptionServiceSpy.swift in Sources */,
+				B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
+				B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */,
+				B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */,
-				B47D59752DB39E8900034806 /* UserLoginUseCaseTests.swift in Sources */,
+				B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
+				B4CE054A2DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift in Sources */,
 				086BE481223270A3004CDC26 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
+				B48D30082DCCB571002943D9 /* UserRegistrationNotifierSpy.swift in Sources */,
 				080F9A3F2531DDFB00EAD475 /* FeedEndpointTests.swift in Sources */,
-				B4558F362DC9020800A2CE4B /* RefreshTokenUseCaseTests.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,
 				08EF9D17250BB0E4004539C2 /* LoadResourcePresenterTests.swift in Sources */,
 				B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */,
@@ -2006,12 +2266,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -2075,12 +2333,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -2107,16 +2363,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				FRAMEWORK_VERSION = A;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2138,16 +2390,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				FRAMEWORK_VERSION = A;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2168,9 +2416,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2189,9 +2439,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2208,10 +2460,11 @@
 		0832C68522A0223B00E1C5E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2220,7 +2473,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2229,10 +2481,11 @@
 		0832C68622A0223B00E1C5E9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2241,7 +2494,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2250,10 +2502,11 @@
 		08993964220359C50031B03D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2262,7 +2515,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2271,10 +2523,11 @@
 		08993965220359C50031B03D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2283,7 +2536,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2293,13 +2545,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z273P8K3M7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2308,7 +2564,7 @@
 					"@loader_path/Frameworks",
 				);
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeediOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeidiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -2323,13 +2579,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z273P8K3M7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2338,7 +2598,7 @@
 					"@loader_path/Frameworks",
 				);
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeediOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeidiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -2353,8 +2613,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2375,8 +2639,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2398,9 +2666,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2409,6 +2681,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialFeedLoginIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2426,9 +2699,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2437,6 +2714,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialFeedLoginIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2454,9 +2732,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2464,6 +2746,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2477,9 +2760,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
@@ -2487,6 +2774,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;

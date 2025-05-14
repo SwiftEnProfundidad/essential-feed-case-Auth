@@ -1,7 +1,8 @@
-import XCTest
-import SwiftUI
+
 import EssentialApp
 import EssentialFeed
+import SwiftUI
+import XCTest
 
 final class PasswordRecoverySnapshotTests: XCTestCase {
     func test_passwordRecovery_success_light() {
@@ -16,6 +17,7 @@ final class PasswordRecoverySnapshotTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
     private func makeSUT(email: String, apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> UIViewController {
         let api = DummyPasswordRecoveryAPI(result: apiResult)
         let useCase = RemoteUserPasswordRecoveryUseCase(api: api)
@@ -35,7 +37,8 @@ private final class DummyPasswordRecoveryAPI: PasswordRecoveryAPI {
     init(result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
         self.result = result
     }
-    func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+
+    func recover(email _: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
     }
 }
