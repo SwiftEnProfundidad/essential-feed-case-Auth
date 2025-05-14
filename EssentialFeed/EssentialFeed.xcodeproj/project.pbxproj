@@ -165,6 +165,7 @@
 		B46CA15F2DBEA28000CE9ADC /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA15E2DBEA28000CE9ADC /* PasswordRecoveryView.swift */; };
 		B46DAAB52DC18C690080160E /* PasswordRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB42DC18C690080160E /* PasswordRecoveryViewModel.swift */; };
 		B46DEFC72DC7B34E00102B5A /* LoginValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */; };
+		B470A0022DD4547F001661C6 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B470A0012DD4547F001661C6 /* Info.plist */; };
 		B4754F372DCA04B6005592C5 /* TokenParserSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */; };
 		B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59792DB3D67F00034806 /* SecureStorageTests.swift */; };
 		B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */; };
@@ -381,7 +382,6 @@
 		08C4E987233E13CC00D939F8 /* FeedImageDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataStore.swift; sourceTree = "<group>"; };
 		08CFB1A8230C20B7008608CB /* FeedLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLocalizationTests.swift; sourceTree = "<group>"; };
 		08D917A022B92A5D003BC31B /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		08D917A322B92A5D003BC31B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08D917A822B92A5D003BC31B /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08D917AF22B92A5D003BC31B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08DB54D72544623300B98C3A /* LoadMoreCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreCellController.swift; sourceTree = "<group>"; };
@@ -448,6 +448,7 @@
 		B46CA15E2DBEA28000CE9ADC /* PasswordRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryView.swift; sourceTree = "<group>"; };
 		B46DAAB42DC18C690080160E /* PasswordRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewModel.swift; sourceTree = "<group>"; };
 		B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginValidationError.swift; sourceTree = "<group>"; };
+		B470A0012DD4547F001661C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4754F362DCA04B6005592C5 /* TokenParserSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParserSpy.swift; sourceTree = "<group>"; };
 		B47D59792DB3D67F00034806 /* SecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageTests.swift; sourceTree = "<group>"; };
 		B488383E2DC65FA60048CF98 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
@@ -1012,7 +1013,7 @@
 		08D917A122B92A5D003BC31B /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
-				08D917A322B92A5D003BC31B /* Info.plist */,
+				B470A0012DD4547F001661C6 /* Info.plist */,
 				080D8BC7251E251900602717 /* Shared UI */,
 				080D8C02251E28A400602717 /* Image Comments UI */,
 				08FC5AA622D5F33000148E12 /* Feed UI */,
@@ -1859,6 +1860,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				
 				0822D0F123056FEB004B3345 /* Feed.storyboard in Resources */,
 				080D8C14251E293D00602717 /* ImageComments.storyboard in Resources */,
 				0822D0F3230570F3004B3345 /* Feed.xcassets in Resources */,
@@ -2266,12 +2268,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -2335,12 +2335,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -2367,12 +2365,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2384,7 +2378,6 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2396,12 +2389,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeed/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2413,7 +2402,6 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
@@ -2424,12 +2412,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2439,7 +2423,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2450,12 +2433,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2465,7 +2444,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2474,12 +2452,8 @@
 		0832C68522A0223B00E1C5E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2489,7 +2463,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2498,12 +2471,8 @@
 		0832C68622A0223B00E1C5E9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedCacheIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2513,7 +2482,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedCacheIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2522,12 +2490,8 @@
 		08993964220359C50031B03D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2537,7 +2501,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2546,12 +2509,8 @@
 		08993965220359C50031B03D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				
-				
-				
-								COMBINE_HIDPI_IMAGES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeedAPIEndToEndTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2561,7 +2520,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedAPIEndToEndTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
 			};
@@ -2571,17 +2529,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								DEFINES_MODULE = YES;
-				
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = EssentialFeidiOS/Info.plist;
+				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2591,7 +2545,6 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeidiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2604,17 +2557,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								DEFINES_MODULE = YES;
-				
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				INFOPLIST_FILE = EssentialFeidiOS/Info.plist;
+				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2624,7 +2573,6 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeidiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2637,10 +2585,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2650,7 +2594,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2662,10 +2605,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				
-				
-				
-								
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2675,7 +2614,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2688,11 +2626,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				
-				
-				
-								CURRENT_PROJECT_VERSION = 1;
-				
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2702,7 +2636,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialFeedLoginIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2720,11 +2653,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				
-				
-				
-								CURRENT_PROJECT_VERSION = 1;
-				
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2734,7 +2663,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialFeedLoginIntegrationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = macosx;
@@ -2752,11 +2680,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				
-				
-				
-								CURRENT_PROJECT_VERSION = 1;
-				
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2765,7 +2689,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2779,11 +2702,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				
-				
-				
-								CURRENT_PROJECT_VERSION = 1;
-				
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2792,7 +2711,6 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
