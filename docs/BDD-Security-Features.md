@@ -620,14 +620,31 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ---
 
 ### Technical Checklist for Session Management
-- [❌] Show list of active sessions with relevant details
-- [❌] Highlight current session
-- [❌] Allow remote session termination
-- [❌] Allow termination of all sessions except current
-- [❌] Notify affected device after remote termination
-- [❌] Detect suspicious access and notify user
-- [❌] Allow verification or termination of suspicious session
-- [❌] Suggest password change if applicable
+- [❌] Integrate SessionManager into login flow
+    - [❌] Register new session after successful login (store userID, token, timestamp)
+    - [❌] Ensure SessionManager is injected via dependency inversion (protocol-based)
+    - [❌] Add unit tests for session registration on login
+    - [❌] Add integration tests for session persistence after login
+- [❌] Integrate SessionManager into logout flow
+    - [❌] Invalidate current session on logout (remove from store, clear token)
+    - [❌] Notify APIInterceptor/TokenProvider of session end
+    - [❌] Add unit tests for session invalidation on logout
+    - [❌] Add integration tests for session cleanup
+- [❌] List active sessions in the UI
+    - [❌] Fetch all active sessions from SessionManager
+    - [❌] Display device, location, and last access info (if available)
+    - [❌] Highlight current session
+    - [❌] Add unit tests for session listing logic
+    - [❌] Add UI tests for session list
+- [❌] Remote session termination
+    - [❌] Allow user to terminate any session except the current one
+    - [❌] Notify affected device after remote termination
+    - [❌] Add tests for remote termination logic
+- [❌] Detect and notify suspicious access
+    - [❌] Detect anomalies (location, device, access time)
+    - [❌] Notify user and offer security actions (verify/terminate)
+    - [❌] Add tests for suspicious session detection and notification
+- [❌] Suggest password change if suspicious activity detected
 
 ---
 
@@ -663,24 +680,109 @@ flowchart TD
     J -- No --> K[Suggest password change if needed]
     D -- Error --> L[Show error, allow retry]
 ```
+
+#### Clean Architecture Flow (Explicit Layers)
+
+```mermaid
+flowchart TD
+    %% CAPAS
+    subgraph UI [UI Layer]
+        A[User accesses session management]
+        B[Display list of active sessions]
+        C[User selects session to close]
+        F[User selects 'close all except current']
+        L[Show error, allow retry]
+        I[Notify user, offer verify or close]
+        K[Suggest password change if needed]
+    end
+
+    subgraph UC [UseCase Layer]
+        UC1[Request session list]
+        UC2[Request session termination]
+        UC3[Request terminate all except current]
+        UC4[Request suspicious session actions]
+        UC5[Handle error, propagate to UI]
+    end
+
+    subgraph DOMAIN [Domain Layer]
+        SM1[SessionManager: Get active sessions]
+        SM2[SessionManager: Invalidate session]
+        SM3[SessionManager: Invalidate all except current]
+        SM4[SessionManager: Detect suspicious login]
+        SM5[SessionManager: Suggest password change]
+    end
+
+    subgraph INFRA [Infra Layer]
+        N1[Notify device after termination]
+        N2[APIInterceptor/TokenProvider: Handle token/session]
+    end
+
+    %% FLUJOS PRINCIPALES
+    A --> UC1
+    UC1 --> SM1
+    SM1 --> B
+
+    C --> UC2
+    UC2 --> SM2
+    SM2 --> N1
+    N1 --> UC2
+    UC2 --> B
+
+    F --> UC3
+    UC3 --> SM3
+    SM3 --> N1
+    N1 --> UC3
+    UC3 --> B
+
+    %% ACCESO SOSPECHOSO
+    B --> SM4
+    SM4 --> UC4
+    UC4 --> I
+    I --> UC4
+    UC4 --> SM2
+    SM2 --> N1
+    N1 --> UC4
+    UC4 --> B
+
+    %% SUGERENCIA CAMBIO CONTRASEÑA
+    UC4 --> SM5
+    SM5 --> K
+
+    %% ERRORES
+    SM2 -- Error --> UC5
+    UC5 --> L
+```
 ---
 
 ### Traceability Checklist <-> Tests
 
-| Session Management Checklist Item            | Test Present  | Coverage  |
-|----------------------------------------------|---------------|-----------|
-| Show list of active sessions                 | No            |    ❌     |
-| Highlight current session                    | No            |    ❌     |
-| Remote session termination                   | No            |    ❌     |
-| Terminate all except current                 | No            |    ❌     |
-| Notify device after remote termination       | No            |    ❌     |
-| Detect and notify suspicious access          | No            |    ❌     |
-| Verify/terminate suspicious session          | No            |    ❌     |
-| Suggest password change                      | No            |    ❌     |
+| Checklist Item                              | Test File & Function (Suggested/Existing)                                                                                                  | Status   | Notes / Comments                         |
+|---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|----------|------------------------------------------|
+| Show list of active sessions                | `SessionListViewModelTests.test_showsActiveSessions()`<br>`SessionManagerTests.test_fetchActiveSessions_returnsExpectedList()`               | ❌       | UI + dominio, requiere spies             |
+| Highlight current session                   | `SessionListViewModelTests.test_highlightsCurrentSession()`                                                                                 | ❌       | UI: marcado visual                       |
+| Remote session termination                  | `SessionManagerTests.test_terminateRemoteSession_removesSession()`<br>`SessionListViewModelTests.test_terminateRemoteSession_updatesUI()`    | ❌       | Dominio + integración UI                 |
+| Terminate all except current                | `SessionManagerTests.test_terminateAllExceptCurrent_removesOtherSessions()`                                                                 | ❌       | Dominio puro                             |
+| Notify device after remote termination      | `SessionManagerTests.test_terminateRemoteSession_notifiesDevice()`                                                                          | ❌       | Infraestructura (mock/spies)             |
+| Detect and notify suspicious access         | `SessionManagerTests.test_detectsSuspiciousAccess_andNotifies()`                                                                            | ❌       | Dominio + integración                    |
+| Verify/terminate suspicious session         | `SessionManagerTests.test_verifyOrTerminateSuspiciousSession()`                                                                             | ❌       | Dominio puro                             |
+| Suggest password change                     | `SessionManagerTests.test_suggestsPasswordChange_onSuspiciousActivity()`                                                                    | ❌       | Dominio + UI feedback                    |
 
 > Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
+
+### Architecture Mapping: Checklist <-> Components
+
+| Session Management Checklist Item            | Arquitectura/Capa Responsable                                                                                  |
+|----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Show list of active sessions                 | **SessionManager (Domain):** Provides active sessions<br>**UseCase:** Orchestrates query<br>**UI:** Presents list |
+| Highlight current session                    | **SessionManager (Domain):** Marks current session<br>**UseCase:** Exposes info<br>**UI:** Highlights session        |
+| Remote session termination                   | **SessionManager (Domain):** Invalidates remote session<br>**UseCase:** Exposes action<br>**UI:** Triggers event   |
+| Terminate all except current                 | **SessionManager (Domain):** Invalidates all except current<br>**UseCase:** Orchestrates<br>**UI:** Triggers action|
+| Notify device after remote termination       | **SessionManager (Domain):** Emits event<br>**APIInterceptor/TokenProvider (Infra):** Handles tokens/notifications|
+| Detect and notify suspicious access          | **SessionManager (Domain):** Detects anomalies<br>**UseCase:** Notifies<br>**UI:** Shows alert             |
+| Verify/terminate suspicious session          | **SessionManager (Domain):** Allows verify/invalidate<br>**UseCase:** Exposes action<br>**UI:** Requests decision|
+| Suggest password change                      | **SessionManager (Domain):** Suggests change<br>**UseCase:** Exposes suggestion<br>**UI:** Shows prompt       |
 
 ## 7. Account Verification
 
