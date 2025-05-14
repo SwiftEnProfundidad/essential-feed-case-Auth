@@ -6,7 +6,7 @@ final class InMemoryKeychainStore: KeychainStore {
     private let queue = DispatchQueue(label: "InMemoryKeychainStore.Queue")
 
     func set(_ value: String, for key: String) {
-        queue.async(flags: .barrier) {
+        queue.sync {
             self.store[key] = value
         }
     }
@@ -20,7 +20,7 @@ final class InMemoryKeychainStore: KeychainStore {
     }
 
     func delete(_ key: String) {
-        queue.async(flags: .barrier) {
+        _ = queue.sync {
             self.store.removeValue(forKey: key)
         }
     }
