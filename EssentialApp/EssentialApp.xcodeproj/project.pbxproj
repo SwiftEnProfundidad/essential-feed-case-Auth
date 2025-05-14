@@ -39,6 +39,7 @@
 		0895DAAD234B3F7E0031BB2D /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; };
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF92F52555A15B006B7E7D /* NullStore.swift */; };
+		B43385222DD43E0A006B6C37 /* InMemoryKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */; };
 		B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44823382DD3A226009E59A5 /* LoginUIComposer.swift */; };
 		B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */; };
 		B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */; };
@@ -149,6 +150,7 @@
 		08B5033925346BE1003FF218 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		08B5033B25346BFE003FF218 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		08CF92F52555A15B006B7E7D /* NullStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NullStore.swift; sourceTree = "<group>"; };
+		B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryKeychainStore.swift; sourceTree = "<group>"; };
 		B44823382DD3A226009E59A5 /* LoginUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUIComposer.swift; sourceTree = "<group>"; };
 		B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUISnapshotTests.swift; sourceTree = "<group>"; };
 		B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelAdapterTest.swift; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 		B4702E322DC150C00055B3D9 /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
+				B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */,
 				B4702E332DC153280055B3D9 /* KeychainHelperSpy.swift */,
 				B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */,
 				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
@@ -639,6 +642,7 @@
 				B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */,
 				08073B56238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift in Sources */,
 				0832C9D0238D2811002314C9 /* SceneDelegateTests.swift in Sources */,
+				B43385222DD43E0A006B6C37 /* InMemoryKeychainStore.swift in Sources */,
 				B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */,
 				B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */,
 				B4702E352DC153280055B3D9 /* KeychainHelperSpy.swift in Sources */,
@@ -817,9 +821,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "Don't Code Sign";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -838,9 +843,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "Don't Code Sign";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -860,9 +866,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Don't Code Sign";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -884,9 +891,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Don't Code Sign";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Don't Code Sign";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

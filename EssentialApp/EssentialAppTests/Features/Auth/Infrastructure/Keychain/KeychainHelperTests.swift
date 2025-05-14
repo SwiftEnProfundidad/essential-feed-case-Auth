@@ -45,9 +45,9 @@ final class KeychainHelperTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> KeychainHelper {
-        let sut = KeychainHelper()
-        trackForMemoryLeaks(sut, file: file, line: line)
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> KeychainStore {
+        let sut = InMemoryKeychainStore()
+        trackForMemoryLeaks(sut as AnyObject, file: file, line: line)
         return sut
     }
 }
