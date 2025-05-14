@@ -173,16 +173,15 @@ class FeedAcceptanceTests: XCTestCase {
     }
 
     private func makeData(for url: URL) -> Data {
-        switch url.path {
-        case "/image-0": makeImageData0()
-        case "/image-1": makeImageData1()
-        case "/image-2": makeImageData2()
-        case "/essential-feed/v1/feed" where url.query?.contains("after_id") == false: makeFirstFeedPageData()
-        case "/essential-feed/v1/feed" where url.query?.contains("after_id=A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A") == true: makeSecondFeedPageData()
-        case "/essential-feed/v1/feed" where url.query?.contains("after_id=166FCDD7-C9F4-420A-B2D6-CE2EAFA3D82F") == true: makeLastEmptyFeedPageData()
-        case "/essential-feed/v1/image/2AB2AE66-A4B7-4A16-B374-51BBAC8DB086/comments": makeCommentsData()
-        default: Data()
-        }
+        let path = url.path
+        if path.contains("image-0") { return makeImageData0() }
+        if path.contains("image-1") { return makeImageData1() }
+        if path.contains("image-2") { return makeImageData2() }
+        if path.contains("/essential-feed/v1/feed"), !(url.query?.contains("after_id") ?? false) { return makeFirstFeedPageData() }
+        if path.contains("/essential-feed/v1/feed"), url.query?.contains("after_id=A28F5FE3-27A7-44E9-8DF5-53742D0E4A5A") ?? false { return makeSecondFeedPageData() }
+        if path.contains("/essential-feed/v1/feed"), url.query?.contains("after_id=166FCDD7-C9F4-420A-B2D6-CE2EAFA3D82F") ?? false { return makeLastEmptyFeedPageData() }
+        if path.contains("/essential-feed/v1/image/2AB2AE66-A4B7-4A16-B374-51BBAC8DB086/comments") { return makeCommentsData() }
+        return Data()
     }
 
     private func makeImageData0() -> Data { stabilizedPNGData(for: .red) }
