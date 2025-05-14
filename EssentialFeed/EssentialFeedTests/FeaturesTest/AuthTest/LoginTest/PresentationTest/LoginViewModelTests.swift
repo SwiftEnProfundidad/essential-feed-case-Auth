@@ -56,33 +56,24 @@ final class LoginViewModelTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (viewModel: LoginViewModel, useCase: UserLoginUseCase) {
-        let tokenStorage = TokenStorageSpy()
-        let offlineStore = OfflineLoginStoreSpy()
-        let successObserver = DummySuccessObserver()
-        let failureObserver = DummyFailureObserver()
-
-        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
+        let persistence = LoginPersistenceSpy()
+        let notifier = LoginEventNotifierSpy()
+        let flowHandler = LoginFlowHandlerSpy()
         let useCase = UserLoginUseCase(
             api: api,
-            tokenStorage: tokenStorage,
-            offlineStore: offlineStore,
-            failedAttemptsStore: failedAttemptsStore,
-            successObserver: successObserver,
-            failureObserver: failureObserver
+            persistence: persistence,
+            notifier: notifier,
+            flowHandler: flowHandler
         )
-
         let viewModel = LoginViewModel(authenticate: { username, password in
             await useCase.login(with: LoginCredentials(email: username, password: password))
         })
-
         trackForMemoryLeaks(api, file: file, line: line)
-        trackForMemoryLeaks(tokenStorage, file: file, line: line)
-        trackForMemoryLeaks(offlineStore, file: file, line: line)
-        trackForMemoryLeaks(successObserver, file: file, line: line)
-        trackForMemoryLeaks(failureObserver, file: file, line: line)
+        trackForMemoryLeaks(persistence, file: file, line: line)
+        trackForMemoryLeaks(notifier, file: file, line: line)
+        trackForMemoryLeaks(flowHandler, file: file, line: line)
         trackForMemoryLeaks(useCase, file: file, line: line)
         trackForMemoryLeaks(viewModel, file: file, line: line)
-
         return (viewModel, useCase)
     }
 }
