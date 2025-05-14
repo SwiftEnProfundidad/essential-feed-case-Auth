@@ -491,7 +491,7 @@ flowchart TD
 
 ---
 
-## 4. 🔄 Expired Token Management
+## 4. Expired Token Management
 
 ### Functional Narrative
 As an authenticated user,
@@ -592,7 +592,7 @@ flowchart TD
 
 ---
 
-## 5. 🔄 Password Recovery
+## 5. Password Recovery
 
 ### Functional Narrative
 As a user who has forgotten their password,
@@ -670,7 +670,7 @@ flowchart TD
 
 ---
 
-## 6. 🔄 Session Management
+## 6. Session Management
 
 ### Functional Narrative
 As a security-conscious user,
