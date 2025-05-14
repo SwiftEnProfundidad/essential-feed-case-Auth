@@ -1,3 +1,4 @@
+
 public struct UserRegistrationResponse: Equatable {
     public let userID: String
     public let token: String

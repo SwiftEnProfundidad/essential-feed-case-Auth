@@ -4,14 +4,14 @@ import XCTest
 
 final class UserLoginUseCaseIntegrationTests: XCTestCase {
     func test_login_doesNotCallAPI_whenEmailIsInvalid() async {
-        let (sut, api, _, _, _) = makeSUT()
+        let (sut, api) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "ValidPassword123")
         _ = await sut.login(with: credentials)
         XCTAssertFalse(api.wasCalled, "API should NOT be called when email is invalid")
     }
 
     func test_login_doesNotCallAPI_whenPasswordIsInvalid() async {
-        let (sut, api, _, _, _) = makeSUT()
+        let (sut, api) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "   ")
         _ = await sut.login(with: credentials)
         XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
@@ -27,34 +27,24 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (
         sut: UserLoginUseCase,
-        api: AuthAPISpy,
-        successSpy: LoginSuccessObserverSpy,
-        failureSpy: LoginFailureObserverSpy,
-        failedAttemptsStore: FailedLoginAttemptsStoreSpy
+        api: AuthAPISpy
     ) {
         let api = AuthAPISpy()
-        let offlineStore = OfflineLoginStoreSpy()
-        let tokenStorage = TokenStorageSpy()
-        let successSpy = LoginSuccessObserverSpy()
-        let failureSpy = LoginFailureObserverSpy()
-        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
+
+        let persistence = LoginPersistenceSpy()
+        let notifier = LoginEventNotifierSpy()
+        let flowHandler = LoginFlowHandlerSpy()
         let sut = UserLoginUseCase(
             api: api,
-            tokenStorage: tokenStorage,
-            offlineStore: offlineStore,
-            failedAttemptsStore: failedAttemptsStore,
-            successObserver: successSpy,
-            failureObserver: failureSpy
+            persistence: persistence,
+            notifier: notifier,
+            flowHandler: flowHandler
         )
 
         trackForMemoryLeaks(api, file: file, line: line)
-        trackForMemoryLeaks(offlineStore, file: file, line: line)
-        trackForMemoryLeaks(tokenStorage, file: file, line: line)
-        trackForMemoryLeaks(successSpy, file: file, line: line)
-        trackForMemoryLeaks(failureSpy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
 
-        return (sut, api, successSpy, failureSpy, failedAttemptsStore)
+        return (sut, api)
     }
 
     private final class LoginSuccessObserverSpy: LoginSuccessObserver {

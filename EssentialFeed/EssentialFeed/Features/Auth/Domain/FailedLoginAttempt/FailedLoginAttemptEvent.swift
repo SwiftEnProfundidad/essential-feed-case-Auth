@@ -1,7 +1,7 @@
 
 import Foundation
 
-public struct FailedLoginAttempt: Equatable, Codable {
+public struct FailedLoginAttemptEvent: Equatable, Codable {
     public let username: String
     public let timestamp: Date
     public let reason: Reason
