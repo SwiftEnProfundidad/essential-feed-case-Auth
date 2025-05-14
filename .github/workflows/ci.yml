@@ -7,7 +7,7 @@ on:
     branches: [ main, master, "feature/**" ]
 
 jobs:
-  test-essentialapp-ios:
+  essentialapp-ios:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -35,7 +35,7 @@ jobs:
             -enableCodeCoverage YES | tee build-and-test-ios.log | xcpretty
           cat build-and-test-ios.log
 
-  test-essentialfeed-macos:
+  essentialfeed-macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
