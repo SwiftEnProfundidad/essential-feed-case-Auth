@@ -98,3 +98,27 @@ fastlane/test_output
 !/coverage-reports/README.md
 
 # End of https://www.gitignore.io/api/swift,xcode
+
+# --- Archivos y carpetas temporales del sistema ---
+.DS_Store
+
+# --- Entornos virtuales y dependencias locales ---
+.venv/
+
+# --- Configuración local de editores ---
+.vscode/
+
+# --- Reglas de asistentes y herramientas locales ---
+.windsurfrules
+
+# --- Logs y salidas temporales de builds/tests ---
+build.log
+xcodebuild.log
+xcodebuild-keychain.log
+test-log.txt
+test-output.log
+test_output.log
+systemkeychain-tests.log
+
+# --- Otros archivos temporales o de usuario ---
+Prototype/
