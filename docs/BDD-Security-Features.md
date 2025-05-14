@@ -73,7 +73,7 @@ This document tracks the implementation of critical security features in the app
 #### Technical Diagram
 *(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
 
-> **Note:** Snapshot testing has been evaluated and discarded for secure storage, since relevant outputs (results and errors) are directly validated using asserts and explicit comparisons. This decision follows best professional testing practices in iOS and avoids adding redundant or low-value tests for the Keychain domain.
+> **Note:** Snapshot testing has been evaluated and discarded for secure storage, since relevant outputs (results and errors) are validated directly through asserts and explicit comparisons. This decision follows professional iOS testing best practices and avoids adding redundant or low-value tests for the Keychain domain.
     - [✅] Coverage of all critical code branches (add specific tests for each uncovered branch)
 
 #### Secure storage technical diagram flow
@@ -103,7 +103,7 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 | 🟡    | **Partial**     | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
 | ❌    | **Pending**   | Not implemented or not found in the current code. |
 
-- ✅ **Keychain/SecureStorage (Implementación Principal: `KeychainHelper` como `KeychainStore`)**
+- ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
     - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
     - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
     - [🟡] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
@@ -145,8 +145,8 @@ flowchart TD
 | Store in Keychain with proper configuration                         | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
 | Verify that the information is stored correctly                      | `test_setAndGet_returnsSavedValue` (`KeychainHelperTests`)  | Integration        | ✅                | For Strings.                                                                    |
 | Attempt alternative storage if Keychain fails                | *No fallback logic in `KeychainHelper`*                            | N/A               | ❌                | *Not implemented*                                                                |
-| Notify error if failure persists                                    | *No implementado*                                   | N/A               | 🟡                | *Not implemented*                                                                |
-| Clean up corrupted data and request new authentication                 | *No implementado*                                   | N/A               | ❌                | Application logic, not `KeychainHelper`.                                   |
+| Notify error if failure persists                                    | *Not implemented*                                   | N/A               | 🟡                | *Not implemented*                                                                |
+| Clean up corrupted data and request new authentication                 | *Not implemented*                                   | N/A               | ❌                | Application logic, not `KeychainHelper`.                                   |
 | Properly delete previous values before saving a new one       | `test_set_overwritesPreviousValue` (`KeychainHelperTests`)               | Integration        | ✅                |                                                                              |    |
 | Support unicode keys and large binary data                        | `KeychainHelperTests` uses Strings. Binary support would require changes.   | Integration        | 🟡                | `KeychainHelper` limited to Strings. Binary support would require changes.       |
 | Robustness against concurrency                                             | *No specific concurrency tests*                                     | Integration        | 🟡                | Individual Keychain operations are atomic. `KeychainHelper` adds no more. | Unit/Integration    | 🟡                | No granular mapping of `OSStatus`.                                               |
@@ -247,7 +247,6 @@ flowchart TD
 
 ---
 
-
 ### Technical Checklist Registration <-> Tests (Reviewed)
 
 | Technical Checklist Item                                                                                                   | Test covering it (real name)                                                                                                      | Test Type          | Coverage (Reviewed) | Brief Comment                                                                                         |
@@ -265,7 +264,6 @@ flowchart TD
 | Documentation and architecture aligned                                                                                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
                                                                          
 ---
-
 
 ## 3. User Authentication (Login)
 
@@ -300,7 +298,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
         - [✅] Capture a snapshot of the error screen and add a reference
         - [✅] Ensure tests run in CI (update scheme + record on first run)
 
-    - [✅] The cycle is covered by automated tests in CI (For `UserLoginUseCase` logic)
+    - [✅] The cycle is covered by automated tests in CI
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
     #### Subtasks
@@ -398,9 +396,9 @@ flowchart TD
     E -- Connectivity Error --> I[UI: Notify Connection Error]
     E -- Other Server Error --> J[UI: Notify General Error]
 
-``` 
+```
 
-### Checklist Traceability <-> Tests (Revisada)
+### Checklist Traceability <-> Tests
 
 | Login Checklist Item              | Test Present (or N/A if missing functionality)               | Coverage (Reviewed)  | Brief Comment                                                                |
 |-----------------------------------|--------------------------------------------------------------|----------------------|-------------------------------------------------------------------------------|
@@ -415,7 +413,6 @@ flowchart TD
 | Delay/lockout after failures     | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
 
 ---
-
 
 ## 4. 🔄 Expired Token Management
 
@@ -479,7 +476,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - The system securely stores the new token
 - The user continues using the app without interruptions
 
-**Sad path:**
+**Sad path 1:**
 - The refresh token is invalid or expired: the system notifies the user and redirects to login
 - Network failure: the system notifies the user and allows retry
 - Unexpected error: the system logs the event for metrics
@@ -503,10 +500,10 @@ flowchart TD
 
 ---
 
-### Checklist <-> Tests Traceability
+### Checklist Traceability <-> Tests
 
 | Expired token management checklist item       | Test present  | Coverage  |
-|-----------------------------------------------|---------------|-----------|
+|:----------------------------------------------|:-------------:|:---------:|
 | Detect token expiration                       | No            |    ❌     |
 | Request refresh token from backend            | No            |    ❌     |
 | Store new token after renewal                 | No            |    ❌     |
@@ -556,7 +553,7 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - The user accesses the valid link and sets a new password
 - The system updates the password and notifies by email
 
-**Sad path:**
+**Sad path 1:**
 - Email not registered: the system responds with a neutral message
 - Expired/invalid link: the system shows an error and allows requesting a new link
 - Failed attempt: the system logs the event for metrics
@@ -584,7 +581,7 @@ flowchart TD
 ### Traceability Checklist <-> Tests
 
 | Password Recovery Checklist Item             | Test Present  | Coverage  |
-|----------------------------------------------|---------------|-----------|
+|:----------------------------------------------|:-------------:|:---------:|
 | Send reset link                             | No            |    ❌     |
 | Neutral message if email not registered      | No            |    ❌     |
 | Allow new password with valid link           | No            |    ❌     |
@@ -620,14 +617,31 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ---
 
 ### Technical Checklist for Session Management
-- [❌] Show list of active sessions with relevant details
-- [❌] Highlight current session
-- [❌] Allow remote session termination
-- [❌] Allow termination of all sessions except current
-- [❌] Notify affected device after remote termination
-- [❌] Detect suspicious access and notify user
-- [❌] Allow verification or termination of suspicious session
-- [❌] Suggest password change if applicable
+- [❌] Integrate SessionManager into login flow
+    - [❌] Register new session after successful login (store userID, token, timestamp)
+    - [❌] Ensure SessionManager is injected via dependency inversion (protocol-based)
+    - [❌] Add unit tests for session registration on login
+    - [❌] Add integration tests for session persistence after login
+- [❌] Integrate SessionManager into logout flow
+    - [❌] Invalidate current session on logout (remove from store, clear token)
+    - [❌] Notify APIInterceptor/TokenProvider of session end
+    - [❌] Add unit tests for session invalidation on logout
+    - [❌] Add integration tests for session cleanup
+- [❌] List active sessions in the UI
+    - [❌] Fetch all active sessions from SessionManager
+    - [❌] Display device, location, and last access info (if available)
+    - [❌] Highlight current session
+    - [❌] Add unit tests for session listing logic
+    - [❌] Add UI tests for session list
+- [❌] Remote session termination
+    - [❌] Allow user to terminate any session except the current one
+    - [❌] Notify affected device after remote termination
+    - [❌] Add tests for remote termination logic
+- [❌] Detect and notify suspicious access
+    - [❌] Detect anomalies (location, device, access time)
+    - [❌] Notify user and offer security actions (verify/terminate)
+    - [❌] Add tests for suspicious session detection and notification
+- [❌] Suggest password change if suspicious activity detected
 
 ---
 
@@ -663,24 +677,110 @@ flowchart TD
     J -- No --> K[Suggest password change if needed]
     D -- Error --> L[Show error, allow retry]
 ```
+
+#### Clean Architecture Flow (Explicit Layers)
+
+```mermaid
+flowchart TD
+    %% LAYERS
+    subgraph UI [UI Layer]
+        A[User accesses session management]
+        B[Display list of active sessions]
+        C[User selects session to close]
+        F[User selects 'close all except current']
+        L[Show error, allow retry]
+        I[Notify user, offer verify or close]
+        K[Suggest password change if needed]
+    end
+
+    subgraph UC [UseCase Layer]
+        UC1[Request session list]
+        UC2[Request session termination]
+        UC3[Request terminate all except current]
+        UC4[Request suspicious session actions]
+        UC5[Handle error, propagate to UI]
+    end
+
+    subgraph DOMAIN [Domain Layer]
+        SM1[SessionManager: Get active sessions]
+        SM2[SessionManager: Invalidate session]
+        SM3[SessionManager: Invalidate all except current]
+        SM4[SessionManager: Detect suspicious login]
+        SM5[SessionManager: Suggest password change]
+    end
+
+    subgraph INFRA [Infra Layer]
+        N1[Notify device after termination]
+        N2[APIInterceptor/TokenProvider: Handle token/session]
+    end
+
+    %% MAIN FLOWS
+    A --> UC1
+    UC1 --> SM1
+    SM1 --> B
+
+    C --> UC2
+    UC2 --> SM2
+    SM2 --> N1
+    N1 --> UC2
+    UC2 --> B
+
+    F --> UC3
+    UC3 --> SM3
+    SM3 --> N1
+    N1 --> UC3
+    UC3 --> B
+
+    %% SUSPICIOUS ACCESS
+    B --> SM4
+    SM4 --> UC4
+    UC4 --> I
+    I --> UC4
+    UC4 --> SM2
+    SM2 --> N1
+    N1 --> UC4
+    UC4 --> B
+
+    %% SUGGEST PASSWORD CHANGE
+    UC4 --> SM5
+    SM5 --> K
+
+    %% ERRORS
+    SM2 -- Error --> UC5
+    UC5 --> L
+```
+
 ---
 
 ### Traceability Checklist <-> Tests
 
-| Session Management Checklist Item            | Test Present  | Coverage  |
-|----------------------------------------------|---------------|-----------|
-| Show list of active sessions                 | No            |    ❌     |
-| Highlight current session                    | No            |    ❌     |
-| Remote session termination                   | No            |    ❌     |
-| Terminate all except current                 | No            |    ❌     |
-| Notify device after remote termination       | No            |    ❌     |
-| Detect and notify suspicious access          | No            |    ❌     |
-| Verify/terminate suspicious session          | No            |    ❌     |
-| Suggest password change                      | No            |    ❌     |
+| Checklist Item                              | Test File & Function (Suggested/Existing)                                                                                                  | Status   | Notes / Comments                         |
+|---------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|----------|------------------------------------------|
+| Show list of active sessions                | `SessionListViewModelTests.test_showsActiveSessions()`<br>`SessionManagerTests.test_fetchActiveSessions_returnsExpectedList()`               | ❌       | UI + domain, requires spies              |
+| Highlight current session                   | `SessionListViewModelTests.test_highlightsCurrentSession()`                                                                                 | ❌       | UI: visual highlight                     |
+| Remote session termination                  | `SessionManagerTests.test_terminateRemoteSession_removesSession()`<br>`SessionListViewModelTests.test_terminateRemoteSession_updatesUI()`    | ❌       | Domain + UI integration                  |
+| Terminate all except current                | `SessionManagerTests.test_terminateAllExceptCurrent_removesOtherSessions()`                                                                 | ❌       | Pure domain                              |
+| Notify device after remote termination      | `SessionManagerTests.test_terminateRemoteSession_notifiesDevice()`                                                                          | ❌       | Infrastructure (mock/spies)              |
+| Detect and notify suspicious access         | `SessionManagerTests.test_detectsSuspiciousAccess_andNotifies()`                                                                            | ❌       | Domain + integration                     |
+| Verify/terminate suspicious session         | `SessionManagerTests.test_verifyOrTerminateSuspiciousSession()`                                                                             | ❌       | Pure domain                              |
+| Suggest password change                     | `SessionManagerTests.test_suggestsPasswordChange_onSuspiciousActivity()`                                                                    | ❌       | Domain + UI feedback                     |
 
 > Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
+
+### Architecture Mapping: Checklist <-> Components
+
+| Session Management Checklist Item            | Architecture/Responsible Layer                                                                                  |
+|----------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Show list of active sessions                 | **SessionManager (Domain):** Provides active sessions<br>**UseCase:** Orchestrates query<br>**UI:** Presents list |
+| Highlight current session                    | **SessionManager (Domain):** Marks current session<br>**UseCase:** Exposes info<br>**UI:** Highlights session        |
+| Remote session termination                   | **SessionManager (Domain):** Invalidates remote session<br>**UseCase:** Exposes action<br>**UI:** Triggers event   |
+| Terminate all except current                 | **SessionManager (Domain):** Invalidates all except current<br>**UseCase:** Orchestrates<br>**UI:** Triggers action|
+| Notify device after remote termination       | **SessionManager (Domain):** Emits event<br>**APIInterceptor/TokenProvider (Infra):** Handles tokens/notifications|
+| Detect and notify suspicious access          | **SessionManager (Domain):** Detects anomalies<br>**UseCase:** Notifies<br>**UI:** Shows alert             |
+| Verify/terminate suspicious session          | **SessionManager (Domain):** Allows verify/invalidate<br>**UseCase:** Exposes action<br>**UI:** Requests decision|
+| Suggest password change                      | **SessionManager (Domain):** Suggests change<br>**UseCase:** Exposes suggestion<br>**UI:** Shows prompt       |
 
 ## 7. Account Verification
 
@@ -869,10 +969,12 @@ flowchart TD
     J --> K[Optional: Invalidate Other Sessions]
     F -- Server Error (e.g. 4xx, 5xx) --> L[UI: Notify Server Error]
     F -- Connectivity Error --> M[UI: Notify Connectivity Error]
-``` 
+```
+
 ---
 
 ### Checklist Traceability <-> Tests
+
 | Password Change Checklist Item                                 | Test Present  | Coverage  |
 |:---------------------------------------------------------------|:-------------:|:---------:|
 | Validate current password                                      | No            |    ❌     |
@@ -1074,26 +1176,26 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - Logging relevant security events
 - Analyzing patterns of failed attempts
 - Notifying administrators in critical events
-- Almacenamiento seguro y trazable de eventos
-- Medidas automáticas ante patrones sospechosos
-- Visualización y consulta de métricas de seguridad
+- Secure and traceable storage of events
+- Automatic actions in response to suspicious patterns
+- Visualization and querying of security metrics
 
 ---
 
-### Checklist técnico de métricas de seguridad
+### Security Metrics Technical Checklist
 
-- [❌] Registrar eventos de seguridad relevantes
-- [❌] Analizar patrones de intentos fallidos
-- [❌] Notificar a administradores en eventos críticos
-- [❌] Almacenar eventos de forma segura y trazable
-- [❌] Aplicar medidas automáticas ante patrones sospechosos
-- [❌] Permitir visualización y consulta de métricas
+- [❌] Log relevant security events
+- [❌] Analyze patterns of failed attempts
+- [❌] Notify administrators in critical events
+- [❌] Store events securely and traceably
+- [❌] Apply automatic actions for suspicious patterns
+- [❌] Allow visualization and querying of metrics
 
-> Solo se marcarán como completados los ítems con test real automatizado. El resto debe implementarse y testearse antes de marcar como hecho.
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 
 ---
 
-### Diagrama técnico del flujo de métricas de seguridad
+### Technical Diagram of Security Metrics Flow
 
 ```mermaid
 flowchart TD
@@ -1173,6 +1275,7 @@ so I can take preventive measures and protect data integrity and application fun
 - [❌] Tests to verify the correct application reaction.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 
@@ -1202,6 +1305,7 @@ in order to protect intellectual property and the effectiveness of my security c
 - [❌] Evaluate the impact of obfuscation on performance and debugging.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 
@@ -1229,6 +1333,7 @@ to protect the privacy of sensitive data.
 - [❌] Tests to verify blocking/hiding in sensitive views.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 
@@ -1257,6 +1362,7 @@ to protect against man-in-the-middle (MitM) attacks using fake or compromised SS
 - [❌] Comprehensive tests for successful (correct pin) and failed (incorrect pin, different certificate) connections.
 
 ---
+
 *(Diagrama, Cursos Técnicos y Trazabilidad a desarrollar)*
 ---
 ## 16. Secure Handling of Sensitive Data in Memory
@@ -1284,6 +1390,7 @@ to reduce the risk of extraction by malware or memory analysis tools.
 - [❌] Perform memory analysis (if possible with tools) to verify data cleanup.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 
@@ -1291,7 +1398,7 @@ to reduce the risk of extraction by malware or memory analysis tools.
 
 ### Functional Narrative
 As a user, I want to be able to use my device's biometric authentication (Touch ID/Face ID) to access the application or authorize sensitive operations quickly and securely,
-y como aplicación, necesito integrar esta funcionalidad correctamente, manejando los posibles fallos y respetando la seguridad de las credenciales subyacentes.
+and as an application, I need to integrate this functionality correctly, handling possible failures and respecting the security of the underlying credentials.
 
 ---
 
@@ -1314,6 +1421,7 @@ y como aplicación, necesito integrar esta funcionalidad correctamente, manejand
 - [❌] Tests for successful, failed, and fallback flows.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 
@@ -1342,6 +1450,7 @@ to ensure that previous session tokens can no longer be used.
 - [❌] Tests to verify local cleanup and server call.
 
 ---
+
 *(Diagram, Technical Flows, and Traceability to be developed)*
 ---
 ## 19. Secure Device Permissions Management
@@ -1374,7 +1483,3 @@ ensuring that they are only requested when necessary and that the user understan
 - [❌] Tests for all request flows and permission states.
 
 ---
-*(Diagram, Technical Flows, and Traceability to be developed)*
----
-
-
