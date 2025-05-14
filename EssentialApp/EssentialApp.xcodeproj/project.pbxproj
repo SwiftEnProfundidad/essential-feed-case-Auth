@@ -816,7 +816,11 @@
 		0895DAA3234B3B980031BB2D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Z273P8K3M7;
+				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -832,7 +836,11 @@
 		0895DAA4234B3B980031BB2D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEVELOPMENT_TEAM = Z273P8K3M7;
+				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -850,7 +858,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
+				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -871,7 +883,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
+				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
