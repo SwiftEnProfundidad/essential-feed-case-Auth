@@ -345,19 +345,20 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [❌] CI coverage for retry scenarios.
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
 - [🚧] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
-    #### Subtasks (Detailed in the original BDD, all marked as ❌ for current implementation)
-    - [✅] Define DTO/model for failed login attempts (FailedLoginAttempt)
-    - [🚧] Create in-memory and/or persistent store for failed attempts (FailedLoginAttemptStore)
-    - [🔜] Implement type-erased wrapper (AnyFailedLoginAttemptStore)
-    - [❌] Integrate failed attempt logging in UserLoginUseCase (when not a format error)
-    - [❌] Implement logic to query recent failed attempts (e.g., last 5 minutes)
-    - [❌] Implement delay logic (e.g., block for 1 minute after 3 failures, 5 minutes after 5 failures)
-    - [❌] Notify user of temporary lockout and remaining time
+    #### Subtasks (Detailed in the original BDD, updated to current implementation)
+    - [✅] Define DTO/model for failed login attempts (`FailedLoginAttempt`)
+    - [✅] Create in-memory and/or persistent store for failed attempts (`InMemoryFailedLoginAttemptsStore`, segregated protocol, ISP-compliant)
+    - [✅] Implement type-erased wrapper (`AnyFailedLoginAttemptStore`)
+    - [🚧] Integrate failed attempt logging in `UserLoginUseCase` (when not a format error)
+    - [🔜] Apply lockout/delay logic after threshold
     - [❌] Suggest password recovery after X accumulated failed attempts
-    - [❌] Unit tests for the store and wrapper
-    - [❌] Unit tests for UserLoginUseCase for lockout and notification logic
+    - [✅] Unit tests for the store and wrapper (`InMemoryFailedLoginAttemptsStoreTests`, `AnyFailedLoginAttemptStoreTests` with helpers and memory leak tracking)
+    - [❌] Unit tests for `UserLoginUseCase` for lockout and notification logic
     - [❌] Integration tests (real persistence, if applicable)
     - [❌] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
+
+> **Technical note:**
+> - Integration and lockout logic in the main use case (UserLoginUseCase) is still pending.
 
 ---
 
