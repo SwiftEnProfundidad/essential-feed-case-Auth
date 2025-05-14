@@ -6,7 +6,7 @@ public protocol LoginSuccessObserver {
 }
 
 public protocol LoginFailureObserver {
-    func didFailLogin(error: LoginError)
+    func didFailLogin(error: Error)
 }
 
 public final class UserLoginUseCase {
@@ -16,6 +16,9 @@ public final class UserLoginUseCase {
     private let failedAttemptsStore: FailedLoginAttemptsStore
     private let successObserver: LoginSuccessObserver
     private let failureObserver: LoginFailureObserver
+
+    private let maxFailedAttempts = 5
+    private let lockoutDuration: TimeInterval = 300
 
     public init(
         api: UserLoginAPI,
@@ -33,32 +36,38 @@ public final class UserLoginUseCase {
         self.failureObserver = failureObserver
     }
 
-    public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+    public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
         let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
         if email.isEmpty {
-            failureObserver.didFailLogin(error: .invalidEmailFormat)
-            return .failure(.invalidEmailFormat)
+            failureObserver.didFailLogin(error: LoginError.invalidEmailFormat)
+            return .failure(LoginError.invalidEmailFormat)
         }
         guard isValidEmail(email) else {
-            failureObserver.didFailLogin(error: .invalidEmailFormat)
-            return .failure(.invalidEmailFormat)
+            failureObserver.didFailLogin(error: LoginError.invalidEmailFormat)
+            return .failure(LoginError.invalidEmailFormat)
+        }
+
+        if let lockoutInfo = getAccountLockoutInfo(email) {
+            let accountLockedError = AccountLockedError(username: email, remainingLockTime: lockoutInfo.remainingTime)
+            failureObserver.didFailLogin(error: accountLockedError)
+            return .failure(accountLockedError)
         }
 
         let password = credentials.password
 
         if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !password.isEmpty {
-            failureObserver.didFailLogin(error: .invalidPasswordFormat)
-            return .failure(.invalidPasswordFormat)
+            failureObserver.didFailLogin(error: LoginError.invalidPasswordFormat)
+            return .failure(LoginError.invalidPasswordFormat)
         }
 
         if password.isEmpty {
-            failureObserver.didFailLogin(error: .invalidPasswordFormat)
-            return .failure(.invalidPasswordFormat)
+            failureObserver.didFailLogin(error: LoginError.invalidPasswordFormat)
+            return .failure(LoginError.invalidPasswordFormat)
         }
 
         if password.count < 6 {
-            failureObserver.didFailLogin(error: .invalidPasswordFormat)
-            return .failure(.invalidPasswordFormat)
+            failureObserver.didFailLogin(error: LoginError.invalidPasswordFormat)
+            return .failure(LoginError.invalidPasswordFormat)
         }
 
         let result = await api.login(with: credentials)
@@ -76,17 +85,16 @@ public final class UserLoginUseCase {
                 successObserver.didLoginSuccessfully(response: response)
                 return .success(response)
             } catch {
-                failureObserver.didFailLogin(error: .tokenStorageFailed)
-                return .failure(.tokenStorageFailed)
+                failureObserver.didFailLogin(error: LoginError.tokenStorageFailed)
+                return .failure(LoginError.tokenStorageFailed)
             }
-
         case let .failure(error):
             if error == .noConnectivity {
                 do {
                     try await offlineStore.save(credentials: credentials)
-                    failureObserver.didFailLogin(error: .noConnectivity)
+                    failureObserver.didFailLogin(error: LoginError.noConnectivity)
                     failedAttemptsStore.incrementAttempts(for: credentials.email)
-                    return .failure(.noConnectivity)
+                    return .failure(LoginError.noConnectivity)
                 } catch {
                     let loginOfflineError = LoginError.offlineStoreFailed
                     failureObserver.didFailLogin(error: loginOfflineError)
@@ -107,5 +115,25 @@ public final class UserLoginUseCase {
         let emailRegEx = #"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"#
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
+    }
+
+    private struct LockoutInfo {
+        let isLocked: Bool
+        let remainingTime: TimeInterval
+    }
+
+    private func getAccountLockoutInfo(_ username: String) -> LockoutInfo? {
+        let attempts = failedAttemptsStore.getAttempts(for: username)
+
+        if attempts >= maxFailedAttempts, let lastAttemptTime = failedAttemptsStore.lastAttemptTime(for: username) {
+            let timeSinceLastAttempt = Date().timeIntervalSince(lastAttemptTime)
+            let remainingLockTime = max(0, lockoutDuration - timeSinceLastAttempt)
+
+            if remainingLockTime > 0 {
+                return LockoutInfo(isLocked: true, remainingTime: remainingLockTime)
+            }
+        }
+
+        return nil
     }
 }

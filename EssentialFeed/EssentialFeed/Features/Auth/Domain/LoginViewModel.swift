@@ -27,7 +27,7 @@ public final class LoginViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var delayTask: Task<Void, Never>?
 
-    public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
+    public var authenticate: (String, String) async -> Result<LoginResponse, Error>
     private let pendingRequestStore: AnyLoginRequestStore?
     private let failedAttemptsStore: FailedLoginAttemptsStore
     private let maxFailedAttempts: Int
@@ -36,7 +36,7 @@ public final class LoginViewModel: ObservableObject {
     public weak var navigation: LoginNavigation?
 
     public init(
-        authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
+        authenticate: @escaping (String, String) async -> Result<LoginResponse, Error>,
         pendingRequestStore: AnyLoginRequestStore? = nil,
         failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
         maxFailedAttempts: Int = 5,
@@ -62,7 +62,7 @@ public final class LoginViewModel: ObservableObject {
         checkAccountUnlock(for: username)
         guard !isAccountLocked(for: username) else {
             isLoginBlocked = true
-            errorMessage = blockMessageProvider.messageForMaxAttemptsReached()
+            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked)
             return
         }
 
@@ -72,12 +72,12 @@ public final class LoginViewModel: ObservableObject {
         let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if trimmedUsername.isEmpty {
-            errorMessage = blockMessageProvider.message(for: .emptyEmail)
+            errorMessage = blockMessageProvider.message(for: LoginError.invalidEmailFormat)
             return
         }
 
         if trimmedPassword.isEmpty {
-            errorMessage = blockMessageProvider.message(for: .emptyPassword)
+            errorMessage = blockMessageProvider.message(for: LoginError.invalidPasswordFormat)
             return
         }
 
@@ -97,7 +97,7 @@ public final class LoginViewModel: ObservableObject {
             onAuthenticated?()
         case let .failure(error):
             await handleFailedLogin(username: trimmedUsername, error: error)
-            if case .network = error {
+            if case LoginError.network = error {
                 let request = LoginRequest(username: trimmedUsername, password: trimmedPassword)
                 pendingRequestStore?.save(request)
             }
@@ -124,7 +124,7 @@ public final class LoginViewModel: ObservableObject {
         return elapsed < 5 * 60 // bloqueado si no ha pasado el timeout
     }
 
-    private func handleFailedLogin(username: String, error: LoginError = .invalidCredentials) async {
+    private func handleFailedLogin(username: String, error: Error = LoginError.invalidCredentials) async {
         failedAttemptsStore.incrementAttempts(for: username)
         let attempts = failedAttemptsStore.getAttempts(for: username)
 
@@ -133,7 +133,7 @@ public final class LoginViewModel: ObservableObject {
             if attempts < self.maxFailedAttempts {
                 self.errorMessage = self.blockMessageProvider.message(for: error)
             } else {
-                self.errorMessage = self.blockMessageProvider.messageForMaxAttemptsReached()
+                self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked)
                 self.isLoginBlocked = true
             }
         }

@@ -349,9 +349,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Define DTO/model for failed login attempts (`FailedLoginAttempt`)
     - [✅] Create in-memory and/or persistent store for failed attempts (`InMemoryFailedLoginAttemptsStore`, segregated protocol, ISP-compliant)
     - [✅] Implement type-erased wrapper (`AnyFailedLoginAttemptStore`)
-    - [🚧] Integrate failed attempt logging in `UserLoginUseCase` (when not a format error)
-    - [🔜] Apply lockout/delay logic after threshold
-    - [❌] Suggest password recovery after X accumulated failed attempts
+    - [✅] Integrate failed attempt logging in `UserLoginUseCase` (when not a format error)
+    - [🚧] Apply lockout/delay logic after threshold
+    - [🔜] Suggest password recovery after X accumulated failed attempts
     - [✅] Unit tests for the store and wrapper (`InMemoryFailedLoginAttemptsStoreTests`, `AnyFailedLoginAttemptStoreTests` with helpers and memory leak tracking)
     - [❌] Unit tests for `UserLoginUseCase` for lockout and notification logic
     - [❌] Integration tests (real persistence, if applicable)

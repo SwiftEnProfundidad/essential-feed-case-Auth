@@ -2,5 +2,6 @@
     "sweetpad.build.xcodeWorkspacePath": "EssentialApp/EssentialApp.xcworkspace",
     "window.autoDetectColorScheme": true,
     "window.confirmSaveUntitledWorkspace": true,
-    "interactiveWindow.promptToSaveOnClose": true
+    "interactiveWindow.promptToSaveOnClose": true,
+    "markdown.validate.enabled": true
 }

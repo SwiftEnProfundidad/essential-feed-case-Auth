@@ -57,8 +57,6 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         return (sut, api, successSpy, failureSpy, failedAttemptsStore)
     }
 
-    // MARK: - Spies (válidos para todos los tests de esta clase)
-
     private final class LoginSuccessObserverSpy: LoginSuccessObserver {
         private(set) var receivedResponses = [LoginResponse]()
         func didLoginSuccessfully(response: LoginResponse) {
@@ -67,8 +65,8 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
     }
 
     private final class LoginFailureObserverSpy: LoginFailureObserver {
-        private(set) var receivedErrors = [LoginError]()
-        func didFailLogin(error: LoginError) {
+        private(set) var receivedErrors = [Error]()
+        func didFailLogin(error: Error) {
             receivedErrors.append(error)
         }
     }

@@ -138,8 +138,9 @@
 		B400BE9E2DBD61E900A18EE5 /* LoginPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B400BE932DBD61E900A18EE5 /* LoginPresentation.swift */; };
 		B402E0302DB864AF00B29ECF /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B402E02E2DB864AF00B29ECF /* SessionManaging.swift */; };
 		B40318DD2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */; };
+		B40318DF2DD4E85A000D4658 /* AccountLockedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40318DE2DD4E85A000D4658 /* AccountLockedError.swift */; };
+		B40318E32DD4EE9F000D4658 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40318E22DD4EE9F000D4658 /* LoginBlockMessageProvider.swift */; };
 		B4153A6D2DC6811C00B40F51 /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */; };
-		B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
 		B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
 		B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */; };
@@ -424,7 +425,8 @@
 		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B402E02E2DB864AF00B29ECF /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
 		B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
-		B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
+		B40318DE2DD4E85A000D4658 /* AccountLockedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLockedError.swift; sourceTree = "<group>"; };
+		B40318E22DD4EE9F000D4658 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -1249,6 +1251,7 @@
 		B4D6B25D2DC8D15400F5A3FE /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B40318E22DD4EE9F000D4658 /* LoginBlockMessageProvider.swift */,
 				B46DAAB42DC18C690080160E /* PasswordRecoveryViewModel.swift */,
 				B46CA15E2DBEA28000CE9ADC /* PasswordRecoveryView.swift */,
 				B46CA1472DBE8AAF00CE9ADC /* PasswordRecoveryPresenter.swift */,
@@ -1262,7 +1265,6 @@
 		B4D6B25E2DC8D15400F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				B4153A6E2DC6A17700B40F51 /* LoginBlockMessageProvider.swift */,
 				B48838452DC66A7A0048CF98 /* AnyLoginRequestStore.swift */,
 			);
 			path = UI;
@@ -1541,6 +1543,7 @@
 		B4EC32672DCD2AA100A9435A /* Errors */ = {
 			isa = PBXGroup;
 			children = (
+				B40318DE2DD4E85A000D4658 /* AccountLockedError.swift */,
 				B46DEFC62DC7B34E00102B5A /* LoginValidationError.swift */,
 				B4CE05592DCD204C00EAE847 /* LogingError.swift */,
 			);
@@ -1974,6 +1977,7 @@
 				08EF9D29250BBC6C004539C2 /* ResourceErrorView.swift in Sources */,
 				08E546CC24F9631300C64FAE /* FeedImageDataMapper.swift in Sources */,
 				B4EC32642DCD2A1100A9435A /* Token.swift in Sources */,
+				B40318E32DD4EE9F000D4658 /* LoginBlockMessageProvider.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				08DB5510254467FC00B98C3A /* Paginated.swift in Sources */,
 				B48838402DC65FA60048CF98 /* PendingRequestStore.swift in Sources */,
@@ -2009,7 +2013,6 @@
 				0844769121FCBE7D00439BE9 /* URLSessionHTTPClient.swift in Sources */,
 				B4EC325B2DCD24DF00A9435A /* OfflineRegistrationStore.swift in Sources */,
 				08EF9D27250BBC1B004539C2 /* ResourceLoadingView.swift in Sources */,
-				B4153A6F2DC6A17700B40F51 /* LoginBlockMessageProvider.swift in Sources */,
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
 				B470A00B2DD4725E001661C6 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
@@ -2033,6 +2036,7 @@
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
 				B4558F3C2DC936C400A2CE4B /* HTTPClient.swift in Sources */,
+				B40318DF2DD4E85A000D4658 /* AccountLockedError.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 				B4D71EEF2DAF1643003A1316 /* KeychainProtocol.swift in Sources */,

@@ -4,12 +4,16 @@ import XCTest
 
 final class UserLoginUseCaseTests: XCTestCase {
     func test_login_fails_withEmptyEmail_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "ValidPassword123")
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidEmailFormat, "Should return invalid email format error for empty email")
+            guard let loginError = error as? LoginError else {
+                XCTFail("Expected LoginError, got \(error)")
+                return
+            }
+            XCTAssertEqual(loginError, .invalidEmailFormat, "Should return invalid email format error for empty email")
             XCTAssertFalse(api.wasCalled, "API should NOT be called when email is empty")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -18,12 +22,16 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withWhitespaceOnlyEmail_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "    ", password: "ValidPassword123")
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidEmailFormat, "Should return invalid email format error for whitespace-only email")
+            guard let loginError = error as? LoginError else {
+                XCTFail("Expected LoginError, got \(error)")
+                return
+            }
+            XCTAssertEqual(loginError, .invalidEmailFormat, "Should return invalid email format error for whitespace-only email")
             XCTAssertFalse(api.wasCalled, "API should NOT be called when email is whitespace-only")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -32,12 +40,16 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withWhitespaceOnlyPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "     ")
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidPasswordFormat, "Should return invalid password format error for whitespace-only password")
+            guard let loginError = error as? LoginError else {
+                XCTFail("Expected LoginError, got \(error)")
+                return
+            }
+            XCTAssertEqual(loginError, .invalidPasswordFormat, "Should return invalid password format error for whitespace-only password")
             XCTAssertFalse(api.wasCalled, "API should NOT be called when password is whitespace-only")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -46,12 +58,16 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withShortPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "12345")
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidPasswordFormat, "Should return invalid password format error for short password")
+            guard let loginError = error as? LoginError else {
+                XCTFail("Expected LoginError, got \(error)")
+                return
+            }
+            XCTAssertEqual(loginError, .invalidPasswordFormat, "Should return invalid password format error for short password")
             XCTAssertFalse(api.wasCalled, "API should NOT be called when password is too short")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -60,12 +76,16 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withEmptyEmailAndPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "")
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidEmailFormat, "Should return invalid email format error when both fields are empty (email checked first)")
+            if let loginError = error as? LoginError {
+                XCTAssertEqual(loginError, .invalidEmailFormat, "Should return invalid email format error when both fields are empty (email checked first)")
+            } else {
+                XCTFail("Expected LoginError.invalidEmailFormat, got \(error)")
+            }
             XCTAssertFalse(api.wasCalled, "API should NOT be called when both fields are empty")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -74,7 +94,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let invalidEmail = "usuario_invalido"
         let credentials = LoginCredentials(email: invalidEmail, password: "ValidPassword123")
 
@@ -82,7 +102,11 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidEmailFormat, "Should return invalid email format error")
+            if let loginError = error as? LoginError {
+                XCTAssertEqual(loginError, .invalidEmailFormat, "Should return invalid email format error")
+            } else {
+                XCTFail("Expected LoginError.invalidEmailFormat, got \(error)")
+            }
             XCTAssertFalse(api.wasCalled, "API should NOT be called when email format is invalid")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -91,7 +115,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withInvalidPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let invalidPassword = ""
         let credentials = LoginCredentials(email: "user@example.com", password: invalidPassword)
 
@@ -99,7 +123,11 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .invalidPasswordFormat, "Should return invalid password format error")
+            if let loginError = error as? LoginError {
+                XCTAssertEqual(loginError, .invalidPasswordFormat, "Should return invalid password format error")
+            } else {
+                XCTFail("Expected LoginError.invalidPasswordFormat, got \(error)")
+            }
             XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on validation error")
         case .success:
@@ -108,7 +136,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_onInvalidCredentials() async throws {
-        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "wrongpass")
 
         api.stubbedResult = Result<LoginResponse, LoginError>.failure(.invalidCredentials)
@@ -118,13 +146,17 @@ final class UserLoginUseCaseTests: XCTestCase {
         case .success:
             XCTFail("Expected failure, got success")
         case let .failure(error):
-            XCTAssertEqual(error, .invalidCredentials, "Should return invalid credentials error on failure")
+            if let loginError = error as? LoginError {
+                XCTAssertEqual(loginError, .invalidCredentials, "Should return invalid credentials error on failure")
+            } else {
+                XCTFail("Expected LoginError.invalidCredentials, got \(error)")
+            }
             XCTAssertTrue(failureObserver.didNotifyFailure, "Failure observer should be notified on failed login")
         }
     }
 
     func test_login_succeeds_storesToken_andNotifiesObserver() async throws {
-        let (sut, api, successObserver, _, tokenStorage, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, successObserver, _, tokenStorage, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "password123")
 
         let expectedTokenValue = "jwt-token-123"
@@ -155,7 +187,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_succeedsApiCall_butFailsToStoreToken_returnsError() async throws {
-        let (sut, api, successObserver, _, tokenStorage, _, failedAttemptsStore) = makeSUT()
+        let (sut, api, successObserver, _, tokenStorage, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "password123")
 
         let expectedTokenValue = "jwt-token-for-fail-case"
@@ -171,7 +203,11 @@ final class UserLoginUseCaseTests: XCTestCase {
         case .success:
             XCTFail("Expected failure due to token storage error, got success")
         case let .failure(error):
-            XCTAssertEqual(error, LoginError.tokenStorageFailed, "Expected token storage error")
+            if let loginError = error as? LoginError {
+                XCTAssertEqual(loginError, .tokenStorageFailed, "Expected token storage error")
+            } else {
+                XCTFail("Expected LoginError.tokenStorageFailed, got \(error)")
+            }
         }
 
         XCTAssertFalse(successObserver.didNotifySuccess, "Success observer should NOT be notified if token storage fails")
@@ -186,9 +222,13 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         _ = await sut.login(with: credentials)
 
-        XCTAssertEqual(failedAttemptsStore.messages.count, 1, "Should increment failed attempts once")
-        if let message = failedAttemptsStore.messages.first {
-            XCTAssertEqual(message, .incrementAttempts("user@example.com"), "Should increment attempts for the correct username")
+        XCTAssertTrue(failedAttemptsStore.messages.contains(.incrementAttempts("user@example.com")), "Should increment attempts for the correct username")
+        if let last = failedAttemptsStore.messages.last(where: {
+            if case .incrementAttempts = $0 { true } else { false }
+        }) {
+            XCTAssertEqual(last, .incrementAttempts("user@example.com"), "Should increment attempts for the correct username")
+        } else {
+            XCTFail("No incrementAttempts message found")
         }
     }
 
@@ -211,9 +251,13 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         _ = await sut.login(with: credentials)
 
-        XCTAssertEqual(failedAttemptsStore.messages.count, 1, "Should reset failed attempts once")
-        if let message = failedAttemptsStore.messages.first {
-            XCTAssertEqual(message, .resetAttempts("user@example.com"), "Should reset attempts for the correct username")
+        XCTAssertTrue(failedAttemptsStore.messages.contains(.resetAttempts("user@example.com")), "Should reset attempts for the correct username")
+        if let last = failedAttemptsStore.messages.last(where: {
+            if case .resetAttempts = $0 { true } else { false }
+        }) {
+            XCTAssertEqual(last, .resetAttempts("user@example.com"), "Should reset attempts for the correct username")
+        } else {
+            XCTFail("No resetAttempts message found")
         }
     }
 
@@ -285,7 +329,7 @@ final class LoginSuccessObserverSpy: LoginSuccessObserver {
 
 final class LoginFailureObserverSpy: LoginFailureObserver {
     var didNotifyFailure = false
-    func didFailLogin(error _: LoginError) {
+    func didFailLogin(error _: Error) {
         didNotifyFailure = true
     }
 }
