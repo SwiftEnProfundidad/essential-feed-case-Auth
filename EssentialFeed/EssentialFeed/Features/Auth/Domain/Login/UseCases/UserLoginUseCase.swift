@@ -1,3 +1,4 @@
+
 import Foundation
 
 public protocol LoginSuccessObserver {
@@ -12,6 +13,7 @@ public final class UserLoginUseCase {
     private let api: UserLoginAPI
     private let tokenStorage: TokenStorage
     private let offlineStore: OfflineLoginStore
+    private let failedAttemptsStore: FailedLoginAttemptsStore
     private let successObserver: LoginSuccessObserver
     private let failureObserver: LoginFailureObserver
 
@@ -19,12 +21,14 @@ public final class UserLoginUseCase {
         api: UserLoginAPI,
         tokenStorage: TokenStorage,
         offlineStore: OfflineLoginStore,
+        failedAttemptsStore: FailedLoginAttemptsStore,
         successObserver: LoginSuccessObserver,
         failureObserver: LoginFailureObserver
     ) {
         self.api = api
         self.tokenStorage = tokenStorage
         self.offlineStore = offlineStore
+        self.failedAttemptsStore = failedAttemptsStore
         self.successObserver = successObserver
         self.failureObserver = failureObserver
     }
@@ -68,6 +72,7 @@ public final class UserLoginUseCase {
 
             do {
                 try await tokenStorage.save(tokenToStore)
+                failedAttemptsStore.resetAttempts(for: credentials.email)
                 successObserver.didLoginSuccessfully(response: response)
                 return .success(response)
             } catch {
@@ -80,13 +85,18 @@ public final class UserLoginUseCase {
                 do {
                     try await offlineStore.save(credentials: credentials)
                     failureObserver.didFailLogin(error: .noConnectivity)
+                    failedAttemptsStore.incrementAttempts(for: credentials.email)
                     return .failure(.noConnectivity)
                 } catch {
                     let loginOfflineError = LoginError.offlineStoreFailed
                     failureObserver.didFailLogin(error: loginOfflineError)
+                    failedAttemptsStore.incrementAttempts(for: credentials.email)
                     return .failure(loginOfflineError)
                 }
             } else {
+                if error != .invalidEmailFormat, error != .invalidPasswordFormat {
+                    failedAttemptsStore.incrementAttempts(for: credentials.email)
+                }
                 failureObserver.didFailLogin(error: error)
                 return .failure(error)
             }

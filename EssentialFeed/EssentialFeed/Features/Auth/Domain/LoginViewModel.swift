@@ -1,3 +1,4 @@
+
 import Combine
 import Foundation
 
@@ -79,13 +80,9 @@ public final class LoginViewModel: ObservableObject {
             errorMessage = blockMessageProvider.message(for: .emptyPassword)
             return
         }
-        // El resto de validaciones (formato) las gestiona el dominio
-
-        // No validamos formato aquí: deja que el dominio/autenticación gestione el error de formato
 
         let result = await authenticate(trimmedUsername, trimmedPassword)
 
-        // Limpia el error antes de procesar el resultado
         errorMessage = nil
 
         switch result {
@@ -107,7 +104,6 @@ public final class LoginViewModel: ObservableObject {
         }
     }
 
-    // Desbloquear tras recuperación
     public func unlockAfterRecovery() {
         isLoginBlocked = false
         errorMessage = nil
@@ -141,7 +137,6 @@ public final class LoginViewModel: ObservableObject {
                 self.isLoginBlocked = true
             }
         }
-        // El delay debe aplicarse siempre que attempts >= maxFailedAttempts
         if attempts >= maxFailedAttempts {
             let delay = max(0.5, calculateDelay(attempts: attempts))
             try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
@@ -149,14 +144,12 @@ public final class LoginViewModel: ObservableObject {
     }
 
     private static func isValidEmail(_ email: String) -> Bool {
-        // Validación mínima: contiene "@" y un punto después
         let parts = email.split(separator: "@")
         guard parts.count == 2, let domain = parts.last else { return false }
         return domain.contains(".")
     }
 
     private static func isValidPassword(_ password: String) -> Bool {
-        // Validación mínima: al menos 8 caracteres
         password.count >= 8
     }
 

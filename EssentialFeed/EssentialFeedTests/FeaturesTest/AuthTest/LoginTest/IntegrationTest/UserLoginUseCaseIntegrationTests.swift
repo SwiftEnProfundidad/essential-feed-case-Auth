@@ -4,14 +4,14 @@ import XCTest
 
 final class UserLoginUseCaseIntegrationTests: XCTestCase {
     func test_login_doesNotCallAPI_whenEmailIsInvalid() async {
-        let (sut, api, _, _) = makeSUT()
+        let (sut, api, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "ValidPassword123")
         _ = await sut.login(with: credentials)
         XCTAssertFalse(api.wasCalled, "API should NOT be called when email is invalid")
     }
 
     func test_login_doesNotCallAPI_whenPasswordIsInvalid() async {
-        let (sut, api, _, _) = makeSUT()
+        let (sut, api, _, _, _) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "   ")
         _ = await sut.login(with: credentials)
         XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
@@ -29,18 +29,20 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         sut: UserLoginUseCase,
         api: AuthAPISpy,
         successSpy: LoginSuccessObserverSpy,
-        failureSpy: LoginFailureObserverSpy
+        failureSpy: LoginFailureObserverSpy,
+        failedAttemptsStore: FailedLoginAttemptsStoreSpy
     ) {
         let api = AuthAPISpy()
         let offlineStore = OfflineLoginStoreSpy()
         let tokenStorage = TokenStorageSpy()
         let successSpy = LoginSuccessObserverSpy()
         let failureSpy = LoginFailureObserverSpy()
-
+        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
         let sut = UserLoginUseCase(
             api: api,
             tokenStorage: tokenStorage,
             offlineStore: offlineStore,
+            failedAttemptsStore: failedAttemptsStore,
             successObserver: successSpy,
             failureObserver: failureSpy
         )
@@ -52,7 +54,7 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         trackForMemoryLeaks(failureSpy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
 
-        return (sut, api, successSpy, failureSpy)
+        return (sut, api, successSpy, failureSpy, failedAttemptsStore)
     }
 
     // MARK: - Spies (válidos para todos los tests de esta clase)

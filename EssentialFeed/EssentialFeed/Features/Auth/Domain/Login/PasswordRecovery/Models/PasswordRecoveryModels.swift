@@ -1,6 +1,5 @@
-import Foundation
 
-// MARK: - DTOs para recuperación de contraseña
+import Foundation
 
 public struct PasswordRecoveryRequest {
     public let email: String

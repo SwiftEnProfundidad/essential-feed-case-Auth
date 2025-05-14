@@ -61,10 +61,12 @@ final class LoginViewModelTests: XCTestCase {
         let successObserver = DummySuccessObserver()
         let failureObserver = DummyFailureObserver()
 
+        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
         let useCase = UserLoginUseCase(
             api: api,
             tokenStorage: tokenStorage,
             offlineStore: offlineStore,
+            failedAttemptsStore: failedAttemptsStore,
             successObserver: successObserver,
             failureObserver: failureObserver
         )

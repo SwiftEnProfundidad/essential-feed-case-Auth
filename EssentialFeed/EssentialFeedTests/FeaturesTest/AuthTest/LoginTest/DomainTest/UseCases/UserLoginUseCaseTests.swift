@@ -1,10 +1,10 @@
-
 import EssentialFeed
+import Foundation
 import XCTest
 
 final class UserLoginUseCaseTests: XCTestCase {
     func test_login_fails_withEmptyEmail_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "ValidPassword123")
         let result = await sut.login(with: credentials)
         switch result {
@@ -18,7 +18,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withWhitespaceOnlyEmail_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "    ", password: "ValidPassword123")
         let result = await sut.login(with: credentials)
         switch result {
@@ -32,7 +32,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withWhitespaceOnlyPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "     ")
         let result = await sut.login(with: credentials)
         switch result {
@@ -46,7 +46,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withShortPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "12345")
         let result = await sut.login(with: credentials)
         switch result {
@@ -60,7 +60,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withEmptyEmailAndPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "", password: "")
         let result = await sut.login(with: credentials)
         switch result {
@@ -74,7 +74,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let invalidEmail = "usuario_invalido"
         let credentials = LoginCredentials(email: invalidEmail, password: "ValidPassword123")
 
@@ -91,7 +91,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_withInvalidPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let invalidPassword = ""
         let credentials = LoginCredentials(email: "user@example.com", password: invalidPassword)
 
@@ -108,7 +108,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_fails_onInvalidCredentials() async throws {
-        let (sut, api, _, failureObserver, _, _) = makeSUT()
+        let (sut, api, _, failureObserver, _, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "wrongpass")
 
         api.stubbedResult = Result<LoginResponse, LoginError>.failure(.invalidCredentials)
@@ -124,7 +124,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_succeeds_storesToken_andNotifiesObserver() async throws {
-        let (sut, api, successObserver, _, tokenStorage, _) = makeSUT()
+        let (sut, api, successObserver, _, tokenStorage, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "password123")
 
         let expectedTokenValue = "jwt-token-123"
@@ -155,7 +155,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_succeedsApiCall_butFailsToStoreToken_returnsError() async throws {
-        let (sut, api, successObserver, _, tokenStorage, _) = makeSUT()
+        let (sut, api, successObserver, _, tokenStorage, _, failedAttemptsStore) = makeSUT()
         let credentials = LoginCredentials(email: "user@example.com", password: "password123")
 
         let expectedTokenValue = "jwt-token-for-fail-case"
@@ -178,6 +178,45 @@ final class UserLoginUseCaseTests: XCTestCase {
         XCTAssertEqual(tokenStorage.messages.count, 1, "Expected TokenStorage save attempt")
     }
 
+    func test_login_incrementsFailedAttempts_onInvalidCredentialsError() async {
+        let (sut, api, _, _, _, _, failedAttemptsStore) = makeSUT()
+        let credentials = LoginCredentials(email: "user@example.com", password: "wrongpass")
+
+        api.stubbedResult = Result<LoginResponse, LoginError>.failure(.invalidCredentials)
+
+        _ = await sut.login(with: credentials)
+
+        XCTAssertEqual(failedAttemptsStore.messages.count, 1, "Should increment failed attempts once")
+        if let message = failedAttemptsStore.messages.first {
+            XCTAssertEqual(message, .incrementAttempts("user@example.com"), "Should increment attempts for the correct username")
+        }
+    }
+
+    func test_login_doesNotIncrementFailedAttempts_onFormatErrors() async {
+        let (sut, _, _, _, _, _, failedAttemptsStore) = makeSUT()
+        let credentials = LoginCredentials(email: "invalid", password: "password123")
+
+        _ = await sut.login(with: credentials)
+
+        XCTAssertEqual(failedAttemptsStore.messages.count, 0, "Should not increment failed attempts on format errors")
+    }
+
+    func test_login_resetsFailedAttempts_onSuccessfulLogin() async {
+        let (sut, api, _, _, _, _, failedAttemptsStore) = makeSUT()
+        let credentials = LoginCredentials(email: "user@example.com", password: "password123")
+
+        let expectedTokenValue = "jwt-token-123"
+        let apiResponse = LoginResponse(token: expectedTokenValue)
+        api.stubbedResult = .success(apiResponse)
+
+        _ = await sut.login(with: credentials)
+
+        XCTAssertEqual(failedAttemptsStore.messages.count, 1, "Should reset failed attempts once")
+        if let message = failedAttemptsStore.messages.first {
+            XCTAssertEqual(message, .resetAttempts("user@example.com"), "Should reset attempts for the correct username")
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -188,18 +227,21 @@ final class UserLoginUseCaseTests: XCTestCase {
         successObserver: LoginSuccessObserverSpy,
         failureObserver: LoginFailureObserverSpy,
         tokenStorage: TokenStorageSpy,
-        offlineStore: OfflineLoginStoreSpy
+        offlineStore: OfflineLoginStoreSpy,
+        failedAttemptsStore: FailedLoginAttemptsStoreSpy
     ) {
         let api = AuthAPISpy()
         let successObserver = LoginSuccessObserverSpy()
         let failureObserver = LoginFailureObserverSpy()
         let tokenStorage = TokenStorageSpy()
         let offlineStore = OfflineLoginStoreSpy()
+        let failedAttemptsStore = FailedLoginAttemptsStoreSpy()
 
         let sut = UserLoginUseCase(
             api: api,
             tokenStorage: tokenStorage,
             offlineStore: offlineStore,
+            failedAttemptsStore: failedAttemptsStore,
             successObserver: successObserver,
             failureObserver: failureObserver
         )
@@ -209,9 +251,10 @@ final class UserLoginUseCaseTests: XCTestCase {
         trackForMemoryLeaks(failureObserver, file: file, line: line)
         trackForMemoryLeaks(tokenStorage, file: file, line: line)
         trackForMemoryLeaks(offlineStore, file: file, line: line)
+        trackForMemoryLeaks(failedAttemptsStore, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
 
-        return (sut, api, successObserver, failureObserver, tokenStorage, offlineStore)
+        return (sut, api, successObserver, failureObserver, tokenStorage, offlineStore, failedAttemptsStore)
     }
 }
 
