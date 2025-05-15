@@ -7,8 +7,8 @@ public protocol FailedLoginAttemptsReader {
 }
 
 public protocol FailedLoginAttemptsWriter {
-    func incrementAttempts(for username: String)
-    func resetAttempts(for username: String)
+    func incrementAttempts(for username: String) async
+    func resetAttempts(for username: String) async
 }
 
 public typealias FailedLoginAttemptsStore = FailedLoginAttemptsReader & FailedLoginAttemptsWriter

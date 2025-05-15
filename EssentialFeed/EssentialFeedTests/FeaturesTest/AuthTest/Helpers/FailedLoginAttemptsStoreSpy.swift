@@ -19,11 +19,11 @@ final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
         return attemptsToReturn
     }
 
-    func incrementAttempts(for username: String) {
+    func incrementAttempts(for username: String) async {
         messages.append(.incrementAttempts(username))
     }
 
-    func resetAttempts(for username: String) {
+    func resetAttempts(for username: String) async {
         messages.append(.resetAttempts(username))
     }
 

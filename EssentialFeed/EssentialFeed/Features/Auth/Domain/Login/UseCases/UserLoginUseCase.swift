@@ -35,29 +35,29 @@ public final class UserLoginUseCase {
         let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
         if email.isEmpty {
             notifier.notifyFailure(error: LoginError.invalidEmailFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
+            await flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
             return .failure(LoginError.invalidEmailFormat)
         }
         guard isValidEmail(email) else {
             notifier.notifyFailure(error: LoginError.invalidEmailFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
+            await flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
             return .failure(LoginError.invalidEmailFormat)
         }
 
         let password = credentials.password
         if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !password.isEmpty {
             notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
+            await flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
             return .failure(LoginError.invalidPasswordFormat)
         }
         if password.isEmpty {
             notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
+            await flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
             return .failure(LoginError.invalidPasswordFormat)
         }
         if password.count < 6 {
             notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
+            await flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
             return .failure(LoginError.invalidPasswordFormat)
         }
 
@@ -72,18 +72,18 @@ public final class UserLoginUseCase {
                 try? await persistence.saveOfflineCredentials(credentials)
                 notifier.notifySuccess(response: response)
                 let finalResult: Result<LoginResponse, Error> = .success(response)
-                flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
+                await flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
                 return finalResult
             } catch {
                 notifier.notifyFailure(error: LoginError.tokenStorageFailed)
                 let finalResult: Result<LoginResponse, Error> = .failure(LoginError.tokenStorageFailed)
-                flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
+                await flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
                 return finalResult
             }
         case let .failure(error):
             notifier.notifyFailure(error: error)
             let finalResult: Result<LoginResponse, Error> = .failure(error)
-            flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
+            await flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
             return finalResult
         }
     }
