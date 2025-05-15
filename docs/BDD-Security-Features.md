@@ -155,7 +155,8 @@ This document tracks the implementation of critical security features in the app
 > **Note:** Snapshot testing has been evaluated and discarded for secure storage, since relevant outputs (results and errors) are validated directly through asserts and explicit comparisons. This decision follows professional iOS testing best practices and avoids adding redundant or low-value tests for the Keychain domain.
     - [✅] Coverage of all critical code branches (add specific tests for each uncovered branch)
 
-#### Secure storage technical diagram flow
+## 1. Secure storage
+
 ### Functional Narrative
 As an application, I need to store sensitive data (tokens, credentials) securely, protecting it against unauthorized access and persisting the information between sessions.
 
@@ -175,12 +176,6 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 ---
 
 ### Secure Storage Technical Checklist
-
-| Emoji | Status          | Completion Criteria (Reviewed)                      |
-|-------|-----------------|----------------------------------------------------|
-| ✅    | **Completed**  | Implemented + tests (≥80%) + documented          |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**     | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
-| ❌    | **Pending**   | Not implemented or not found in the current code. |
 
 - ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
     - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
