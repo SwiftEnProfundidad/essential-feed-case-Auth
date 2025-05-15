@@ -35,18 +35,22 @@ public final class UserLoginUseCase {
     private let flowHandler: LoginFlowHandler
     private let config: Config
 
+    private let userDefaults: UserDefaults
+
     public init(
         api: UserLoginAPI,
         persistence: LoginPersistence,
         notifier: LoginEventNotifier,
         flowHandler: LoginFlowHandler,
-        config: Config = .default
+        config: Config = .default,
+        userDefaults: UserDefaults = .standard
     ) {
         self.api = api
         self.persistence = persistence
         self.notifier = notifier
         self.flowHandler = flowHandler
         self.config = config
+        self.userDefaults = userDefaults
     }
 
     public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
@@ -70,7 +74,7 @@ public final class UserLoginUseCase {
         let attemptsKey = StorageKey.failedAttemptsPrefix + email
         let lockoutKey = StorageKey.lockoutUntilPrefix + email
         let now = Date()
-        let defaults = UserDefaults.standard
+        let defaults = userDefaults
         if let until = defaults.object(forKey: lockoutKey) as? Date, now < until {
             return .accountLocked
         } else if defaults.object(forKey: lockoutKey) != nil {
@@ -100,7 +104,7 @@ public final class UserLoginUseCase {
     private func handleLoginFailure(_ error: LoginError, _ credentials: LoginCredentials, _ email: String) async -> Result<LoginResponse, Error> {
         let attemptsKey = StorageKey.failedAttemptsPrefix + email
         let lockoutKey = StorageKey.lockoutUntilPrefix + email
-        let defaults = UserDefaults.standard
+        let defaults = userDefaults
         guard error == .invalidCredentials else {
             return await handleFailure(.failure(error), credentials)
         }
@@ -118,7 +122,7 @@ public final class UserLoginUseCase {
         return await handleFailure(.failure(LoginError.invalidCredentials), credentials)
     }
 
-    private var defaults: UserDefaults { UserDefaults.standard }
+    private var defaults: UserDefaults { userDefaults }
     private func attemptsKey(for email: String) -> String {
         StorageKey.failedAttemptsPrefix + email
     }

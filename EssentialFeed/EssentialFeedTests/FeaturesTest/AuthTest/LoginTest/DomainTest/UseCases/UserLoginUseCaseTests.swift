@@ -4,7 +4,7 @@ import XCTest
 
 final class UserLoginUseCaseTests: XCTestCase {
     func test_login_fails_withInvalidPassword_andDoesNotSendRequest() async {
-        let (sut, api, _, notifier, flowHandler) = makeSUT()
+        let (sut, api, _, notifier, flowHandler, _) = makeSUT()
         let invalidPassword = ""
         let credentials = LoginCredentials(email: "user@example.com", password: invalidPassword)
 
@@ -14,7 +14,7 @@ final class UserLoginUseCaseTests: XCTestCase {
         case let .failure(error):
             if let loginError = error as? LoginError {
                 XCTAssertEqual(
-                    loginError, .invalidPasswordFormat, "Should return invalid password format error"
+                    loginError, LoginError.invalidPasswordFormat, "Should return invalid password format error"
                 )
             } else {
                 XCTFail("Expected LoginError.invalidPasswordFormat, got \(error)")
@@ -31,8 +31,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_fails_onInvalidCredentials() async throws {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
-        let (sut, api, _, _, flowHandler) = makeSUT()
+        let (sut, api, _, _, flowHandler, userDefaults) = makeSUT()
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.invalidPassword)
 
         api.stubbedResult = Result<LoginResponse, LoginError>.failure(.invalidCredentials)
@@ -45,7 +45,7 @@ final class UserLoginUseCaseTests: XCTestCase {
         case let .failure(error):
             if let loginError = error as? LoginError {
                 XCTAssertEqual(
-                    loginError, .invalidCredentials, "Should return invalid credentials error on failure"
+                    loginError, LoginError.invalidCredentials, "Should return invalid credentials error on failure"
                 )
             } else {
                 XCTFail("Expected LoginError.invalidCredentials, got \(error)")
@@ -58,8 +58,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_succeeds_storesToken_andNotifiesObserver() async throws {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
-        let (sut, api, persistence, notifier, flowHandler) = makeSUT()
+        let (sut, api, persistence, notifier, flowHandler, userDefaults) = makeSUT()
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.validPassword)
         let expectedTokenValue = Self.anotherValidToken
         let apiResponse = LoginResponse(token: expectedTokenValue)
@@ -80,8 +80,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_succeedsApiCall_butFailsToStoreToken_returnsError() async throws {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
-        let (sut, api, persistence, notifier, flowHandler) = makeSUT()
+        let (sut, api, persistence, notifier, flowHandler, userDefaults) = makeSUT()
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.validPassword)
         let expectedTokenValue = Self.anotherValidToken
         let apiResponse = LoginResponse(token: expectedTokenValue)
@@ -102,8 +102,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_incrementsFailedAttempts_onInvalidCredentialsError() async {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
-        let (sut, api, _, _, flowHandler) = makeSUT()
+        let (sut, api, _, _, flowHandler, userDefaults) = makeSUT()
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.invalidPassword)
         api.stubbedResult = Result<LoginResponse, LoginError>.failure(.invalidCredentials)
         _ = await sut.login(with: credentials)
@@ -122,7 +122,7 @@ final class UserLoginUseCaseTests: XCTestCase {
     }
 
     func test_login_doesNotIncrementFailedAttempts_onFormatErrors() async {
-        let (sut, _, _, _, flowHandler) = makeSUT()
+        let (sut, _, _, _, flowHandler, _) = makeSUT()
         let credentials = LoginCredentials(email: "invalid", password: Self.validPassword)
         _ = await sut.login(with: credentials)
 
@@ -140,8 +140,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_resetsFailedAttempts_onSuccessfulLogin() async {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
-        let (sut, api, _, _, flowHandler) = makeSUT()
+        let (sut, api, _, _, flowHandler, userDefaults) = makeSUT()
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.validPassword)
         let expectedTokenValue = Self.validToken
         let apiResponse = LoginResponse(token: expectedTokenValue)
@@ -161,11 +161,11 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_blocksUser_afterMaxFailedAttempts_andNotifiesLockout() async {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
         let maxAttempts = 3
-        let (sut, api, _, notifier, flowHandler) = makeSUT(maxFailedAttempts: maxAttempts)
+        let (sut, api, _, notifier, flowHandler, userDefaults) = makeSUT(maxFailedAttempts: maxAttempts)
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.invalidPassword)
-        api.stubbedResult = .failure(.invalidCredentials)
+        api.stubbedResult = .failure(LoginError.invalidCredentials)
 
         for _ in 1 ... maxAttempts {
             _ = await sut.login(with: credentials)
@@ -176,12 +176,12 @@ final class UserLoginUseCaseTests: XCTestCase {
             XCTAssertEqual(error as? LoginError, .accountLocked, "Should return accountLocked error after exceeding the threshold")
 
             let lastNotified = notifier.notifiedFailures.compactMap { $0 as? LoginError }.last
-            XCTAssertEqual(lastNotified, .accountLocked, "Notifier should notify accountLocked error")
+            XCTAssertEqual(lastNotified, LoginError.accountLocked, "Notifier should notify accountLocked error")
 
             let lastFlowError = flowHandler.handledResults.compactMap { result, _ in
                 if case let .failure(e) = result { return e as? LoginError } else { return nil }
             }.last
-            XCTAssertEqual(lastFlowError, .accountLocked, "FlowHandler should handle accountLocked as a lockout error")
+            XCTAssertEqual(lastFlowError, LoginError.accountLocked, "FlowHandler should handle accountLocked as a lockout error")
         default:
             XCTFail("Expected accountLocked error")
         }
@@ -189,56 +189,67 @@ final class UserLoginUseCaseTests: XCTestCase {
 
     func test_login_allowsRetry_afterLockoutPeriod() async {
         let email = Self.email(for: #function)
-        clearUserDefaults(for: email)
         let maxAttempts = 2
-        let (sut, api, _, _, _) = makeSUT(maxFailedAttempts: maxAttempts, lockoutDuration: 1)
+        let (sut, api, _, _, _, userDefaults) = makeSUT(maxFailedAttempts: maxAttempts, lockoutDuration: 1)
+        clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.invalidPassword)
-        api.stubbedResult = .failure(.invalidCredentials)
+        api.stubbedResult = .failure(LoginError.invalidCredentials)
 
         for _ in 1 ... maxAttempts {
             _ = await sut.login(with: credentials)
         }
-        _ = await sut.login(with: credentials)
-        try? await Task.sleep(nanoseconds: 1_100_000_000)
-        api.stubbedResult = .success(LoginResponse(token: Self.validToken))
-        let result = await sut.login(with: LoginCredentials(email: email, password: Self.validPassword))
-        switch result {
-        case .success:
-            break
+        let lockoutResult = await sut.login(with: credentials)
+        switch lockoutResult {
+        case let .failure(error):
+            XCTAssertEqual(error as? LoginError, .accountLocked, "Should return accountLocked error after exceeding the threshold")
         default:
-            XCTFail("Should allow login after lockout period has expired")
+            XCTFail("Expected accountLocked error")
+        }
+
+        let expectation = expectation(description: "Wait for lockout to expire")
+        DispatchQueue.global().asyncAfter(deadline: .now() + 1.1) {
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: 2)
+
+        api.stubbedResult = .success(LoginResponse(token: Self.validToken))
+        let retryResult = await sut.login(with: LoginCredentials(email: email, password: Self.validPassword))
+        switch retryResult {
+        case let .success(response):
+            XCTAssertEqual(response.token, Self.validToken, "Should allow login after lockout period")
+        default:
+            XCTFail("Expected successful login after lockout period")
         }
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
-        maxFailedAttempts _: Int = 5,
-        lockoutDuration _: TimeInterval = 5 * 60,
+        maxFailedAttempts: Int = 5,
+        lockoutDuration: TimeInterval = 5 * 60,
         file: StaticString = #file, line: UInt = #line
-    ) -> (
-        sut: UserLoginUseCase,
-        api: AuthAPISpy,
-        persistence: LoginPersistenceSpy,
-        notifier: LoginEventNotifierSpy,
-        flowHandler: LoginFlowHandlerSpy
-    ) {
+    ) -> (UserLoginUseCase, AuthAPISpy, LoginPersistenceSpy, LoginEventNotifierSpy, LoginFlowHandlerSpy, UserDefaults) {
         let api = AuthAPISpy()
         let persistence = LoginPersistenceSpy()
         let notifier = LoginEventNotifierSpy()
         let flowHandler = LoginFlowHandlerSpy()
+        let suiteName = "UserLoginUseCaseTests_\(UUID().uuidString)"
+        let userDefaults = UserDefaults(suiteName: suiteName)!
+        userDefaults.removePersistentDomain(forName: suiteName)
         let sut = UserLoginUseCase(
             api: api,
             persistence: persistence,
             notifier: notifier,
-            flowHandler: flowHandler
+            flowHandler: flowHandler,
+            config: UserLoginUseCase.Config(maxFailedAttempts: maxFailedAttempts, lockoutDuration: lockoutDuration),
+            userDefaults: userDefaults
         )
         trackForMemoryLeaks(api, file: file, line: line)
         trackForMemoryLeaks(persistence, file: file, line: line)
         trackForMemoryLeaks(notifier, file: file, line: line)
         trackForMemoryLeaks(flowHandler, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return (sut, api, persistence, notifier, flowHandler)
+        return (sut, api, persistence, notifier, flowHandler, userDefaults)
     }
 
     private static func email(for testName: String) -> String {
@@ -251,10 +262,9 @@ final class UserLoginUseCaseTests: XCTestCase {
         return "user+\(cleaned)@example.com"
     }
 
-    private func clearUserDefaults(for email: String) {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "failedAttempts_" + email)
-        defaults.removeObject(forKey: "lockoutUntil_" + email)
+    private func clearUserDefaults(for email: String, userDefaults: UserDefaults) {
+        userDefaults.removeObject(forKey: "login_failed_attempts_" + email)
+        userDefaults.removeObject(forKey: "login_lockout_until_" + email)
     }
 }
 
