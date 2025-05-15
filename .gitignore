@@ -110,6 +110,12 @@ fastlane/test_output
 
 # --- Reglas de asistentes y herramientas locales ---
 .windsurfrules
+.windsurf/
+.windsurf/rules/
+.windsurf/rules/*.md
+.windsurf/workflows/
+.windsurf/workflows/*.md
+docs/WORKSPACE_RULES_AND_PRACTICES.md
 
 # --- Logs y salidas temporales de builds/tests ---
 build.log

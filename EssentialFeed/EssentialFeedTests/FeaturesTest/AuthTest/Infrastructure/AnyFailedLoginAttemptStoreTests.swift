@@ -15,11 +15,11 @@ final class AnyFailedLoginAttemptStoreTests: XCTestCase {
             return attemptsResult
         }
 
-        func incrementAttempts(for _: String) {
+        func incrementAttempts(for _: String) async {
             incrementAttemptsCalled = true
         }
 
-        func resetAttempts(for _: String) {
+        func resetAttempts(for _: String) async {
             resetAttemptsCalled = true
         }
 
@@ -36,15 +36,15 @@ final class AnyFailedLoginAttemptStoreTests: XCTestCase {
         XCTAssertTrue(spy.getAttemptsCalled)
     }
 
-    func test_incrementAttempts_delegatesToWrappedStore() {
+    func test_incrementAttempts_delegatesToWrappedStore() async {
         let (sut, spy) = makeSUT()
-        sut.incrementAttempts(for: "user")
+        await sut.incrementAttempts(for: "user")
         XCTAssertTrue(spy.incrementAttemptsCalled)
     }
 
-    func test_resetAttempts_delegatesToWrappedStore() {
+    func test_resetAttempts_delegatesToWrappedStore() async {
         let (sut, spy) = makeSUT()
-        sut.resetAttempts(for: "user")
+        await sut.resetAttempts(for: "user")
         XCTAssertTrue(spy.resetAttemptsCalled)
     }
 

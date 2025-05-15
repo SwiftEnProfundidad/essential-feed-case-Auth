@@ -1,4 +1,3 @@
-
 import Foundation
 
 public protocol LoginSuccessObserver {
@@ -13,79 +12,157 @@ public protocol PasswordRecoverySuggestionObserver {
     func suggestPasswordRecovery(for email: String)
 }
 
+private enum StorageKey {
+    static let failedAttemptsPrefix = "login_failed_attempts_"
+    static let lockoutUntilPrefix = "login_lockout_until_"
+}
+
 public final class UserLoginUseCase {
+    public struct Config {
+        public let maxFailedAttempts: Int
+        public let lockoutDuration: TimeInterval
+        public static let defaultTokenDuration: TimeInterval = 3600
+        public static let `default` = Config(maxFailedAttempts: 5, lockoutDuration: 5 * 60)
+        public init(maxFailedAttempts: Int, lockoutDuration: TimeInterval) {
+            self.maxFailedAttempts = maxFailedAttempts
+            self.lockoutDuration = lockoutDuration
+        }
+    }
+
     private let api: UserLoginAPI
     private let persistence: LoginPersistence
     private let notifier: LoginEventNotifier
-    private let flowHandler: LoginFlowHandler?
+    private let flowHandler: LoginFlowHandler
+    private let config: Config
+
+    private let userDefaults: UserDefaults
 
     public init(
         api: UserLoginAPI,
         persistence: LoginPersistence,
         notifier: LoginEventNotifier,
-        flowHandler: LoginFlowHandler? = nil
+        flowHandler: LoginFlowHandler,
+        config: Config = .default,
+        userDefaults: UserDefaults = .standard
     ) {
         self.api = api
         self.persistence = persistence
         self.notifier = notifier
         self.flowHandler = flowHandler
+        self.config = config
+        self.userDefaults = userDefaults
     }
 
     public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
         let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
-        if email.isEmpty {
-            notifier.notifyFailure(error: LoginError.invalidEmailFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
-            return .failure(LoginError.invalidEmailFormat)
+        guard let validationError = validateCredentials(credentials) else {
+            guard let lockoutError = checkLockout(for: email) else {
+                let result = await api.login(with: credentials)
+                switch result {
+                case let .success(response):
+                    return await handleSuccess(response, credentials)
+                case let .failure(error):
+                    return await handleLoginFailure(error, credentials, email)
+                }
+            }
+            return await handleFailure(.failure(lockoutError), credentials)
         }
-        guard isValidEmail(email) else {
-            notifier.notifyFailure(error: LoginError.invalidEmailFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidEmailFormat), credentials: credentials)
-            return .failure(LoginError.invalidEmailFormat)
-        }
+        return await handleFailure(.failure(validationError), credentials)
+    }
 
+    private func checkLockout(for email: String) -> LoginError? {
+        let attemptsKey = StorageKey.failedAttemptsPrefix + email
+        let lockoutKey = StorageKey.lockoutUntilPrefix + email
+        let now = Date()
+        let defaults = userDefaults
+        if let until = defaults.object(forKey: lockoutKey) as? Date, now < until {
+            return .accountLocked
+        } else if defaults.object(forKey: lockoutKey) != nil {
+            defaults.removeObject(forKey: attemptsKey)
+            defaults.removeObject(forKey: lockoutKey)
+        }
+        return nil
+    }
+
+    private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
+        clearLockout(for: credentials.email)
+        let expiryDate = Date().addingTimeInterval(Config.defaultTokenDuration)
+        let tokenToStore = Token(value: response.token, expiry: expiryDate)
+        do {
+            try await persistence.saveToken(tokenToStore)
+            try? await persistence.saveOfflineCredentials(credentials)
+            let result: Result<LoginResponse, Error> = .success(response)
+            await notifyAndHandle(result: result, credentials: credentials)
+            return result
+        } catch {
+            let result: Result<LoginResponse, Error> = .failure(LoginError.tokenStorageFailed)
+            await notifyAndHandle(result: result, credentials: credentials)
+            return result
+        }
+    }
+
+    private func handleLoginFailure(_ error: LoginError, _ credentials: LoginCredentials, _ email: String) async -> Result<LoginResponse, Error> {
+        let attemptsKey = StorageKey.failedAttemptsPrefix + email
+        let lockoutKey = StorageKey.lockoutUntilPrefix + email
+        let defaults = userDefaults
+        guard error == .invalidCredentials else {
+            return await handleFailure(.failure(error), credentials)
+        }
+        let prevAttempts = defaults.integer(forKey: attemptsKey)
+        let newAttempts = prevAttempts + 1
+        defaults.set(newAttempts, forKey: attemptsKey)
+        guard newAttempts <= config.maxFailedAttempts else {
+            return await handleFailure(.failure(LoginError.accountLocked), credentials)
+        }
+        guard newAttempts != config.maxFailedAttempts else {
+            let until = Date().addingTimeInterval(config.lockoutDuration)
+            defaults.set(until, forKey: lockoutKey)
+            return await handleFailure(.failure(LoginError.invalidCredentials), credentials)
+        }
+        return await handleFailure(.failure(LoginError.invalidCredentials), credentials)
+    }
+
+    private var defaults: UserDefaults { userDefaults }
+    private func attemptsKey(for email: String) -> String {
+        StorageKey.failedAttemptsPrefix + email
+    }
+
+    private func lockoutKey(for email: String) -> String {
+        StorageKey.lockoutUntilPrefix + email
+    }
+
+    private func handleFailure(_ result: Result<LoginResponse, Error>, _ credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
+        await notifyAndHandle(result: result, credentials: credentials)
+        return result
+    }
+
+    private func clearLockout(for email: String) {
+        defaults.removeObject(forKey: attemptsKey(for: email))
+        defaults.removeObject(forKey: lockoutKey(for: email))
+    }
+
+    private func validateCredentials(_ credentials: LoginCredentials) -> LoginError? {
+        let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
+        if email.isEmpty || !isValidEmail(email) {
+            return .invalidEmailFormat
+        }
         let password = credentials.password
-        if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !password.isEmpty {
-            notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
-            return .failure(LoginError.invalidPasswordFormat)
+        if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || password.isEmpty
+            || password.count < 6
+        {
+            return .invalidPasswordFormat
         }
-        if password.isEmpty {
-            notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
-            return .failure(LoginError.invalidPasswordFormat)
-        }
-        if password.count < 6 {
-            notifier.notifyFailure(error: LoginError.invalidPasswordFormat)
-            flowHandler?.handlePostLogin(result: .failure(LoginError.invalidPasswordFormat), credentials: credentials)
-            return .failure(LoginError.invalidPasswordFormat)
-        }
+        return nil
+    }
 
-        let result = await api.login(with: credentials)
+    private func notifyAndHandle(result: Result<LoginResponse, Error>, credentials: LoginCredentials) async {
         switch result {
         case let .success(response):
-            let defaultTokenDuration: TimeInterval = 3600
-            let expiryDate = Date().addingTimeInterval(defaultTokenDuration)
-            let tokenToStore = Token(value: response.token, expiry: expiryDate)
-            do {
-                try await persistence.saveToken(tokenToStore)
-                try? await persistence.saveOfflineCredentials(credentials)
-                notifier.notifySuccess(response: response)
-                let finalResult: Result<LoginResponse, Error> = .success(response)
-                flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
-                return finalResult
-            } catch {
-                notifier.notifyFailure(error: LoginError.tokenStorageFailed)
-                let finalResult: Result<LoginResponse, Error> = .failure(LoginError.tokenStorageFailed)
-                flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
-                return finalResult
-            }
+            notifier.notifySuccess(response: response)
         case let .failure(error):
             notifier.notifyFailure(error: error)
-            let finalResult: Result<LoginResponse, Error> = .failure(error)
-            flowHandler?.handlePostLogin(result: finalResult, credentials: credentials)
-            return finalResult
         }
+        await flowHandler.handlePostLogin(result: result, credentials: credentials)
     }
 
     private func isValidEmail(_ email: String) -> Bool {

@@ -7,12 +7,12 @@ public final class DefaultLoginFlowHandler: LoginFlowHandler {
         self.recoverySuggestionService = recoverySuggestionService
     }
 
-    public func handlePostLogin(result: Result<LoginResponse, Error>, credentials: LoginCredentials) {
+    public func handlePostLogin(result: Result<LoginResponse, Error>, credentials: LoginCredentials) async {
         switch result {
         case .success:
-            recoverySuggestionService?.resetAttempts(for: credentials.email)
+            await recoverySuggestionService?.resetAttempts(for: credentials.email)
         case let .failure(error):
-            recoverySuggestionService?.handleFailedAttempt(for: credentials.email, error: error)
+            await recoverySuggestionService?.handleFailedAttempt(for: credentials.email, error: error)
         }
     }
 }

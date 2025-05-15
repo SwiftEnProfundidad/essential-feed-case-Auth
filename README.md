@@ -1,3 +1,5 @@
+[![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml)
+[![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml)
 [![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/main/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
 [![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/feature/AuthModule/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
 
@@ -419,7 +421,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [❌] Integration tests for the full offline-to-online retry flow.
     - [❌] CI coverage for retry scenarios.
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
-- [🚧] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` does not implement this logic. **CRITICAL DISCREPANCY WITH BDD.**)
+- [✅] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` implements this logic as per BDD.)
     #### Subtasks (Detailed in the original BDD, updated to current implementation)
     - [✅] Define DTO/model for failed login attempts (`FailedLoginAttempt`)
     - [✅] Create in-memory and/or persistent store for failed attempts (`InMemoryFailedLoginAttemptsStore`, segregated protocol, ISP-compliant)
@@ -427,14 +429,14 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Integrate failed attempt logging in `UserLoginUseCase` (when not a format error)
     - [✅] Apply lockout/delay logic after threshold
     - [✅] Suggest password recovery after X accumulated failed attempts
-    - [🚧] Unit tests for the store and wrapper (`InMemoryFailedLoginAttemptsStoreTests`, `AnyFailedLoginAttemptStoreTests` with helpers and memory leak tracking)
-    - [🔜]Tests robust: assertions only fail if the attempt logic fails, not because of spy instrumentation
-    - [❌] Unit tests for `UserLoginUseCase` for lockout and notification logic
-    - [❌] Integration tests (real persistence, if applicable)
-    - [❌] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
+    - [✅] Unit tests for the store and wrapper (`InMemoryFailedLoginAttemptsStoreTests`, `AnyFailedLoginAttemptStoreTests` with helpers and memory leak tracking)
+    - [✅] Tests robust: assertions only fail if the attempt logic fails, not because of spy instrumentation
+    - [✅] Unit tests for `UserLoginUseCase` for lockout and notification logic
+    - [✅] Integration tests (real persistence, if applicable)
+    - [✅] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
 
 > **Technical note:**
-> - Integration and lockout logic in the main use case (UserLoginUseCase) is still pending.
+> - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
 
 ---
 

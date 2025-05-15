@@ -8,5 +8,5 @@ public protocol LoginViewModelProtocol: AnyObject {
     var loginSuccess: Bool { get set }
     var isLoginBlocked: Bool { get set }
     func login() async
-    func unlockAfterRecovery()
+    func unlockAfterRecovery() async
 }
