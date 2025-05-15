@@ -435,22 +435,23 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-### Technical Flows (happy/sad path) (Reviewed)
+### Technical Flows (happy/sad path) (Reviewed & Updated)
 
 **Happy path:**
 - User enters valid credentials.
 - System validates data format.
 - System sends authentication request to the server.
 - System receives the token.
-- **(Missing in current UC implementation) System stores the token securely.**
-- **(Missing in current UC implementation) System registers the active session.**
-- System notifies login success (via observer).
+- System stores the token securely in Keychain via `TokenStorage`.
+- System registers the active session (el estado de sesión se deriva automáticamente del Keychain, no requiere activación explícita).
+- System notifies login success (via observer to the presenter/UI).
 
 **Sad path:**
-- Incorrect credentials: system notifies error and allows retry, **(missing) logs failed attempt for metrics.**
-- No connectivity: system notifies error, **(missing) should store the request and allow retry when connection is available.**
-- Validation errors: system shows clear messages and does not send request.
-- Multiple failed attempts: **(missing) system should apply delay/lockout and suggest password recovery.**
+- Incorrect credentials: system notifies error and allows retry.
+- System logs failed attempt for metrics and lockout logic (`FailedLoginAttempt` registrado y cubierto por tests).
+- If maximum failed attempts reached, system applies lockout/delay and sugiere recuperación de contraseña.
+- If connectivity error: system saves credentials for offline retry and notifies user of connectivity issue.
+- Validation errors: system shows clear, specific messages and does not send request.
 
 ---
 
