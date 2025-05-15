@@ -6,7 +6,7 @@ public enum LoginComposer {
     public static func composedViewController(onAuthenticated: @escaping () -> Void) -> UIViewController {
         let viewModel = LoginViewModel(authenticate: { _, _ in
             // TODO: Implement real authentication logic
-            .failure(.invalidCredentials)
+            .failure(LoginError.invalidCredentials)
         })
 
         viewModel.onAuthenticated = onAuthenticated
