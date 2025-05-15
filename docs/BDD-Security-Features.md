@@ -428,8 +428,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Apply lockout/delay logic after threshold
     - [✅] Suggest password recovery after X accumulated failed attempts
     - [✅] Unit tests for the store and wrapper (`InMemoryFailedLoginAttemptsStoreTests`, `AnyFailedLoginAttemptStoreTests` with helpers and memory leak tracking)
-    - [🚧] Tests robust: assertions only fail if the attempt logic fails, not because of spy instrumentation
-    - [🔜] Unit tests for `UserLoginUseCase` for lockout and notification logic
+    - [✅] Tests robust: assertions only fail if the attempt logic fails, not because of spy instrumentation
+    - [🚧] Unit tests for `UserLoginUseCase` for lockout and notification logic
     - [❌] Integration tests (real persistence, if applicable)
     - [❌] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
 
