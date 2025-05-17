@@ -254,3 +254,64 @@
   - Development tools
   - Debug menu
 </rules>
+
+
+EssentialFeed/
+└── Features/
+    ├── Auth/
+    │   ├── Domain/
+    │   │   ├── Entities/
+    │   │   │   └── User.swift
+    │   │   ├── Protocols/
+    │   │   │   ├── AuthRepository.swift
+    │   │   │   └── RegistrationRepository.swift
+    │   │   └── UseCases/
+    │   │       ├── LoginUseCase.swift
+    │   │       ├── RegisterUserUseCase.swift
+    │   │       └── PasswordRecoveryUseCase.swift
+    │   ├── Infrastructure/
+    │   │   ├── Persistence/
+    │   │   │   └── CoreDataAuthStore.swift
+    │   │   └── Network/
+    │   │       └── AuthAPIService.swift
+    │   ├── Presentation/
+    │   │   ├── ViewModels/
+    │   │   │   ├── LoginViewModel.swift
+    │   │   │   └── RegistrationViewModel.swift
+    │   │   └── Mappers/
+    │   │       └── AuthErrorMapper.swift
+    │   └── Tests/
+    │       ├── Domain/
+    │       ├── Infrastructure/
+    │       ├── Presentation/
+    │       └── Helpers/
+    │           ├── AuthAPISpy.swift
+    │           └── RegistrationValidatorStub.swift
+    └── Security/
+        ├── Domain/
+        │   ├── Entities/
+        │   │   └── Session.swift
+        │   ├── Protocols/
+        │   │   ├── SessionManager.swift
+        │   │   └── TokenStorage.swift
+        │   └── UseCases/
+        │       ├── RefreshTokenUseCase.swift
+        │       └── LogoutUseCase.swift
+        ├── Infrastructure/
+        │   ├── Keychain/
+        │   │   ├── KeychainProtocol.swift
+        │   │   ├── KeychainSecureStorage.swift
+        │   │   └── SystemKeychain.swift
+        │   ├── Session/
+        │   │   └── SystemSessionManager.swift
+        │   └── APIInterceptor/
+        │       └── APIInterceptor.swift
+        ├── Presentation/
+        │   └── ViewModels/
+        │       └── SessionViewModel.swift
+        └── Tests/
+            ├── Domain/
+            ├── Infrastructure/
+            ├── Presentation/
+            └── Helpers/
+                └── TokenStorageSpy.swift
