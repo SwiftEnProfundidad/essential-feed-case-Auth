@@ -22,8 +22,6 @@ public enum PasswordRecoveryError: Error, Equatable {
     case unknown
 }
 
-// MARK: - Protocolo de API para recuperación de contraseña
-
 public protocol PasswordRecoveryAPI {
     func recover(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void)
 }

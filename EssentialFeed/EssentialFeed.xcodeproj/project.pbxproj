@@ -132,59 +132,11 @@
 		08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */; };
 		08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F8822C236499B200CAEE16 /* FeedCache.swift */; };
 		B40318DD2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */; };
-		B4047BB12DD8B27600A0C34C /* RegistrationValidatorStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B992DD8B27600A0C34C /* RegistrationValidatorStub.swift */; };
 		B4047C452DD8B9FF00A0C34C /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047C262DD8B9FF00A0C34C /* AuthAPISpy.swift */; };
-		B4047D652DD8D46A00A0C34C /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D372DD8D46A00A0C34C /* TokenStorage.swift */; };
-		B4047D662DD8D46A00A0C34C /* LogingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0E2DD8D46A00A0C34C /* LogingError.swift */; };
-		B4047D682DD8D46A00A0C34C /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D492DD8D46A00A0C34C /* PasswordRecoveryView.swift */; };
-		B4047D692DD8D46A00A0C34C /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D122DD8D46A00A0C34C /* LoginRequest.swift */; };
-		B4047D6A2DD8D46A00A0C34C /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D112DD8D46A00A0C34C /* LoginCredentials.swift */; };
-		B4047D6B2DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D072DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift */; };
-		B4047D6C2DD8D46A00A0C34C /* LoginPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D462DD8D46A00A0C34C /* LoginPresentation.swift */; };
-		B4047D6D2DD8D46A00A0C34C /* UserRegistrationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D2D2DD8D46A00A0C34C /* UserRegistrationAPI.swift */; };
-		B4047D6F2DD8D46A00A0C34C /* UserLoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D192DD8D46A00A0C34C /* UserLoginUseCase.swift */; };
-		B4047D712DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D062DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift */; };
-		B4047D732DD8D46A00A0C34C /* TokenRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3F2DD8D46A00A0C34C /* TokenRefreshService.swift */; };
-		B4047D742DD8D46A00A0C34C /* DefaultLoginPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D1D2DD8D46A00A0C34C /* DefaultLoginPersistence.swift */; };
-		B4047D752DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D1B2DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift */; };
-		B4047D762DD8D46A00A0C34C /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D152DD8D46A00A0C34C /* PasswordRecovery.swift */; };
-		B4047D782DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3C2DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift */; };
-		B4047D792DD8D46A00A0C34C /* LoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D352DD8D46A00A0C34C /* LoginViewModelProtocol.swift */; };
-		B4047D7A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift */; };
-		B4047D7B2DD8D46A00A0C34C /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D442DD8D46A00A0C34C /* LoginBlockMessageProvider.swift */; };
-		B4047D7C2DD8D46A00A0C34C /* UserRegistrationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D302DD8D46A00A0C34C /* UserRegistrationUseCase.swift */; };
-		B4047D7D2DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D482DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift */; };
-		B4047D7E2DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D082DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift */; };
-		B4047D7F2DD8D46A00A0C34C /* AccountLockedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0D2DD8D46A00A0C34C /* AccountLockedError.swift */; };
-		B4047D802DD8D46A00A0C34C /* OfflineLoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D252DD8D46A00A0C34C /* OfflineLoginStore.swift */; };
-		B4047D812DD8D46A00A0C34C /* UserRegistrationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D2A2DD8D46A00A0C34C /* UserRegistrationResponse.swift */; };
-		B4047D822DD8D46A00A0C34C /* OfflineRegistrationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D2C2DD8D46A00A0C34C /* OfflineRegistrationStore.swift */; };
-		B4047D832DD8D46A00A0C34C /* LoginPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D242DD8D46A00A0C34C /* LoginPersistence.swift */; };
-		B4047D842DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D1C2DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift */; };
-		B4047D852DD8D46A00A0C34C /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D422DD8D46A00A0C34C /* AnyLoginRequestStore.swift */; };
-		B4047D862DD8D46A00A0C34C /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D452DD8D46A00A0C34C /* LoginErrorMessageMapper.swift */; };
-		B4047D892DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3D2DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift */; };
-		B4047D8A2DD8D46A00A0C34C /* UserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D262DD8D46A00A0C34C /* UserLoginAPI.swift */; };
-		B4047D8C2DD8D46A00A0C34C /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D132DD8D46A00A0C34C /* LoginResponse.swift */; };
-		B4047D8D2DD8D46A00A0C34C /* RetryOfflineRegistrationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D2F2DD8D46A00A0C34C /* RetryOfflineRegistrationsUseCase.swift */; };
-		B4047D8F2DD8D46A00A0C34C /* LoginValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0F2DD8D46A00A0C34C /* LoginValidationError.swift */; };
-		B4047D902DD8D46A00A0C34C /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D332DD8D46A00A0C34C /* Token.swift */; };
-		B4047D912DD8D46A00A0C34C /* UserRegistrationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D282DD8D46A00A0C34C /* UserRegistrationError.swift */; };
-		B4047D922DD8D46A00A0C34C /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3E2DD8D46A00A0C34C /* PendingRequestStore.swift */; };
-		B4047D942DD8D46A00A0C34C /* PasswordRecoveryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D1F2DD8D46A00A0C34C /* PasswordRecoveryModels.swift */; };
-		B4047D952DD8D46A00A0C34C /* LoginEventNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D222DD8D46A00A0C34C /* LoginEventNotifier.swift */; };
-		B4047D972DD8D46A00A0C34C /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D472DD8D46A00A0C34C /* LoginPresenter.swift */; };
-		B4047D982DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D4A2DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift */; };
-		B4047D992DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0B2DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift */; };
-		B4047D9A2DD8D46A00A0C34C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3A2DD8D46A00A0C34C /* LoginViewModel.swift */; };
-		B4047D9B2DD8D46A00A0C34C /* LoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D232DD8D46A00A0C34C /* LoginFlowHandler.swift */; };
-		B4047D9D2DD8D46A00A0C34C /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D182DD8D46A00A0C34C /* RefreshTokenUseCase.swift */; };
-		B4047D9E2DD8D46A00A0C34C /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D362DD8D46A00A0C34C /* TokenParser.swift */; };
 		B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB02DDA6EA300A0C34C /* SystemSessionManager.swift */; };
 		B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAF2DDA6EA300A0C34C /* SessionManaging.swift */; };
 		B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA12DDA6EA300A0C34C /* Session.swift */; };
 		B4047DBC2DDA6EA300A0C34C /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */; };
-		B4047DBD2DDA6EA300A0C34C /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */; };
 		B4047DBE2DDA6EA300A0C34C /* KeychainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAB2DDA6EA300A0C34C /* KeychainProtocol.swift */; };
 		B4047DBF2DDA6EA300A0C34C /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB42DDA6EA300A0C34C /* SessionViewModel.swift */; };
 		B4047DC02DDA6EA300A0C34C /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB22DDA6EA300A0C34C /* SecureStorage.swift */; };
@@ -193,8 +145,6 @@
 		B4047DC72DDA71BC00A0C34C /* SecureStorageProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */; };
 		B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */; };
 		B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */; };
-		B4047DFF2DDA824200A0C34C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DFE2DDA824200A0C34C /* SessionManager.swift */; };
-		B4047E032DDA829200A0C34C /* KeychainSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
 		B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
 		B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */; };
@@ -207,6 +157,54 @@
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6422DBE28E100E738D3 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369A2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift */; };
+		B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36BA2DDA92EE00184F55 /* PasswordRecoveryView.swift */; };
+		B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */; };
+		B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369C2DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift */; };
+		B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B42DDA92EE00184F55 /* LoginPresentation.swift */; };
+		B45C36C42DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369D2DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift */; };
+		B45C36C52DDA92EE00184F55 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36842DDA92EE00184F55 /* LoginResponse.swift */; };
+		B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */; };
+		B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A02DDA92EE00184F55 /* TokenStorageProtocol.swift */; };
+		B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B52DDA92EE00184F55 /* LoginPresenter.swift */; };
+		B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */; };
+		B45C36CB2DDA92EE00184F55 /* LoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369B2DDA92EE00184F55 /* LoginViewModelProtocol.swift */; };
+		B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */; };
+		B45C36CD2DDA92EE00184F55 /* PasswordRecoveryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */; };
+		B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368F2DDA92EE00184F55 /* LoginError.swift */; };
+		B45C36CF2DDA92EE00184F55 /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368E2DDA92EE00184F55 /* LoginCredentials.swift */; };
+		B45C36D02DDA92EE00184F55 /* SessionManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369E2DDA92EE00184F55 /* SessionManagerProtocol.swift */; };
+		B45C36D12DDA92EE00184F55 /* UserRegistrationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AC2DDA92EE00184F55 /* UserRegistrationUseCase.swift */; };
+		B45C36D22DDA92EE00184F55 /* UserRegistrationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36952DDA92EE00184F55 /* UserRegistrationError.swift */; };
+		B45C36D32DDA92EE00184F55 /* LoginValidationError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36942DDA92EE00184F55 /* LoginValidationError.swift */; };
+		B45C36D42DDA92EE00184F55 /* LoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36892DDA92EE00184F55 /* LoginFlowHandler.swift */; };
+		B45C36D52DDA92EE00184F55 /* PasswordRecoveryPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B62DDA92EE00184F55 /* PasswordRecoveryPresenter.swift */; };
+		B45C36D62DDA92EE00184F55 /* UserLoginUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */; };
+		B45C36D72DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A52DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift */; };
+		B45C36D82DDA92EE00184F55 /* FailedLoginAttemptEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368D2DDA92EE00184F55 /* FailedLoginAttemptEvent.swift */; };
+		B45C36D92DDA92EE00184F55 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B92DDA92EE00184F55 /* LoginViewModel.swift */; };
+		B45C36DA2DDA92EE00184F55 /* PasswordRecoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B72DDA92EE00184F55 /* PasswordRecoveryViewModel.swift */; };
+		B45C36DB2DDA92EE00184F55 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36912DDA92EE00184F55 /* Token.swift */; };
+		B45C36DC2DDA92EE00184F55 /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36902DDA92EE00184F55 /* PasswordRecovery.swift */; };
+		B45C36DD2DDA92EE00184F55 /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */; };
+		B45C36DE2DDA92EE00184F55 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */; };
+		B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */; };
+		B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36872DDA92EE00184F55 /* KeychainSessionManager.swift */; };
+		B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */; };
+		B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368A2DDA92EE00184F55 /* LoginPersistenceRepository.swift */; };
+		B45C36E42DDA92EE00184F55 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36832DDA92EE00184F55 /* LoginRequest.swift */; };
+		B45C36E52DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */; };
+		B45C36E62DDA92EE00184F55 /* AccountLockedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36932DDA92EE00184F55 /* AccountLockedError.swift */; };
+		B45C36E72DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A62DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift */; };
+		B45C36E82DDA92EE00184F55 /* TokenParserProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369F2DDA92EE00184F55 /* TokenParserProtocol.swift */; };
+		B45C36EA2DDA92EE00184F55 /* TokenRefreshService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36812DDA92EE00184F55 /* TokenRefreshService.swift */; };
+		B45C36EB2DDA92EE00184F55 /* UserRegistrationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36852DDA92EE00184F55 /* UserRegistrationResponse.swift */; };
+		B45C36EC2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C367C2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift */; };
+		B45C36ED2DDA92EE00184F55 /* UserLoginAPIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A12DDA92EE00184F55 /* UserLoginAPIProtocol.swift */; };
+		B45C36EF2DDA92EE00184F55 /* LoginEventNotifierRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36982DDA92EE00184F55 /* LoginEventNotifierRepositoryProtocol.swift */; };
+		B45C36F02DDA92EE00184F55 /* LoginFlowHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36992DDA92EE00184F55 /* LoginFlowHandlerProtocol.swift */; };
+		B45C36F12DDA92EE00184F55 /* FailedLoginAttemptsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36972DDA92EE00184F55 /* FailedLoginAttemptsRepositoryProtocol.swift */; };
+		B45C36F22DDA92EE00184F55 /* UserRegistrationAPIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A22DDA92EE00184F55 /* UserRegistrationAPIProtocol.swift */; };
 		B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */; };
 		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */; };
 		B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */; };
@@ -442,56 +440,8 @@
 		08FC5AA922D5F47900148E12 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
 		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
-		B4047B992DD8B27600A0C34C /* RegistrationValidatorStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorStub.swift; sourceTree = "<group>"; };
 		B4047C262DD8B9FF00A0C34C /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
-		B4047D062DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPolicy.swift; sourceTree = "<group>"; };
-		B4047D072DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionNotifier.swift; sourceTree = "<group>"; };
-		B4047D082DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionService.swift; sourceTree = "<group>"; };
-		B4047D0A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptEvent.swift; sourceTree = "<group>"; };
-		B4047D0B2DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
-		B4047D0D2DD8D46A00A0C34C /* AccountLockedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLockedError.swift; sourceTree = "<group>"; };
-		B4047D0E2DD8D46A00A0C34C /* LogingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogingError.swift; sourceTree = "<group>"; };
-		B4047D0F2DD8D46A00A0C34C /* LoginValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginValidationError.swift; sourceTree = "<group>"; };
-		B4047D112DD8D46A00A0C34C /* LoginCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCredentials.swift; sourceTree = "<group>"; };
-		B4047D122DD8D46A00A0C34C /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
-		B4047D132DD8D46A00A0C34C /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
-		B4047D152DD8D46A00A0C34C /* PasswordRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecovery.swift; sourceTree = "<group>"; };
-		B4047D182DD8D46A00A0C34C /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
-		B4047D192DD8D46A00A0C34C /* UserLoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCase.swift; sourceTree = "<group>"; };
-		B4047D1B2DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLoginEventNotifier.swift; sourceTree = "<group>"; };
-		B4047D1C2DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLoginFlowHandler.swift; sourceTree = "<group>"; };
-		B4047D1D2DD8D46A00A0C34C /* DefaultLoginPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLoginPersistence.swift; sourceTree = "<group>"; };
-		B4047D1F2DD8D46A00A0C34C /* PasswordRecoveryModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryModels.swift; sourceTree = "<group>"; };
-		B4047D222DD8D46A00A0C34C /* LoginEventNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEventNotifier.swift; sourceTree = "<group>"; };
-		B4047D232DD8D46A00A0C34C /* LoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowHandler.swift; sourceTree = "<group>"; };
-		B4047D242DD8D46A00A0C34C /* LoginPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPersistence.swift; sourceTree = "<group>"; };
-		B4047D252DD8D46A00A0C34C /* OfflineLoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStore.swift; sourceTree = "<group>"; };
-		B4047D262DD8D46A00A0C34C /* UserLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginAPI.swift; sourceTree = "<group>"; };
-		B4047D282DD8D46A00A0C34C /* UserRegistrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationError.swift; sourceTree = "<group>"; };
-		B4047D2A2DD8D46A00A0C34C /* UserRegistrationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationResponse.swift; sourceTree = "<group>"; };
-		B4047D2C2DD8D46A00A0C34C /* OfflineRegistrationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStore.swift; sourceTree = "<group>"; };
-		B4047D2D2DD8D46A00A0C34C /* UserRegistrationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationAPI.swift; sourceTree = "<group>"; };
-		B4047D2F2DD8D46A00A0C34C /* RetryOfflineRegistrationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineRegistrationsUseCase.swift; sourceTree = "<group>"; };
-		B4047D302DD8D46A00A0C34C /* UserRegistrationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCase.swift; sourceTree = "<group>"; };
-		B4047D332DD8D46A00A0C34C /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		B4047D352DD8D46A00A0C34C /* LoginViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelProtocol.swift; sourceTree = "<group>"; };
-		B4047D362DD8D46A00A0C34C /* TokenParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParser.swift; sourceTree = "<group>"; };
-		B4047D372DD8D46A00A0C34C /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
-		B4047D3A2DD8D46A00A0C34C /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
-		B4047D3C2DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
-		B4047D3D2DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
-		B4047D3E2DD8D46A00A0C34C /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
-		B4047D3F2DD8D46A00A0C34C /* TokenRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshService.swift; sourceTree = "<group>"; };
-		B4047D422DD8D46A00A0C34C /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
-		B4047D442DD8D46A00A0C34C /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
-		B4047D452DD8D46A00A0C34C /* LoginErrorMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorMessageMapper.swift; sourceTree = "<group>"; };
-		B4047D462DD8D46A00A0C34C /* LoginPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresentation.swift; sourceTree = "<group>"; };
-		B4047D472DD8D46A00A0C34C /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
-		B4047D482DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenter.swift; sourceTree = "<group>"; };
-		B4047D492DD8D46A00A0C34C /* PasswordRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryView.swift; sourceTree = "<group>"; };
-		B4047D4A2DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewModel.swift; sourceTree = "<group>"; };
 		B4047DA12DDA6EA300A0C34C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
 		B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		B4047DAB2DDA6EA300A0C34C /* KeychainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainProtocol.swift; sourceTree = "<group>"; };
 		B4047DAC2DDA6EA300A0C34C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorage.swift; sourceTree = "<group>"; };
@@ -503,8 +453,6 @@
 		B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageProtocols.swift; sourceTree = "<group>"; };
 		B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
-		B4047DFE2DDA824200A0C34C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
-		B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSessionManager.swift; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -516,6 +464,54 @@
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
+		B45C367C2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
+		B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
+		B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
+		B45C36812DDA92EE00184F55 /* TokenRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshService.swift; sourceTree = "<group>"; };
+		B45C36832DDA92EE00184F55 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		B45C36842DDA92EE00184F55 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		B45C36852DDA92EE00184F55 /* UserRegistrationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationResponse.swift; sourceTree = "<group>"; };
+		B45C36872DDA92EE00184F55 /* KeychainSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSessionManager.swift; sourceTree = "<group>"; };
+		B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEventNotifierRepository.swift; sourceTree = "<group>"; };
+		B45C36892DDA92EE00184F55 /* LoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowHandler.swift; sourceTree = "<group>"; };
+		B45C368A2DDA92EE00184F55 /* LoginPersistenceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPersistenceRepository.swift; sourceTree = "<group>"; };
+		B45C368D2DDA92EE00184F55 /* FailedLoginAttemptEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptEvent.swift; sourceTree = "<group>"; };
+		B45C368E2DDA92EE00184F55 /* LoginCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCredentials.swift; sourceTree = "<group>"; };
+		B45C368F2DDA92EE00184F55 /* LoginError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginError.swift; sourceTree = "<group>"; };
+		B45C36902DDA92EE00184F55 /* PasswordRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecovery.swift; sourceTree = "<group>"; };
+		B45C36912DDA92EE00184F55 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
+		B45C36932DDA92EE00184F55 /* AccountLockedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLockedError.swift; sourceTree = "<group>"; };
+		B45C36942DDA92EE00184F55 /* LoginValidationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginValidationError.swift; sourceTree = "<group>"; };
+		B45C36952DDA92EE00184F55 /* UserRegistrationError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationError.swift; sourceTree = "<group>"; };
+		B45C36972DDA92EE00184F55 /* FailedLoginAttemptsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsRepositoryProtocol.swift; sourceTree = "<group>"; };
+		B45C36982DDA92EE00184F55 /* LoginEventNotifierRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEventNotifierRepositoryProtocol.swift; sourceTree = "<group>"; };
+		B45C36992DDA92EE00184F55 /* LoginFlowHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowHandlerProtocol.swift; sourceTree = "<group>"; };
+		B45C369A2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPersistenceRepositoryProtocol.swift; sourceTree = "<group>"; };
+		B45C369B2DDA92EE00184F55 /* LoginViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelProtocol.swift; sourceTree = "<group>"; };
+		B45C369C2DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStoreProtocol.swift; sourceTree = "<group>"; };
+		B45C369D2DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreProtocol.swift; sourceTree = "<group>"; };
+		B45C369E2DDA92EE00184F55 /* SessionManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerProtocol.swift; sourceTree = "<group>"; };
+		B45C369F2DDA92EE00184F55 /* TokenParserProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenParserProtocol.swift; sourceTree = "<group>"; };
+		B45C36A02DDA92EE00184F55 /* TokenStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageProtocol.swift; sourceTree = "<group>"; };
+		B45C36A12DDA92EE00184F55 /* UserLoginAPIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginAPIProtocol.swift; sourceTree = "<group>"; };
+		B45C36A22DDA92EE00184F55 /* UserRegistrationAPIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationAPIProtocol.swift; sourceTree = "<group>"; };
+		B45C36A52DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPolicyUseCase.swift; sourceTree = "<group>"; };
+		B45C36A62DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionNotifierUseCase.swift; sourceTree = "<group>"; };
+		B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionServiceUseCase.swift; sourceTree = "<group>"; };
+		B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryUseCase.swift; sourceTree = "<group>"; };
+		B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
+		B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineRegistrationsUseCase.swift; sourceTree = "<group>"; };
+		B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCase.swift; sourceTree = "<group>"; };
+		B45C36AC2DDA92EE00184F55 /* UserRegistrationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCase.swift; sourceTree = "<group>"; };
+		B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
+		B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
+		B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorMessageMapper.swift; sourceTree = "<group>"; };
+		B45C36B42DDA92EE00184F55 /* LoginPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresentation.swift; sourceTree = "<group>"; };
+		B45C36B52DDA92EE00184F55 /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
+		B45C36B62DDA92EE00184F55 /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenter.swift; sourceTree = "<group>"; };
+		B45C36B72DDA92EE00184F55 /* PasswordRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewModel.swift; sourceTree = "<group>"; };
+		B45C36B92DDA92EE00184F55 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		B45C36BA2DDA92EE00184F55 /* PasswordRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryView.swift; sourceTree = "<group>"; };
 		B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenterTests.swift; sourceTree = "<group>"; };
 		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorWithLogicStub.swift; sourceTree = "<group>"; };
 		B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationServerUseCaseTests.swift; sourceTree = "<group>"; };
@@ -1173,14 +1169,6 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
-		B4047B9A2DD8B27600A0C34C /* Registration */ = {
-			isa = PBXGroup;
-			children = (
-				B4047B992DD8B27600A0C34C /* RegistrationValidatorStub.swift */,
-			);
-			path = Registration;
-			sourceTree = "<group>";
-		};
 		B4047C252DD8B9FF00A0C34C /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -1229,245 +1217,6 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		B4047D092DD8D46A00A0C34C /* Suggestion */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D062DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift */,
-				B4047D072DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift */,
-				B4047D082DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift */,
-			);
-			path = Suggestion;
-			sourceTree = "<group>";
-		};
-		B4047D0C2DD8D46A00A0C34C /* FailedLoginAttempt */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D092DD8D46A00A0C34C /* Suggestion */,
-				B4047D0A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift */,
-				B4047D0B2DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift */,
-			);
-			path = FailedLoginAttempt;
-			sourceTree = "<group>";
-		};
-		B4047D102DD8D46A00A0C34C /* Errors */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D0D2DD8D46A00A0C34C /* AccountLockedError.swift */,
-				B4047D0E2DD8D46A00A0C34C /* LogingError.swift */,
-				B4047D0F2DD8D46A00A0C34C /* LoginValidationError.swift */,
-			);
-			path = Errors;
-			sourceTree = "<group>";
-		};
-		B4047D142DD8D46A00A0C34C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D112DD8D46A00A0C34C /* LoginCredentials.swift */,
-				B4047D122DD8D46A00A0C34C /* LoginRequest.swift */,
-				B4047D132DD8D46A00A0C34C /* LoginResponse.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		B4047D162DD8D46A00A0C34C /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D152DD8D46A00A0C34C /* PasswordRecovery.swift */,
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
-		B4047D172DD8D46A00A0C34C /* PasswordRecovery */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D162DD8D46A00A0C34C /* UseCases */,
-			);
-			path = PasswordRecovery;
-			sourceTree = "<group>";
-		};
-		B4047D1A2DD8D46A00A0C34C /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D182DD8D46A00A0C34C /* RefreshTokenUseCase.swift */,
-				B4047D192DD8D46A00A0C34C /* UserLoginUseCase.swift */,
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
-		B4047D1E2DD8D46A00A0C34C /* Login */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D102DD8D46A00A0C34C /* Errors */,
-				B4047D142DD8D46A00A0C34C /* Models */,
-				B4047D172DD8D46A00A0C34C /* PasswordRecovery */,
-				B4047D1A2DD8D46A00A0C34C /* UseCases */,
-				B4047D1B2DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift */,
-				B4047D1C2DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift */,
-				B4047D1D2DD8D46A00A0C34C /* DefaultLoginPersistence.swift */,
-			);
-			path = Login;
-			sourceTree = "<group>";
-		};
-		B4047D202DD8D46A00A0C34C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D1F2DD8D46A00A0C34C /* PasswordRecoveryModels.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		B4047D212DD8D46A00A0C34C /* PasswordRecovery */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D202DD8D46A00A0C34C /* Models */,
-			);
-			path = PasswordRecovery;
-			sourceTree = "<group>";
-		};
-		B4047D272DD8D46A00A0C34C /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D222DD8D46A00A0C34C /* LoginEventNotifier.swift */,
-				B4047D232DD8D46A00A0C34C /* LoginFlowHandler.swift */,
-				B4047D242DD8D46A00A0C34C /* LoginPersistence.swift */,
-				B4047D252DD8D46A00A0C34C /* OfflineLoginStore.swift */,
-				B4047D262DD8D46A00A0C34C /* UserLoginAPI.swift */,
-				B4047DFE2DDA824200A0C34C /* SessionManager.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		B4047D292DD8D46A00A0C34C /* Errors */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D282DD8D46A00A0C34C /* UserRegistrationError.swift */,
-			);
-			path = Errors;
-			sourceTree = "<group>";
-		};
-		B4047D2B2DD8D46A00A0C34C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D2A2DD8D46A00A0C34C /* UserRegistrationResponse.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		B4047D2E2DD8D46A00A0C34C /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D2C2DD8D46A00A0C34C /* OfflineRegistrationStore.swift */,
-				B4047D2D2DD8D46A00A0C34C /* UserRegistrationAPI.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		B4047D312DD8D46A00A0C34C /* UseCases */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D2F2DD8D46A00A0C34C /* RetryOfflineRegistrationsUseCase.swift */,
-				B4047D302DD8D46A00A0C34C /* UserRegistrationUseCase.swift */,
-			);
-			path = UseCases;
-			sourceTree = "<group>";
-		};
-		B4047D322DD8D46A00A0C34C /* Registration */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D292DD8D46A00A0C34C /* Errors */,
-				B4047D2B2DD8D46A00A0C34C /* Models */,
-				B4047D2E2DD8D46A00A0C34C /* Protocols */,
-				B4047D312DD8D46A00A0C34C /* UseCases */,
-			);
-			path = Registration;
-			sourceTree = "<group>";
-		};
-		B4047D342DD8D46A00A0C34C /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D332DD8D46A00A0C34C /* Token.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		B4047D382DD8D46A00A0C34C /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D352DD8D46A00A0C34C /* LoginViewModelProtocol.swift */,
-				B4047D362DD8D46A00A0C34C /* TokenParser.swift */,
-				B4047D372DD8D46A00A0C34C /* TokenStorage.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		B4047D392DD8D46A00A0C34C /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D342DD8D46A00A0C34C /* Models */,
-				B4047D382DD8D46A00A0C34C /* Protocols */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		B4047D3B2DD8D46A00A0C34C /* Domain */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D0C2DD8D46A00A0C34C /* FailedLoginAttempt */,
-				B4047D1E2DD8D46A00A0C34C /* Login */,
-				B4047D212DD8D46A00A0C34C /* PasswordRecovery */,
-				B4047D272DD8D46A00A0C34C /* Protocols */,
-				B4047D322DD8D46A00A0C34C /* Registration */,
-				B4047D392DD8D46A00A0C34C /* Shared */,
-				B4047D3A2DD8D46A00A0C34C /* LoginViewModel.swift */,
-			);
-			path = Domain;
-			sourceTree = "<group>";
-		};
-		B4047D402DD8D46A00A0C34C /* Infrastructure */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D3C2DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift */,
-				B4047D3D2DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift */,
-				B4047D3E2DD8D46A00A0C34C /* PendingRequestStore.swift */,
-				B4047D3F2DD8D46A00A0C34C /* TokenRefreshService.swift */,
-			);
-			path = Infrastructure;
-			sourceTree = "<group>";
-		};
-		B4047D432DD8D46A00A0C34C /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D422DD8D46A00A0C34C /* AnyLoginRequestStore.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		B4047D4B2DD8D46A00A0C34C /* Presentation */ = {
-			isa = PBXGroup;
-			children = (
-				B4047D432DD8D46A00A0C34C /* Helpers */,
-				B4047D442DD8D46A00A0C34C /* LoginBlockMessageProvider.swift */,
-				B4047D452DD8D46A00A0C34C /* LoginErrorMessageMapper.swift */,
-				B4047D462DD8D46A00A0C34C /* LoginPresentation.swift */,
-				B4047D472DD8D46A00A0C34C /* LoginPresenter.swift */,
-				B4047D482DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift */,
-				B4047D492DD8D46A00A0C34C /* PasswordRecoveryView.swift */,
-				B4047D4A2DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift */,
-			);
-			path = Presentation;
-			sourceTree = "<group>";
-		};
-		B4047D642DD8D46A00A0C34C /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				B4047E002DDA827C00A0C34C /* Data */,
-				B4047D3B2DD8D46A00A0C34C /* Domain */,
-				B4047D402DD8D46A00A0C34C /* Infrastructure */,
-				B4047D4B2DD8D46A00A0C34C /* Presentation */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
 		B4047DA22DDA6EA300A0C34C /* Entities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1487,7 +1236,6 @@
 		B4047DA62DDA6EA300A0C34C /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1584,22 +1332,6 @@
 			path = Storage;
 			sourceTree = "<group>";
 		};
-		B4047E002DDA827C00A0C34C /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				B4047E012DDA828600A0C34C /* Session */,
-			);
-			path = Data;
-			sourceTree = "<group>";
-		};
-		B4047E012DDA828600A0C34C /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
 		B417AE2F2DCE00090096D12B /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
@@ -1625,6 +1357,173 @@
 				B417AE392DCE09660096D12B /* SecureStoreSpy.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B45C36822DDA92EE00184F55 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				B45C367C2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift */,
+				B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */,
+				B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */,
+				B45C36812DDA92EE00184F55 /* TokenRefreshService.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
+		B45C36862DDA92EE00184F55 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36832DDA92EE00184F55 /* LoginRequest.swift */,
+				B45C36842DDA92EE00184F55 /* LoginResponse.swift */,
+				B45C36852DDA92EE00184F55 /* UserRegistrationResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B45C368B2DDA92EE00184F55 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36872DDA92EE00184F55 /* KeychainSessionManager.swift */,
+				B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */,
+				B45C36892DDA92EE00184F55 /* LoginFlowHandler.swift */,
+				B45C368A2DDA92EE00184F55 /* LoginPersistenceRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B45C368C2DDA92EE00184F55 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36822DDA92EE00184F55 /* DataSources */,
+				B45C36862DDA92EE00184F55 /* Models */,
+				B45C368B2DDA92EE00184F55 /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B45C36922DDA92EE00184F55 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				B45C368D2DDA92EE00184F55 /* FailedLoginAttemptEvent.swift */,
+				B45C368E2DDA92EE00184F55 /* LoginCredentials.swift */,
+				B45C368F2DDA92EE00184F55 /* LoginError.swift */,
+				B45C36902DDA92EE00184F55 /* PasswordRecovery.swift */,
+				B45C36912DDA92EE00184F55 /* Token.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		B45C36962DDA92EE00184F55 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36932DDA92EE00184F55 /* AccountLockedError.swift */,
+				B45C36942DDA92EE00184F55 /* LoginValidationError.swift */,
+				B45C36952DDA92EE00184F55 /* UserRegistrationError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		B45C36A32DDA92EE00184F55 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36972DDA92EE00184F55 /* FailedLoginAttemptsRepositoryProtocol.swift */,
+				B45C36982DDA92EE00184F55 /* LoginEventNotifierRepositoryProtocol.swift */,
+				B45C36992DDA92EE00184F55 /* LoginFlowHandlerProtocol.swift */,
+				B45C369A2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift */,
+				B45C369B2DDA92EE00184F55 /* LoginViewModelProtocol.swift */,
+				B45C369C2DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift */,
+				B45C369D2DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift */,
+				B45C369E2DDA92EE00184F55 /* SessionManagerProtocol.swift */,
+				B45C369F2DDA92EE00184F55 /* TokenParserProtocol.swift */,
+				B45C36A02DDA92EE00184F55 /* TokenStorageProtocol.swift */,
+				B45C36A12DDA92EE00184F55 /* UserLoginAPIProtocol.swift */,
+				B45C36A22DDA92EE00184F55 /* UserRegistrationAPIProtocol.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		B45C36AD2DDA92EE00184F55 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36A52DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift */,
+				B45C36A62DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift */,
+				B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */,
+				B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */,
+				B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */,
+				B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */,
+				B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */,
+				B45C36AC2DDA92EE00184F55 /* UserRegistrationUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		B45C36AE2DDA92EE00184F55 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36922DDA92EE00184F55 /* Entities */,
+				B45C36962DDA92EE00184F55 /* Errors */,
+				B45C36A32DDA92EE00184F55 /* Repositories */,
+				B45C36AD2DDA92EE00184F55 /* UseCases */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		B45C36B02DDA92EE00184F55 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B45C36B32DDA92EE00184F55 /* Mappers */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */,
+				B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */,
+			);
+			path = Mappers;
+			sourceTree = "<group>";
+		};
+		B45C36B82DDA92EE00184F55 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36B42DDA92EE00184F55 /* LoginPresentation.swift */,
+				B45C36B52DDA92EE00184F55 /* LoginPresenter.swift */,
+				B45C36B62DDA92EE00184F55 /* PasswordRecoveryPresenter.swift */,
+			);
+			path = Presenters;
+			sourceTree = "<group>";
+		};
+		B45C36BC2DDA92EE00184F55 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36B92DDA92EE00184F55 /* LoginViewModel.swift */,
+				B45C36BA2DDA92EE00184F55 /* PasswordRecoveryView.swift */,
+				B45C36B72DDA92EE00184F55 /* PasswordRecoveryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		B45C36BD2DDA92EE00184F55 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				B45C36B02DDA92EE00184F55 /* Helpers */,
+				B45C36B32DDA92EE00184F55 /* Mappers */,
+				B45C36B82DDA92EE00184F55 /* Presenters */,
+				B45C36BC2DDA92EE00184F55 /* ViewModels */,
+			);
+			path = Presentation;
+			sourceTree = "<group>";
+		};
+		B45C36BE2DDA92EE00184F55 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				B45C368C2DDA92EE00184F55 /* Data */,
+				B45C36AE2DDA92EE00184F55 /* Domain */,
+				B45C36BD2DDA92EE00184F55 /* Presentation */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		B46CA14F2DBE8F6500CE9ADC /* Helpers */ = {
@@ -1676,9 +1575,8 @@
 		B4D6B2622DC8D15400F5A3FE /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B45C36BE2DDA92EE00184F55 /* Auth */,
 				B4047DB72DDA6EA300A0C34C /* Security */,
-				B4047D642DD8D46A00A0C34C /* Auth */,
-				B4047B9A2DD8B27600A0C34C /* Registration */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -2209,66 +2107,64 @@
 				08EF9D1A250BB15C004539C2 /* LoadResourcePresenter.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* (null) in Sources */,
-				B4047BB12DD8B27600A0C34C /* RegistrationValidatorStub.swift in Sources */,
-				B4047D652DD8D46A00A0C34C /* TokenStorage.swift in Sources */,
-				B4047D662DD8D46A00A0C34C /* LogingError.swift in Sources */,
-				B4047DFF2DDA824200A0C34C /* SessionManager.swift in Sources */,
-				B4047D682DD8D46A00A0C34C /* PasswordRecoveryView.swift in Sources */,
-				B4047D692DD8D46A00A0C34C /* LoginRequest.swift in Sources */,
-				B4047D6A2DD8D46A00A0C34C /* LoginCredentials.swift in Sources */,
-				B4047D6B2DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift in Sources */,
-				B4047D6C2DD8D46A00A0C34C /* LoginPresentation.swift in Sources */,
-				B4047D6D2DD8D46A00A0C34C /* UserRegistrationAPI.swift in Sources */,
-				B4047D6F2DD8D46A00A0C34C /* UserLoginUseCase.swift in Sources */,
-				B4047D712DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift in Sources */,
-				B4047D732DD8D46A00A0C34C /* TokenRefreshService.swift in Sources */,
-				B4047D742DD8D46A00A0C34C /* DefaultLoginPersistence.swift in Sources */,
-				B4047D752DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift in Sources */,
-				B4047E032DDA829200A0C34C /* KeychainSessionManager.swift in Sources */,
-				B4047D762DD8D46A00A0C34C /* PasswordRecovery.swift in Sources */,
-				B4047D782DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift in Sources */,
-				B4047D792DD8D46A00A0C34C /* LoginViewModelProtocol.swift in Sources */,
-				B4047D7A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift in Sources */,
-				B4047D7B2DD8D46A00A0C34C /* LoginBlockMessageProvider.swift in Sources */,
 				B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */,
 				B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */,
 				B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */,
 				B4047DBC2DDA6EA300A0C34C /* HTTPClient.swift in Sources */,
-				B4047DBD2DDA6EA300A0C34C /* LogoutUseCase.swift in Sources */,
 				B4047DBE2DDA6EA300A0C34C /* KeychainProtocol.swift in Sources */,
 				B4047DBF2DDA6EA300A0C34C /* SessionViewModel.swift in Sources */,
 				B4047DC02DDA6EA300A0C34C /* SecureStorage.swift in Sources */,
 				B4047DC22DDA6EA300A0C34C /* SystemKeychain.swift in Sources */,
 				B4047DC32DDA6EA300A0C34C /* KeychainSecureStorage.swift in Sources */,
-				B4047D7C2DD8D46A00A0C34C /* UserRegistrationUseCase.swift in Sources */,
-				B4047D7D2DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift in Sources */,
-				B4047D7E2DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift in Sources */,
-				B4047D7F2DD8D46A00A0C34C /* AccountLockedError.swift in Sources */,
-				B4047D802DD8D46A00A0C34C /* OfflineLoginStore.swift in Sources */,
-				B4047D812DD8D46A00A0C34C /* UserRegistrationResponse.swift in Sources */,
-				B4047D822DD8D46A00A0C34C /* OfflineRegistrationStore.swift in Sources */,
-				B4047D832DD8D46A00A0C34C /* LoginPersistence.swift in Sources */,
-				B4047D842DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift in Sources */,
-				B4047D852DD8D46A00A0C34C /* AnyLoginRequestStore.swift in Sources */,
-				B4047D862DD8D46A00A0C34C /* LoginErrorMessageMapper.swift in Sources */,
-				B4047D892DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
-				B4047D8A2DD8D46A00A0C34C /* UserLoginAPI.swift in Sources */,
-				B4047D8C2DD8D46A00A0C34C /* LoginResponse.swift in Sources */,
-				B4047D8D2DD8D46A00A0C34C /* RetryOfflineRegistrationsUseCase.swift in Sources */,
-				B4047D8F2DD8D46A00A0C34C /* LoginValidationError.swift in Sources */,
-				B4047D902DD8D46A00A0C34C /* Token.swift in Sources */,
-				B4047D912DD8D46A00A0C34C /* UserRegistrationError.swift in Sources */,
-				B4047D922DD8D46A00A0C34C /* PendingRequestStore.swift in Sources */,
-				B4047D942DD8D46A00A0C34C /* PasswordRecoveryModels.swift in Sources */,
-				B4047D952DD8D46A00A0C34C /* LoginEventNotifier.swift in Sources */,
-				B4047D972DD8D46A00A0C34C /* LoginPresenter.swift in Sources */,
-				B4047D982DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift in Sources */,
-				B4047D992DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift in Sources */,
-				B4047D9A2DD8D46A00A0C34C /* LoginViewModel.swift in Sources */,
-				B4047D9B2DD8D46A00A0C34C /* LoginFlowHandler.swift in Sources */,
-				B4047D9D2DD8D46A00A0C34C /* RefreshTokenUseCase.swift in Sources */,
-				B4047D9E2DD8D46A00A0C34C /* TokenParser.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
+				B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */,
+				B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */,
+				B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */,
+				B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */,
+				B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */,
+				B45C36C42DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift in Sources */,
+				B45C36C52DDA92EE00184F55 /* LoginResponse.swift in Sources */,
+				B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */,
+				B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */,
+				B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */,
+				B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */,
+				B45C36CB2DDA92EE00184F55 /* LoginViewModelProtocol.swift in Sources */,
+				B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */,
+				B45C36CD2DDA92EE00184F55 /* PasswordRecoveryUseCase.swift in Sources */,
+				B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */,
+				B45C36CF2DDA92EE00184F55 /* LoginCredentials.swift in Sources */,
+				B45C36D02DDA92EE00184F55 /* SessionManagerProtocol.swift in Sources */,
+				B45C36D12DDA92EE00184F55 /* UserRegistrationUseCase.swift in Sources */,
+				B45C36D22DDA92EE00184F55 /* UserRegistrationError.swift in Sources */,
+				B45C36D32DDA92EE00184F55 /* LoginValidationError.swift in Sources */,
+				B45C36D42DDA92EE00184F55 /* LoginFlowHandler.swift in Sources */,
+				B45C36D52DDA92EE00184F55 /* PasswordRecoveryPresenter.swift in Sources */,
+				B45C36D62DDA92EE00184F55 /* UserLoginUseCase.swift in Sources */,
+				B45C36D72DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift in Sources */,
+				B45C36D82DDA92EE00184F55 /* FailedLoginAttemptEvent.swift in Sources */,
+				B45C36D92DDA92EE00184F55 /* LoginViewModel.swift in Sources */,
+				B45C36DA2DDA92EE00184F55 /* PasswordRecoveryViewModel.swift in Sources */,
+				B45C36DB2DDA92EE00184F55 /* Token.swift in Sources */,
+				B45C36DC2DDA92EE00184F55 /* PasswordRecovery.swift in Sources */,
+				B45C36DD2DDA92EE00184F55 /* RefreshTokenUseCase.swift in Sources */,
+				B45C36DE2DDA92EE00184F55 /* LoginBlockMessageProvider.swift in Sources */,
+				B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */,
+				B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */,
+				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
+				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
+				B45C36E42DDA92EE00184F55 /* LoginRequest.swift in Sources */,
+				B45C36E52DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
+				B45C36E62DDA92EE00184F55 /* AccountLockedError.swift in Sources */,
+				B45C36E72DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift in Sources */,
+				B45C36E82DDA92EE00184F55 /* TokenParserProtocol.swift in Sources */,
+				B45C36EA2DDA92EE00184F55 /* TokenRefreshService.swift in Sources */,
+				B45C36EB2DDA92EE00184F55 /* UserRegistrationResponse.swift in Sources */,
+				B45C36EC2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift in Sources */,
+				B45C36ED2DDA92EE00184F55 /* UserLoginAPIProtocol.swift in Sources */,
+				B45C36EF2DDA92EE00184F55 /* LoginEventNotifierRepositoryProtocol.swift in Sources */,
+				B45C36F02DDA92EE00184F55 /* LoginFlowHandlerProtocol.swift in Sources */,
+				B45C36F12DDA92EE00184F55 /* FailedLoginAttemptsRepositoryProtocol.swift in Sources */,
+				B45C36F22DDA92EE00184F55 /* UserRegistrationAPIProtocol.swift in Sources */,
 				0889B0FA2530B0AA00FEAB5A /* ImageCommentsEndpoint.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
 				08C4E988233E13CC00D939F8 /* FeedImageDataStore.swift in Sources */,

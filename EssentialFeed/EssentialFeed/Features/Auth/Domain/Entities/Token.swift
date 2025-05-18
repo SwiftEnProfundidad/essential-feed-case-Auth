@@ -1,6 +1,5 @@
 import Foundation
 
-/// Access / refresh token con expiración.
 public struct Token: Equatable {
     public let value: String
     public let expiry: Date

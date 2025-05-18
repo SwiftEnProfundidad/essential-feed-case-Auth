@@ -1,8 +1,5 @@
 import Foundation
 
-// Asegúrate de que Token, TokenStorage, TokenParser y HTTPClient sean accesibles.
-// Probablemente necesites: import EssentialFeed o importaciones específicas si están en diferentes módulos/targets.
-
 public final class TokenRefreshService: RefreshTokenUseCase {
     private let httpClient: HTTPClient
     private let tokenStorage: TokenStorage
