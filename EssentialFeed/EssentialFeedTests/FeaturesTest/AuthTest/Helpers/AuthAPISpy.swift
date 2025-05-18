@@ -14,7 +14,7 @@ public final class AuthAPISpy: UserLoginAPI, UserRegistrationAPI {
         wasCalled = true
         guard let result = stubbedResult else {
             XCTFail("API should NOT be called for invalid input. Provide a stubbedResult only when expected.")
-            return .failure(.invalidCredentials) // Dummy value, test debe fallar antes
+            return .failure(.invalidCredentials)
         }
         return result
     }

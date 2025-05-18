@@ -132,17 +132,10 @@
 		08EFE6BD22D6384100DA417A /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */; };
 		08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08F8822C236499B200CAEE16 /* FeedCache.swift */; };
 		B40318DD2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */; };
-		B4047BAA2DD8B27600A0C34C /* KeychainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B9E2DD8B27600A0C34C /* KeychainProtocol.swift */; };
-		B4047BAB2DD8B27600A0C34C /* APIInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B9B2DD8B27600A0C34C /* APIInterceptor.swift */; };
-		B4047BB02DD8B27600A0C34C /* SystemKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047BA02DD8B27600A0C34C /* SystemKeychain.swift */; };
 		B4047BB12DD8B27600A0C34C /* RegistrationValidatorStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B992DD8B27600A0C34C /* RegistrationValidatorStub.swift */; };
-		B4047BB82DD8B27600A0C34C /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B9C2DD8B27600A0C34C /* HTTPClient.swift */; };
-		B4047BC72DD8B27600A0C34C /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047BA22DD8B27600A0C34C /* SystemSessionManager.swift */; };
-		B4047BCA2DD8B27600A0C34C /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047B9F2DD8B27600A0C34C /* KeychainSecureStorage.swift */; };
 		B4047C452DD8B9FF00A0C34C /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047C262DD8B9FF00A0C34C /* AuthAPISpy.swift */; };
 		B4047D652DD8D46A00A0C34C /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D372DD8D46A00A0C34C /* TokenStorage.swift */; };
 		B4047D662DD8D46A00A0C34C /* LogingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0E2DD8D46A00A0C34C /* LogingError.swift */; };
-		B4047D672DD8D46A00A0C34C /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D5E2DD8D46A00A0C34C /* SecureStorage.swift */; };
 		B4047D682DD8D46A00A0C34C /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D492DD8D46A00A0C34C /* PasswordRecoveryView.swift */; };
 		B4047D692DD8D46A00A0C34C /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D122DD8D46A00A0C34C /* LoginRequest.swift */; };
 		B4047D6A2DD8D46A00A0C34C /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D112DD8D46A00A0C34C /* LoginCredentials.swift */; };
@@ -170,8 +163,6 @@
 		B4047D842DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D1C2DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift */; };
 		B4047D852DD8D46A00A0C34C /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D422DD8D46A00A0C34C /* AnyLoginRequestStore.swift */; };
 		B4047D862DD8D46A00A0C34C /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D452DD8D46A00A0C34C /* LoginErrorMessageMapper.swift */; };
-		B4047D872DD8D46A00A0C34C /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D5B2DD8D46A00A0C34C /* SessionManaging.swift */; };
-		B4047D882DD8D46A00A0C34C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D4E2DD8D46A00A0C34C /* SessionManager.swift */; };
 		B4047D892DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3D2DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift */; };
 		B4047D8A2DD8D46A00A0C34C /* UserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D262DD8D46A00A0C34C /* UserLoginAPI.swift */; };
 		B4047D8C2DD8D46A00A0C34C /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D132DD8D46A00A0C34C /* LoginResponse.swift */; };
@@ -187,11 +178,23 @@
 		B4047D992DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D0B2DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift */; };
 		B4047D9A2DD8D46A00A0C34C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D3A2DD8D46A00A0C34C /* LoginViewModel.swift */; };
 		B4047D9B2DD8D46A00A0C34C /* LoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D232DD8D46A00A0C34C /* LoginFlowHandler.swift */; };
-		B4047D9C2DD8D46A00A0C34C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D4C2DD8D46A00A0C34C /* Session.swift */; };
 		B4047D9D2DD8D46A00A0C34C /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D182DD8D46A00A0C34C /* RefreshTokenUseCase.swift */; };
 		B4047D9E2DD8D46A00A0C34C /* TokenParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D362DD8D46A00A0C34C /* TokenParser.swift */; };
-		B4047D9F2DD8D46A00A0C34C /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D512DD8D46A00A0C34C /* LogoutUseCase.swift */; };
-		B4047DA02DD8D46A00A0C34C /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047D602DD8D46A00A0C34C /* SessionViewModel.swift */; };
+		B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB02DDA6EA300A0C34C /* SystemSessionManager.swift */; };
+		B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAF2DDA6EA300A0C34C /* SessionManaging.swift */; };
+		B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA12DDA6EA300A0C34C /* Session.swift */; };
+		B4047DBC2DDA6EA300A0C34C /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */; };
+		B4047DBD2DDA6EA300A0C34C /* LogoutUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */; };
+		B4047DBE2DDA6EA300A0C34C /* KeychainProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAB2DDA6EA300A0C34C /* KeychainProtocol.swift */; };
+		B4047DBF2DDA6EA300A0C34C /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB42DDA6EA300A0C34C /* SessionViewModel.swift */; };
+		B4047DC02DDA6EA300A0C34C /* SecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DB22DDA6EA300A0C34C /* SecureStorage.swift */; };
+		B4047DC22DDA6EA300A0C34C /* SystemKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAD2DDA6EA300A0C34C /* SystemKeychain.swift */; };
+		B4047DC32DDA6EA300A0C34C /* KeychainSecureStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DAC2DDA6EA300A0C34C /* KeychainSecureStorage.swift */; };
+		B4047DC72DDA71BC00A0C34C /* SecureStorageProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */; };
+		B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */; };
+		B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */; };
+		B4047DFF2DDA824200A0C34C /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DFE2DDA824200A0C34C /* SessionManager.swift */; };
+		B4047E032DDA829200A0C34C /* KeychainSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
 		B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
 		B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */; };
@@ -440,12 +443,6 @@
 		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4047B992DD8B27600A0C34C /* RegistrationValidatorStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorStub.swift; sourceTree = "<group>"; };
-		B4047B9B2DD8B27600A0C34C /* APIInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInterceptor.swift; sourceTree = "<group>"; };
-		B4047B9C2DD8B27600A0C34C /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
-		B4047B9E2DD8B27600A0C34C /* KeychainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainProtocol.swift; sourceTree = "<group>"; };
-		B4047B9F2DD8B27600A0C34C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorage.swift; sourceTree = "<group>"; };
-		B4047BA02DD8B27600A0C34C /* SystemKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychain.swift; sourceTree = "<group>"; };
-		B4047BA22DD8B27600A0C34C /* SystemSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionManager.swift; sourceTree = "<group>"; };
 		B4047C262DD8B9FF00A0C34C /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4047D062DD8D46A00A0C34C /* PasswordRecoveryPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPolicy.swift; sourceTree = "<group>"; };
 		B4047D072DD8D46A00A0C34C /* PasswordRecoverySuggestionNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionNotifier.swift; sourceTree = "<group>"; };
@@ -493,12 +490,21 @@
 		B4047D482DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenter.swift; sourceTree = "<group>"; };
 		B4047D492DD8D46A00A0C34C /* PasswordRecoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryView.swift; sourceTree = "<group>"; };
 		B4047D4A2DD8D46A00A0C34C /* PasswordRecoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryViewModel.swift; sourceTree = "<group>"; };
-		B4047D4C2DD8D46A00A0C34C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		B4047D4E2DD8D46A00A0C34C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
-		B4047D512DD8D46A00A0C34C /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
-		B4047D5B2DD8D46A00A0C34C /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
-		B4047D5E2DD8D46A00A0C34C /* SecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorage.swift; sourceTree = "<group>"; };
-		B4047D602DD8D46A00A0C34C /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
+		B4047DA12DDA6EA300A0C34C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutUseCase.swift; sourceTree = "<group>"; };
+		B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		B4047DAB2DDA6EA300A0C34C /* KeychainProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainProtocol.swift; sourceTree = "<group>"; };
+		B4047DAC2DDA6EA300A0C34C /* KeychainSecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorage.swift; sourceTree = "<group>"; };
+		B4047DAD2DDA6EA300A0C34C /* SystemKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychain.swift; sourceTree = "<group>"; };
+		B4047DAF2DDA6EA300A0C34C /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
+		B4047DB02DDA6EA300A0C34C /* SystemSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSessionManager.swift; sourceTree = "<group>"; };
+		B4047DB22DDA6EA300A0C34C /* SecureStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorage.swift; sourceTree = "<group>"; };
+		B4047DB42DDA6EA300A0C34C /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
+		B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageProtocols.swift; sourceTree = "<group>"; };
+		B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		B4047DFE2DDA824200A0C34C /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSessionManager.swift; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -1175,51 +1181,6 @@
 			path = Registration;
 			sourceTree = "<group>";
 		};
-		B4047B9D2DD8B27600A0C34C /* APIInterceptor */ = {
-			isa = PBXGroup;
-			children = (
-				B4047B9B2DD8B27600A0C34C /* APIInterceptor.swift */,
-				B4047B9C2DD8B27600A0C34C /* HTTPClient.swift */,
-			);
-			path = APIInterceptor;
-			sourceTree = "<group>";
-		};
-		B4047BA12DD8B27600A0C34C /* Keychain */ = {
-			isa = PBXGroup;
-			children = (
-				B4047B9E2DD8B27600A0C34C /* KeychainProtocol.swift */,
-				B4047B9F2DD8B27600A0C34C /* KeychainSecureStorage.swift */,
-				B4047BA02DD8B27600A0C34C /* SystemKeychain.swift */,
-			);
-			path = Keychain;
-			sourceTree = "<group>";
-		};
-		B4047BA32DD8B27600A0C34C /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				B4047BA22DD8B27600A0C34C /* SystemSessionManager.swift */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
-		B4047BA42DD8B27600A0C34C /* Infrastructure */ = {
-			isa = PBXGroup;
-			children = (
-				B4047B9D2DD8B27600A0C34C /* APIInterceptor */,
-				B4047BA12DD8B27600A0C34C /* Keychain */,
-				B4047BA32DD8B27600A0C34C /* Session */,
-			);
-			path = Infrastructure;
-			sourceTree = "<group>";
-		};
-		B4047BA52DD8B27600A0C34C /* Security */ = {
-			isa = PBXGroup;
-			children = (
-				B4047BA42DD8B27600A0C34C /* Infrastructure */,
-			);
-			path = Security;
-			sourceTree = "<group>";
-		};
 		B4047C252DD8B9FF00A0C34C /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -1371,6 +1332,7 @@
 				B4047D242DD8D46A00A0C34C /* LoginPersistence.swift */,
 				B4047D252DD8D46A00A0C34C /* OfflineLoginStore.swift */,
 				B4047D262DD8D46A00A0C34C /* UserLoginAPI.swift */,
+				B4047DFE2DDA824200A0C34C /* SessionManager.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -1495,100 +1457,147 @@
 			path = Presentation;
 			sourceTree = "<group>";
 		};
-		B4047D4D2DD8D46A00A0C34C /* Entities */ = {
+		B4047D642DD8D46A00A0C34C /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D4C2DD8D46A00A0C34C /* Session.swift */,
+				B4047E002DDA827C00A0C34C /* Data */,
+				B4047D3B2DD8D46A00A0C34C /* Domain */,
+				B4047D402DD8D46A00A0C34C /* Infrastructure */,
+				B4047D4B2DD8D46A00A0C34C /* Presentation */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		B4047DA22DDA6EA300A0C34C /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				B4047DA12DDA6EA300A0C34C /* Session.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
 		};
-		B4047D502DD8D46A00A0C34C /* Protocols */ = {
+		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D4E2DD8D46A00A0C34C /* SessionManager.swift */,
+				B4047DC52DDA71A600A0C34C /* Storage */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
 		};
-		B4047D532DD8D46A00A0C34C /* UseCases */ = {
+		B4047DA62DDA6EA300A0C34C /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D512DD8D46A00A0C34C /* LogoutUseCase.swift */,
+				B4047DA52DDA6EA300A0C34C /* LogoutUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
 		};
-		B4047D542DD8D46A00A0C34C /* Domain */ = {
+		B4047DA72DDA6EA300A0C34C /* Domain */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D4D2DD8D46A00A0C34C /* Entities */,
-				B4047D502DD8D46A00A0C34C /* Protocols */,
-				B4047D532DD8D46A00A0C34C /* UseCases */,
+				B4047DA22DDA6EA300A0C34C /* Entities */,
+				B4047DA42DDA6EA300A0C34C /* Protocols */,
+				B4047DA62DDA6EA300A0C34C /* UseCases */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
 		};
-		B4047D562DD8D46A00A0C34C /* APIInterceptor */ = {
+		B4047DAA2DDA6EA300A0C34C /* APIInterceptor */ = {
 			isa = PBXGroup;
 			children = (
+				B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */,
 			);
 			path = APIInterceptor;
 			sourceTree = "<group>";
 		};
-		B4047D5D2DD8D46A00A0C34C /* Session */ = {
+		B4047DAE2DDA6EA300A0C34C /* Keychain */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D5B2DD8D46A00A0C34C /* SessionManaging.swift */,
+				B4047DAB2DDA6EA300A0C34C /* KeychainProtocol.swift */,
+				B4047DAC2DDA6EA300A0C34C /* KeychainSecureStorage.swift */,
+				B4047DAD2DDA6EA300A0C34C /* SystemKeychain.swift */,
+				B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */,
+				B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */,
+			);
+			path = Keychain;
+			sourceTree = "<group>";
+		};
+		B4047DB12DDA6EA300A0C34C /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				B4047DAF2DDA6EA300A0C34C /* SessionManaging.swift */,
+				B4047DB02DDA6EA300A0C34C /* SystemSessionManager.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
 		};
-		B4047D5F2DD8D46A00A0C34C /* Infrastructure */ = {
+		B4047DB32DDA6EA300A0C34C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D562DD8D46A00A0C34C /* APIInterceptor */,
-				B4047D5D2DD8D46A00A0C34C /* Session */,
-				B4047D5E2DD8D46A00A0C34C /* SecureStorage.swift */,
+				B4047DC42DDA70F300A0C34C /* Storage */,
+				B4047DAA2DDA6EA300A0C34C /* APIInterceptor */,
+				B4047DAE2DDA6EA300A0C34C /* Keychain */,
+				B4047DB12DDA6EA300A0C34C /* Session */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
 		};
-		B4047D612DD8D46A00A0C34C /* ViewModels */ = {
+		B4047DB52DDA6EA300A0C34C /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D602DD8D46A00A0C34C /* SessionViewModel.swift */,
+				B4047DB42DDA6EA300A0C34C /* SessionViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		B4047D622DD8D46A00A0C34C /* Presentation */ = {
+		B4047DB62DDA6EA300A0C34C /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D612DD8D46A00A0C34C /* ViewModels */,
+				B4047DB52DDA6EA300A0C34C /* ViewModels */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
 		};
-		B4047D632DD8D46A00A0C34C /* Security */ = {
+		B4047DB72DDA6EA300A0C34C /* Security */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D542DD8D46A00A0C34C /* Domain */,
-				B4047D5F2DD8D46A00A0C34C /* Infrastructure */,
-				B4047D622DD8D46A00A0C34C /* Presentation */,
+				B4047DA72DDA6EA300A0C34C /* Domain */,
+				B4047DB32DDA6EA300A0C34C /* Infrastructure */,
+				B4047DB62DDA6EA300A0C34C /* Presentation */,
 			);
 			path = Security;
 			sourceTree = "<group>";
 		};
-		B4047D642DD8D46A00A0C34C /* Auth */ = {
+		B4047DC42DDA70F300A0C34C /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				B4047D3B2DD8D46A00A0C34C /* Domain */,
-				B4047D402DD8D46A00A0C34C /* Infrastructure */,
-				B4047D4B2DD8D46A00A0C34C /* Presentation */,
-				B4047D632DD8D46A00A0C34C /* Security */,
+				B4047DB22DDA6EA300A0C34C /* SecureStorage.swift */,
 			);
-			path = Auth;
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		B4047DC52DDA71A600A0C34C /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		B4047E002DDA827C00A0C34C /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B4047E012DDA828600A0C34C /* Session */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		B4047E012DDA828600A0C34C /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				B4047E022DDA829200A0C34C /* KeychainSessionManager.swift */,
+			);
+			path = Session;
 			sourceTree = "<group>";
 		};
 		B417AE2F2DCE00090096D12B /* UseCases */ = {
@@ -1667,9 +1676,9 @@
 		B4D6B2622DC8D15400F5A3FE /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				B4047DB72DDA6EA300A0C34C /* Security */,
 				B4047D642DD8D46A00A0C34C /* Auth */,
 				B4047B9A2DD8B27600A0C34C /* Registration */,
-				B4047BA52DD8B27600A0C34C /* Security */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -2192,19 +2201,18 @@
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
 				08EF9D2F250BC9A5004539C2 /* ImageCommentsPresenter.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
+				B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */,
+				B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */,
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
 				089C40DC22170EC500DE552E /* LocalFeedLoader.swift in Sources */,
 				08346CEF24F93BC400A9F17C /* ImageCommentsMapper.swift in Sources */,
 				08EF9D1A250BB15C004539C2 /* LoadResourcePresenter.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* (null) in Sources */,
-				B4047BAA2DD8B27600A0C34C /* KeychainProtocol.swift in Sources */,
-				B4047BAB2DD8B27600A0C34C /* APIInterceptor.swift in Sources */,
-				B4047BB02DD8B27600A0C34C /* SystemKeychain.swift in Sources */,
 				B4047BB12DD8B27600A0C34C /* RegistrationValidatorStub.swift in Sources */,
 				B4047D652DD8D46A00A0C34C /* TokenStorage.swift in Sources */,
 				B4047D662DD8D46A00A0C34C /* LogingError.swift in Sources */,
-				B4047D672DD8D46A00A0C34C /* SecureStorage.swift in Sources */,
+				B4047DFF2DDA824200A0C34C /* SessionManager.swift in Sources */,
 				B4047D682DD8D46A00A0C34C /* PasswordRecoveryView.swift in Sources */,
 				B4047D692DD8D46A00A0C34C /* LoginRequest.swift in Sources */,
 				B4047D6A2DD8D46A00A0C34C /* LoginCredentials.swift in Sources */,
@@ -2216,11 +2224,22 @@
 				B4047D732DD8D46A00A0C34C /* TokenRefreshService.swift in Sources */,
 				B4047D742DD8D46A00A0C34C /* DefaultLoginPersistence.swift in Sources */,
 				B4047D752DD8D46A00A0C34C /* DefaultLoginEventNotifier.swift in Sources */,
+				B4047E032DDA829200A0C34C /* KeychainSessionManager.swift in Sources */,
 				B4047D762DD8D46A00A0C34C /* PasswordRecovery.swift in Sources */,
 				B4047D782DD8D46A00A0C34C /* AnyFailedLoginAttemptStore.swift in Sources */,
 				B4047D792DD8D46A00A0C34C /* LoginViewModelProtocol.swift in Sources */,
 				B4047D7A2DD8D46A00A0C34C /* FailedLoginAttemptEvent.swift in Sources */,
 				B4047D7B2DD8D46A00A0C34C /* LoginBlockMessageProvider.swift in Sources */,
+				B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */,
+				B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */,
+				B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */,
+				B4047DBC2DDA6EA300A0C34C /* HTTPClient.swift in Sources */,
+				B4047DBD2DDA6EA300A0C34C /* LogoutUseCase.swift in Sources */,
+				B4047DBE2DDA6EA300A0C34C /* KeychainProtocol.swift in Sources */,
+				B4047DBF2DDA6EA300A0C34C /* SessionViewModel.swift in Sources */,
+				B4047DC02DDA6EA300A0C34C /* SecureStorage.swift in Sources */,
+				B4047DC22DDA6EA300A0C34C /* SystemKeychain.swift in Sources */,
+				B4047DC32DDA6EA300A0C34C /* KeychainSecureStorage.swift in Sources */,
 				B4047D7C2DD8D46A00A0C34C /* UserRegistrationUseCase.swift in Sources */,
 				B4047D7D2DD8D46A00A0C34C /* PasswordRecoveryPresenter.swift in Sources */,
 				B4047D7E2DD8D46A00A0C34C /* PasswordRecoverySuggestionService.swift in Sources */,
@@ -2232,8 +2251,6 @@
 				B4047D842DD8D46A00A0C34C /* DefaultLoginFlowHandler.swift in Sources */,
 				B4047D852DD8D46A00A0C34C /* AnyLoginRequestStore.swift in Sources */,
 				B4047D862DD8D46A00A0C34C /* LoginErrorMessageMapper.swift in Sources */,
-				B4047D872DD8D46A00A0C34C /* SessionManaging.swift in Sources */,
-				B4047D882DD8D46A00A0C34C /* SessionManager.swift in Sources */,
 				B4047D892DD8D46A00A0C34C /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
 				B4047D8A2DD8D46A00A0C34C /* UserLoginAPI.swift in Sources */,
 				B4047D8C2DD8D46A00A0C34C /* LoginResponse.swift in Sources */,
@@ -2249,14 +2266,8 @@
 				B4047D992DD8D46A00A0C34C /* FailedLoginAttemptsStore.swift in Sources */,
 				B4047D9A2DD8D46A00A0C34C /* LoginViewModel.swift in Sources */,
 				B4047D9B2DD8D46A00A0C34C /* LoginFlowHandler.swift in Sources */,
-				B4047D9C2DD8D46A00A0C34C /* Session.swift in Sources */,
 				B4047D9D2DD8D46A00A0C34C /* RefreshTokenUseCase.swift in Sources */,
 				B4047D9E2DD8D46A00A0C34C /* TokenParser.swift in Sources */,
-				B4047D9F2DD8D46A00A0C34C /* LogoutUseCase.swift in Sources */,
-				B4047DA02DD8D46A00A0C34C /* SessionViewModel.swift in Sources */,
-				B4047BB82DD8B27600A0C34C /* HTTPClient.swift in Sources */,
-				B4047BC72DD8B27600A0C34C /* SystemSessionManager.swift in Sources */,
-				B4047BCA2DD8B27600A0C34C /* KeychainSecureStorage.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				0889B0FA2530B0AA00FEAB5A /* ImageCommentsEndpoint.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
@@ -2275,6 +2286,7 @@
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
+				B4047DC72DDA71BC00A0C34C /* SecureStorageProtocols.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 				B4D71EEF2DAF1643003A1316 /* (null) in Sources */,
 			);

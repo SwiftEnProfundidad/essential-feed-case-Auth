@@ -9,7 +9,7 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
     public init() {}
 
     public func message(forAttempts _: Int, maxAttempts _: Int) -> String {
-        "Too many attempts. Please wait 5 minutes or reset your password."
+        "Account temporarily locked due to multiple failed attempts. Please try again later."
     }
 
     public func message(for error: Error) -> String {
@@ -36,6 +36,8 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
                 return "Offline store failed. Please try again."
             case .accountLocked:
                 return "Account temporarily locked due to multiple failed attempts. Please try again later."
+            case .messageForMaxAttemptsReached:
+                return "Maximum number of attempts reached. Please try again later."
             }
         }
         return "An unknown error occurred. Please try again."

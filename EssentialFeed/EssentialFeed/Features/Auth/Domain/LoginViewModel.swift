@@ -27,7 +27,7 @@ public final class LoginViewModel: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private var delayTask: Task<Void, Never>?
 
-    public var authenticate: (String, String) async -> Result<LoginResponse, Error>
+    public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
     private let pendingRequestStore: AnyLoginRequestStore?
     private let failedAttemptsStore: FailedLoginAttemptsStore
     private let maxFailedAttempts: Int
@@ -36,7 +36,7 @@ public final class LoginViewModel: ObservableObject {
     public weak var navigation: LoginNavigation?
 
     public init(
-        authenticate: @escaping (String, String) async -> Result<LoginResponse, Error>,
+        authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
         pendingRequestStore: AnyLoginRequestStore? = nil,
         failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
         maxFailedAttempts: Int = 5,
@@ -119,7 +119,7 @@ public final class LoginViewModel: ObservableObject {
         guard attempts >= maxFailedAttempts else { return false }
         guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return false }
         let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        return elapsed < 5 * 60 // bloqueado si no ha pasado el timeout
+        return elapsed < 5 * 60
     }
 
     private func handleFailedLogin(username: String, error: Error = LoginError.invalidCredentials) async {

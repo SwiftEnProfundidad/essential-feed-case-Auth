@@ -14,6 +14,7 @@ public enum LoginError: Error, LoginErrorType, Equatable {
     case unknown
     case offlineStoreFailed
     case accountLocked
+    case messageForMaxAttemptsReached
     public func errorMessage() -> String {
         switch self {
         case .invalidCredentials:
@@ -34,6 +35,8 @@ public enum LoginError: Error, LoginErrorType, Equatable {
             "Offline store failed. Please try again."
         case .accountLocked:
             "Account temporarily locked due to multiple failed attempts. Please try again later."
+        case .messageForMaxAttemptsReached:
+            "Maximum number of attempts reached. Please try again later."
         }
     }
 }

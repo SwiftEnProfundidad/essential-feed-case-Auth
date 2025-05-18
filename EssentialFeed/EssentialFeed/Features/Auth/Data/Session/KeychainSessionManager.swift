@@ -1,11 +1,7 @@
 
 import Foundation
 
-public protocol SessionManager {
-    var isAuthenticated: Bool { get }
-}
-
-public final class RealSessionManager: SessionManager {
+public final class KeychainSessionManager: SessionManager {
     private let keychain: KeychainStore
 
     public init(keychain: KeychainStore) {

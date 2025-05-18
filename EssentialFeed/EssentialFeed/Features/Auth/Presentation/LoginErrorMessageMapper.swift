@@ -26,6 +26,8 @@ public enum LoginErrorMessageMapper {
                 return "Offline store failed. Please try again."
             case .accountLocked:
                 return "Account temporarily locked due to multiple failed attempts. Please try again later."
+            case .messageForMaxAttemptsReached:
+                return "Maximum number of attempts reached. Please try again later."
             }
         }
         return "An unknown error occurred. Please try again."

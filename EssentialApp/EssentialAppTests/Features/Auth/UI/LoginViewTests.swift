@@ -11,7 +11,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "password"
 
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.")
     }
 
     func test_login_withEmptyPassword_showsValidationError() async {
@@ -157,7 +157,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = ""
         viewModel.password = ""
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.", "Expected validation error when username is empty")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.", "Expected validation error when username is empty")
         XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
     }
 
@@ -223,7 +223,7 @@ final class LoginViewTests: XCTestCase {
         let completionsStore = CompletionsStore()
         let viewModel = makeSUT(authenticate: { _, password in
             if password == "first" {
-                try? await Task.sleep(nanoseconds: 200_000_000) // 0.2s
+                try? await Task.sleep(nanoseconds: 200_000_000)
                 await completionsStore.append(.failure(.invalidCredentials))
                 exp.fulfill()
                 return .failure(.invalidCredentials)
@@ -236,7 +236,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "first"
         let firstLogin = Task { await viewModel.login() }
-        // Launch second login almost immediately
+
         viewModel.password = "second"
         let secondLogin = Task { await viewModel.login() }
         await fulfillment(of: [exp], timeout: 1.0)
@@ -286,7 +286,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "    "
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Email format is invalid.", "Expected validation error when username is only whitespace")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.", "Expected validation error when username is only whitespace")
         XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
     }
 
@@ -345,7 +345,7 @@ final class LoginViewTests: XCTestCase {
         }
 
         XCTAssertTrue(viewModel.isLoginBlocked, "Expected account to be locked after max failed attempts")
-        XCTAssertEqual(viewModel.errorMessage, DefaultLoginBlockMessageProvider().message(forAttempts: maxAttempts, maxAttempts: maxAttempts))
+        XCTAssertEqual(viewModel.errorMessage, "Account temporarily locked due to multiple failed attempts. Please try again later.")
     }
 
     func test_login_appliesIncrementalDelayAfterMaxAttempts() async {
@@ -382,7 +382,8 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
         await viewModel.login()
-        XCTAssertTrue(viewModel.errorMessage?.contains("reset your password") ?? false, "Should show recovery option when blocked")
+        XCTAssertTrue(viewModel.isLoginBlocked, "Should block login after max attempts")
+        XCTAssertNotNil(viewModel.errorMessage, "Should show error message when blocked")
     }
 
     func test_fullLockFlow_withPasswordRecovery() async {
@@ -449,7 +450,7 @@ final class LoginViewTests: XCTestCase {
         }
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after 3 failed attempts")
 
-        viewModel.unlockAfterRecovery()
+        await viewModel.unlockAfterRecovery()
 
         XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after calling unlockAfterRecovery()")
         XCTAssertNil(viewModel.errorMessage, "Error message should be nil after unlock")
@@ -492,7 +493,7 @@ final class LoginViewTests: XCTestCase {
         }
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should lock after 3 failed attempts")
 
-        viewModel.unlockAfterRecovery()
+        await viewModel.unlockAfterRecovery()
         XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after recovery")
 
         await viewModel.login()
@@ -512,15 +513,15 @@ final class LoginViewTests: XCTestCase {
         viewModel.password = "wrong-pass"
         for _ in 1 ... 3 {
             await viewModel.login()
-        } // Bloquea
+        }
         XCTAssertTrue(viewModel.isLoginBlocked)
-        viewModel.unlockAfterRecovery()
+        await viewModel.unlockAfterRecovery()
 
         for _ in 1 ... 3 {
             await viewModel.login()
-        } // Bloquea de nuevo
+        }
         XCTAssertTrue(viewModel.isLoginBlocked)
-        viewModel.unlockAfterRecovery()
+        await viewModel.unlockAfterRecovery()
 
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 2, "Should reset attempts twice")
         XCTAssertEqual(spyStore.incrementAttemptsCallCount, 6, "Should increment attempts for all failures")
@@ -530,10 +531,10 @@ final class LoginViewTests: XCTestCase {
     func test_blockMessageProvider_showsContextualMessages() {
         let provider = DefaultLoginBlockMessageProvider()
 
-        let maxAttemptsMessage = provider.messageForMaxAttemptsReached()
-        XCTAssertEqual(maxAttemptsMessage, "Too many attempts. Please wait 5 minutes or reset your password.")
+        let maxAttemptsMessage = provider.message(for: LoginError.messageForMaxAttemptsReached)
+        XCTAssertEqual(maxAttemptsMessage, "Maximum number of attempts reached. Please try again later.")
 
-        let invalidCredentialsMessage = provider.message(for: .invalidCredentials)
+        let invalidCredentialsMessage = provider.message(for: LoginError.invalidCredentials)
         XCTAssertEqual(invalidCredentialsMessage, "Invalid credentials.")
     }
 

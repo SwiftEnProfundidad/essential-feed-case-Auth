@@ -53,7 +53,7 @@ public final class UserLoginUseCase {
         self.userDefaults = userDefaults
     }
 
-    public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
+    public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let validationError = validateCredentials(credentials) else {
             guard let lockoutError = checkLockout(for: email) else {
@@ -84,24 +84,24 @@ public final class UserLoginUseCase {
         return nil
     }
 
-    private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
+    private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         clearLockout(for: credentials.email)
         let expiryDate = Date().addingTimeInterval(Config.defaultTokenDuration)
         let tokenToStore = Token(value: response.token, expiry: expiryDate)
         do {
             try await persistence.saveToken(tokenToStore)
             try? await persistence.saveOfflineCredentials(credentials)
-            let result: Result<LoginResponse, Error> = .success(response)
+            let result: Result<LoginResponse, LoginError> = .success(response)
             await notifyAndHandle(result: result, credentials: credentials)
             return result
         } catch {
-            let result: Result<LoginResponse, Error> = .failure(LoginError.tokenStorageFailed)
+            let result: Result<LoginResponse, LoginError> = .failure(LoginError.tokenStorageFailed)
             await notifyAndHandle(result: result, credentials: credentials)
             return result
         }
     }
 
-    private func handleLoginFailure(_ error: LoginError, _ credentials: LoginCredentials, _ email: String) async -> Result<LoginResponse, Error> {
+    private func handleLoginFailure(_ error: LoginError, _ credentials: LoginCredentials, _ email: String) async -> Result<LoginResponse, LoginError> {
         let attemptsKey = StorageKey.failedAttemptsPrefix + email
         let lockoutKey = StorageKey.lockoutUntilPrefix + email
         let defaults = userDefaults
@@ -131,7 +131,7 @@ public final class UserLoginUseCase {
         StorageKey.lockoutUntilPrefix + email
     }
 
-    private func handleFailure(_ result: Result<LoginResponse, Error>, _ credentials: LoginCredentials) async -> Result<LoginResponse, Error> {
+    private func handleFailure(_ result: Result<LoginResponse, LoginError>, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         await notifyAndHandle(result: result, credentials: credentials)
         return result
     }
@@ -155,7 +155,7 @@ public final class UserLoginUseCase {
         return nil
     }
 
-    private func notifyAndHandle(result: Result<LoginResponse, Error>, credentials: LoginCredentials) async {
+    private func notifyAndHandle(result: Result<LoginResponse, LoginError>, credentials: LoginCredentials) async {
         switch result {
         case let .success(response):
             notifier.notifySuccess(response: response)

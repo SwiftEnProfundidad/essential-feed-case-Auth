@@ -30,8 +30,8 @@ final class LoginEventNotifierSpy: LoginEventNotifier {
 }
 
 final class LoginFlowHandlerSpy: LoginFlowHandler {
-    private(set) var handledResults: [(Result<LoginResponse, Error>, LoginCredentials)] = []
-    func handlePostLogin(result: Result<LoginResponse, Error>, credentials: LoginCredentials) {
+    private(set) var handledResults: [(Result<LoginResponse, LoginError>, LoginCredentials)] = []
+    func handlePostLogin(result: Result<LoginResponse, LoginError>, credentials: LoginCredentials) {
         handledResults.append((result, credentials))
     }
 }
