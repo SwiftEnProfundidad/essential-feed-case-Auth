@@ -12,7 +12,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // UIKit necesita este init para instanciar desde Storyboard/Scene
     override public init() {
         self.isUserAuthenticatedClosure = {
-            RealSessionManager(keychain: KeychainHelper()).isAuthenticated
+            KeychainSessionManager(keychain: KeychainHelper()).isAuthenticated
         }
         super.init()
     }
@@ -61,7 +61,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     public convenience init(
         httpClient: HTTPClient, store: FeedStore & FeedImageDataStore,
         scheduler: AnyDispatchQueueScheduler,
-        sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())
+        sessionManager: SessionManager = KeychainSessionManager(keychain: KeychainHelper())
     ) {
         self.init(sessionManager: sessionManager)
         self.httpClient = httpClient
@@ -69,7 +69,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.scheduler = scheduler
     }
 
-    public init(sessionManager: SessionManager = RealSessionManager(keychain: KeychainHelper())) {
+    public init(sessionManager: SessionManager = KeychainSessionManager(keychain: KeychainHelper())) {
         self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
         super.init()
     }

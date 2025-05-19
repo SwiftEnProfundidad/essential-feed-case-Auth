@@ -748,8 +748,9 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
-				B4D6B2622DC8D15400F5A3FE /* Features */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
+				B4047DB72DDA6EA300A0C34C /* Security Feature */,
+				B4D6B2622DC8D15400F5A3FE /* Auth Feature */,
 				08EF9D18250BB14C004539C2 /* Shared Presentation */,
 				08346CF324F942BC00A9F17C /* Shared API */,
 				08346CF424F942D900A9F17C /* Shared API Infra */,
@@ -1306,14 +1307,14 @@
 			path = Presentation;
 			sourceTree = "<group>";
 		};
-		B4047DB72DDA6EA300A0C34C /* Security */ = {
+		B4047DB72DDA6EA300A0C34C /* Security Feature */ = {
 			isa = PBXGroup;
 			children = (
 				B4047DA72DDA6EA300A0C34C /* Domain */,
 				B4047DB32DDA6EA300A0C34C /* Infrastructure */,
 				B4047DB62DDA6EA300A0C34C /* Presentation */,
 			);
-			path = Security;
+			path = "Security Feature";
 			sourceTree = "<group>";
 		};
 		B4047DC42DDA70F300A0C34C /* Storage */ = {
@@ -1572,13 +1573,12 @@
 			path = UnitTest;
 			sourceTree = "<group>";
 		};
-		B4D6B2622DC8D15400F5A3FE /* Features */ = {
+		B4D6B2622DC8D15400F5A3FE /* Auth Feature */ = {
 			isa = PBXGroup;
 			children = (
 				B45C36BE2DDA92EE00184F55 /* Auth */,
-				B4047DB72DDA6EA300A0C34C /* Security */,
 			);
-			path = Features;
+			path = "Auth Feature";
 			sourceTree = "<group>";
 		};
 		B4D6B2652DC8D70600F5A3FE /* FeaturesTest */ = {
