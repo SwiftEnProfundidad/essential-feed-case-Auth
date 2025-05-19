@@ -12,13 +12,8 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         switch result {
         case let .failure(error):
-            if let loginError = error as? LoginError {
-                XCTAssertEqual(
-                    loginError, LoginError.invalidPasswordFormat, "Should return invalid password format error"
-                )
-            } else {
-                XCTFail("Expected LoginError.invalidPasswordFormat, got \(error)")
-            }
+            XCTAssertEqual(error, LoginError.invalidPasswordFormat, "Should return invalid password format error")
+            XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
 
             XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
             XCTAssertEqual(notifier.notifiedFailures.count, 1, "Notifier should be notified on validation error")
@@ -43,10 +38,8 @@ final class UserLoginUseCaseTests: XCTestCase {
         case .success:
             XCTFail("Expected failure, got success")
         case let .failure(error):
-            if let loginError = error as? LoginError {
-                XCTAssertEqual(
-                    loginError, LoginError.invalidCredentials, "Should return invalid credentials error on failure"
-                )
+            if error == .invalidCredentials {
+                XCTAssertEqual(error, LoginError.invalidCredentials, "Should return invalid credentials error on failure")
             } else {
                 XCTFail("Expected LoginError.invalidCredentials, got \(error)")
             }
@@ -93,7 +86,7 @@ final class UserLoginUseCaseTests: XCTestCase {
         case .success:
             XCTFail("Expected failure, got success")
         case let .failure(error):
-            XCTAssertEqual(error as? LoginError, .tokenStorageFailed, "Should return token storage error")
+            XCTAssertEqual(error, .tokenStorageFailed, "Should return token storage error")
             XCTAssertEqual(notifier.notifiedSuccesses.count, 0, "Notifier should NOT be notified if token storage fails")
             XCTAssertEqual(persistence.savedTokens.count, 0, "Token should not be saved if storage fails")
             XCTAssertEqual(flowHandler.handledResults.count, 1, "FlowHandler should be called on failed token storage")
@@ -110,8 +103,7 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         let wasIncremented = flowHandler.handledResults.contains { result, creds in
             if case let .failure(error) = result,
-               let loginError = error as? LoginError,
-               loginError == .invalidCredentials,
+               error == .invalidCredentials,
                creds.email == credentials.email
             {
                 return true
@@ -128,8 +120,7 @@ final class UserLoginUseCaseTests: XCTestCase {
 
         let wasCalledForFormatError = flowHandler.handledResults.contains { result, _ in
             if case let .failure(error) = result,
-               let loginError = error as? LoginError,
-               loginError == .invalidEmailFormat
+               error == .invalidEmailFormat
             {
                 return true
             }
@@ -173,13 +164,13 @@ final class UserLoginUseCaseTests: XCTestCase {
         let result = await sut.login(with: credentials)
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error as? LoginError, .accountLocked, "Should return accountLocked error after exceeding the threshold")
+            XCTAssertEqual(error, .accountLocked, "Should return accountLocked error after exceeding the threshold")
 
             let lastNotified = notifier.notifiedFailures.compactMap { $0 as? LoginError }.last
             XCTAssertEqual(lastNotified, LoginError.accountLocked, "Notifier should notify accountLocked error")
 
             let lastFlowError = flowHandler.handledResults.compactMap { result, _ in
-                if case let .failure(e) = result { return e as? LoginError } else { return nil }
+                if case let .failure(error) = result { error } else { nil }
             }.last
             XCTAssertEqual(lastFlowError, LoginError.accountLocked, "FlowHandler should handle accountLocked as a lockout error")
         default:
@@ -201,7 +192,7 @@ final class UserLoginUseCaseTests: XCTestCase {
         let lockoutResult = await sut.login(with: credentials)
         switch lockoutResult {
         case let .failure(error):
-            XCTAssertEqual(error as? LoginError, .accountLocked, "Should return accountLocked error after exceeding the threshold")
+            XCTAssertEqual(error, .accountLocked, "Should return accountLocked error after exceeding the threshold")
         default:
             XCTFail("Expected accountLocked error")
         }

@@ -1,317 +1,339 @@
-<rules>
-  # Project Configuration
-  - Language: Swift 5.9+
+# Reglas del Proyecto EssentialFeed
 
-  # Project Structure
-  - Group by features, not by type
-  - Keep related files together
-  - Use .lproj for localizable content
+## Tabla de Contenidos
+1. [Arquitectura](#arquitectura)
+2. [Estructura del Proyecto](#estructura-del-proyecto)
+3. [Estilo de Código](#estilo-de-código)
+4. [Testing](#testing)
+5. [Flujo de Trabajo](#flujo-de-trabajo)
+6. [Seguridad](#seguridad)
+7. [Documentación](#documentación)
+8. [CI/CD](#cicd)
+9. [Reglas del Workspace](#reglas-del-workspace)
 
-  # Architecture
-  - Clean Architecture with MVVM (SwiftUI) or MVP (UIKit)
-  - Strict separation of concerns
-  - Unidirectional data flow
-  - Feature-based modularization
+---
 
-  # Code Style
-  - SwiftLint with custom rules
-  - Maximum file length: 500 lines
-  - Maximum function length: 50 lines
-  - Maximum line length: 120 characters
-  - Use extensions for protocol conformance
-  - Group related code with MARK comments
+## 1. Arquitectura
 
-  # Naming Conventions
-  - Types: PascalCase (LoginViewController, UserProfilePresenter)
-  - Variables/Functions: camelCase
-  - Protocols: -able, -ing, -Type suffixes
-  - Test classes: [Feature]Tests
-  - Factory methods: make[Type]
+### Clean Architecture
 
-  # Swift Best Practices
-  - Value types (structs) by default
-  - Classes only when reference semantics are needed
-  - Prefer let over var
-  - Use guard for early returns
-  - No force unwrapping (!) or force casting (as!)
-  - Prefer composition over inheritance
-  - Use type inference where clear
+#### Capas Principales
+1. **Domain** (Núcleo)
+   - Entidades del negocio (inmutables)
+   - Value Objects (objetos de valor)
+   - Casos de uso (Use Cases sin estado)
+   - Protocolos de repositorios
+   - Errores de dominio
+   - Reglas de negocio y validaciones
+   - ✅ No depende de otras capas
 
-  # Testing
-  - TDD/BDD approach
-  - AAA pattern (Arrange-Act-Assert)
-  - Test naming: test_[method]_[scenario]_[expectedResult]
-  - Use test doubles (Spies > Mocks)
-  - Test one behavior per test
-  - Test both success and failure paths
-  - Avoid testing implementation details
+2. **Infrastructure**
+   - Implementaciones concretas de repositorios
+   - Fuentes de datos:
+     - API Clients (REST/GraphQL)
+     - Persistencia local (CoreData/Realm)
+   - Mapeo DTO ↔ Entidad
+   - Manejo de errores de red/BD
+   - ⬆️ Depende del Domain
 
-  # Test Helpers
-  - Use makeSUT() pattern for test setup
-  - Implement Spies for protocol dependencies
-  - Track memory leaks automatically
-  - Use test-specific bundles for resources
+3. **Presentation**
+   - **MVVM** (SwiftUI) / **MVP** (UIKit)
+   - ViewModels/Presenters (`@MainActor`)
+   - Vistas (SwiftUI Views/UIViewControllers)
+   - Estados de UI (carga/éxito/error)
+   - Coordinadores/Routers
+   - Inyección de dependencias
+   - ⬆️ Depende del Domain
 
-  # Test Doubles (Spies)
-  - Naming: [Type]Spy (e.g., LoginServiceSpy)
-  - Track method calls and parameters
-  - Example:
-    ```
-    class LoginServiceSpy: LoginServiceProtocol {
-        var loginCallCount = 0
-        var loginArgs: [(email: String, password: String)] = []
-        
-        func login(email: String, password: String) async throws -> User {
-            loginCallCount += 1
-            loginArgs.append((email, password))
-            // Implementation for testing
-        }
+### Patrones de Diseño
+- **MVVM** para SwiftUI
+- **MVP** para UIKit
+- **Factory** para creación de dependencias
+- **Router/Coordinator** para navegación
+- **Repository** para acceso a datos
+
+---
+
+## 2. Estructura del Proyecto
+
+### Layout General
+```
+essential-feed-case-study/
+├── EssentialApp/                 # Aplicación principal
+│   ├── EssentialApp/            # Código fuente
+│   ├── EssentialAppTests/        # Pruebas unitarias
+│   └── EssentialApp.xcodeproj/   # Proyecto Xcode
+│
+├── EssentialFeed/                # Framework principal
+│   ├── EssentialFeed/           # Código fuente
+│   ├── EssentialFeedTests/       # Pruebas unitarias
+│   └── EssentialFeed.xcodeproj/  # Proyecto Xcode
+│
+├── coverage-reports/            # Informes de cobertura
+├── docs/                        # Documentación
+└── scripts/                     # Scripts de automatización
+```
+
+### Estructura de Features
+```
+Features/
+├── AuthFeature/                 # Autenticación
+│   ├── Domain/
+│   │   ├── Entities/
+│   │   ├── UseCases/
+│   │   └── Protocols/
+│   ├── Data/
+│   │   ├── Repositories/
+│   │   └── DataSources/
+│   └── Presentation/
+│       ├── ViewModels/
+│       └── Views/
+│
+└── SecurityFeature/            # Seguridad
+    ├── Domain/
+    │   ├── Entities/
+    │   ├── UseCases/
+    │   └── Protocols/
+    ├── Data/
+    │   ├── Repositories/
+    │   └── DataSources/
+    └── Presentation/
+        ├── ViewModels/
+        └── Views/
+```
+
+---
+
+## 3. Estilo de Código
+
+### Convenciones de Nombrado
+- **Tipos**: `PascalCase` (`LoginViewController`, `UserRepository`)
+- **Variables/Funciones**: `camelCase` (`userName`, `fetchUserData()`)
+- **Constantes**: `camelCase` con contexto (`maxRetryCount`)
+- **Protocolos**: 
+  - `-able` para capacidades (`Cacheable`)
+  - `-ing` para comportamientos (`Logging`)
+  - `-Type` para tipos asociados (`RepositoryType`)
+- **Tests**: `test_methodName_whenCondition_shouldExpectedBehavior()`
+
+### Estructura
+- **Archivos**: Máximo 500 líneas
+- **Funciones**: Máximo 50 líneas
+- **Líneas**: 120 caracteres máximo
+- **Espaciado**:
+  - 1 línea entre métodos
+  - 2 líneas entre secciones
+  - 1 línea entre lógica relacionada
+
+### SwiftLint
+- Configuración estándar del equipo
+- Corregir warnings antes de commit
+- Documentar supresiones de reglas
+
+---
+
+## 4. Testing
+
+### Estrategia
+- **TDD/BDD**
+- **AAA** (Arrange-Act-Assert)
+- Un comportamiento por test
+- Spies sobre Mocks
+- Cobertura mínima: 80%
+
+### Estructura de Tests
+```
+Tests/
+└── [Feature]Tests/
+    ├── Domain/
+    │   ├── [Entity]Tests.swift
+    │   └── UseCases/
+    │       └── [UseCase]Tests.swift
+    │
+    ├── Infrastructure/
+    │   ├── Repositories/
+    │   │   └── [Repository]Tests.swift
+    │   └── DataSources/
+    │       └── [DataSource]Tests.swift
+    │
+    └── Presentation/
+        └── [MVVM o MVP]/
+            ├── ViewModels/
+            │   └── [ViewModel]Tests.swift
+            └── Views/
+                └── [View]Tests.swift
+```
+
+### Test Doubles (Spies)
+```swift
+class LoginServiceSpy: LoginServiceProtocol {
+    var loginCallCount = 0
+    var loginArgs: [(email: String, password: String)] = []
+    
+    func login(email: String, password: String) async throws -> User {
+        loginCallCount += 1
+        loginArgs.append((email, password))
+        // Implementación para testing
     }
-    ```
-  - Verify in tests:
-    ```
-    XCTAssertEqual(spy.loginCallCount, 1)
-    XCTAssertEqual(spy.loginArgs.first?.email, "test@example.com")
-    ```
-  - Reset state in tearDown() if needed
-  - Use for async/await with continuations
+}
+```
 
-  # Test Setup Example
-  - Use makeSUT pattern:
-    ```
-    private func makeSUT(
-        service: LoginServiceProtocol = LoginServiceSpy(),
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> (sut: LoginViewModel, spy: LoginServiceSpy) {
-        let spy = service as? LoginServiceSpy ?? LoginServiceSpy()
-        let sut = LoginViewModel(service: spy)
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
-        return (sut, spy)
-    }
-    ```
-  - Track memory leaks with:
-    ```
-    private func trackForMemoryLeaks(
-        _ instance: AnyObject,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        addTeardownBlock { [weak instance] in
-            XCTAssertNil(instance, "Instance should have been deallocated", file: file, line: line)
-        }
-    }
-    ```
+### Configuración de Tests
+```swift
+private func makeSUT(
+    service: LoginServiceProtocol = LoginServiceSpy(),
+    file: StaticString = #filePath,
+    line: UInt = #line
+) -> (sut: LoginViewModel, spy: LoginServiceSpy) {
+    let spy = service as? LoginServiceSpy ?? LoginServiceSpy()
+    let sut = LoginViewModel(service: spy)
+    trackForMemoryLeaks(sut, file: file, line: line)
+    trackForMemoryLeaks(spy, file: file, line: line)
+    return (sut, spy)
+}
+```
 
-  # Dependency Management
-  - SPM for dependencies
-  - Avoid third-party libraries unless necessary
-  - No singletons for service location
-  - Use dependency injection
-  - Protocol-oriented dependencies
+---
 
-  # Git Workflow
-  - Branch naming: type/ABC-123-short-description
-  - Commit types: feat|fix|refactor|docs|test|chore
-  - Small, focused commits
-  - Pull request template required
-  - Squash merge for feature branches
+## 5. Flujo de Trabajo
 
-  # MVVM (SwiftUI) Guidelines
-  - View: @ObservedObject ViewModel
-  - ViewModel: ObservableObject with @Published
-  - No UIKit references in ViewModels
-  - @MainActor for UI updates
-  - Use @Published private(set) for state
-  - Handle user intents with methods
+### Ramas
+- `feature/ABC-123-descripcion` (nuevas funcionalidades)
+- `fix/ABC-124-correccion` (corrección de bugs)
+- `refactor/ABC-125-mejora` (mejoras de código)
+- `chore/ABC-126-tarea` (tareas de mantenimiento)
+- `release/v1.0.0` (preparación de release)
+- `hotfix/ABC-127-urgente` (correcciones críticas)
 
-  # MVP (UIKit) Guidelines
-  - View: UIViewController + protocol
-  - Presenter: Handles presentation logic
-  - Router: Handles navigation
-  - No business logic in Views
-  - Use weak references to avoid retain cycles
+### Commits
+```
+<tipo>(<ámbito>): <mensaje>
 
-  # Error Handling
-  - Use Result type for throwing functions
-  - Meaningful error messages
-  - Handle errors at the appropriate level
-  - User-friendly error messages
-  - Log errors for debugging
+[cuerpo opcional]
+[pie de página opcional]
+```
 
-  # Performance
-  - Lazy loading for heavy resources
-  - Diffable data sources for collections
-  - Profile with Instruments regularly
-  - Optimize image assets
-  - Use appropriate QoS classes
+#### Tipos de Commits
+| Tipo      | Descripción                                  |
+|-----------|---------------------------------------------|
+| `feat`    | Nueva funcionalidad                        |
+| `fix`     | Corrección de bug                           |
+| `refactor`| Mejoras de código sin cambiar funcionalidad|
+| `test`    | Adición o modificación de pruebas          |
+| `chore`   | Tareas de mantenimiento                    |
+| `docs`    | Actualización de documentación             |
 
-  # Documentation
-  - Document public APIs
-  - Use /// for documentation
-  - Update README with setup
-  - Document complex algorithms
-  - Keep changelog updated
+### Revisión de Código
+- PRs pequeños (< 400 líneas)
+- Descripciones claras
+- Cambios autocontenidos
+- Seguir estándares de código
+- Abordar deuda técnica
 
-  # Memory Management
-  - Use weak/unowned properly
-  - Check for retain cycles
-  - Use Instruments for leaks
-  - Be careful with closures
-  - Use capture lists appropriately
+---
 
-  # Concurrency
-  - Use async/await
-  - MainActor for UI updates
-  - Thread safety with actors
-  - Use Task for background work
-  - Handle task cancellation
+## 6. Seguridad
 
-  # Localization
-  - Use NSLocalizedString
-  - Keep strings in Localizable.strings
-  - Support RTL languages
-  - Test with different locales
-  - Support dynamic type
+### Almacenamiento
+- Usar Keychain para datos sensibles
+- No almacenar credenciales en UserDefaults
+- Cifrar datos sensibles en disco
 
-  # Accessibility
-  - Support Dynamic Type
-  - VoiceOver support
-  - Sufficient contrast ratios
-  - Accessibility identifiers for UI tests
-  - Support Voice Control
+### Red
+- Usar HTTPS exclusivamente
+- Certificate Pinning
+- Validar certificados SSL
+- No permitir tráfico HTTP inseguro
 
-  # Security
-  - Use Keychain for sensitive data
-  - Certificate pinning
-  - Input validation
-  - Use HTTPS exclusively
-  - Sanitize user input
-  - Secure token management
-  - SQL injection protection
-  - SSL certificate validation
-  - Biometric authentication support
-  - Secure file storage
+### Validación
+- Validar todas las entradas
+- Sanitizar datos del usuario
+- Protección contra inyección SQL
+- Manejar tokens de forma segura
 
-  # CI/CD
-  - Fastlane for automation
-  - Unit test coverage > 80%
-  - UI tests for critical paths
-  - Automatic code signing
-  - Beta distribution
-  - Static code analysis
-  - Integration tests
-  - Automated deployment
-  - Code coverage reports
-  - Performance testing
+### Autenticación
+- Soporte para autenticación biométrica
+- Gestión segura de sesiones
+- Protección contra fuerza bruta
+- Logout automático tras inactividad
 
-  # Code Review
-  - Small PRs (< 400 lines)
-  - Clear descriptions
-  - Required approvals: 1
-  - Address technical debt
-  - Follow SOLID principles
-  - Check for memory leaks
-  - Verify error handling
-  - Ensure accessibility compliance
+---
 
-  # Dependency Injection
-  - Use @Dependency for DI
-  - @Environment for global dependencies
-  - Protocol-based dependencies
-  - Testable dependency injection
-  - Scoped dependencies
+## 7. Documentación
 
-  # UI/UX
-  - Dark/Light mode support
-  - Adaptive layouts
-  - Haptic feedback
-  - Loading states
-  - Empty states
-  - Error states
-  - Pull-to-refresh
-  - Infinite scrolling
+### Código
+- Documentar APIs públicas con `///`
+- Incluir ejemplos de uso
+- Documentar parámetros y valores de retorno
+- Especificar precondiciones y postcondiciones
 
-  # Analytics & Monitoring
-  - Track user interactions
-  - Crash reporting
-  - Performance monitoring
-  - Custom event tracking
-  - User journey analysis
+### Proyecto
+- Mantener actualizado el README.md
+- Documentar decisiones de arquitectura
+- Mantener un CHANGELOG.md
+- Guía de contribución CONTRIBUTING.md
 
-  # Build & Performance
-  - Enable build optimizations
-  - Use assets catalogs
-  - Lazy load modules
-  - Optimize asset sizes
-  - Monitor build times
+### Comunicación
+- Explicaciones en español
+- Código, commits y mensajes en inglés
+- Comentarios en código en inglés
 
-  # Development Workflow
-  - Feature flags
-  - Environment configurations
-  - Mock API responses
-  - Development tools
-  - Debug menu
-</rules>
+---
 
+## 8. CI/CD
 
-EssentialFeed/
-└── Features/
-    ├── Auth/
-    │   ├── Domain/
-    │   │   ├── Entities/
-    │   │   │   └── User.swift
-    │   │   ├── Protocols/
-    │   │   │   ├── AuthRepository.swift
-    │   │   │   └── RegistrationRepository.swift
-    │   │   └── UseCases/
-    │   │       ├── LoginUseCase.swift
-    │   │       ├── RegisterUserUseCase.swift
-    │   │       └── PasswordRecoveryUseCase.swift
-    │   ├── Infrastructure/
-    │   │   ├── Persistence/
-    │   │   │   └── CoreDataAuthStore.swift
-    │   │   └── Network/
-    │   │       └── AuthAPIService.swift
-    │   ├── Presentation/
-    │   │   ├── ViewModels/
-    │   │   │   ├── LoginViewModel.swift
-    │   │   │   └── RegistrationViewModel.swift
-    │   │   └── Mappers/
-    │   │       └── AuthErrorMapper.swift
-    │   └── Tests/
-    │       ├── Domain/
-    │       ├── Infrastructure/
-    │       ├── Presentation/
-    │       └── Helpers/
-    │           ├── AuthAPISpy.swift
-    │           └── RegistrationValidatorStub.swift
-    └── Security/
-        ├── Domain/
-        │   ├── Entities/
-        │   │   └── Session.swift
-        │   ├── Protocols/
-        │   │   ├── SessionManager.swift
-        │   │   └── TokenStorage.swift
-        │   └── UseCases/
-        │       ├── RefreshTokenUseCase.swift
-        │       └── LogoutUseCase.swift
-        ├── Infrastructure/
-        │   ├── Keychain/
-        │   │   ├── KeychainProtocol.swift
-        │   │   ├── KeychainSecureStorage.swift
-        │   │   └── SystemKeychain.swift
-        │   ├── Session/
-        │   │   └── SystemSessionManager.swift
-        │   └── APIInterceptor/
-        │       └── APIInterceptor.swift
-        ├── Presentation/
-        │   └── ViewModels/
-        │       └── SessionViewModel.swift
-        └── Tests/
-            ├── Domain/
-            ├── Infrastructure/
-            ├── Presentation/
-            └── Helpers/
-                └── TokenStorageSpy.swift
+### Automatización
+- Fastlane para automatización
+- Integración continua con GitHub Actions
+- Despliegue continuo configurado
+- Notificaciones de build
+
+### Calidad de Código
+- Análisis estático
+- Cobertura de código > 80%
+- Pruebas unitarias obligatorias
+- Pruebas de UI para flujos críticos
+
+### Despliegue
+- Firma de código automática
+- Distribución beta
+- Release notes automáticos
+- Versionado semántico
+
+### Monitoreo
+- Informes de cobertura
+- Análisis de rendimiento
+- Detección de fugas de memoria
+- Métricas de calidad
+
+---
+
+## 9. Reglas del Workspace
+
+### Comunicación y Código
+- Explicaciones, revisiones y documentación: **siempre en español**
+- Código, nombres, commits, mensajes de error y asserts: **siempre en inglés**
+
+### Testing y Calidad
+- **TDD y BDD**: Todo lo funcional debe estar cubierto por tests antes de marcar como hecho
+- **Tipos de tests**: unitarios, integración, UI, snapshot, end-to-end
+- **Spies y test doubles**: Usar spies como primera opción
+- **Actualización de BDD**:
+  - Solo una subtask en 🚧 (en curso)
+  - Siguiente en 🔜 (planificada)
+  - Resto en ❌ (pendiente)
+  - Solo en ✅ lo 100% cubierto
+  - Task principal solo en verde si todas las subtasks lo están
+
+### Procesos
+- **Antes de implementar**: Analizar el proyecto, dependencias y duplicidades
+- **Tras cada avance**: Actualizar BDD, documentación y snapshots
+- **Commits y PRs**:
+  - Mensajes descriptivos en inglés
+  - PRs con checklist de criterios de aceptación
+  - Revisión de código obligatoria
+
+---
+
+*Última actualización: 2025-05-19*
+*Documento generado automáticamente. Para editar, modificar este archivo directamente.*
