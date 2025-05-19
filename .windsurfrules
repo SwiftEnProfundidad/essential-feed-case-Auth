@@ -41,15 +41,15 @@
    - ViewModels/Presenters (`@MainActor`)
    - Vistas (SwiftUI Views/UIViewControllers)
    - Estados de UI (carga/éxito/error)
-   - Coordinadores/Routers
+   - Coordinadores/Routers(no en este proyecto)
    - Inyección de dependencias
    - ⬆️ Depende del Domain
 
 ### Patrones de Diseño
-- **MVVM** para SwiftUI
-- **MVP** para UIKit
+- **MVVM** para SwiftUI y para UIKit 
+- **MVP** para UIKit y SwiftUI (si proyecto lo requiere)
 - **Factory** para creación de dependencias
-- **Router/Coordinator** para navegación
+- **Router/Coordinator** para navegación (no en este proyecto)
 - **Repository** para acceso a datos
 
 ---
@@ -60,7 +60,7 @@
 ```
 essential-feed-case-study/
 ├── EssentialApp/                 # Aplicación principal
-│   ├── EssentialApp/            # Código fuente
+│   ├── EssentialApp/             # Código fuente
 │   ├── EssentialAppTests/        # Pruebas unitarias
 │   └── EssentialApp.xcodeproj/   # Proyecto Xcode
 │

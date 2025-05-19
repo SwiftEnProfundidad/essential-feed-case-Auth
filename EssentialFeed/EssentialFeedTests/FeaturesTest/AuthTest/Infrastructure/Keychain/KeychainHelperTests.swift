@@ -1,24 +1,20 @@
-import EssentialApp
 import EssentialFeed
 import XCTest
 
 final class KeychainHelperTests: XCTestCase {
-    // MARK: - Tests
-
     func test_setAndGet_returnsSavedValue() {
         let (sut, key, value) = makeSUT()
 
-        setValue(value, for: key, in: sut)
+        sut.delete(key)
+        sut.set(value, for: key)
 
         XCTAssertEqual(sut.get(key), value)
-
-        cleanup(key: key, in: sut)
+        cleanUp(key: key, in: sut)
     }
 
     func test_get_returnsNilForNonexistentKey() {
         let (sut, key, _) = makeSUT()
-
-        cleanup(key: key, in: sut)
+        cleanUp(key: key, in: sut)
 
         XCTAssertNil(sut.get(key))
     }
@@ -27,18 +23,18 @@ final class KeychainHelperTests: XCTestCase {
         let (sut, key, value) = makeSUT()
         let otherValue = "other_value"
 
-        setValue(value, for: key, in: sut)
-        setValue(otherValue, for: key, in: sut)
+        cleanUp(key: key, in: sut)
+        sut.set(value, for: key)
+        sut.set(otherValue, for: key)
 
         XCTAssertEqual(sut.get(key), otherValue)
-
-        cleanup(key: key, in: sut)
+        cleanUp(key: key, in: sut)
     }
 
     func test_delete_removesValue() {
         let (sut, key, value) = makeSUT()
 
-        setValue(value, for: key, in: sut)
+        sut.set(value, for: key)
         sut.delete(key)
 
         XCTAssertNil(sut.get(key))
@@ -47,8 +43,9 @@ final class KeychainHelperTests: XCTestCase {
     func test_delete_nonexistentKey_doesNotCrash() {
         let (sut, key, _) = makeSUT()
 
-        sut.delete(key) // Should not crash
+        cleanUp(key: key, in: sut)
 
+        sut.delete(key)
         XCTAssertNil(sut.get(key))
     }
 
@@ -57,7 +54,7 @@ final class KeychainHelperTests: XCTestCase {
     private func makeSUT(
         key: String = "test_key",
         value: String = "test_value",
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: KeychainStore, key: String, value: String) {
         let sut = InMemoryKeychainStore()
@@ -65,11 +62,7 @@ final class KeychainHelperTests: XCTestCase {
         return (sut, key, value)
     }
 
-    private func setValue(_ value: String, for key: String, in store: KeychainStore) {
-        store.set(value, for: key)
-    }
-
-    private func cleanup(key: String, in store: KeychainStore) {
+    private func cleanUp(key: String, in store: KeychainStore) {
         store.delete(key)
     }
 }

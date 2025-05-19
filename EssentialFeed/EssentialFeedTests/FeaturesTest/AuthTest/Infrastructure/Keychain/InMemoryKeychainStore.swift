@@ -1,4 +1,3 @@
-import EssentialApp
 import EssentialFeed
 import Foundation
 

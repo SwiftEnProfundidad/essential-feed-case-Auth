@@ -1,5 +1,4 @@
 
-import EssentialApp
 import EssentialFeed
 
 final class KeychainHelperSpy: KeychainStore {
