@@ -152,6 +152,7 @@
 		B417AE3B2DCE09660096D12B /* SecureStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE392DCE09660096D12B /* SecureStoreSpy.swift */; };
 		B417AE3C2DCE09660096D12B /* EncryptionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE382DCE09660096D12B /* EncryptionServiceSpy.swift */; };
 		B417AE422DCE0B440096D12B /* LoginViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */; };
+		B42939622DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42939612DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
@@ -473,6 +474,7 @@
 		B417AE382DCE09660096D12B /* EncryptionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionServiceSpy.swift; sourceTree = "<group>"; };
 		B417AE392DCE09660096D12B /* SecureStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStoreSpy.swift; sourceTree = "<group>"; };
 		B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
+		B42939612DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineLoginsUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1731,6 +1733,7 @@
 		B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */ = {
 			isa = PBXGroup;
 			children = (
+				B42939612DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift */,
 				B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */,
 				B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */,
 			);
@@ -2306,6 +2309,7 @@
 				B417AE3C2DCE09660096D12B /* EncryptionServiceSpy.swift in Sources */,
 				B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
 				B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */,
+				B42939622DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift in Sources */,
 				B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */,
