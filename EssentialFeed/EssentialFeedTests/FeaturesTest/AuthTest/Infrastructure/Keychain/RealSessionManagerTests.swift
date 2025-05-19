@@ -1,5 +1,4 @@
 
-import EssentialApp
 import EssentialFeed
 import XCTest
 

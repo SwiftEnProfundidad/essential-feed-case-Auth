@@ -22,15 +22,12 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
 
-        // ADD: Stub una respuesta exitosa para que sut.send() no falle.
-        // Esto es necesario porque observeRequests ahora solo configura el observador.
         let dummyData = Data() // Puede ser Data vacía si el test no la usa.
         let dummyResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
         URLProtocolStub.stub(data: dummyData, response: dummyResponse, error: nil)
 
         let (sut, _) = makeSUT()
         do {
-            // CHANGE: La llamada a send ahora debe ser para la URLRequest correcta
             _ = try await sut.send(URLRequest(url: url))
         } catch {
             XCTFail("Unexpected error: \(error)")
@@ -40,33 +37,24 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
 
     func test_send_whenSwiftTaskIsCancelled_throwsCancellationError() async {
-        // Arrange
         let (sut, _) = makeSUT()
 
         URLProtocolStub.hangRequests = true
-        URLProtocolStub.observeRequests { _ in } // Necesario para que el requestObserver no sea nil si así lo espera la lógica
-        // o simplemente para asegurar un estado consistente.
-        // Alternativamente, se puede quitar si no es estrictamente necesario para 'hangRequests'.
+        URLProtocolStub.observeRequests { _ in }
 
         let task = Task { () -> (Data, HTTPURLResponse) in
             try await sut.send(anyURLRequest())
         }
 
-        // Act
         try? await Task.sleep(nanoseconds: 1_000_000) // 1 millisecond
 
         task.cancel()
 
-        // Assert
         do {
             _ = try await task.value
-            // CHANGE: Mensaje de XCTFail y tipo de error esperado
             XCTFail("Expected send to throw URLError with code .cancelled, but it succeeded or threw a different error.")
-            // CHANGE: Tipo de error esperado y condición
         } catch let error as URLError where error.code == .cancelled {
-            // This is the expected outcome: URLSession task was cancelled.
         } catch {
-            // CHANGE: Mensaje de XCTFail y tipo de error esperado
             XCTFail("Expected send to throw URLError with code .cancelled, but threw \(error) instead.")
         }
     }
@@ -92,12 +80,10 @@ class URLSessionHTTPClientTests: XCTestCase {
             (anyData(), nonHTTPURLResponse(), nil)
         ]
 
-        // CHANGE: Create SUT once outside the loop
         let (sut, _) = makeSUT()
         let timeout: TimeInterval = 1.0 // Define timeout
 
         for invalidCase in invalidCases {
-            // CHANGE: Only stub the protocol for each case
             URLProtocolStub.stub(data: invalidCase.data, response: invalidCase.response, error: invalidCase.error)
 
             let request = URLRequest(url: anyURL(), timeoutInterval: timeout)
@@ -138,12 +124,12 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
 
     func test_complete_withError_atIndexOutOfBounds_whenNoRequestsMade() {
-        let (_, client) = makeSUT() // client es HTTPClientSpy
+        let (_, client) = makeSUT()
 
-        client.complete(with: anyNSError(), at: 0) // Intentar completar en el índice 0 cuando no hay tareas
+        client.complete(with: anyNSError(), at: 0)
 
         let expectation = XCTestExpectation(description: "Allow async client.complete to proceed")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Pequeña demora para la cola del spy
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 0.5)

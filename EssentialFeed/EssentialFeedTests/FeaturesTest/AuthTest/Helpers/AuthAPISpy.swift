@@ -4,31 +4,40 @@ import Foundation
 import XCTest
 
 public final class AuthAPISpy: UserLoginAPI, UserRegistrationAPI {
-    var stubbedResult: Result<LoginResponse, LoginError>?
-    private(set) var wasCalled = false
+    public private(set) var wasCalled = false
+    public private(set) var messages: [Message] = []
+    public var stubbedResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
+
+    public struct Message: Equatable {
+        public let email: String
+        public let password: String
+    }
 
     public private(set) var registrationRequests = [UserRegistrationData]()
-    public var registrationResult: Result<UserRegistrationResponse, UserRegistrationError>?
+    public var registrationResult: Result<UserRegistrationResponse, UserRegistrationError> = .failure(.unknown)
 
-    public func login(with _: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+    public func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         wasCalled = true
-        guard let result = stubbedResult else {
-            XCTFail("API should NOT be called for invalid input. Provide a stubbedResult only when expected.")
-            return .failure(.invalidCredentials)
-        }
-        return result
+        messages.append(Message(email: credentials.email, password: credentials.password))
+        return stubbedResult
     }
 
     public func register(with data: UserRegistrationData) async -> Result<UserRegistrationResponse, UserRegistrationError> {
         registrationRequests.append(data)
-        return registrationResult ?? .failure(.unknown)
+        return registrationResult
     }
+
+    // MARK: - Helpers
 
     public func completeRegistrationSuccessfully(with response: UserRegistrationResponse) {
         registrationResult = .success(response)
     }
 
-    func completeRegistration(with error: UserRegistrationError) {
+    public func completeRegistration(with error: UserRegistrationError) {
         registrationResult = .failure(error)
+    }
+
+    public func recordAuthentication(email: String, password: String) {
+        messages.append(Message(email: email, password: password))
     }
 }
