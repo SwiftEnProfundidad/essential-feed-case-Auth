@@ -99,6 +99,7 @@ fastlane/test_output
 
 # End of https://www.gitignore.io/api/swift,xcode
 
+# --- Configuración de editores ---
 # VS Code
 .vscode/*
 !.vscode/settings.json
@@ -107,28 +108,25 @@ fastlane/test_output
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-# WindSurf
-.windsurf/
-
 # JetBrains IDEs
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# Local development environment files
-.env
-.env.local
-.env.*.local
-
-# Local configuration files (iOS/macOS)
-*.xcuserstate
-*.xcscmblueprint
+# --- Herramientas de desarrollo ---
+# WindSurf
+.windsurf/
+.windsurfrules
+.windsurf/rules/
+.windsurf/rules/*.md
+.windsurf/workflows/
+.windsurf/workflows/*.md
 
 # Fastlane
 fastlane/report.xml
 fastlane/Preview.html
-fastlane/screenshots
+fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/README.md
 
@@ -147,28 +145,32 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Local development
+# --- Entornos y configuraciones locales ---
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Configuración de desarrollo local
 .localized
-
-# --- Archivos y carpetas temporales del sistema ---
-.DS_Store
-
-# --- Entornos virtuales y dependencias locales ---
 .venv/
 
-# --- Configuración local de editores ---
-.vscode/
+# --- Archivos del sistema ---
+# macOS
+.DS_Store
+**/.DS_Store
+**/._.DS_Store
 
-# --- Reglas de asistentes y herramientas locales ---
-.windsurfrules
-.windsurf/
-.windsurf/rules/
-.windsurf/rules/*.md
-.windsurf/workflows/
-.windsurf/workflows/*.md
-docs/WORKSPACE_RULES_AND_PRACTICES.md
+# Xcode
+*.xcuserstate
+*.xcuserdatad/
+*.xcscmblueprint
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 
-# --- Logs y salidas temporales de builds/tests ---
+# --- Logs y salidas de build ---
 build.log
 xcodebuild.log
 xcodebuild-keychain.log
@@ -177,5 +179,21 @@ test-output.log
 test_output.log
 systemkeychain-tests.log
 
-# --- Otros archivos temporales o de usuario ---
+# --- Documentación y reglas ---
+docs/WORKSPACE_RULES_AND_PRACTICES.md
+
+# --- Otros archivos temporales ---
 Prototype/
+*~
+*.swp
+*.swo
+*~
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Directorios temporales ---
+.temp/
+tmp/
+temp/
