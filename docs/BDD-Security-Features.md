@@ -438,7 +438,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Integration tests (real persistence, if applicable) (Covered conceptually by `UserLoginUseCaseIntegrationTests` structure)
     - [✅] CI coverage for all scenarios (For the saving part)
 
-- [🚧] **Implement logic to retry saved offline login requests** (When connectivity is restored).
+- [✅] **Implement logic to retry saved offline login requests** (When connectivity is restored).
     #### Subtasks
     - [✅] Design mechanism to detect connectivity restoration.
     - [✅] Create a service/manager to handle pending offline requests.
@@ -447,7 +447,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Handle success/failure of retried requests (notify user, clear from store).
     - [✅] Unit tests for the retry logic/service.
     - [✅] Integration tests for the full offline-to-online retry flow.
-    - [🚧] CI coverage for retry scenarios.
+    - [✅] CI coverage for retry scenarios.
 
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
 
