@@ -40,6 +40,25 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         }
     }
 
+    func test_execute_onSuccess_deletesRequestFromStore_onFailure_doesNotDelete() async {
+        let (sut, offlineStore, loginAPI) = makeSUT()
+        let credentials1 = LoginCredentials(email: "x@a.com", password: "a")
+        let credentials2 = LoginCredentials(email: "y@b.com", password: "b")
+        offlineStore.stub_loadAll = [credentials1, credentials2]
+
+        loginAPI.stubbedResults = [
+            .success(LoginResponse(token: "tokenX")),
+            .failure(.invalidCredentials)
+        ]
+
+        var deleted: [LoginCredentials] = []
+        offlineStore.onDelete = { cred in deleted.append(cred) }
+
+        _ = await sut.execute()
+
+        XCTAssertEqual(deleted, [credentials1], "Should delete only success")
+    }
+
     // MARK: - Helpers & Spies
 
     private func makeSUT() -> (sut: RetryOfflineLoginsUseCase, offlineStore: OfflineLoginStoreSpy, loginAPI: LoginAPISpy) {
@@ -55,7 +74,12 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     final class OfflineLoginStoreSpy: OfflineLoginLoading, OfflineLoginDeleting, OfflineLoginStoring {
         var stub_loadAll: [LoginCredentials] = []
         func loadAll() async -> [LoginCredentials] { stub_loadAll }
-        func delete(credentials _: LoginCredentials) async throws {}
+
+        var onDelete: ((LoginCredentials) -> Void)?
+        func delete(credentials: LoginCredentials) async throws {
+            onDelete?(credentials)
+        }
+
         func save(credentials _: LoginCredentials) async throws {}
     }
 

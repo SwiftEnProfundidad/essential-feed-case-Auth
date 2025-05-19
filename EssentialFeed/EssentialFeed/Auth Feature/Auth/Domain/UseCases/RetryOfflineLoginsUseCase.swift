@@ -15,6 +15,9 @@ public final class RetryOfflineLoginsUseCase {
         for req in requests {
             let result = await loginAPI.login(with: req)
             results.append(result)
+            if case .success = result {
+                try? await offlineStore.delete(credentials: req)
+            }
         }
         return results
     }
