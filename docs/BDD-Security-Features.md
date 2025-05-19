@@ -1396,7 +1396,7 @@ flowchart TD
 | Visualize and query metrics                   | No            |    ❌     |
 
 ---
-## III. Advanced and Mobile-Specific Security Roadmap
+## I. Advanced and Mobile-Specific Security Roadmap
 
 This section describes additional use cases focused on strengthening application security at the client and mobile platform level. Their progressive implementation will contribute to greater robustness and protection of user data and application integrity.
 
