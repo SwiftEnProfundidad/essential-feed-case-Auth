@@ -1,4 +1,4 @@
-@testable import EssentialFeed
+import EssentialFeed
 import Foundation
 
 final class LoginPersistenceSpy: LoginPersistence {

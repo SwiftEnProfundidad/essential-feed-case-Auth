@@ -2,7 +2,7 @@
 //  Copyright 2019 Essential Developer. All rights reserved.
 //
 
-@testable import EssentialApp
+import EssentialApp
 import EssentialFeediOS
 import SwiftUI
 import XCTest
