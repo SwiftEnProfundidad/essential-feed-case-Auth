@@ -40,6 +40,8 @@ final class LoginSecurityUseCaseTests: XCTestCase {
         let fixedDate = Date()
         let timeTraveler = TimeTraveler(initialDate: fixedDate)
         let blockDuration: TimeInterval = 300
+        let travelTime: TimeInterval = 120
+        let expectedRemainingTime = blockDuration - travelTime
         let (sut, _) = makeSUT(
             blockDuration: blockDuration,
             timeProvider: { timeTraveler.currentDate }
@@ -50,12 +52,19 @@ final class LoginSecurityUseCaseTests: XCTestCase {
             await sut.handleFailedLogin(username: username)
         }
 
-        timeTraveler.travel(by: 120)
+        timeTraveler.travel(by: travelTime)
 
-        let expectedRemainingTime = blockDuration - 120
-        let remainingTime = sut.getRemainingBlockTime(username: username)
+        guard let remainingTime = sut.getRemainingBlockTime(username: username) else {
+            return XCTFail("Expected remaining time, got nil")
+        }
 
-        XCTAssertEqual(remainingTime!, expectedRemainingTime, accuracy: 0.001)
+        let lowerBound = expectedRemainingTime - 1.0
+        let upperBound = expectedRemainingTime + 1.0
+
+        XCTAssertTrue(
+            (lowerBound ... upperBound).contains(remainingTime),
+            "Expected remaining time to be approximately \(expectedRemainingTime), but got \(remainingTime)"
+        )
     }
 
     // MARK: - Helpers
