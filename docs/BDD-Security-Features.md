@@ -555,18 +555,17 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ### Technical Checklist for Expired Token Management
 
-#### 1. [❌] Detect token expiration in every protected request
-- [❌] Create `TokenValidator` with:
-  - [❌] Local timestamp validation  
-  - [❌] JWT parsing for `exp` claim  
-  - [❌] Handler for malformed tokens  
+#### 1. [✅] Detect token expiration in every protected request
+- [✅] Create `TokenValidator` with:
+  - [✅] Local timestamp validation  
+  - [✅] JWT parsing for `exp` claim  
+  - [✅] Handler for malformed tokens  
 
-#### 2. [❌] Request refresh token from backend if token is expired  
-
-- [❌] Implement `TokenRefreshService`:  
-  - [❌] Request to `/auth/refresh` endpoint  
-  - [❌] Exponential backoff (3 retries)  
-  - [❌] Semaphore to avoid race conditions  
+#### 2. [🚧] Request refresh token from backend if token is expired  
+- [🚧] Implement `TokenRefreshService`:  
+  - [🚧] Request to `/auth/refresh` endpoint  
+  - [🚧] Exponential backoff (3 retries)  
+  - [🚧] Semaphore to avoid race conditions  
 
 #### 3. [❌] Store the new token securely after renewal 
 - [❌] KeychainManager:  
