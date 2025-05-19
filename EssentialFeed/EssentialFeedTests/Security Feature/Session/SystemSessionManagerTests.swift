@@ -11,7 +11,6 @@ final class SystemSessionManagerTests: XCTestCase {
 
         sut.registerSession(userID: userID, token: token, date: date)
 
-        // Assert: store received correct session
         XCTAssertEqual(store.receivedSessions.count, 1, "store should receive exactly one session")
         let received = store.receivedSessions.first
         XCTAssertEqual(received?.userID, userID, "userID should match")

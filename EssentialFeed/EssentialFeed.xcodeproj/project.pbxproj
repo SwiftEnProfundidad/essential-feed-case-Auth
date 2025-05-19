@@ -450,7 +450,6 @@
 		08EFE6BC22D6384100DA417A /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
 		08F8822C236499B200CAEE16 /* FeedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCache.swift; sourceTree = "<group>"; };
 		08FC5AA922D5F47900148E12 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
-		B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerSpy.swift; sourceTree = "<group>"; };
 		B40318DC2DD4DCDB000D4658 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4047C262DD8B9FF00A0C34C /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4047DA12DDA6EA300A0C34C /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -1177,23 +1176,6 @@
 			path = "Feed UI";
 			sourceTree = "<group>";
 		};
-		B402E02C2DB8642D00B29ECF /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				B402E02B2DB8642D00B29ECF /* SessionManagerSpy.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		B402E02D2DB8642D00B29ECF /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */,
-				B402E02C2DB8642D00B29ECF /* Helpers */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
 		B4047C252DD8B9FF00A0C34C /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -1624,6 +1606,14 @@
 			path = DomainTest;
 			sourceTree = "<group>";
 		};
+		B4AF1BB52DDB6D0A00FD2ED2 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				B49D2E8D2DB8E83B00D36E0D /* SystemSessionManagerTests.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		B4D6B2622DC8D15400F5A3FE /* Auth Feature */ = {
 			isa = PBXGroup;
 			children = (
@@ -1635,9 +1625,9 @@
 		B4D6B2652DC8D70600F5A3FE /* FeaturesTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4AF1BB52DDB6D0A00FD2ED2 /* Session */,
 				B4D6B2662DC8D70D00F5A3FE /* AuthTest */,
 				B4D6B26B2DC8D74400F5A3FE /* SecurityTest */,
-				B402E02D2DB8642D00B29ECF /* Session */,
 			);
 			path = FeaturesTest;
 			sourceTree = "<group>";

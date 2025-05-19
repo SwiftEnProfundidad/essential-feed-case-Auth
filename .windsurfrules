@@ -42,7 +42,7 @@
    - Vistas (SwiftUI Views/UIViewControllers)
    - Estados de UI (carga/éxito/error)
    - Coordinadores/Routers(no en este proyecto)
-   - Inyección de dependencias
+   - Inyección de dependencias (**explícita**: por `init` o función, nunca singleton oculto ni `@EnvironmentObject` para lógica core/testable)
    - ⬆️ Depende del Domain
 
 ### Patrones de Diseño
@@ -107,20 +107,20 @@ Features/
 ## 3. Estilo de Código
 
 ### Convenciones de Nombrado
-- **Tipos**: `PascalCase` (`LoginViewController`, `UserRepository`)
-- **Variables/Funciones**: `camelCase` (`userName`, `fetchUserData()`)
-- **Constantes**: `camelCase` con contexto (`maxRetryCount`)
-- **Protocolos**: 
+- Tipos: `PascalCase` (`LoginViewController`, `UserRepository`)
+- Variables/Funciones: `camelCase` (`userName`, `fetchUserData()`)
+- Constantes: `camelCase` con contexto (`maxRetryCount`)
+- Protocolos: 
   - `-able` para capacidades (`Cacheable`)
   - `-ing` para comportamientos (`Logging`)
   - `-Type` para tipos asociados (`RepositoryType`)
-- **Tests**: `test_methodName_whenCondition_shouldExpectedBehavior()`
+- Tests: `test_methodName_whenCondition_shouldExpectedBehavior()`
 
 ### Estructura
-- **Archivos**: Máximo 500 líneas
-- **Funciones**: Máximo 50 líneas
-- **Líneas**: 120 caracteres máximo
-- **Espaciado**:
+- Archivos: Máximo 500 líneas
+- Funciones: Máximo 50 líneas
+- Líneas: 120 caracteres máximo
+- Espaciado:
   - 1 línea entre métodos
   - 2 líneas entre secciones
   - 1 línea entre lógica relacionada
@@ -129,19 +129,22 @@ Features/
 - Configuración estándar del equipo
 - Corregir warnings antes de commit
 - Documentar supresiones de reglas
+- Archivo `.swiftlint.yml` bajo control de versiones
 
 ---
 
 ## 4. Testing
 
 ### Estrategia
-- **TDD/BDD**
-- **AAA** (Arrange-Act-Assert)
+- TDD/BDD
+- AAA (Arrange-Act-Assert)
 - Un comportamiento por test
 - Spies sobre Mocks
 - Cobertura mínima: 80%
+- Las validaciones de side-effects de seguridad (por ejemplo, lockout tras X intentos) deben estar cubiertas por tests unitarios y de integración, incluyendo escenarios de retries/offline.
 
 ### Estructura de Tests
+
 ```
 Tests/
 └── [Feature]Tests/
@@ -238,6 +241,7 @@ private func makeSUT(
 - Usar Keychain para datos sensibles
 - No almacenar credenciales en UserDefaults
 - Cifrar datos sensibles en disco
+- Almacenes locales temporales para reintentos/offline deben usar cifrado fuerte (AES/CCCrypt/similar) siempre que el dato incluya credenciales, tokens o información personal.
 
 ### Red
 - Usar HTTPS exclusivamente
@@ -254,10 +258,15 @@ private func makeSUT(
 ### Autenticación
 - Soporte para autenticación biométrica
 - Gestión segura de sesiones
-- Protección contra fuerza bruta
+- Protección contra fuerza bruta  
+  Cualquier lógica de intentos (como lockout) debe loguear y disparar métricas de seguridad.
 - Logout automático tras inactividad
 
+### Otros (ATS/Política)
+- El Info.plist nunca debe permitir dominios inseguros (`NSAllowsArbitraryLoads = NO`), ni siquiera en entornos de staging cuando la feature afecta autenticación.
+
 ---
+
 
 ## 7. Documentación
 
@@ -311,14 +320,14 @@ private func makeSUT(
 ## 9. Reglas del Workspace
 
 ### Comunicación y Código
-- Explicaciones, revisiones y documentación: **siempre en español**
-- Código, nombres, commits, mensajes de error y asserts: **siempre en inglés**
+- Explicaciones, revisiones y documentación: siempre en español
+- Código, nombres, commits, mensajes de error y asserts: siempre en inglés
 
 ### Testing y Calidad
-- **TDD y BDD**: Todo lo funcional debe estar cubierto por tests antes de marcar como hecho
-- **Tipos de tests**: unitarios, integración, UI, snapshot, end-to-end
-- **Spies y test doubles**: Usar spies como primera opción
-- **Actualización de BDD**:
+- TDD y BDD: Todo lo funcional debe estar cubierto por tests antes de marcar como hecho
+- Tipos de tests: unitarios, integración, UI, snapshot, end-to-end
+- Spies y test doubles: Usar spies como primera opción
+- Actualización de BDD:
   - Solo una subtask en 🚧 (en curso)
   - Siguiente en 🔜 (planificada)
   - Resto en ❌ (pendiente)
@@ -326,14 +335,18 @@ private func makeSUT(
   - Task principal solo en verde si todas las subtasks lo están
 
 ### Procesos
-- **Antes de implementar**: Analizar el proyecto, dependencias y duplicidades
-- **Tras cada avance**: Actualizar BDD, documentación y snapshots
-- **Commits y PRs**:
+- Antes de implementar: Analizar el proyecto, dependencias y duplicidades
+- Tras cada avance: Actualizar BDD, documentación y snapshots
+- Commits y PRs:
   - Mensajes descriptivos en inglés
   - PRs con checklist de criterios de aceptación
   - Revisión de código obligatoria
+- Las futuras auditorías/PRs deben ser “traceables” hasta el checklist del BDD usando los emojis de estado correspondientes.
 
 ---
 
-*Última actualización: 2025-05-19*
+*Última actualización: 2025-05-19*  
 *Documento generado automáticamente. Para editar, modificar este archivo directamente.*
+```
+---
+

@@ -283,6 +283,39 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     // *Note: this seems to refer to KeychainSpy, but in UserRegistration we use OfflineStoreSpy and TokenStorageSpy. Maybe this item is more generic.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
+### Technical Checklist for Registration (Unified & Reviewed)
+
+- [✅] **Store initial credentials (email/password) securely (Keychain)**  Implemented in `UserRegistrationUseCase` (`keychain.save`)
+- [✅] **Store authentication token received (OAuth/JWT) securely after registration**  (`UserRegistrationUseCase` stores token via `TokenStorage`)
+- [✅] **Notify registration success**  Via `UserRegistrationResult.success`
+- [✅] **Notify that the email is already in use**  Handled by `UserRegistrationUseCase` and notifier
+- [✅] **Show appropriate and specific error messages**  Via returned error types
+- [✅] **Save data for retry if there is no connection and notify error**  (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`)
+- [✅] **Refactor UserRegistrationUseCase constructor**  Reduced dependencies, improved SRP (grouped persistence)
+- [✅] **Implement logic to retry saved offline registration requests** (when connectivity is restored)
+    - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
+    - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
+    - [✅] whenApiCallFails → keeps data, returns `.registrationFailed`
+    - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
+    - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
+- [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
+- [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
+- [✅] **Documentation and architecture aligned**  
+      (Technical diagram is up to date  
+       // If the implementation omits a relevant technical point, flag it below.)
+
+#### Still missing / To improve
+- [🟡] **Explicit post-save validation in Keychain after credential/token save**  (*If only basic check, mark as 🟡; if implemented, mark as ✅*)
+- [❌] **Replay attack protection (nonce, timestamp)***(Unit: test_registerUser_withReplayAttack_protection)*
+- [❌] **Other complex fraud/abuse-case checks, if any required by business/regulatory** *(add if detected!)*
+
+#### (Test Traceability Table — recommended concrete subtasks)
+- [✅] test_registerUser_withValidData_storesAuthToken (unit/integration)
+- [✅] test_register_whenNoConnectivity_savesDataOffline (integration)
+- [🟡] test_registerUser_withReplayAttack_protection (unit) // recommended/missing
+
+---
+
 ---
 
 ### Technical Flows (happy/sad path) (Reviewed)
@@ -371,7 +404,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
         - [✅] Ensure tests run in CI (update scheme + record on first run)
-
     - [✅] The cycle is covered by automated tests in CI
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
@@ -405,17 +437,20 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Unit tests for UseCase for storage (`test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` covers this)
     - [✅] Integration tests (real persistence, if applicable) (Covered conceptually by `UserLoginUseCaseIntegrationTests` structure)
     - [✅] CI coverage for all scenarios (For the saving part)
-- [🔜] **Implement logic to retry saved offline login requests** (When connectivity is restored).
+
+- [🚧] **Implement logic to retry saved offline login requests** (When connectivity is restored).
     #### Subtasks
-    - [❌] Design mechanism to detect connectivity restoration.
-    - [❌] Create a service/manager to handle pending offline requests.
+    - [🚧] Design mechanism to detect connectivity restoration.
+    - [🔜] Create a service/manager to handle pending offline requests.
     - [❌] Implement fetching saved login credentials from `OfflineLoginStore`.
     - [❌] Implement logic to re-submit login requests via `AuthAPI`.
     - [❌] Handle success/failure of retried requests (notify user, clear from store).
     - [❌] Unit tests for the retry logic/service.
     - [❌] Integration tests for the full offline-to-online retry flow.
     - [❌] CI coverage for retry scenarios.
+
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
+
 - [✅] **Apply delay/lockout after multiple failed attempts** (`UserLoginUseCase` implements this logic as per BDD.)
     #### Subtasks (Detailed in the original BDD, updated to current implementation)
     - [✅] Define DTO/model for failed login attempts (`FailedLoginAttempt`)
@@ -429,6 +464,16 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Unit tests for `UserLoginUseCase` for lockout and notification logic
     - [✅] Integration tests (real persistence, if applicable)
     - [✅] CI coverage for all scenarios (lockout, unlock, recovery suggestion)
+
+---
+
+#### Still missing / To improve
+
+- [❌] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
+- [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
+- [❓] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
+- [❌] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
+- [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
 
 > **Technical note:**
 > - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
@@ -529,17 +574,37 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [❌] Migration of existing tokens  
   - [❌] Security tests (Keychain Spy)  
 
-#### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  - [✅] Basic alerts (Snackbar)  
+#### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
+- [✅] Basic alerts (Snackbar)  
 - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Localized messages:  
   - [✅] Spanish/English  
   - [❌] Screenshot tests  
 
-#### 5. [❌] Redirect to login if renewal is not possible  - [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
-- [❌] Credentials cleanup  - [❌] Integration tests  
+#### 5. [❌] Redirect to login if renewal is not possible  
+- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
+- [❌] Credentials cleanup  
+- [❌] Integration tests  
 
-#### 6. [❌] Log the expiration event for metrics  - [❌] Unified events:  
+#### 6. [❌] Log the expiration event for metrics  
+- [❌] Unified events:  
   - [❌] `TokenExpired`  
-  - [❌] `RefreshFailed`  - [❌] Integration with Firebase/Sentry  
+  - [❌] `RefreshFailed`  
+- [❌] Integration with Firebase/Sentry  
+
+---
+
+#### Still missing / To improve
+
+- [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
+    - Detect 401 responses (token expired)
+    - Trigger token refresh cycle (transparently to feature code)
+    - Retry original request with fresh token when possible
+    - Deduplicate concurrent refreshes (single refresh in-flight)
+- [❌] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
+- [❌] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
+- [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+- [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
 ---
 
@@ -611,12 +676,23 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 ---
 
 ### Technical Checklist for Password Recovery
+
 - [❌] Send reset link to registered email
 - [❌] Show neutral message if email is not registered
 - [❌] Allow new password to be set if the link is valid
 - [❌] Show error and allow requesting a new link if the link is invalid or expired
 - [❌] Log all attempts and changes for security metrics
 - [❌] Notify by email after password change
+
+---
+
+#### Still missing / To improve
+
+- [❌] Add rate limiting to password recovery endpoints to prevent abuse/brute force (essential for security compliance)
+- [❌] Ensure tokenized reset links are one-time-use and expire after a short period (e.g., 15 minutes to 1 hour)
+- [❌] Implement audit logging for all password recovery attempts, including IP/user-agent
+- [❌] Add CAPTCHA/anti-bot protection for password recovery forms
+- [❌] Enforce strong password requirements when resetting password
 
 ---
 
