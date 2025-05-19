@@ -446,8 +446,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Implement logic to re-submit login requests via `AuthAPI`.
     - [✅] Handle success/failure of retried requests (notify user, clear from store).
     - [✅] Unit tests for the retry logic/service.
-    - [🚧] Integration tests for the full offline-to-online retry flow.
-    - [🔜] CI coverage for retry scenarios.
+    - [✅] Integration tests for the full offline-to-online retry flow.
+    - [🚧] CI coverage for retry scenarios.
 
 - [✅] **Notify connectivity error** (If `AuthAPI` returns `LoginError.network` or `URLError.notConnectedToInternet`, `UserLoginUseCase` propagates appropriate error and notifies the `failureObserver`.)
 
