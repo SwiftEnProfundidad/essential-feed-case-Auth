@@ -1,4 +1,4 @@
-@testable import EssentialFeed
+import EssentialFeed
 import XCTest
 
 final class RetryOfflineLoginsUseCaseTests: XCTestCase {
@@ -45,18 +45,38 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         let credentials1 = LoginCredentials(email: "x@a.com", password: "a")
         let credentials2 = LoginCredentials(email: "y@b.com", password: "b")
         offlineStore.stub_loadAll = [credentials1, credentials2]
-
         loginAPI.stubbedResults = [
             .success(LoginResponse(token: "tokenX")),
             .failure(.invalidCredentials)
         ]
+        var deleted: [LoginCredentials] = []
+        offlineStore.onDelete = { cred in deleted.append(cred) }
+        _ = await sut.execute()
+        XCTAssertEqual(deleted, [credentials1], "Should delete only success")
+    }
 
+    func test_execute_returnsSuccessAndFailureResults_andDeletesOnlySuccesses() async {
+        let (sut, offlineStore, loginAPI) = makeSUT()
+        let credentials1 = LoginCredentials(email: "ok@a.com", password: "pw1")
+        let credentials2 = LoginCredentials(email: "fail@b.com", password: "pw2")
+        let credentials3 = LoginCredentials(email: "ok2@c.com", password: "pw3")
+        offlineStore.stub_loadAll = [credentials1, credentials2, credentials3]
+        loginAPI.stubbedResults = [
+            .success(LoginResponse(token: "token1")),
+            .failure(.invalidCredentials),
+            .success(LoginResponse(token: "token2"))
+        ]
         var deleted: [LoginCredentials] = []
         offlineStore.onDelete = { cred in deleted.append(cred) }
 
-        _ = await sut.execute()
+        let results = await sut.execute()
 
-        XCTAssertEqual(deleted, [credentials1], "Should delete only success")
+        XCTAssertEqual(results.count, 3)
+        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2, credentials3])
+        XCTAssertEqual(deleted, [credentials1, credentials3])
+        if case .success = results[0] {} else { XCTFail("Expected .success for [0]") }
+        if case let .failure(err) = results[1] { XCTAssertEqual(err, .invalidCredentials) } else { XCTFail("Expected .failure for [1]") }
+        if case .success = results[2] {} else { XCTFail("Expected .success for [2]") }
     }
 
     // MARK: - Helpers & Spies

@@ -1,4 +1,4 @@
-@testable import EssentialFeed
+import EssentialFeed
 import XCTest
 
 final class LoginSecurityUseCaseTests: XCTestCase {
