@@ -9,7 +9,6 @@ public struct Token: Equatable {
         self.expiry = expiry
     }
 
-    // Equatable con tolerancia de 1 s en la fecha
     public static func == (lhs: Token, rhs: Token) -> Bool {
         let tolerance: TimeInterval = 1.0
         return lhs.value == rhs.value &&
