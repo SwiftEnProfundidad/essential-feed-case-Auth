@@ -1,4 +1,3 @@
-
 import Combine
 import Foundation
 
@@ -29,26 +28,20 @@ public final class LoginViewModel: ObservableObject {
 
     public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
     private let pendingRequestStore: AnyLoginRequestStore?
-    private let failedAttemptsStore: FailedLoginAttemptsStore
-    private let maxFailedAttempts: Int
+    private let loginSecurity: LoginSecurityUseCase
     private let blockMessageProvider: LoginBlockMessageProvider
-    private let timeProvider: () -> Date
     public weak var navigation: LoginNavigation?
 
     public init(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
         pendingRequestStore: AnyLoginRequestStore? = nil,
-        failedAttemptsStore: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
-        maxFailedAttempts: Int = 5,
-        blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
-        timeProvider: @escaping () -> Date = { Date() }
+        loginSecurity: LoginSecurityUseCase = LoginSecurityUseCase(),
+        blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider()
     ) {
         self.authenticate = authenticate
         self.pendingRequestStore = pendingRequestStore
-        self.failedAttemptsStore = failedAttemptsStore
-        self.maxFailedAttempts = maxFailedAttempts
+        self.loginSecurity = loginSecurity
         self.blockMessageProvider = blockMessageProvider
-        self.timeProvider = timeProvider
         recoveryRequested
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -60,106 +53,98 @@ public final class LoginViewModel: ObservableObject {
     @MainActor
     public func login() async {
         await checkAccountUnlock(for: username)
-        guard !isAccountLocked(for: username) else {
-            isLoginBlocked = true
+        guard !isLoginBlocked else {
             errorMessage = blockMessageProvider.message(for: LoginError.accountLocked)
             return
         }
 
-        delayTask?.cancel()
+        guard let (trimmedUsername, trimmedPassword) = validateCredentials() else {
+            return
+        }
 
+        await performAuthentication(username: trimmedUsername, password: trimmedPassword)
+    }
+
+    // MARK: - Private Helpers
+
+    private func validateCredentials() -> (username: String, password: String)? {
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if trimmedUsername.isEmpty {
+        guard !trimmedUsername.isEmpty else {
             errorMessage = blockMessageProvider.message(for: LoginError.invalidEmailFormat)
-            return
+            return nil
         }
 
-        if trimmedPassword.isEmpty {
+        guard !trimmedPassword.isEmpty else {
             errorMessage = blockMessageProvider.message(for: LoginError.invalidPasswordFormat)
-            return
+            return nil
         }
 
-        let result = await authenticate(trimmedUsername, trimmedPassword)
+        return (trimmedUsername, trimmedPassword)
+    }
 
+    @MainActor
+    private func performAuthentication(username: String, password: String) async {
+        let result = await authenticate(username, password)
         errorMessage = nil
 
         switch result {
         case .success:
-            await failedAttemptsStore.resetAttempts(for: trimmedUsername)
-            loginSuccess = true
-            authenticated.send(())
-            errorMessage = nil
-            isLoginBlocked = false
-            onAuthenticated?()
+            await handleSuccessfulLogin(username: username)
         case let .failure(error):
-            await handleFailedLogin(username: trimmedUsername, error: error)
-            if case LoginError.network = error {
-                let request = LoginRequest(username: trimmedUsername, password: trimmedPassword)
-                pendingRequestStore?.save(request)
+            await handleFailedLogin(username: username, error: error)
+            if case .network = error {
+                savePendingRequest(username: username, password: password)
             }
         }
+    }
+
+    @MainActor
+    private func handleSuccessfulLogin(username: String) async {
+        await loginSecurity.resetAttempts(username: username)
+        loginSuccess = true
+        authenticated.send(())
+        errorMessage = nil
+        isLoginBlocked = false
+        onAuthenticated?()
+    }
+
+    private func savePendingRequest(username: String, password: String) {
+        let request = LoginRequest(username: username, password: password)
+        pendingRequestStore?.save(request)
     }
 
     public func unlockAfterRecovery() async {
         isLoginBlocked = false
         errorMessage = nil
-        await failedAttemptsStore.resetAttempts(for: username)
+        await loginSecurity.resetAttempts(username: username)
     }
 
-    private func calculateDelay(attempts: Int) -> TimeInterval {
-        let baseDelay = 0.5
-        let additionalDelay = Double(attempts - maxFailedAttempts) * 0.5
-        return max(baseDelay, baseDelay + additionalDelay)
-    }
-
-    private func isAccountLocked(for username: String) -> Bool {
-        let attempts = failedAttemptsStore.getAttempts(for: username)
-        guard attempts >= maxFailedAttempts else { return false }
-        guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return false }
-        let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        return elapsed < 5 * 60
-    }
-
-    private func handleFailedLogin(username: String, error: Error = LoginError.invalidCredentials) async {
-        await failedAttemptsStore.incrementAttempts(for: username)
-        let attempts = failedAttemptsStore.getAttempts(for: username)
+    private func handleFailedLogin(username: String, error: LoginError = .invalidCredentials) async {
+        await loginSecurity.handleFailedLogin(username: username)
 
         await MainActor.run { [weak self] in
             guard let self else { return }
-            if attempts < self.maxFailedAttempts {
-                self.errorMessage = self.blockMessageProvider.message(for: error)
-            } else {
+
+            if self.loginSecurity.isAccountLocked(username: username) {
                 self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked)
                 self.isLoginBlocked = true
+            } else {
+                self.errorMessage = self.blockMessageProvider.message(for: error)
             }
         }
-        if attempts >= maxFailedAttempts {
-            let delay = max(0.5, calculateDelay(attempts: attempts))
-            try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-        }
-    }
-
-    private static func isValidEmail(_ email: String) -> Bool {
-        let parts = email.split(separator: "@")
-        guard parts.count == 2, let domain = parts.last else { return false }
-        return domain.contains(".")
-    }
-
-    private static func isValidPassword(_ password: String) -> Bool {
-        password.count >= 8
     }
 
     private func checkAccountUnlock(for username: String) async {
-        let attempts = failedAttemptsStore.getAttempts(for: username)
-        guard attempts >= maxFailedAttempts else { return }
-        guard let lastAttempt = failedAttemptsStore.lastAttemptTime(for: username) else { return }
-        let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        if elapsed >= 5 * 60 {
-            await failedAttemptsStore.resetAttempts(for: username)
-            isLoginBlocked = false
-            errorMessage = nil
+        guard loginSecurity.isAccountLocked(username: username) else { return }
+
+        if loginSecurity.getRemainingBlockTime(username: username) == nil {
+            await loginSecurity.resetAttempts(username: username)
+            await MainActor.run { [weak self] in
+                self?.isLoginBlocked = false
+                self?.errorMessage = nil
+            }
         }
     }
 
