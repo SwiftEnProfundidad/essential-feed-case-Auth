@@ -561,17 +561,17 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] JWT parsing for `exp` claim  
   - [✅] Handler for malformed tokens  
 
-#### 2. [🚧] Request refresh token from backend if token is expired  
-- [🚧] Implement `TokenRefreshService`:  
-  - [🚧] Request to `/auth/refresh` endpoint  
-  - [🚧] Exponential backoff (3 retries)  
-  - [🚧] Semaphore to avoid race conditions  
+#### 2. [✅] Request refresh token from backend if token is expired  
+- [✅] Implement `TokenRefreshService`:  
+  - [✅] Request to `/auth/refresh` endpoint  
+  - [✅] Exponential backoff (3 retries)  
+  - [✅] Semaphore to avoid race conditions  
 
-#### 3. [❌] Store the new token securely after renewal 
-- [❌] KeychainManager:  
-  - [❌] AES-256 encryption  
-  - [❌] Migration of existing tokens  
-  - [❌] Security tests (Keychain Spy)  
+#### 3. [🚧] Store the new token securely after renewal 
+- [🚧] KeychainManager:  
+  - [🚧] AES-256 encryption  
+  - [🚧] Migration of existing tokens  
+  - [🚧] Security tests (Keychain Spy)  
 
 #### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  
