@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 import XCTest
@@ -89,18 +88,34 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         return keychainLoadDataToReturn
     }
 
-    var tokenStorageSaveTokenCalls = [Token]()
-    var tokenStorageShouldSaveError = false
-    func save(_ token: Token) async throws {
-        if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
-        tokenStorageSaveTokenCalls.append(token)
+    enum TokenStorageMessage: Equatable {
+        case save(tokenBundle: Token)
+        case loadTokenBundle
+        case deleteTokenBundle
     }
 
-    var refreshTokenToLoad: String?
-    var tokenStorageShouldLoadRefreshTokenThrowError = false
-    func loadRefreshToken() async throws -> String? {
-        if tokenStorageShouldLoadRefreshTokenThrowError { throw TestError(id: "loadRefreshTokenError") }
-        return refreshTokenToLoad
+    var tokenStorageMessages = [TokenStorageMessage]()
+    var tokenStorageSaveTokenCalls = [Token]()
+    var tokenStorageShouldSaveError = false
+
+    func save(tokenBundle token: Token) async throws {
+        if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
+        tokenStorageSaveTokenCalls.append(token)
+        tokenStorageMessages.append(.save(tokenBundle: token))
+    }
+
+    var tokenBundleToLoad: Token?
+    var tokenStorageShouldLoadBundleError = false
+    func loadTokenBundle() async throws -> Token? {
+        tokenStorageMessages.append(.loadTokenBundle)
+        if tokenStorageShouldLoadBundleError { throw TestError(id: "loadTokenBundleError") }
+        return tokenBundleToLoad
+    }
+
+    var tokenStorageShouldDeleteBundleError = false
+    func deleteTokenBundle() async throws {
+        tokenStorageMessages.append(.deleteTokenBundle)
+        if tokenStorageShouldDeleteBundleError { throw TestError(id: "deleteTokenBundleError") }
     }
 
     var offlineStoreSaveCalls = [UserRegistrationData]()
@@ -110,35 +125,19 @@ final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
         offlineStoreSaveCalls.append(data)
     }
 
-    // --- Métodos Adicionales del Spy (no estrictamente de RegistrationPersistenceInterfaces) ---
-    // Mantener estos si los tests dependen de ellos o si el spy se usa en otros contextos.
-
-    // Para LoginCredentials (si se reutiliza)
-    // func save(credentials: LoginCredentials) async throws {}
-    // func loadCredentials() async -> LoginCredentials? { nil }
-    // func deleteCredentials() async throws {}
-
-    // Para KeychainDeletable (si el spy necesita ser más completo que solo KeychainSavable)
     var keychainDeleteKeyCalls = [String]()
     var keychainDeleteResults: [Bool] = []
 
-    func delete(forKey key: String) -> Bool { // Este método NO es parte de KeychainSavable, solo de KeychainFull/Deletable
+    func delete(forKey key: String) -> Bool {
         keychainDeleteKeyCalls.append(key)
         guard !keychainDeleteResults.isEmpty else { return true }
         return keychainDeleteResults.removeFirst()
     }
 
     var tokenStorageSaveRefreshTokenCalls = [String?]()
-    // func save(refreshToken: String?) async throws { ... }
-
     var tokenToLoad: Token?
-    // func loadToken() async -> Token? { return tokenToLoad }
-
     var tokenStorageDeleteTokenCalled = false
-    // func deleteToken() async throws { tokenStorageDeleteTokenCalled = true }
-
     var tokenStorageDeleteRefreshTokenCalled = false
-    // func deleteRefreshToken() async throws { tokenStorageDeleteRefreshTokenCalled = true }
 }
 
 struct TestError: Error { let id: String }

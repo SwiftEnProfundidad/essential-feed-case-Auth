@@ -15,8 +15,8 @@ public final class RemoteTokenRefreshService: TokenRefreshService {
 
     public func refreshToken(refreshToken: String) async -> Result<TokenRefreshResult, TokenRefreshError> {
         var usedRefreshToken = refreshToken
-        if usedRefreshToken.isEmpty, let loaded = try? await tokenStorage.loadRefreshToken() {
-            usedRefreshToken = loaded
+        if usedRefreshToken.isEmpty, let loadedTokenBundle = try? await tokenStorage.loadTokenBundle(), let loadedRefreshToken = loadedTokenBundle.refreshToken {
+            usedRefreshToken = loadedRefreshToken
         }
         if usedRefreshToken.isEmpty {
             return .failure(.invalidRefreshToken)
@@ -36,10 +36,10 @@ public final class RemoteTokenRefreshService: TokenRefreshService {
                 return .failure(.server(message: "status \(response.statusCode)"))
             }
             let newToken = try tokenParser.parse(from: data)
-            try await tokenStorage.save(newToken)
+            try await tokenStorage.save(tokenBundle: newToken)
             return .success(TokenRefreshResult(
-                accessToken: newToken.value,
-                refreshToken: refreshToken,
+                accessToken: newToken.accessToken,
+                refreshToken: newToken.refreshToken ?? "",
                 expiry: newToken.expiry
             ))
         } catch {

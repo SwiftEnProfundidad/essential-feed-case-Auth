@@ -2,28 +2,6 @@ import Foundation
 
 public typealias RegistrationPersistenceInterfaces = KeychainProtocol & OfflineRegistrationStore & TokenStorage
 
-public struct User: Equatable {
-    public let name: String
-    public let email: String
-
-    public init(name: String, email: String) {
-        self.name = name
-        self.email = email
-    }
-}
-
-public struct UserRegistrationData: Codable, Equatable {
-    public let name: String
-    public let email: String
-    public let password: String
-
-    public init(name: String, email: String, password: String) {
-        self.name = name
-        self.email = email
-        self.password = password
-    }
-}
-
 public enum RegistrationValidationError: Error, Equatable {
     case emptyName
     case invalidEmail
@@ -39,50 +17,8 @@ public enum UserRegistrationResult {
     case failure(Error)
 }
 
-public enum NetworkError: Error, Equatable {
-    case invalidResponse
-    case clientError(statusCode: Int)
-    case serverError(statusCode: Int)
-    case unknown
-    case noConnectivity
-    public var errorDescription: String? {
-        switch self {
-        case .invalidResponse:
-            "Invalid server response."
-        case let .clientError(statusCode):
-            "Client error with status code: \(statusCode)."
-        case let .serverError(statusCode):
-            "Server error with status code: \(statusCode)."
-        case .noConnectivity:
-            "No internet connection."
-        case .unknown:
-            "An unknown error occurred."
-        }
-    }
-}
-
 public protocol UserRegistrationNotifier {
     func notifyRegistrationFailed(with error: Error)
-}
-
-public enum TokenParsingError: Error, Equatable {
-    case invalidData
-    case missingToken
-}
-
-private struct ServerAuthResponse: Codable {
-    struct UserPayload: Codable {
-        let name: String
-        let email: String
-    }
-
-    struct TokenPayload: Codable {
-        let value: String
-        let expiry: Date
-    }
-
-    let user: UserPayload
-    let token: TokenPayload
 }
 
 public actor UserRegistrationUseCase {
@@ -115,67 +51,88 @@ public actor UserRegistrationUseCase {
         let userData = UserRegistrationData(name: name, email: email, password: password)
 
         do {
-            var request = URLRequest(url: registrationEndpoint)
-            request.httpMethod = "POST"
-            request.httpBody = try JSONSerialization.data(withJSONObject: [
-                "name": userData.name,
-                "email": userData.email,
-                "password": userData.password
-            ])
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
+            let request = try makeRequest(for: userData)
             let (data, httpResponse) = try await httpClient.send(request)
-
-            switch httpResponse.statusCode {
-            case 201:
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.dateDecodingStrategy = .iso8601
-                    let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
-                    let receivedToken = Token(value: serverResponse.token.value, expiry: serverResponse.token.expiry)
-
-                    try await persistence.save(receivedToken)
-                    _ = persistence.save(data: password.data(using: .utf8)!, forKey: email)
-
-                    return .success(User(name: name, email: email))
-
-                } catch let tokenError as TokenParsingError {
-                    notifier?.notifyRegistrationFailed(with: tokenError)
-                    return .failure(tokenError)
-                } catch {
-                    notifier?.notifyRegistrationFailed(with: error)
-                    return .failure(error)
-                }
-            case 409:
-                notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
-                return .failure(UserRegistrationError.emailAlreadyInUse)
-            case 400 ..< 500:
-                let clientError = NetworkError.clientError(statusCode: httpResponse.statusCode)
-                notifier?.notifyRegistrationFailed(with: clientError)
-                return .failure(clientError)
-            case 500 ..< 600:
-                let serverError = NetworkError.serverError(statusCode: httpResponse.statusCode)
-                notifier?.notifyRegistrationFailed(with: serverError)
-                return .failure(serverError)
-            default:
-                notifier?.notifyRegistrationFailed(with: NetworkError.unknown)
-                return .failure(NetworkError.unknown)
-            }
+            return await handleRegistrationResponse(data: data, httpResponse: httpResponse, for: userData)
         } catch {
-            if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
+            return handleRegistrationError(error, for: userData)
+        }
+    }
+
+    private func makeRequest(for userData: UserRegistrationData) throws -> URLRequest {
+        var request = URLRequest(url: registrationEndpoint)
+        request.httpMethod = "POST"
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "name": userData.name,
+            "email": userData.email,
+            "password": userData.password
+        ])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        return request
+    }
+
+    private func handleRegistrationResponse(data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData) async -> UserRegistrationResult {
+        switch httpResponse.statusCode {
+        case 201:
+            return await processSuccessfulRegistration(data: data, name: userData.name, email: userData.email, password: userData.password)
+        case 409:
+            notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
+            return .failure(UserRegistrationError.emailAlreadyInUse)
+        case 400 ..< 500:
+            let clientError = NetworkError.clientError(statusCode: httpResponse.statusCode)
+            notifier?.notifyRegistrationFailed(with: clientError)
+            return .failure(clientError)
+        case 500 ..< 600:
+            let serverError = NetworkError.serverError(statusCode: httpResponse.statusCode)
+            notifier?.notifyRegistrationFailed(with: serverError)
+            return .failure(serverError)
+        default:
+            notifier?.notifyRegistrationFailed(with: NetworkError.unknown)
+            return .failure(NetworkError.unknown)
+        }
+    }
+
+    private func processSuccessfulRegistration(data: Data, name: String, email: String, password: String) async -> UserRegistrationResult {
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
+            let receivedToken = Token(
+                accessToken: serverResponse.token.value,
+                expiry: serverResponse.token.expiry,
+                refreshToken: nil
+            )
+
+            try await persistence.save(tokenBundle: receivedToken)
+            _ = persistence.save(data: password.data(using: .utf8)!, forKey: email)
+
+            return .success(User(name: name, email: email))
+        } catch let tokenError as TokenParsingError {
+            notifier?.notifyRegistrationFailed(with: tokenError)
+            return .failure(tokenError)
+        } catch let decodingError as DecodingError {
+            notifier?.notifyRegistrationFailed(with: decodingError)
+            return .failure(decodingError)
+        } catch {
+            notifier?.notifyRegistrationFailed(with: error)
+            return .failure(error)
+        }
+    }
+
+    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) -> UserRegistrationResult {
+        if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
+            Task {
                 do {
                     try await persistence.save(userData)
                 } catch let offlineStoreError {
-                    // Notificar el error específico del guardado offline si ocurre
                     notifier?.notifyRegistrationFailed(with: offlineStoreError)
                 }
-                // Notificar SIEMPRE el error de no conectividad, como espera el test
-                notifier?.notifyRegistrationFailed(with: NetworkError.noConnectivity)
-                return .failure(NetworkError.noConnectivity)
-            } else {
-                notifier?.notifyRegistrationFailed(with: error)
-                return .failure(error)
             }
+            notifier?.notifyRegistrationFailed(with: NetworkError.noConnectivity)
+            return .failure(NetworkError.noConnectivity)
+        } else {
+            notifier?.notifyRegistrationFailed(with: error)
+            return .failure(error)
         }
     }
 }

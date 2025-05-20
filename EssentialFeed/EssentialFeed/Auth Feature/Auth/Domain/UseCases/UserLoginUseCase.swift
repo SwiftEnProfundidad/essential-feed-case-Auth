@@ -75,19 +75,36 @@ public final class UserLoginUseCase {
         let lockoutKey = StorageKey.lockoutUntilPrefix + email
         let now = Date()
         let defaults = userDefaults
-        if let until = defaults.object(forKey: lockoutKey) as? Date, now < until {
-            return .accountLocked
-        } else if defaults.object(forKey: lockoutKey) != nil {
+
+        guard let until = defaults.object(forKey: lockoutKey) as? Date else {
+            // No hay fecha de bloqueo, o ya se limpió. Si attemptsKey existe sin lockoutKey,
+            // podría ser un estado inconsistente, pero la lógica actual lo manejaría.
+            // Considerar si se debe limpiar attemptsKey aquí si lockoutKey es nil.
+            // Por ahora, la lógica original es: si hay lockout, está seteado, si no, se borran ambos.
+            if defaults.object(forKey: lockoutKey) != nil { // Esta condición ahora es redundante si until es nil
+                defaults.removeObject(forKey: attemptsKey)
+                defaults.removeObject(forKey: lockoutKey)
+            }
+            return nil // No está bloqueado
+        }
+
+        guard now < until else { // El bloqueo ha expirado
             defaults.removeObject(forKey: attemptsKey)
             defaults.removeObject(forKey: lockoutKey)
+            return nil // No está bloqueado
         }
-        return nil
+
+        return .accountLocked // Sigue bloqueado
     }
 
     private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         clearLockout(for: credentials.email)
         let expiryDate = Date().addingTimeInterval(Config.defaultTokenDuration)
-        let tokenToStore = Token(value: response.token, expiry: expiryDate)
+        let tokenToStore = Token(
+            accessToken: response.token,
+            expiry: expiryDate,
+            refreshToken: nil
+        )
         do {
             try await persistence.saveToken(tokenToStore)
             try? await persistence.saveOfflineCredentials(credentials)
@@ -147,9 +164,7 @@ public final class UserLoginUseCase {
             return .invalidEmailFormat
         }
         let password = credentials.password
-        if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || password.isEmpty
-            || password.count < 6
-        {
+        if password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || password.isEmpty || password.count < 6 {
             return .invalidPasswordFormat
         }
         return nil

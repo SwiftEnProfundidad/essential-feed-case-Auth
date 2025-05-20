@@ -43,9 +43,7 @@ final class UserLoginUseCaseTests: XCTestCase {
             } else {
                 XCTFail("Expected LoginError.invalidCredentials, got \(error)")
             }
-            XCTAssertEqual(
-                flowHandler.handledResults.count, 1, "FlowHandler should be called on failed login"
-            )
+            XCTAssertEqual(flowHandler.handledResults.count, 1, "FlowHandler should be called on failed login")
         }
     }
 
@@ -63,7 +61,7 @@ final class UserLoginUseCaseTests: XCTestCase {
         case let .success(response):
             XCTAssertEqual(response.token, expectedTokenValue, "Returned token value should match expected token value")
             XCTAssertEqual(persistence.savedTokens.count, 1, "Token should be saved on successful login")
-            XCTAssertEqual(persistence.savedTokens.first?.value, expectedTokenValue, "Saved token should match expected token value")
+            XCTAssertEqual(persistence.savedTokens.first?.accessToken, expectedTokenValue, "Saved token should match expected token value")
             XCTAssertEqual(notifier.notifiedSuccesses.count, 1, "Notifier should be notified on successful login")
             XCTAssertEqual(flowHandler.handledResults.count, 1, "FlowHandler should be called on successful login")
         case let .failure(error):
@@ -147,8 +145,6 @@ final class UserLoginUseCaseTests: XCTestCase {
         }
         XCTAssertTrue(wasReset, "FlowHandler should be called with success for the correct user")
     }
-
-    // MARK: - Test  Lockout/Notification
 
     func test_login_blocksUser_afterMaxFailedAttempts_andNotifiesLockout() async {
         let email = Self.email(for: #function)

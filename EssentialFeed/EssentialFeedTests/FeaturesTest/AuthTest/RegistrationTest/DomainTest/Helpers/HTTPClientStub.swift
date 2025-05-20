@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 
@@ -33,5 +32,9 @@ extension HTTPClientStub {
             let (data, response) = perURLStub(url)
             return .success((data, response))
         }
+    }
+
+    static func stubForError(_ error: Error) -> HTTPClientStub {
+        HTTPClientStub { _ in .failure(error) }
     }
 }
