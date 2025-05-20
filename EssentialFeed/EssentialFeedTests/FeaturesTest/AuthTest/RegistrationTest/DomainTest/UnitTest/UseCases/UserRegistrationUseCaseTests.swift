@@ -3,35 +3,6 @@ import Security
 import XCTest
 
 final class UserRegistrationUseCaseTests: XCTestCase {
-    private func makeSUT(
-        persistenceSpy: RegistrationPersistenceSpy = RegistrationPersistenceSpy(),
-        validator: RegistrationValidatorProtocol = RegistrationValidatorAlwaysValid(),
-        httpClientSpy: HTTPClientSpy = HTTPClientSpy(),
-        registrationEndpoint: URL = URL(string: "https://any-test-endpoint.com")!,
-        notifierSpy: UserRegistrationNotifierSpy = UserRegistrationNotifierSpy(),
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> (
-        sut: UserRegistrationUseCase,
-        persistenceSpy: RegistrationPersistenceSpy,
-        validator: RegistrationValidatorProtocol,
-        httpClientSpy: HTTPClientSpy,
-        notifierSpy: UserRegistrationNotifierSpy
-    ) {
-        let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
-            validator: validator,
-            httpClient: httpClientSpy,
-            registrationEndpoint: registrationEndpoint,
-            notifier: notifierSpy
-        )
-        trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(persistenceSpy, file: file, line: line)
-        trackForMemoryLeaks(httpClientSpy, file: file, line: line)
-        trackForMemoryLeaks(notifierSpy, file: file, line: line)
-        return (sut, persistenceSpy, validator, httpClientSpy, notifierSpy)
-    }
-
     func test_registerUser_withValidDataAndToken_createsUserStoresCredentialsAndToken() async throws {
         let name = "Test User"
         let email = "test@example.com"
@@ -62,15 +33,17 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             XCTAssertEqual(user.name, name, "Registered user's name should match input")
             XCTAssertEqual(user.email, email, "Registered user's email should match input")
 
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 1, "Expected to save credentials once")
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.key, email, "Expected to save credentials for the correct email")
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.data, password.data(using: .utf8), "Expected to save correct password data")
+            let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+            XCTAssertEqual(keychainCalls.count, 1, "Expected to save credentials once")
+            XCTAssertEqual(keychainCalls.first?.key, email, "Expected to save credentials for the correct email")
+            XCTAssertEqual(keychainCalls.first?.data, password.data(using: .utf8), "Expected to save correct password data")
 
-            XCTAssertEqual(persistenceSpy.tokenStorageMessages.count, 1, "Expected to save token once")
-            if case let .save(tokenBundle: savedToken) = persistenceSpy.tokenStorageMessages.first {
+            let tokenMessages = await persistenceSpy.getTokenStorageMessages()
+            XCTAssertEqual(tokenMessages.count, 1, "Expected to save token once")
+            if case let .save(tokenBundle: savedToken) = tokenMessages.first {
                 XCTAssertEqual(savedToken, expectedTokenToReceiveAndStore, "Expected to save the correct token received from server")
             } else {
-                XCTFail("Expected save message in TokenStorageMessages, got \(String(describing: persistenceSpy.tokenStorageMessages.first))")
+                XCTFail("Expected save message in TokenStorageMessages, got \(String(describing: tokenMessages.first))")
             }
         case let .failure(error):
             XCTFail("Expected success, got failure \(error) instead")
@@ -117,7 +90,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let serverResponseData = try makeRegistrationServerResponseData(name: "Test User", email: "test@example.com", token: tokenFromServer)
 
         let tokenStorageError = NSError(domain: "TokenStorageError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to save token"])
-        persistenceSpy.saveTokenError = tokenStorageError
+        await persistenceSpy.setSaveTokenError(tokenStorageError)
 
         let registerTask = Task {
             await sut.register(name: "Test User", email: "test@example.com", password: "Password123")
@@ -133,12 +106,16 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         case let .failure(error):
             XCTAssertEqual(error as NSError, tokenStorageError, "Expected token storage error")
         }
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain save should not be called if token storage fails")
-        XCTAssertEqual(persistenceSpy.tokenStorageMessages.count, 1, "Expected TokenStorage save to be attempted once")
-        if case let .save(tokenBundle: attemptedToken) = persistenceSpy.tokenStorageMessages.first {
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "Keychain save should not be called if token storage fails")
+
+        let tokenMessages = await persistenceSpy.getTokenStorageMessages()
+        XCTAssertEqual(tokenMessages.count, 1, "Expected TokenStorage save to be attempted once")
+
+        if case let .save(tokenBundle: attemptedToken) = tokenMessages.first {
             XCTAssertEqual(attemptedToken, tokenFromServer, "Expected to attempt saving the correct token")
         } else {
-            XCTFail("Expected save message in TokenStorageMessages, got \(String(describing: persistenceSpy.tokenStorageMessages.first))")
+            XCTFail("Expected save message in TokenStorageMessages, got \(String(describing: tokenMessages.first))")
         }
     }
 
@@ -161,8 +138,12 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         case let .failure(error):
             XCTAssertTrue(error is DecodingError || error is TokenParsingError, "Expected a parsing error or TokenParsingError")
         }
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain save should not be called if token parsing fails")
-        XCTAssertEqual(persistenceSpy.tokenStorageMessages.count, 0, "TokenStorage save should not be attempted if token parsing fails")
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "Keychain save should not be called if token parsing fails")
+        let tokenMessages = await persistenceSpy.getTokenStorageMessages()
+        XCTAssertEqual(tokenMessages.count, 0, "TokenStorage save should not be attempted if token parsing fails")
+        let offlineStoreMessages = await persistenceSpy.getOfflineStoreMessages()
+        XCTAssertEqual(offlineStoreMessages.count, 0, "OfflineRegistrationStore save should not be attempted if token parsing fails")
     }
 
     func test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter() async {
@@ -177,13 +158,14 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 
         let response409 = HTTPURLResponse(url: httpClientSpy.requests.first?.url ?? URL(string: "https://test-register-endpoint.com")!, statusCode: 409, httpVersion: nil, headerFields: nil)!
         httpClientSpy.complete(with: Data(), response: response409)
-
         let result = await registerTask.value
 
         await fulfillment(of: [notifierExpectation], timeout: 1.0)
 
-        XCTAssertTrue(notifierSpy.notifiedEmailInUse, "Notifier should be called with emailAlreadyInUse error")
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain save should not be called on registration failure")
+        let emailInUseNotified = notifierSpy.wasEmailInUseNotified()
+        XCTAssertTrue(emailInUseNotified, "Notifier should be called with emailAlreadyInUse error")
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "Keychain save should not be called on registration failure")
         switch result {
         case let .failure(errorReceived):
             guard let registrationError = errorReceived as? UserRegistrationError else {
@@ -220,7 +202,8 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         default:
             XCTFail("Expected .emailAlreadyInUse error, got \(result) instead")
         }
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "No Keychain save should occur if email is already registered")
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "No Keychain save should occur if email is already registered")
     }
 
     func test_registerUser_withNoConnectivity_returnsConnectivityError_andDoesNotStoreCredentials() async {
@@ -244,8 +227,12 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 
         await fulfillment(of: [requestRegistered], timeout: 1.0)
 
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "No Keychain save should occur if there is no connectivity")
-        XCTAssertTrue(persistenceSpy.tokenStorageMessages.isEmpty, "No TokenStorage save should occur if there is no connectivity")
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "No Keychain save should occur if there is no connectivity")
+        let tokenMessages = await persistenceSpy.getTokenStorageMessages()
+        XCTAssertTrue(tokenMessages.isEmpty, "No TokenStorage save should occur if there is no connectivity")
+        let offlineStoreMessages = await persistenceSpy.getOfflineStoreMessages()
+        XCTAssertEqual(offlineStoreMessages.count, 1, "OfflineRegistrationStore save should occur if there is no connectivity")
     }
 
     func test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError() async throws {
@@ -262,8 +249,11 @@ final class UserRegistrationUseCaseTests: XCTestCase {
 
         let result = await registerTask.value
 
-        XCTAssertEqual(persistenceSpy.offlineStoreMessages.count, 1, "Expected to save data once to offline store")
-        if let firstMessage = persistenceSpy.offlineStoreMessages.first {
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        let offlineStoreMessages = await persistenceSpy.getOfflineStoreMessages()
+        XCTAssertEqual(offlineStoreMessages.count, 1, "Expected to save data once to offline store")
+        if let firstMessage = offlineStoreMessages.first {
             switch firstMessage {
             case let .save(savedData):
                 XCTAssertEqual(savedData, expectedUserData, "Expected to save correct user data to offline store")
@@ -279,9 +269,46 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             XCTFail("Expected noConnectivity error, got \(String(describing: result)) instead")
         }
 
-        XCTAssertTrue(notifierSpy.notifiedConnectivityError, "Notifier should be called with noConnectivity error")
-        XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain save should not be called on connectivity error")
-        XCTAssertTrue(persistenceSpy.tokenStorageMessages.isEmpty, "TokenStorage save should not be called on connectivity error")
+        let connectivityErrorNotified = notifierSpy.wasConnectivityErrorNotified()
+        XCTAssertTrue(connectivityErrorNotified, "Notifier should be called with noConnectivity error")
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
+        XCTAssertEqual(keychainCalls.count, 0, "Keychain save should not be called on connectivity error")
+        let tokenMessages = await persistenceSpy.getTokenStorageMessages()
+        XCTAssertTrue(tokenMessages.isEmpty, "TokenStorage save should not be called on connectivity error")
+    }
+
+    // MARK: - Helpers
+
+    private func makeSUT(
+        persistenceSpy: RegistrationPersistenceSpy = RegistrationPersistenceSpy(),
+        validator: RegistrationValidatorProtocol = RegistrationValidatorAlwaysValid(),
+        httpClientSpy: HTTPClientSpy = HTTPClientSpy(),
+        registrationEndpoint: URL = URL(string: "https://any-test-endpoint.com")!,
+        notifierSpy: UserRegistrationNotifierSpy = UserRegistrationNotifierSpy(),
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (
+        sut: UserRegistrationUseCase,
+        persistenceSpy: RegistrationPersistenceSpy,
+        validator: RegistrationValidatorProtocol,
+        httpClientSpy: HTTPClientSpy,
+        notifierSpy: UserRegistrationNotifierSpy
+    ) {
+        let sut = UserRegistrationUseCase(
+            persistence: persistenceSpy,
+            validator: validator,
+            httpClient: httpClientSpy,
+            registrationEndpoint: registrationEndpoint,
+            notifier: notifierSpy
+        )
+
+        addTeardownBlock { [weak sut, weak httpClientSpy, weak notifierSpy] in
+            XCTAssertNil(sut, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+            XCTAssertNil(httpClientSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+            XCTAssertNil(notifierSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+        }
+
+        return (sut, persistenceSpy, validator, httpClientSpy, notifierSpy)
     }
 
     private func assertRegistrationValidation(
@@ -307,9 +334,12 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         XCTAssertEqual(httpClientSpy.requests.count, 0, "No HTTP request should be made if validation fails", file: file, line: line)
-        XCTAssertTrue(persistence.saveKeychainDataCalls.isEmpty, "No Keychain save should occur if validation fails", file: file, line: line)
-        XCTAssertTrue(persistence.tokenStorageMessages.isEmpty, "No TokenStorage interaction should occur if validation fails", file: file, line: line)
-        XCTAssertTrue(persistence.offlineStoreMessages.isEmpty, "No OfflineRegistrationStore interaction should occur if validation fails", file: file, line: line)
+        let keychainCalls = await persistence.getSaveKeychainDataCalls()
+        XCTAssertTrue(keychainCalls.isEmpty, "No Keychain save should occur if validation fails", file: file, line: line)
+        let tokenMessages = await persistence.getTokenStorageMessages()
+        XCTAssertTrue(tokenMessages.isEmpty, "No TokenStorage interaction should occur if validation fails", file: file, line: line)
+        let offlineStoreMessages = await persistence.getOfflineStoreMessages()
+        XCTAssertTrue(offlineStoreMessages.isEmpty, "No OfflineRegistrationStore interaction should occur if validation fails", file: file, line: line)
     }
 
     private func expectHTTPRequest(from httpClient: HTTPClientSpy, timeout: TimeInterval = 1.0, file: StaticString = #file, line: UInt = #line) async {
@@ -362,78 +392,10 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         return try encoder.encode(responsePayload)
     }
 
-    private class RegistrationPersistenceSpy: KeychainProtocol, TokenStorage, OfflineRegistrationStore {
-        var saveKeychainDataCalls = [(data: Data, key: String)]()
-        var saveKeychainReturnValues: [KeychainSaveResult] = []
-        var loadKeychainDataCalls = [String]()
-        var dataToReturnForLoad: Data?
-        var keychainErrorForLoad: Error?
-
-        func save(data: Data, forKey key: String) -> KeychainSaveResult {
-            saveKeychainDataCalls.append((data, key))
-            return saveKeychainReturnValues.isEmpty ? .success : saveKeychainReturnValues.removeFirst()
-        }
-
-        func load(forKey key: String) -> Data? {
-            loadKeychainDataCalls.append(key)
-            if keychainErrorForLoad != nil {}
-            return dataToReturnForLoad
-        }
-
-        enum TokenStorageMessage: Equatable {
-            case save(tokenBundle: Token)
-            case loadTokenBundle
-            case deleteTokenBundle
-        }
-
-        var tokenStorageMessages = [TokenStorageMessage]()
-        var saveTokenError: Error?
-        var tokenBundleToReturn: Token?
-        var loadTokenBundleError: Error?
-        var deleteTokenBundleError: Error?
-
-        func save(tokenBundle: Token) async throws {
-            tokenStorageMessages.append(.save(tokenBundle: tokenBundle))
-            if let error = saveTokenError {
-                throw error
-            }
-        }
-
-        func loadTokenBundle() async throws -> Token? {
-            tokenStorageMessages.append(.loadTokenBundle)
-            if let error = loadTokenBundleError {
-                throw error
-            }
-            return tokenBundleToReturn
-        }
-
-        func deleteTokenBundle() async throws {
-            tokenStorageMessages.append(.deleteTokenBundle)
-            if let error = deleteTokenBundleError {
-                throw error
-            }
-        }
-
-        enum OfflineStoreMessage: Equatable {
-            case save(UserRegistrationData)
-        }
-
-        var offlineStoreMessages = [OfflineStoreMessage]()
-        var saveOfflineDataError: Error?
-
-        func save(_ data: UserRegistrationData) async throws {
-            if let error = saveOfflineDataError {
-                offlineStoreMessages.append(.save(data))
-                throw error
-            }
-            offlineStoreMessages.append(.save(data))
-        }
-    }
-
     private class UserRegistrationNotifierSpy: UserRegistrationNotifier {
-        var notifiedEmailInUse = false
-        var notifiedConnectivityError = false
-        var registrationFailedError: Error?
+        private(set) var notifiedEmailInUse = false
+        private(set) var notifiedConnectivityError = false
+        private(set) var registrationFailedError: Error?
         private var receivedErrors: [Error] = []
         private let onNotify: (() -> Void)?
 
@@ -460,8 +422,74 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             onNotify?()
         }
 
-        func getReceivedErrors() -> [Error] {
-            receivedErrors
+        func wasEmailInUseNotified() -> Bool {
+            notifiedEmailInUse
+        }
+
+        func wasConnectivityErrorNotified() -> Bool {
+            notifiedConnectivityError
+        }
+    }
+
+    private actor RegistrationPersistenceSpy: @preconcurrency KeychainProtocol, TokenStorage, OfflineRegistrationStore {
+        enum TokenStorageMessage: Equatable {
+            case save(tokenBundle: Token)
+            case loadTokenBundle
+            case deleteTokenBundle
+        }
+
+        enum OfflineStoreMessage: Equatable {
+            case save(UserRegistrationData)
+        }
+
+        private var savedKeychainData: [(data: Data, key: String)] = []
+        private var tokenStorageMessages = [TokenStorageMessage]()
+        private var offlineStoreMessages = [OfflineStoreMessage]()
+        private var saveTokenError: Error?
+
+        func save(data: Data, forKey key: String) -> KeychainSaveResult {
+            savedKeychainData.append((data, key))
+            return .success
+        }
+
+        nonisolated func load(forKey _: String) -> Data? {
+            nil
+        }
+
+        func save(tokenBundle: Token) async throws {
+            tokenStorageMessages.append(.save(tokenBundle: tokenBundle))
+            if let error = saveTokenError {
+                throw error
+            }
+        }
+
+        func loadTokenBundle() async throws -> Token? {
+            tokenStorageMessages.append(.loadTokenBundle)
+            return nil
+        }
+
+        func deleteTokenBundle() async throws {
+            tokenStorageMessages.append(.deleteTokenBundle)
+        }
+
+        func save(_ data: UserRegistrationData) async throws {
+            offlineStoreMessages.append(.save(data))
+        }
+
+        func getSaveKeychainDataCalls() -> [(data: Data, key: String)] {
+            savedKeychainData
+        }
+
+        func getTokenStorageMessages() -> [TokenStorageMessage] {
+            tokenStorageMessages
+        }
+
+        func getOfflineStoreMessages() -> [OfflineStoreMessage] {
+            offlineStoreMessages
+        }
+
+        func setSaveTokenError(_ error: Error) {
+            saveTokenError = error
         }
     }
 }
