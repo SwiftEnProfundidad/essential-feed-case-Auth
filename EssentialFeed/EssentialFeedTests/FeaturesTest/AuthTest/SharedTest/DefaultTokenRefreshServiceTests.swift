@@ -1,38 +1,68 @@
 import EssentialFeed
 import XCTest
 
+final class TokenRefreshSaver {
+    private let keychain: KeychainSpy
+    private let encryption: TokenEncryptionServiceSpy
+
+    init(keychain: KeychainSpy, encryption: TokenEncryptionServiceSpy) {
+        self.keychain = keychain
+        self.encryption = encryption
+    }
+
+    func handleTokenRefreshSuccess(token: TokenRefreshResult) async {
+        let dataToEncrypt = token.toData()
+
+        do {
+            let encryptedTokenString = try encryption.encrypt(dataToEncrypt)
+            keychain.save(encryptedTokenString)
+        } catch {
+            keychain.save("encryption-failed-marker")
+        }
+    }
+}
+
 final class DefaultTokenRefreshServiceTests: XCTestCase {
     func test_refreshToken_encrypts_and_saves_token_in_keychain_on_success() async {
-        let keychain = KeychainSpy()
-        let encryption = EncryptionServiceSpy()
+        let keychainSpy = KeychainSpy()
+        let encryptionSpy = TokenEncryptionServiceSpy()
         let token = TokenRefreshResult(accessToken: "access", refreshToken: "refresh", expiry: Date())
-        let sut = TokenRefreshSaver(keychain: keychain, encryption: encryption)
+        let sut = TokenRefreshSaver(keychain: keychainSpy, encryption: encryptionSpy)
 
         await sut.handleTokenRefreshSuccess(token: token)
 
-        XCTAssertEqual(encryption.encryptedData, [token.toData()])
-        XCTAssertEqual(keychain.savedItems, ["encrypted-token"])
+        XCTAssertEqual(encryptionSpy.encryptedData.count, 1)
+        XCTAssertEqual(encryptionSpy.encryptedData.first, token.toData())
+
+        XCTAssertEqual(keychainSpy.saveCallCount, 1)
+        XCTAssertEqual(keychainSpy.receivedValueToSave, "encrypted-token")
     }
 
     func test_refreshToken_savesTokenSecurelyInKeychain_onSuccess() async {
-        let (sut, keychain, _, token) = makeSUT()
+        let (sut, keychainSpy, _, token) = makeSUT()
         await sut.handleTokenRefreshSuccess(token: token)
-        XCTAssertEqual(keychain.savedItems, ["encrypted-token"])
+        XCTAssertEqual(keychainSpy.saveCallCount, 1)
+        XCTAssertEqual(keychainSpy.receivedValueToSave, "encrypted-token")
     }
 
     func test_refreshToken_encryptsTokenWithAES256_beforeSavingInKeychain() async {
-        let (sut, keychain, encryption, token) = makeSUT()
+        let keychainSpy = KeychainSpy()
+        let encryptionSpy = TokenEncryptionServiceSpy()
+        let sut = TokenRefreshSaver(keychain: keychainSpy, encryption: encryptionSpy)
+        let token = TokenRefreshResult(accessToken: "a", refreshToken: "b", expiry: Date())
+
         await sut.handleTokenRefreshSuccess(token: token)
-        XCTAssertEqual(encryption.encryptedData, [token.toData()])
-        XCTAssertEqual(keychain.savedItems, ["encrypted-token"])
+
+        XCTAssertEqual(encryptionSpy.encryptedData.first, token.toData())
+        XCTAssertEqual(keychainSpy.receivedValueToSave, "encrypted-token")
     }
 
     func test_refreshToken_succeedsAfterRetry() async {
-        let sut = TokenRefreshServiceStub(fails: 2, alwaysFail: false)
-        sut.resetAttempt()
+        let stub = TokenRefreshServiceStub(fails: 2, alwaysFail: false)
+        stub.resetAttempt()
         var lastResult: Result<TokenRefreshResult, TokenRefreshError> = .failure(.unknown)
-        for _ in 0 ... (sut.failCount) {
-            lastResult = await sut.refreshToken(refreshToken: "dummy")
+        for _ in 0 ... (stub.failCount) {
+            lastResult = await stub.refreshToken(refreshToken: "dummy")
         }
         switch lastResult {
         case let .success(tokens):
@@ -42,8 +72,7 @@ final class DefaultTokenRefreshServiceTests: XCTestCase {
             let expectedExpiry = Date().addingTimeInterval(3600)
             XCTAssertLessThan(
                 abs(tokens.expiry.timeIntervalSince(expectedExpiry)),
-                dateTolerance,
-                "Expiry date does not match (tolerance \(dateTolerance)s)"
+                dateTolerance
             )
         case let .failure(error):
             XCTFail("Expected success after retries, got error: \(error)")
@@ -51,8 +80,8 @@ final class DefaultTokenRefreshServiceTests: XCTestCase {
     }
 
     func test_refreshToken_failsAfterMaxRetries() async {
-        let sut = TokenRefreshServiceStub(fails: 0, alwaysFail: true)
-        let result = await sut.refreshToken(refreshToken: "dummy")
+        let stub = TokenRefreshServiceStub(fails: 0, alwaysFail: true)
+        let result = await stub.refreshToken(refreshToken: "dummy")
         switch result {
         case .success:
             XCTFail("Expected failure")
@@ -61,71 +90,16 @@ final class DefaultTokenRefreshServiceTests: XCTestCase {
         }
     }
 
-    // MARK: - Helpers
-
-    private func makeSUT() -> (sut: TokenRefreshSaver, keychain: KeychainSpy, encryption: EncryptionServiceSpy, token: TokenRefreshResult) {
-        let keychain = KeychainSpy()
-        let encryption = EncryptionServiceSpy()
-        let sut = TokenRefreshSaver(keychain: keychain, encryption: encryption)
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: TokenRefreshSaver, keychain: KeychainSpy, encryption: TokenEncryptionServiceSpy, token: TokenRefreshResult) {
+        let keychainSpy = KeychainSpy()
+        let encryptionSpy = TokenEncryptionServiceSpy()
+        let sut = TokenRefreshSaver(keychain: keychainSpy, encryption: encryptionSpy)
         let token = TokenRefreshResult(accessToken: "access", refreshToken: "refresh", expiry: Date())
-        return (sut, keychain, encryption, token)
-    }
-}
 
-final class KeychainSpy {
-    private(set) var savedItems: [String] = []
-    func save(_ encryptedToken: String) {
-        savedItems.append(encryptedToken)
-    }
-}
+        trackForMemoryLeaks(keychainSpy, file: file, line: line)
+        trackForMemoryLeaks(encryptionSpy, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
 
-final class TokenRefreshSaver {
-    private let keychain: KeychainSpy
-    private let encryption: EncryptionServiceSpy
-    init(keychain: KeychainSpy, encryption: EncryptionServiceSpy) {
-        self.keychain = keychain
-        self.encryption = encryption
-    }
-
-    func handleTokenRefreshSuccess(token: TokenRefreshResult) async {
-        let encrypted = try? encryption.encrypt(token.toData())
-        keychain.save(encrypted == nil ? "fail" : "encrypted-token")
-    }
-}
-
-final class TokenRefreshServiceStub: TokenRefreshService {
-    let failCount: Int
-    let alwaysFail: Bool
-    var attempt = 0
-
-    init(fails: Int, alwaysFail: Bool) {
-        self.failCount = fails
-        self.alwaysFail = alwaysFail
-    }
-
-    func refreshToken(refreshToken _: String) async -> Result<TokenRefreshResult, TokenRefreshError> {
-        attempt += 1
-        if alwaysFail {
-            try? await Task.sleep(nanoseconds: 10_000_000)
-            return .failure(.network)
-        }
-        if attempt <= failCount {
-            try? await Task.sleep(nanoseconds: 10_000_000)
-            return .failure(.network)
-        }
-        let expiry = Date().addingTimeInterval(3600)
-        let result = TokenRefreshResult(accessToken: "newAccessToken", refreshToken: "newRefreshToken", expiry: expiry)
-        return .success(result)
-    }
-
-    func resetAttempt() {
-        self.attempt = 0
-    }
-}
-
-private extension TokenRefreshResult {
-    func toData() -> Data {
-        let components = [accessToken, refreshToken, "\(expiry.timeIntervalSince1970)"]
-        return components.joined(separator: ",").data(using: .utf8)!
+        return (sut, keychainSpy, encryptionSpy, token)
     }
 }

@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -291,10 +290,11 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
         saveResult: KeychainSaveResult = .success,
         updateStatus: OSStatus = errSecSuccess,
         file: StaticString = #file, line: UInt = #line
-    ) -> (sut: SystemKeychain, spy: KeychainFullSpy) {
-        let spy = makeKeychainFullSpy()
+    ) -> (sut: SystemKeychain, spy: PrivateKeychainFullSpy) {
+        let spy = PrivateKeychainFullSpy()
         spy.saveResult = saveResult
         spy.updateStatus = updateStatus
+        // forceValidationFailForKey will be handled by spy.nextLoadResultForValidation
         let sut = SystemKeychain(keychain: spy)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(spy, file: file, line: line)
@@ -317,5 +317,74 @@ final class SystemKeychainIntegrationCoverageTests: XCTestCase {
 
     private func uniqueKey() -> String {
         "test-key-\(UUID().uuidString)"
+    }
+}
+
+private final class PrivateKeychainFullSpy: KeychainFull {
+    var saveResult: KeychainSaveResult = .success
+    var updateStatus: OSStatus = errSecSuccess
+    var deleteResult: Bool = true
+
+    var loadCallCount = 0
+    var saveCallCount = 0
+    var updateCallCount = 0
+    var deleteCallCount = 0
+
+    var receivedSaveData: Data?
+    var receivedSaveKey: String?
+    var receivedUpdateData: Data?
+    var receivedUpdateKey: String?
+    var receivedDeleteKey: String?
+    var receivedLoadKey: String?
+
+    var nextLoadResultForValidation: Data?
+    var forceValidationFailForKey: String?
+
+    private var items: [String: Data] = [:]
+
+    func save(data: Data, forKey key: String) -> KeychainSaveResult {
+        saveCallCount += 1
+        receivedSaveData = data
+        receivedSaveKey = key
+
+        if saveResult == .success {
+            items[key] = data
+        }
+        return saveResult
+    }
+
+    func load(forKey key: String) -> Data? {
+        loadCallCount += 1
+        receivedLoadKey = key
+
+        if let forcedKey = forceValidationFailForKey, forcedKey == key {
+            return nil // Simulate validation failure by returning nil for this specific key
+        }
+
+        if let specificResult = nextLoadResultForValidation {
+            nextLoadResultForValidation = nil // Consume it
+            return specificResult
+        }
+        return items[key]
+    }
+
+    func delete(forKey key: String) -> Bool {
+        deleteCallCount += 1
+        receivedDeleteKey = key
+        if deleteResult {
+            items[key] = nil
+        }
+        return deleteResult
+    }
+
+    func update(data: Data, forKey key: String) -> OSStatus {
+        updateCallCount += 1
+        receivedUpdateData = data
+        receivedUpdateKey = key
+
+        if updateStatus == errSecSuccess {
+            items[key] = data
+        }
+        return updateStatus
     }
 }

@@ -5,8 +5,8 @@ final class KeychainHelperTests: XCTestCase {
     func test_setAndGet_returnsSavedValue() {
         let (sut, key, value) = makeSUT()
 
-        sut.delete(key)
-        sut.set(value, for: key)
+        _ = sut.delete(key)
+        _ = sut.save(value, for: key)
 
         XCTAssertEqual(sut.get(key), value)
         cleanUp(key: key, in: sut)
@@ -24,8 +24,8 @@ final class KeychainHelperTests: XCTestCase {
         let otherValue = "other_value"
 
         cleanUp(key: key, in: sut)
-        sut.set(value, for: key)
-        sut.set(otherValue, for: key)
+        _ = sut.save(value, for: key)
+        _ = sut.save(otherValue, for: key)
 
         XCTAssertEqual(sut.get(key), otherValue)
         cleanUp(key: key, in: sut)
@@ -34,7 +34,7 @@ final class KeychainHelperTests: XCTestCase {
     func test_delete_removesValue() {
         let (sut, key, value) = makeSUT()
 
-        sut.set(value, for: key)
+        _ = sut.save(value, for: key)
         sut.delete(key)
 
         XCTAssertNil(sut.get(key))
