@@ -569,7 +569,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### 3. [🚧] Store the new token securely after renewal
 - [🚧] KeychainManager:
-  - [🚧] AES-256 encryption             
+  - [✅] AES-256 encryption             
   - [🔜] Migration of existing tokens  
   - [⚠️] Security tests (Keychain Spy): 
     - [✅] Stores token in Keychain on successful refresh (happy path)
