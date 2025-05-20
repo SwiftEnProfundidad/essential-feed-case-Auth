@@ -89,6 +89,99 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Expected save to be called on writer with encrypted data and key.")
     }
 
+    func test_delete_whenWriterThrowsError_notifiesHandlerAndRethrowsError() {
+        let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
+        let testKey = "anyKey"
+        let expectedError = KeychainError.itemNotFound // Or any other relevant KeychainError for delete
+
+        writerSpy.completeDelete(with: expectedError)
+
+        var capturedError: Error?
+        XCTAssertThrowsError(try sut.delete(forKey: testKey)) { error in
+            capturedError = error
+        }
+
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected delete to rethrow the same error from writer.")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "delete")], "Expected errorHandler to be notified with correct error, key, and operation.")
+        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Expected delete to be called on writer with the correct key.")
+    }
+
+    func test_delete_whenWriterSucceeds_doesNotNotifyHandler() {
+        let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
+        let testKey = "anyKey"
+
+        writerSpy.completeDeleteSuccessfully()
+
+        XCTAssertNoThrow(try sut.delete(forKey: testKey), "Expected delete to not throw an error.")
+
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected errorHandler not to be notified on success.")
+        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Expected delete to be called on writer with the correct key.")
+    }
+
+    func test_encrypt_whenEncryptorThrowsError_notifiesHandlerAndRethrowsError() {
+        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let testData = Data("plain data".utf8)
+        let expectedError = KeychainError.encryptionFailed
+
+        encryptorSpy.completeEncrypt(with: expectedError)
+
+        var capturedError: Error?
+        XCTAssertThrowsError(try sut.encrypt(testData)) { error in
+            capturedError = error
+        }
+
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected encrypt to rethrow error from encryptor.")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "encrypt")], "Expected errorHandler notification for encrypt failure.")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)], "Expected encrypt to be called on encryptor.")
+    }
+
+    func test_encrypt_whenEncryptorSucceeds_returnsDataAndDoesNotNotifyHandler() {
+        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let plainData = Data("plain data".utf8)
+        let expectedEncryptedData = Data("encrypted data".utf8)
+
+        encryptorSpy.completeEncrypt(with: expectedEncryptedData)
+
+        var capturedData: Data?
+        XCTAssertNoThrow(capturedData = try sut.encrypt(plainData))
+
+        XCTAssertEqual(capturedData, expectedEncryptedData, "Expected encrypt to return data from encryptor.")
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected no errorHandler notification on encrypt success.")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Expected encrypt to be called on encryptor.")
+    }
+
+    func test_decrypt_whenEncryptorThrowsError_notifiesHandlerAndRethrowsError() {
+        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let encryptedData = Data("encrypted data".utf8)
+        let expectedError = KeychainError.decryptionFailed
+
+        encryptorSpy.completeDecrypt(with: expectedError)
+
+        var capturedError: Error?
+        XCTAssertThrowsError(try sut.decrypt(encryptedData)) { error in
+            capturedError = error
+        }
+
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected decrypt to rethrow error from encryptor.")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "decrypt")], "Expected errorHandler notification for decrypt failure.")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Expected decrypt to be called on encryptor.")
+    }
+
+    func test_decrypt_whenEncryptorSucceeds_returnsDataAndDoesNotNotifyHandler() {
+        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let encryptedData = Data("encrypted data".utf8)
+        let expectedPlainData = Data("plain data".utf8)
+
+        encryptorSpy.completeDecrypt(with: expectedPlainData)
+
+        var capturedData: Data?
+        XCTAssertNoThrow(capturedData = try sut.decrypt(encryptedData))
+
+        XCTAssertEqual(capturedData, expectedPlainData, "Expected decrypt to return data from encryptor.")
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected no errorHandler notification on decrypt success.")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Expected decrypt to be called on encryptor.")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
