@@ -2,25 +2,28 @@ import EssentialFeed
 import Foundation
 
 public final class KeychainHelperSpy: KeychainStore {
-    public private(set) var setCalls: [(String, String)] = []
+    public var stubbedValue: String?
+
     public private(set) var getCalls: [String] = []
+    public private(set) var saveCalls: [(String, String)] = []
     public private(set) var deleteCalls: [String] = []
-    private var store: [String: String] = [:]
 
     public init() {}
 
-    public func set(_ value: String, for key: String) {
-        setCalls.append((value, key))
-        store[key] = value
-    }
-
     public func get(_ key: String) -> String? {
         getCalls.append(key)
-        return store[key]
+        return stubbedValue
     }
 
-    public func delete(_ key: String) {
+    @discardableResult
+    public func save(_ value: String, for key: String) -> Bool {
+        saveCalls.append((key, value))
+        return true
+    }
+
+    @discardableResult
+    public func delete(_ key: String) -> Bool {
         deleteCalls.append(key)
-        store.removeValue(forKey: key)
+        return true
     }
 }

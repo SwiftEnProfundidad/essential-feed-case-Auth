@@ -1,4 +1,3 @@
-
 import Foundation
 import Security
 
@@ -19,7 +18,8 @@ public final class KeychainHelper: KeychainStore {
         return value
     }
 
-    public func set(_ value: String, for key: String) {
+    @discardableResult
+    public func save(_ value: String, for key: String) -> Bool {
         let data = value.data(using: .utf8)!
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
@@ -31,14 +31,15 @@ public final class KeychainHelper: KeychainStore {
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
-        SecItemAdd(attributes as CFDictionary, nil)
+        return SecItemAdd(attributes as CFDictionary, nil) == errSecSuccess
     }
 
-    public func delete(_ key: String) {
+    @discardableResult
+    public func delete(_ key: String) -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
-        SecItemDelete(query as CFDictionary)
+        return SecItemDelete(query as CFDictionary) == errSecSuccess
     }
 }

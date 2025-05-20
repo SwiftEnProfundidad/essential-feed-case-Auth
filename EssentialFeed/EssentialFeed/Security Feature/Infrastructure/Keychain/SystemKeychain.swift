@@ -1,5 +1,4 @@
 import Foundation
-
 import Security
 
 public final class SystemKeychain: KeychainFull {
@@ -39,15 +38,13 @@ public final class SystemKeychain: KeychainFull {
         queue.setSpecific(key: SystemKeychain.queueKey, value: ())
     }
 
+    // MARK: - Public API
+
     public func delete(forKey key: String) -> Bool {
-        if let keychain {
-            return keychain.delete(forKey: key)
-        }
-        if DispatchQueue.getSpecific(key: SystemKeychain.queueKey) != nil {
-            return _delete(forKey: key)
-        } else {
-            return queue.sync { _delete(forKey: key) }
-        }
+        let cleanedKey = key.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !cleanedKey.isEmpty else { return false }
+        guard let keychain else { return _delete(forKey: cleanedKey) }
+        return keychain.delete(forKey: cleanedKey)
     }
 
     private func _delete(forKey key: String) -> Bool {
@@ -82,8 +79,18 @@ public final class SystemKeychain: KeychainFull {
         case .success:
             return .success
         case .duplicateItem:
+            if !keychain.delete(forKey: key) {
+                return .failure
+            }
             let updateStatus = keychain.update(data: data, forKey: key)
-            return updateStatus == errSecSuccess ? .success : .duplicateItem
+            switch updateStatus {
+            case errSecSuccess:
+                return .success
+            case errSecDuplicateItem:
+                return .duplicateItem
+            default:
+                return .failure
+            }
         case .failure:
             return .failure
         }

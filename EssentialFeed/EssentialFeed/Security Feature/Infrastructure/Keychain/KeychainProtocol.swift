@@ -25,7 +25,5 @@ public protocol KeychainFull: KeychainSavable {
     func load(forKey key: String) -> Data?
 }
 
-// TEMPORAL: Typealias para compatibilidad con código legacy
-// TODO: Eliminar cuando todo el código y los tests usen los nuevos protocolos
 public typealias KeychainProtocolWithDelete = KeychainFull
 public typealias KeychainProtocol = KeychainSavable

@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -15,7 +14,7 @@ final class SecureStorageTests: XCTestCase {
 
     func test_protectionLevel_returnsHighForUnreadableData() {
         let (sut, _, _) = makeSUT()
-        let invalidData = "invalid".data(using: .utf16)! // Usando UTF16 para que falle al leer como UTF8
+        let invalidData = "invalid".data(using: .utf16)!
 
         let level = sut.protectionLevel(for: invalidData)
 
@@ -160,10 +159,10 @@ final class SecureStorageTests: XCTestCase {
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
         sut: SecureStorage,
         store: SecureStoreSpy,
-        encryptionService: EncryptionServiceSpy
+        encryptionService: EncryptionServiceDataSpy
     ) {
         let store = SecureStoreSpy()
-        let encryptionService = EncryptionServiceSpy()
+        let encryptionService = EncryptionServiceDataSpy()
         let sut = SecureStorage(store: store, encryptionService: encryptionService)
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(encryptionService, file: file, line: line)
