@@ -567,11 +567,14 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Exponential backoff (3 retries)  
   - [✅] Semaphore to avoid race conditions  
 
-#### 3. [🚧] Store the new token securely after renewal 
-- [🚧] KeychainManager:  
-  - [🚧] AES-256 encryption  
-  - [🚧] Migration of existing tokens  
-  - [🚧] Security tests (Keychain Spy)  
+#### 3. [🚧] Store the new token securely after renewal
+- [🚧] KeychainManager:
+  - [🚧] AES-256 encryption             
+  - [🔜] Migration of existing tokens  
+  - [⚠️] Security tests (Keychain Spy): 
+    - [✅] Stores token in Keychain on successful refresh (happy path)
+    - [🚧] Tests that verify encryption (AES-256) on write
+    - [🔜] Negative/error-path & advanced security tests
 
 #### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  

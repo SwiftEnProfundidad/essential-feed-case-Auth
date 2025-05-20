@@ -37,6 +37,14 @@ final class DefaultTokenRefreshServiceTests: XCTestCase {
         }
     }
 
+    func test_refreshToken_savesTokenSecurelyInKeychain_onSuccess() async {
+        let keychain = KeychainSpy()
+        let sut = TokenRefreshSaver(keychain: keychain)
+        let token = TokenRefreshResult(accessToken: "access", refreshToken: "refresh", expiry: Date())
+        await sut.handleTokenRefreshSuccess(token: token)
+        XCTAssertEqual(keychain.messages, [.save(token)])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(fails: Int = 0, alwaysFail: Bool = false) -> TokenRefreshService {
@@ -71,5 +79,22 @@ final class TokenRefreshServiceStub: TokenRefreshService {
 
     func resetAttempt() {
         self.attempt = 0
+    }
+}
+
+final class KeychainSpy {
+    enum Message: Equatable {
+        case save(TokenRefreshResult)
+    }
+
+    private(set) var messages: [Message] = []
+    func save(_ token: TokenRefreshResult) { messages.append(.save(token)) }
+}
+
+final class TokenRefreshSaver {
+    private let keychain: KeychainSpy
+    init(keychain: KeychainSpy) { self.keychain = keychain }
+    func handleTokenRefreshSuccess(token: TokenRefreshResult) async {
+        keychain.save(token)
     }
 }
