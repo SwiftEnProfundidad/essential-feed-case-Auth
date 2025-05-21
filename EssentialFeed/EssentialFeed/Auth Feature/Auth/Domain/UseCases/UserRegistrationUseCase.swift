@@ -1,5 +1,9 @@
 import Foundation
 
+public protocol UserRegisterer {
+    func register(name: String, email: String, password: String) async -> UserRegistrationResult
+}
+
 public protocol UserRegistrationPersistenceService {
     func save(tokenBundle: Token) async throws
     func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult
@@ -25,7 +29,7 @@ public protocol UserRegistrationNotifier {
     func notifyRegistrationFailed(with error: Error)
 }
 
-public actor UserRegistrationUseCase {
+public actor UserRegistrationUseCase: UserRegisterer {
     private let persistenceService: UserRegistrationPersistenceService
     private let validator: RegistrationValidatorProtocol
     private let httpClient: HTTPClient
