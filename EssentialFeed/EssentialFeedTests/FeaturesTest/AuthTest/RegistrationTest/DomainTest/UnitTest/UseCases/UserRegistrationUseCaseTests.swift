@@ -368,7 +368,6 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             XCTAssertNil(httpClientSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
             XCTAssertNil(notifierSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
         }
-
         return (sut, persistenceSpy, validator, httpClientSpy, notifierSpy)
     }
 

@@ -46,9 +46,7 @@ public actor UserRegistrationUseCase {
         self.notifier = notifier
     }
 
-    public func register(name: String, email: String, password: String) async
-        -> UserRegistrationResult
-    {
+    public func register(name: String, email: String, password: String) async -> UserRegistrationResult {
         if let validationError = validator.validate(name: name, email: email, password: password) {
             notifier?.notifyRegistrationFailed(with: validationError)
             return .failure(validationError)
@@ -59,7 +57,7 @@ public actor UserRegistrationUseCase {
         do {
             let request = try makeRequest(for: userData)
             let (data, httpResponse) = try await httpClient.send(request)
-            return await handleRegistrationResponse(data: data, httpResponse: httpResponse, for: userData)
+            return await mapHTTPResponseToRegistrationResult(data: data, httpResponse: httpResponse, for: userData)
         } catch {
             return handleRegistrationError(error, for: userData)
         }
@@ -77,14 +75,36 @@ public actor UserRegistrationUseCase {
         return request
     }
 
-    private func handleRegistrationResponse(
-        data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData
-    ) async -> UserRegistrationResult {
+    private func mapHTTPResponseToRegistrationResult(data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData) async -> UserRegistrationResult {
         switch httpResponse.statusCode {
         case 201:
-            return await processSuccessfulRegistration(
-                data: data, name: userData.name, email: userData.email, password: userData.password
-            )
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
+                let receivedToken = Token(
+                    accessToken: serverResponse.token.value,
+                    expiry: serverResponse.token.expiry,
+                    refreshToken: nil
+                )
+
+                try await persistenceService.save(tokenBundle: receivedToken)
+                _ = persistenceService.saveCredentials(
+                    passwordData: userData.password.data(using: .utf8)!,
+                    forEmail: userData.email
+                )
+
+                return .success(User(name: userData.name, email: userData.email))
+            } catch let tokenError as TokenParsingError {
+                notifier?.notifyRegistrationFailed(with: tokenError)
+                return .failure(tokenError)
+            } catch let decodingError as DecodingError {
+                notifier?.notifyRegistrationFailed(with: decodingError)
+                return .failure(decodingError)
+            } catch {
+                notifier?.notifyRegistrationFailed(with: error)
+                return .failure(error)
+            }
         case 409:
             notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
             return .failure(UserRegistrationError.emailAlreadyInUse)
@@ -102,40 +122,7 @@ public actor UserRegistrationUseCase {
         }
     }
 
-    private func processSuccessfulRegistration(
-        data: Data, name: String, email: String, password: String
-    ) async -> UserRegistrationResult {
-        do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            let serverResponse = try decoder.decode(ServerAuthResponse.self, from: data)
-            let receivedToken = Token(
-                accessToken: serverResponse.token.value,
-                expiry: serverResponse.token.expiry,
-                refreshToken: nil
-            )
-
-            try await persistenceService.save(tokenBundle: receivedToken)
-            _ = persistenceService.saveCredentials(
-                passwordData: password.data(using: .utf8)!, forEmail: email
-            )
-
-            return .success(User(name: name, email: email))
-        } catch let tokenError as TokenParsingError {
-            notifier?.notifyRegistrationFailed(with: tokenError)
-            return .failure(tokenError)
-        } catch let decodingError as DecodingError {
-            notifier?.notifyRegistrationFailed(with: decodingError)
-            return .failure(decodingError)
-        } catch {
-            notifier?.notifyRegistrationFailed(with: error)
-            return .failure(error)
-        }
-    }
-
-    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData)
-        -> UserRegistrationResult
-    {
+    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) -> UserRegistrationResult {
         if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
             Task {
                 do {
