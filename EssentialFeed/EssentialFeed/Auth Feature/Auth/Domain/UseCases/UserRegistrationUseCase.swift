@@ -63,7 +63,7 @@ public actor UserRegistrationUseCase: UserRegisterer {
             let (data, httpResponse) = try await httpClient.send(request)
             return await mapHTTPResponseToRegistrationResult(data: data, httpResponse: httpResponse, for: userData)
         } catch {
-            return handleRegistrationError(error, for: userData)
+            return await handleRegistrationError(error, for: userData)
         }
     }
 
@@ -126,14 +126,16 @@ public actor UserRegistrationUseCase: UserRegisterer {
         }
     }
 
-    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) -> UserRegistrationResult {
+    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) async -> UserRegistrationResult {
         if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
-            Task {
-                do {
-                    try await persistenceService.saveForOfflineProcessing(registrationData: userData)
-                } catch let offlineStoreError {
-                    notifier?.notifyRegistrationFailed(with: offlineStoreError)
-                }
+            do {
+                try await persistenceService.saveForOfflineProcessing(registrationData: userData)
+            } catch let offlineStoreError {
+                notifier?.notifyRegistrationFailed(with: offlineStoreError)
+                // Note: The original logic only notified. If this offline save failure
+                // should also make the overall registration fail with this specific error,
+                // we might consider returning .failure(offlineStoreError) here.
+                // For now, sticking to notifying and then proceeding to notify/return .noConnectivity.
             }
             notifier?.notifyRegistrationFailed(with: NetworkError.noConnectivity)
             return .failure(NetworkError.noConnectivity)
