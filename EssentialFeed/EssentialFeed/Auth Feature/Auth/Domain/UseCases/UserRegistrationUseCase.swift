@@ -8,7 +8,7 @@ public enum RegistrationValidationError: Error, Equatable {
     case weakPassword
 }
 
-public protocol RegistrationValidatorProtocol {
+public protocol RegistrationValidatorProtocol: AnyObject {
     func validate(name: String, email: String, password: String) -> RegistrationValidationError?
 }
 

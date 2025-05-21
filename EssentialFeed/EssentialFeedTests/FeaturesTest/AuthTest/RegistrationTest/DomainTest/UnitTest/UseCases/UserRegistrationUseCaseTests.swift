@@ -51,35 +51,47 @@ final class UserRegistrationUseCaseTests: XCTestCase {
     }
 
     func test_registerUser_withEmptyName_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
-        let (_, persistenceSpy, _, _, _) = makeSUT()
+        let validatorStub = RegistrationValidatorTestStub()
+        let (sut, persistenceSpy, _, httpClientSpy, _) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
             name: "",
             email: "test@email.com",
             password: "Password123",
             expectedError: .emptyName,
-            persistence: persistenceSpy
+            sut: sut,
+            httpClientSpy: httpClientSpy,
+            persistenceSpy: persistenceSpy,
+            validatorStub: validatorStub
         )
     }
 
     func test_registerUser_withInvalidEmail_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
-        let (_, persistenceSpy, _, _, _) = makeSUT()
+        let validatorStub = RegistrationValidatorTestStub()
+        let (sut, persistenceSpy, _, httpClientSpy, _) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
             name: "Test User",
             email: "invalid-email",
             password: "Password123",
             expectedError: .invalidEmail,
-            persistence: persistenceSpy
+            sut: sut,
+            httpClientSpy: httpClientSpy,
+            persistenceSpy: persistenceSpy,
+            validatorStub: validatorStub
         )
     }
 
     func test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
-        let (_, persistenceSpy, _, _, _) = makeSUT()
+        let validatorStub = RegistrationValidatorTestStub()
+        let (sut, persistenceSpy, _, httpClientSpy, _) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
             name: "Test User",
             email: "test@email.com",
             password: "123",
             expectedError: .weakPassword,
-            persistence: persistenceSpy
+            sut: sut,
+            httpClientSpy: httpClientSpy,
+            persistenceSpy: persistenceSpy,
+            validatorStub: validatorStub
         )
     }
 
@@ -302,8 +314,10 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             notifier: notifierSpy
         )
 
-        addTeardownBlock { [weak sut, weak httpClientSpy, weak notifierSpy] in
+        addTeardownBlock { [weak sut, weak persistenceSpy, weak validator, weak httpClientSpy, weak notifierSpy] in
             XCTAssertNil(sut, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+            XCTAssertNil(persistenceSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
+            XCTAssertNil(validator as AnyObject?, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
             XCTAssertNil(httpClientSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
             XCTAssertNil(notifierSpy, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
         }
@@ -316,13 +330,14 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         email: String,
         password: String,
         expectedError: RegistrationValidationError,
-        persistence: RegistrationPersistenceSpy = RegistrationPersistenceSpy(),
+        sut: UserRegistrationUseCase,
+        httpClientSpy: HTTPClientSpy,
+        persistenceSpy: RegistrationPersistenceSpy,
+        validatorStub: RegistrationValidatorTestStub,
         file: StaticString = #file,
         line: UInt = #line
     ) async {
-        let validator = RegistrationValidatorTestStub()
-        validator.errorToReturn = expectedError
-        let (sut, _, _, httpClientSpy, _) = makeSUT(persistenceSpy: persistence, validator: validator)
+        validatorStub.errorToReturn = expectedError
 
         let result = await sut.register(name: name, email: email, password: password)
 
@@ -334,11 +349,11 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         XCTAssertEqual(httpClientSpy.requests.count, 0, "No HTTP request should be made if validation fails", file: file, line: line)
-        let keychainCalls = await persistence.getSaveKeychainDataCalls()
+        let keychainCalls = await persistenceSpy.getSaveKeychainDataCalls()
         XCTAssertTrue(keychainCalls.isEmpty, "No Keychain save should occur if validation fails", file: file, line: line)
-        let tokenMessages = await persistence.getTokenStorageMessages()
+        let tokenMessages = await persistenceSpy.getTokenStorageMessages()
         XCTAssertTrue(tokenMessages.isEmpty, "No TokenStorage interaction should occur if validation fails", file: file, line: line)
-        let offlineStoreMessages = await persistence.getOfflineStoreMessages()
+        let offlineStoreMessages = await persistenceSpy.getOfflineStoreMessages()
         XCTAssertTrue(offlineStoreMessages.isEmpty, "No OfflineRegistrationStore interaction should occur if validation fails", file: file, line: line)
     }
 
