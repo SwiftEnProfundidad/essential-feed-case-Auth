@@ -860,6 +860,7 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */,
 				B4047C5B2DD8BDBB00A0C34C /* Auth */,
 				B4D6B2652DC8D70600F5A3FE /* FeaturesTest */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
@@ -980,7 +981,6 @@
 				B48407B62DDC407E00834C15 /* TokenRefreshResult+toData.swift */,
 				B48407B72DDC407E00834C15 /* TokenRefreshServiceStub.swift */,
 				B4EB10122DC96B4000A4DA55 /* HTTPClientDummy.swift */,
-				B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */,
 				B49EFABE2DB552DC007B703C /* AsyncAssertHelpers.swift */,
 				0844768E21FCB24E00439BE9 /* XCTestCase+MemoryLeakTracking.swift */,
 				081C0DB222491EEF00AC754E /* SharedTestHelpers.swift */,
