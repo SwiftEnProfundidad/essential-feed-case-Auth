@@ -36,14 +36,14 @@ public struct LoginView: View {
                                     .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                             )
 
-                            // SecureField("Contraseña", text: $viewModel.password)
-                            //     .padding()
-                            //     .background(Color(UIColor.secondarySystemGroupedBackground))
-                            //     .cornerRadius(10)
-                            //     .overlay(
-                            //         RoundedRectangle(cornerRadius: 10)
-                            //             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            //     )
+                            TextField("Contraseña", text: $viewModel.password)
+                                .padding()
+                                .background(Color(UIColor.secondarySystemGroupedBackground))
+                                .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                )
                         }
                         .padding(.horizontal)
 
