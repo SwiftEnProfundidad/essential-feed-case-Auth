@@ -5,6 +5,13 @@ public protocol LoginNavigation: AnyObject {
     func showRecovery()
 }
 
+public enum ViewState: Equatable {
+    case idle
+    case blocked
+    case error(String)
+    case success(String)
+}
+
 public final class LoginViewModel: ObservableObject {
     @Published public var username: String = "" {
         didSet {
@@ -30,7 +37,7 @@ public final class LoginViewModel: ObservableObject {
     private let pendingRequestStore: AnyLoginRequestStore?
     private let loginSecurity: LoginSecurityUseCase
     private let blockMessageProvider: LoginBlockMessageProvider
-    public weak var navigation: LoginNavigation?
+    public var navigation: LoginNavigation?
 
     public init(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
@@ -171,6 +178,19 @@ public final class LoginViewModel: ObservableObject {
 
     public func handleRecoveryTap() {
         navigation?.showRecovery()
+    }
+
+    public var viewState: ViewState {
+        if isLoginBlocked {
+            .blocked
+        } else if let message = errorMessage {
+            .error(message)
+        } else if loginSuccess {
+            // Puedes personalizar el mensaje de éxito si es necesario
+            .success("Login successful!")
+        } else {
+            .idle
+        }
     }
 
     deinit {

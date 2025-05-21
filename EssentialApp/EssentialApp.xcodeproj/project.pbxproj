@@ -51,10 +51,10 @@
 		B46DAAB92DC22A780080160E /* LoginViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB82DC22A780080160E /* LoginViewTests.swift */; };
 		B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */; };
 		B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */; };
-		B4702E362DC153280055B3D9 /* RealSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */; };
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
+		B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
 		B48991302DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
 		B48991312DD3E41300A94850 /* LOGIN_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */; };
 		B48991322DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
@@ -80,7 +80,6 @@
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
 		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
-		B4EA898F2DC18B6E0010481A /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,7 +158,6 @@
 		B46DAAB82DC22A780080160E /* LoginViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewTests.swift; sourceTree = "<group>"; };
 		B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperTests.swift; sourceTree = "<group>"; };
-		B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealSessionManagerTests.swift; sourceTree = "<group>"; };
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
@@ -188,7 +186,6 @@
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
-		B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordRecoveryScreen.swift; path = EssentialApp/Features/Auth/UI/PasswordRecoveryScreen.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,7 +314,6 @@
 			isa = PBXGroup;
 			children = (
 				B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */,
-				B4702E342DC153280055B3D9 /* RealSessionManagerTests.swift */,
 				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
 			);
 			path = Keychain;
@@ -363,7 +359,6 @@
 		B4D6B2582DC8D07900F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				B4EA898E2DC18B6E0010481A /* PasswordRecoveryScreen.swift */,
 				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
 				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
 				B44823382DD3A226009E59A5 /* LoginUIComposer.swift */,
@@ -584,12 +579,12 @@
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
 				B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */,
 				B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */,
-				B4EA898F2DC18B6E0010481A /* PasswordRecoveryScreen.swift in Sources */,
 				B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */,
 				B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */,
 				B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
+				B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
@@ -614,7 +609,6 @@
 				B43385222DD43E0A006B6C37 /* InMemoryKeychainStore.swift in Sources */,
 				B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */,
 				B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */,
-				B4702E362DC153280055B3D9 /* RealSessionManagerTests.swift in Sources */,
 				08073B5B238D2E1000A75DC6 /* ListViewController+TestHelpers.swift in Sources */,
 				B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,

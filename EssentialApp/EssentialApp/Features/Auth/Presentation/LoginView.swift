@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import SwiftUI
 
@@ -18,14 +17,15 @@ public struct LoginView: View {
             SecureField("Contraseña", text: $viewModel.password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
-            if viewModel.isLoginBlocked {
+            switch viewModel.viewState {
+            case .idle:
+                loginControls
+            case .blocked:
                 blockedView()
-            } else if let error = viewModel.errorMessage {
-                errorView(message: error)
-            } else if viewModel.loginSuccess {
-                successView(message: "¡Bienvenido!")
-            } else {
-                loginButton
+            case let .error(message):
+                errorView(message: message)
+            case let .success(message):
+                successView(message: message)
             }
         }
         .padding()
@@ -34,6 +34,16 @@ public struct LoginView: View {
     private var loginButton: some View {
         Button("Iniciar sesión") {
             Task { await viewModel.login() }
+        }
+    }
+
+    private var loginControls: some View {
+        VStack {
+            loginButton
+            Button("¿Olvidaste tu contraseña?") {
+                viewModel.handleRecoveryTap()
+            }
+            .padding(.top, 8)
         }
     }
 
