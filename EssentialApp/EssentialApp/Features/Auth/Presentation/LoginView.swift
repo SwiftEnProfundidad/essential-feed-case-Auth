@@ -47,21 +47,20 @@ public struct LoginView: View {
                         }
                         .padding(.horizontal)
 
-                        // switch viewModel.viewState {
-                        // case .idle:
-                        //     loginControls
-                        //         .padding(.top, 10)
-                        // case .blocked:
-                        //     blockedView()
-                        //         .padding(.top, 10)
-                        // case let .error(message):
-                        //     errorView(message: message)
-                        //         .padding(.top, 10)
-                        // case let .success(message):
-                        //     successView(message: message)
-                        //         .padding(.top, 10)
-                        // }
-                        loginControls.padding(.top, 10)
+                        switch viewModel.viewState {
+                        case .idle:
+                            loginControls
+                                .padding(.top, 10)
+                        case .blocked:
+                            blockedView()
+                                .padding(.top, 10)
+                        case let .error(message):
+                            errorView(message: message)
+                                .padding(.top, 10)
+                        case let .success(message):
+                            successView(message: message)
+                                .padding(.top, 10)
+                        }
                     }
                     .padding()
                     .frame(minHeight: geometry.size.height)
