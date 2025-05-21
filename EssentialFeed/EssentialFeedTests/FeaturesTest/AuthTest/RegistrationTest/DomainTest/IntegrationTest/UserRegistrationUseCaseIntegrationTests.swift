@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -6,11 +5,10 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
     func test_register_withSuccessfulServerResponse_savesTokenAndCredentials() async throws {
         let uniqueUser = UserRegistrationData.makeUnique()
         let expectedToken = Token.make()
+        let userPayload = ServerAuthResponse.UserPayload(name: uniqueUser.name, email: uniqueUser.email)
+        let tokenPayload = ServerAuthResponse.TokenPayload(value: expectedToken.accessToken, expiry: expectedToken.expiry)
+        let serverResponsePayload = ServerAuthResponse(user: userPayload, token: tokenPayload)
 
-        let serverResponsePayload = ServerAuthResponse(
-            user: .init(name: uniqueUser.name, email: uniqueUser.email),
-            token: .init(value: expectedToken.value, expiry: expectedToken.expiry)
-        )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         let serverResponseData = try encoder.encode(serverResponsePayload)
@@ -24,7 +22,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         let validator = RegistrationValidatorAlwaysValid()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
+            persistenceService: persistenceSpy,
             validator: validator,
             httpClient: httpClientStub,
             registrationEndpoint: anyURL(),
@@ -48,11 +46,13 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
             XCTAssertEqual(registeredUser.email, uniqueUser.email)
 
             XCTAssertEqual(persistenceSpy.tokenStorageMessages.count, 1)
-            if case let .save(savedToken) = persistenceSpy.tokenStorageMessages.first {
-                XCTAssertEqual(savedToken.value, expectedToken.value)
+            if case let .save(tokenBundle: savedToken) = persistenceSpy.tokenStorageMessages.first {
+                XCTAssertEqual(savedToken.accessToken, expectedToken.accessToken)
                 XCTAssertEqual(savedToken.expiry.timeIntervalSince1970, expectedToken.expiry.timeIntervalSince1970, accuracy: 1.0)
+                XCTAssertNil(savedToken.refreshToken)
+                XCTAssertNil(expectedToken.refreshToken)
             } else {
-                XCTFail("Expected token to be saved, got \(String(describing: persistenceSpy.tokenStorageMessages.first))")
+                XCTFail("Expected token to be saved with correct message, got \(String(describing: persistenceSpy.tokenStorageMessages.first))")
             }
 
             XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 1)
@@ -78,7 +78,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         let validator = RegistrationValidatorAlwaysValid()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
+            persistenceService: persistenceSpy,
             validator: validator,
             httpClient: httpClientStub,
             registrationEndpoint: anyURL(),
@@ -123,79 +123,6 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
     // TODO: Considerar añadir tests de integración para otros errores de servidor (409, 500) si se ve necesario, aunque los unit tests ya los cubren bien.
 }
 
-private class IntegrationPersistenceSpy: KeychainProtocol, TokenStorage, OfflineRegistrationStore {
-    var saveKeychainDataCalls = [(data: Data, key: String)]()
-    var saveKeychainReturnValues: [KeychainSaveResult] = []
-    var loadKeychainDataCalls = [String]()
-    var dataToReturnForLoad: Data?
-
-    func save(data: Data, forKey key: String) -> KeychainSaveResult {
-        saveKeychainDataCalls.append((data, key))
-        return saveKeychainReturnValues.isEmpty ? .success : saveKeychainReturnValues.removeFirst()
-    }
-
-    func load(forKey key: String) -> Data? {
-        loadKeychainDataCalls.append(key)
-        return dataToReturnForLoad
-    }
-
-    enum TokenStorageMessage: Equatable {
-        case save(Token)
-        case loadRefreshToken
-    }
-
-    var tokenStorageMessages = [TokenStorageMessage]()
-    var saveTokenError: Error?
-    var loadRefreshTokenCallsCount = 0
-    var refreshTokenToReturn: String? = "default-integration-refresh-token"
-    var loadRefreshTokenError: Error?
-
-    func save(_ token: Token) async throws {
-        tokenStorageMessages.append(.save(token))
-        if let error = saveTokenError {
-            throw error
-        }
-    }
-
-    func loadRefreshToken() async throws -> String? {
-        loadRefreshTokenCallsCount += 1
-        tokenStorageMessages.append(.loadRefreshToken)
-        if let error = loadRefreshTokenError {
-            throw error
-        }
-        return refreshTokenToReturn
-    }
-
-    enum OfflineStoreMessage: Equatable {
-        case save(UserRegistrationData)
-    }
-
-    var offlineStoreMessages = [OfflineStoreMessage]()
-    var saveOfflineDataError: Error?
-
-    func save(_ data: UserRegistrationData) async throws {
-        offlineStoreMessages.append(.save(data))
-        if let error = saveOfflineDataError {
-            throw error
-        }
-    }
-}
-
-private struct ServerAuthResponse: Codable {
-    struct UserPayload: Codable {
-        let name: String
-        let email: String
-    }
-
-    struct TokenPayload: Codable {
-        let value: String
-        let expiry: Date
-    }
-
-    let user: UserPayload
-    let token: TokenPayload
-}
-
 private extension UserRegistrationData {
     static func makeUnique(id: UUID = UUID()) -> UserRegistrationData {
         UserRegistrationData(name: "User \(id.uuidString.prefix(8))", email: "user-\(id.uuidString.prefix(8))@example.com", password: "Password\(id.uuidString.prefix(8))")
@@ -203,13 +130,11 @@ private extension UserRegistrationData {
 }
 
 private extension Token {
-    static func make(value: String = "test-token-\(UUID().uuidString)", expiryInterval: TimeInterval = 3600) -> Token {
-        Token(value: value, expiry: Date().addingTimeInterval(expiryInterval))
-    }
-}
-
-extension HTTPClientStub {
-    static func stubForError(_ error: Error) -> HTTPClientStub {
-        HTTPClientStub { _ in .failure(error) }
+    static func make(
+        accessToken: String = "test-token-\(UUID().uuidString)",
+        expiryInterval: TimeInterval = 3600,
+        refreshToken: String? = nil
+    ) -> Token {
+        Token(accessToken: accessToken, expiry: Date().addingTimeInterval(expiryInterval), refreshToken: refreshToken)
     }
 }

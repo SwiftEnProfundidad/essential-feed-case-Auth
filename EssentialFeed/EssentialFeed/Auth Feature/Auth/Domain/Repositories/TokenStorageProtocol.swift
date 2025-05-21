@@ -1,6 +1,7 @@
 import Foundation
 
 public protocol TokenStorage {
-    func save(_ token: Token) async throws
-    func loadRefreshToken() async throws -> String?
+    func save(tokenBundle: Token) async throws
+    func loadTokenBundle() async throws -> Token?
+    func deleteTokenBundle() async throws
 }

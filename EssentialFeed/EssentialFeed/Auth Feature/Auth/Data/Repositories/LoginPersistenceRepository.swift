@@ -10,7 +10,7 @@ public final class DefaultLoginPersistence: LoginPersistence {
     }
 
     public func saveToken(_ token: Token) async throws {
-        try await tokenStorage.save(token)
+        try await tokenStorage.save(tokenBundle: token)
     }
 
     public func saveOfflineCredentials(_ credentials: LoginCredentials) async throws {

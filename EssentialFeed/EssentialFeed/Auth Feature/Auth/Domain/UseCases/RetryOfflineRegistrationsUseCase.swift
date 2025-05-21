@@ -42,11 +42,15 @@ public final class RetryOfflineRegistrationsUseCase {
             case let .success(response):
                 do {
                     let expiryDate = Date().addingTimeInterval(3600)
-                    let tokenToStore = Token(value: response.token, expiry: expiryDate)
-                    try await tokenStorage.save(tokenToStore)
+                    let tokenToStore = Token(
+                        accessToken: response.token,
+                        expiry: expiryDate,
+                        refreshToken: response.refreshToken
+                    )
+                    try await tokenStorage.save(tokenBundle: tokenToStore)
                 } catch {
                     results.append(.failure(.tokenStorageFailed(error)))
-                    continue // pasa al siguiente dato
+                    continue
                 }
                 do {
                     try await offlineStore.delete(data)
