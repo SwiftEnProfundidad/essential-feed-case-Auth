@@ -229,6 +229,8 @@
 		B48407C12DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407C02DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift */; };
 		B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407C22DDC633300834C15 /* EncryptionServiceDataSpy.swift */; };
 		B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
+		B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */; };
+		B48914262DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */; };
 		B48991482DD3E85700A94850 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */; };
 		B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */; };
@@ -584,6 +586,8 @@
 		B48407C02DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenEncryptionServiceSpy.swift; sourceTree = "<group>"; };
 		B48407C22DDC633300834C15 /* EncryptionServiceDataSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionServiceDataSpy.swift; sourceTree = "<group>"; };
 		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptor.swift; sourceTree = "<group>"; };
+		B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptorTests.swift; sourceTree = "<group>"; };
 		B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
 		B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
 		B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationNotifierSpy.swift; sourceTree = "<group>"; };
@@ -1361,6 +1365,7 @@
 		B4047DB32DDA6EA300A0C34C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B48914212DDDFB7900C6EF73 /* Encryption */,
 				B4A746762DDD22780087C33C /* ErrorHandling */,
 				B4047DC42DDA70F300A0C34C /* Storage */,
 				B4047DAA2DDA6EA300A0C34C /* APIInterceptor */,
@@ -1676,6 +1681,22 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		B48914212DDDFB7900C6EF73 /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */,
+			);
+			path = Encryption;
+			sourceTree = "<group>";
+		};
+		B48914242DDDFC3500C6EF73 /* EncryptionTest */ = {
+			isa = PBXGroup;
+			children = (
+				B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */,
+			);
+			path = EncryptionTest;
+			sourceTree = "<group>";
+		};
 		B48D30012DCCB006002943D9 /* IntegrationTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -1733,6 +1754,7 @@
 		B4A7467E2DDD24060087C33C /* InfrastructureTest */ = {
 			isa = PBXGroup;
 			children = (
+				B48914242DDDFC3500C6EF73 /* EncryptionTest */,
 				B4A7467D2DDD24060087C33C /* StorageTest */,
 			);
 			path = InfrastructureTest;
@@ -2429,6 +2451,7 @@
 				087148BD232BEC6700D6BE1A /* ResourceErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
 				B48991482DD3E85700A94850 /* (null) in Sources */,
+				B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */,
 				087148BB232BEC1200D6BE1A /* ResourceLoadingViewModel.swift in Sources */,
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
@@ -2520,6 +2543,7 @@
 				B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */,
+				B48914262DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift in Sources */,
 				B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */,
 				087546942272387900542C32 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */,
 				08754690227237C900542C32 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,

@@ -17,13 +17,49 @@ public final class KeychainManager: KeychainReader, KeychainWriter, KeychainEncr
     // MARK: - KeychainReader
 
     public func load(forKey key: String) throws -> Data? {
+        let rawDataFromKeychain: Data?
         do {
-            return try reader.load(forKey: key)
+            rawDataFromKeychain = try reader.load(forKey: key)
         } catch let error as KeychainError {
-            errorHandler.handle(error: error, forKey: key, operation: "load")
+            errorHandler.handle(error: error, forKey: key, operation: "load (read from keychain)")
             throw error
         } catch {
-            errorHandler.handle(error: .unhandledError(status: -1), forKey: key, operation: "load - unexpected error type")
+            errorHandler.handle(error: .unhandledError(status: -1), forKey: key, operation: "load (read from keychain) - unexpected error type")
+            throw error
+        }
+
+        guard let rawData = rawDataFromKeychain else {
+            return nil
+        }
+
+        do {
+            let decryptedData = try encryptor.decrypt(rawData)
+            return decryptedData
+        } catch KeychainError.decryptionFailed {
+            guard let plainTextTokenString = String(data: rawData, encoding: .utf8) else {
+                errorHandler.handle(error: .migrationFailedBadFormat, forKey: key, operation: "load (migration attempt - bad format)")
+                throw KeychainError.migrationFailedBadFormat
+            }
+
+            guard let plainTextTokenData = plainTextTokenString.data(using: .utf8) else {
+                errorHandler.handle(error: .stringToDataConversionFailed, forKey: key, operation: "load (migration - converting string back to data)")
+                throw KeychainError.stringToDataConversionFailed
+            }
+
+            do {
+                let migratedEncryptedData = try encryptor.encrypt(plainTextTokenData)
+                try writer.save(data: migratedEncryptedData, forKey: key)
+                errorHandler.handle(error: .decryptionFailed, forKey: key, operation: "load (migration successful: old token was plain text, now encrypted and saved)")
+                return plainTextTokenData
+            } catch let saveError {
+                errorHandler.handle(error: .migrationFailedSaveError(saveError), forKey: key, operation: "load (migration save failed)")
+                throw KeychainError.migrationFailedSaveError(saveError)
+            }
+        } catch let otherDecryptionError as KeychainError {
+            errorHandler.handle(error: otherDecryptionError, forKey: key, operation: "load (decrypt)")
+            throw otherDecryptionError
+        } catch {
+            errorHandler.handle(error: .unhandledError(status: -1), forKey: key, operation: "load (decrypt) - unexpected error type")
             throw error
         }
     }
