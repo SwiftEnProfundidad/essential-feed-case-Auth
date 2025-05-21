@@ -5,7 +5,7 @@ public protocol LoginNavigation: AnyObject {
     func showRecovery()
 }
 
-public enum ViewState: Equatable {
+public enum ViewState: Hashable {
     case idle
     case blocked
     case error(String)
@@ -15,15 +15,15 @@ public enum ViewState: Equatable {
 public final class LoginViewModel: ObservableObject {
     @Published public var username: String = "" {
         didSet {
-            if oldValue != username { errorMessage = nil }
+            // if oldValue != username { errorMessage = nil } // MANTENER COMENTADO
         }
     }
 
     @Published public var password: String = "" {
         didSet {
-            if oldValue != password, errorMessage != nil {
-                userDidInitiateEditing()
-            }
+            // if oldValue != password, errorMessage != nil { // MANTENER COMENTADO
+            //     userDidInitiateEditing()
+            // }
         }
     }
 
@@ -182,13 +182,24 @@ public final class LoginViewModel: ObservableObject {
         navigation?.showRecovery()
     }
 
+    public func userWillBeginEditing() {
+        if errorMessage != nil {
+            errorMessage = nil
+            objectWillChange.send()
+            // Si userDidInitiateEditing() tenía más lógica relevante, considerar llamarla o moverla aquí.
+            // Por ahora, nos centramos en limpiar el error para estabilizar el TextField.
+        }
+    }
+
     public func userDidInitiateEditing() {
-        print("[LoginViewModel] userDidInitiateEditing called.") // DEBUG PRINT
-        print("[LoginViewModel] errorMessage before clearing: \(String(describing: errorMessage))") // DEBUG PRINT
+        // Esta función ahora se llamaría explícitamente si es necesario para otras lógicas,
+        // o su contenido (si es solo limpiar error) se integra en userWillBeginEditing.
+        // Por ahora, la dejamos así, pero no se llamará desde didSet de password.
+        debugPrint("LoginViewModel: userDidInitiateEditing - Clearing error message if present.")
         if errorMessage != nil {
             errorMessage = nil
         }
-        print("[LoginViewModel] errorMessage after clearing: \(String(describing: errorMessage))") // DEBUG PRINT
+        debugPrint("LoginViewModel: userDidInitiateEditing - Error message after attempting to clear: \(errorMessage ?? "nil")")
     }
 
     // MARK: - Navigation

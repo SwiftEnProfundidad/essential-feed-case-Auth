@@ -3,9 +3,20 @@ import SwiftUI
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
+    @State private var localUsername: String
+    @State private var localPassword: String
+
+    private enum Field: Hashable {
+        case username
+        case password
+    }
+
+    @FocusState private var focusedField: Field?
 
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
+        _localUsername = State(initialValue: viewModel.username)
+        _localPassword = State(initialValue: viewModel.password)
     }
 
     public var body: some View {
@@ -13,59 +24,83 @@ public struct LoginView: View {
             Color(UIColor.systemGroupedBackground)
                 .edgesIgnoringSafeArea(.all)
 
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: 20) {
-                        Text("MiApp")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .padding(.bottom, 30)
+            VStack {
+                Text("MiApp")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 30)
 
-                        VStack(spacing: 15) {
-                            TextField("Usuario", text: $viewModel.username, onEditingChanged: { isEditing in
-                                if isEditing {
-                                    viewModel.userDidInitiateEditing()
-                                }
-                            })
-                            .autocapitalization(.none)
-                            .padding()
-                            .background(Color(UIColor.secondarySystemGroupedBackground))
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            )
-
-                            TextField("Contraseña", text: $viewModel.password)
-                                .padding()
-                                .background(Color(UIColor.secondarySystemGroupedBackground))
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                )
+                VStack(spacing: 20) {
+                    TextField("Usuario", text: $localUsername)
+                        .id(Field.username)
+                        .focused($focusedField, equals: .username)
+                        .onChange(of: localUsername) { newValue in
+                            viewModel.username = newValue
                         }
-                        .padding(.horizontal)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                        switch viewModel.viewState {
-                        case .idle:
-                            loginControls
-                                .padding(.top, 10)
-                        case .blocked:
-                            blockedView()
-                                .padding(.top, 10)
-                        case let .error(message):
-                            errorView(message: message)
-                                .padding(.top, 10)
-                        case let .success(message):
-                            successView(message: message)
-                                .padding(.top, 10)
+                    SecureField("Contraseña", text: $localPassword)
+                        .id(Field.password)
+                        .focused($focusedField, equals: .password)
+                        .onChange(of: localPassword) { newValue in
+                            viewModel.password = newValue
                         }
-                    }
-                    .padding()
-                    .frame(minHeight: geometry.size.height)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
-                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .padding(.horizontal, 40)
+
+                Group {
+                    switch viewModel.viewState {
+                    case .idle:
+                        VStack(spacing: 16) {
+                            Text(" ")
+                                .font(.caption)
+                                .padding(.vertical, 4)
+                                .frame(maxWidth: .infinity)
+                                .opacity(0)
+                                .accessibilityHidden(true)
+                            loginButton
+                            forgotPasswordButton
+                        }
+                        .frame(maxWidth: .infinity)
+                    case .blocked:
+                        ProgressView()
+                            .padding(.vertical)
+                            .accessibilityIdentifier("login_activity_indicator")
+                    case let .error(message):
+                        VStack(spacing: 8) {
+                            Text(message)
+                                .font(.caption)
+                                .foregroundColor(.red)
+                                .padding(.vertical, 4)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .multilineTextAlignment(.center)
+                                .accessibilityIdentifier("login_error_message")
+                            VStack(spacing: 16) {
+                                loginButton
+                                forgotPasswordButton
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .frame(maxWidth: .infinity)
+                    case let .success(message):
+                        Text(message)
+                            .font(.headline)
+                            .foregroundColor(.green)
+                            .padding(.vertical)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .multilineTextAlignment(.center)
+                            .accessibilityIdentifier("login_success_message")
+                    }
+                }
+                .id(viewModel.viewState)
+                .frame(minHeight: 80)
+                .padding(.horizontal, 40)
+            }
+            .onChange(of: focusedField) { newFocus in
+                if newFocus != nil {
+                    viewModel.userWillBeginEditing()
+                }
             }
         }
     }
@@ -83,15 +118,11 @@ public struct LoginView: View {
         .shadow(color: Color.blue.opacity(0.3), radius: 5, x: 0, y: 5)
     }
 
-    private var loginControls: some View {
-        VStack(spacing: 15) {
-            loginButton
-            Button("¿Olvidaste tu contraseña?") {
-                viewModel.handleRecoveryTap()
-            }
-            .foregroundColor(.blue)
+    private var forgotPasswordButton: some View {
+        Button("¿Olvidaste tu contraseña?") {
+            viewModel.handleRecoveryTap()
         }
-        .padding(.horizontal)
+        .foregroundColor(.blue)
     }
 
     private func blockedView() -> some View {
