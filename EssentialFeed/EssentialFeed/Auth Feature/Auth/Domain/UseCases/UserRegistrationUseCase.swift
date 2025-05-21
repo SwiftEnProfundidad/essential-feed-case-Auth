@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol UserRegisterer {
+public protocol UserRegisterer: AnyObject {
     func register(name: String, email: String, password: String) async -> UserRegistrationResult
 }
 

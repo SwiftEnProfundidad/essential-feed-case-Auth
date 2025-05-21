@@ -90,9 +90,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain()
-        async
-    {
+    func test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
         let validatorStub = RegistrationValidatorTestStub()
         let (sut, persistenceSpy, _, httpClientSpy, _) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
@@ -107,10 +105,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func
-        test_registerUser_withValidData_whenTokenStorageFails_returnsErrorAndDoesNotStoreCredentials()
-        async throws
-    {
+    func test_registerUser_withValidData_whenTokenStorageFails_returnsErrorAndDoesNotStoreCredentials() async throws {
         let (sut, persistenceSpy, _, httpClientSpy, _) = makeSUT()
 
         let tokenFromServer = makeToken()
@@ -153,9 +148,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         if case let .save(tokenBundle: attemptedToken) = tokenMessages.first {
             XCTAssertEqual(attemptedToken, tokenFromServer, "Expected to attempt saving the correct token")
         } else {
-            XCTFail(
-                "Expected save message in TokenStorageMessages, got \(String(describing: tokenMessages.first))"
-            )
+            XCTFail("Expected save message in TokenStorageMessages, got \(String(describing: tokenMessages.first))")
         }
     }
 
@@ -346,13 +339,13 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (
-        sut: UserRegistrationUseCase,
+        sut: UserRegisterer,
         persistenceSpy: RegistrationPersistenceSpy,
         validator: RegistrationValidatorProtocol,
         httpClientSpy: HTTPClientSpy,
         notifierSpy: UserRegistrationNotifierSpy
     ) {
-        let sut = UserRegistrationUseCase(
+        let sut: UserRegisterer = UserRegistrationUseCase(
             persistenceService: persistenceSpy,
             validator: validator,
             httpClient: httpClientSpy,
@@ -435,7 +428,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         email: String,
         password: String,
         expectedError: RegistrationValidationError,
-        sut: UserRegistrationUseCase,
+        sut: UserRegisterer,
         httpClientSpy: HTTPClientSpy,
         persistenceSpy: RegistrationPersistenceSpy,
         validatorStub: RegistrationValidatorTestStub,
