@@ -9,6 +9,8 @@ public enum PasswordRecoveryComposer {
         let apiStub = PasswordRecoveryAPIStub(result: .success(PasswordRecoveryResponse(message: "Simulación de recuperación")))
         let recoveryUseCase = RemoteUserPasswordRecoveryUseCase(api: apiStub)
         let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: recoveryUseCase)
+        let presenter = PasswordRecoveryPresenter(view: viewModel)
+        viewModel.setPresenter(presenter)
         let recoveryView = PasswordRecoveryScreen(viewModel: viewModel)
         return recoveryView
     }
