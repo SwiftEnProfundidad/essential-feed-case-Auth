@@ -860,7 +860,6 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */,
 				B4047C5B2DD8BDBB00A0C34C /* Auth */,
 				B4D6B2652DC8D70600F5A3FE /* FeaturesTest */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
@@ -972,6 +971,7 @@
 		0844768D21FCB23900439BE9 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B4EB10102DC9698000A4DA55 /* HTTPClientSpy.swift */,
 				B48407C22DDC633300834C15 /* EncryptionServiceDataSpy.swift */,
 				B48407C02DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift */,
 				B48407BE2DDC5EAC00834C15 /* KeychainFullSpy.swift */,
