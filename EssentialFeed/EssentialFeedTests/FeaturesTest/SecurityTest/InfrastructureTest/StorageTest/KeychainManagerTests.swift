@@ -394,11 +394,11 @@ final class KeychainManagerTests: XCTestCase {
             errorHandler: errorHandlerSpyCasted
         )
 
-        // trackForMemoryLeaks(sut, file: file, line: line)
-        // trackForMemoryLeaks(readerSpyCasted, file: file, line: line)
-        // trackForMemoryLeaks(writerSpyCasted, file: file, line: line)
-        // trackForMemoryLeaks(encryptorSpyCasted, file: file, line: line)
-        // trackForMemoryLeaks(errorHandlerSpyCasted, file: file, line: line)
+        trackForMemoryLeaks(sut, file: #file, line: #line)
+        trackForMemoryLeaks(readerSpyCasted, file: #file, line: #line)
+        trackForMemoryLeaks(writerSpyCasted, file: #file, line: #line)
+        trackForMemoryLeaks(encryptorSpyCasted, file: #file, line: #line)
+        trackForMemoryLeaks(errorHandlerSpyCasted, file: #file, line: #line)
 
         return (sut, readerSpyCasted, writerSpyCasted, encryptorSpyCasted, errorHandlerSpyCasted)
     }
