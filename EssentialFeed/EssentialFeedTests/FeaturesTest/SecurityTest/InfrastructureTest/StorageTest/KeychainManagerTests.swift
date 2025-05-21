@@ -1,3 +1,4 @@
+
 import EssentialFeed
 import XCTest
 
@@ -15,7 +16,7 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected load to rethrow the same error from reader.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "load")])
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "load (read from keychain)")])
         XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
     }
 
@@ -54,7 +55,7 @@ final class KeychainManagerTests: XCTestCase {
             if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
                 XCTAssertEqual(reportedError, expectedKeychainError, "Error mismatch in errorHandler.")
                 XCTAssertEqual(reportedKey, testKey, "Key mismatch in errorHandler.")
-                XCTAssertEqual(reportedOperation, "load - unexpected error type", "Operation mismatch in errorHandler.")
+                XCTAssertEqual(reportedOperation, "load (read from keychain) - unexpected error type", "Operation mismatch in errorHandler.")
             } else {
                 XCTFail("Unexpected message type from errorHandler: \(firstMessage)")
             }
