@@ -573,8 +573,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [🔜] Migration of existing tokens  
   - [⚠️] Security tests (Keychain Spy): 
     - [✅] Stores token in Keychain on successful refresh (happy path)
-    - [🚧] Tests that verify encryption (AES-256) on write
-    - [🔜] Negative/error-path & advanced security tests
+    - [✅] Tests that verify encryption (AES-256) on write
+    - [🚧] Negative/error-path & advanced security tests
 
 #### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  
