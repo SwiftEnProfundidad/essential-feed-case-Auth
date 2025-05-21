@@ -77,24 +77,20 @@ public final class UserLoginUseCase {
         let defaults = userDefaults
 
         guard let until = defaults.object(forKey: lockoutKey) as? Date else {
-            // No hay fecha de bloqueo, o ya se limpió. Si attemptsKey existe sin lockoutKey,
-            // podría ser un estado inconsistente, pero la lógica actual lo manejaría.
-            // Considerar si se debe limpiar attemptsKey aquí si lockoutKey es nil.
-            // Por ahora, la lógica original es: si hay lockout, está seteado, si no, se borran ambos.
-            if defaults.object(forKey: lockoutKey) != nil { // Esta condición ahora es redundante si until es nil
+            if defaults.object(forKey: lockoutKey) != nil {
                 defaults.removeObject(forKey: attemptsKey)
                 defaults.removeObject(forKey: lockoutKey)
             }
-            return nil // No está bloqueado
+            return nil
         }
 
-        guard now < until else { // El bloqueo ha expirado
+        guard now < until else {
             defaults.removeObject(forKey: attemptsKey)
             defaults.removeObject(forKey: lockoutKey)
             return nil // No está bloqueado
         }
 
-        return .accountLocked // Sigue bloqueado
+        return .accountLocked
     }
 
     private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {

@@ -36,7 +36,7 @@ public final class KeychainTokenStore: TokenStorage {
             if case .itemNotFound = error {
                 return nil
             }
-            throw error // KeychainManager ya lo manejó
+            throw error
         } catch let decodingError {
             throw TokenStorageError.decodingFailed(decodingError)
         }
