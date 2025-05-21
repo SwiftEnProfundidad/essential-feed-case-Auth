@@ -373,6 +373,75 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: testData)])
     }
 
+    func test_load_whenMigrationOccursButEncryptorFailsToEncrypt_failsWithEncryptionFailed() {
+        let (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let testKey = "migrationEncryptFailKey"
+        let plainTextTokenString = "old-plain-text-token-for-encrypt-fail"
+        guard let plainTextTokenData = plainTextTokenString.data(using: .utf8) else {
+            XCTFail("Failed to create plain text token data for encrypt fail test")
+            return
+        }
+        let encryptionProcessError = KeychainError.encryptionFailed
+
+        readerSpy.completeLoad(with: plainTextTokenData)
+
+        encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
+
+        encryptorSpy.completeEncrypt(with: encryptionProcessError)
+
+        var capturedError: Error?
+        XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
+            capturedError = error
+        }
+
+        XCTAssertEqual(capturedError as? KeychainError, KeychainError.migrationFailedSaveError(encryptionProcessError), "Expected load to fail with migrationFailedSaveError wrapping encryptionFailed when encryptor fails during migration.")
+
+        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
+        let expectedEncryptorMessages: [KeychainEncryptorSpy.Message] = [
+            .decrypt(data: plainTextTokenData),
+            .encrypt(data: plainTextTokenData)
+        ]
+        XCTAssertEqual(encryptorSpy.receivedMessages, expectedEncryptorMessages)
+        XCTAssertTrue(writerSpy.receivedMessages.isEmpty, "Writer should not be called if encryption fails during migration")
+
+        let expectedErrorHandlerMessage = KeychainErrorHandlerSpy.Message.handled(
+            error: KeychainError.migrationFailedSaveError(encryptionProcessError),
+            key: testKey,
+            operation: "load (migration save failed)"
+        )
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [expectedErrorHandlerMessage], "Error handler messages mismatch for migration encryption failure.")
+    }
+
+    func test_load_whenOldEmptyPlainTextTokenExists_migratesToEncryptedEmptyToken_andReturnsEmptyData() {
+        let (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let testKey = "emptyMigratableTokenKey"
+        let emptyPlainTextTokenData = Data()
+        let expectedEncryptedEmptyData = Data("encrypted-empty-string".utf8)
+
+        readerSpy.completeLoad(with: emptyPlainTextTokenData)
+        encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
+        encryptorSpy.completeEncrypt(with: expectedEncryptedEmptyData)
+        writerSpy.completeSaveSuccessfully()
+
+        var returnedData: Data?
+        XCTAssertNoThrow(returnedData = try sut.load(forKey: testKey))
+
+        XCTAssertEqual(returnedData, emptyPlainTextTokenData, "Load should return empty data for migrated empty token.")
+        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
+        let expectedEncryptorMessages: [KeychainEncryptorSpy.Message] = [
+            .decrypt(data: emptyPlainTextTokenData),
+            .encrypt(data: emptyPlainTextTokenData)
+        ]
+        XCTAssertEqual(encryptorSpy.receivedMessages, expectedEncryptorMessages)
+        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: expectedEncryptedEmptyData, key: testKey)])
+        let expectedErrorHandlerMessage = KeychainErrorHandlerSpy.Message.handled(
+            error: .decryptionFailed,
+            key: testKey,
+            operation: "load (migration successful: old token was plain text, now encrypted and saved)"
+        )
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [expectedErrorHandlerMessage])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
