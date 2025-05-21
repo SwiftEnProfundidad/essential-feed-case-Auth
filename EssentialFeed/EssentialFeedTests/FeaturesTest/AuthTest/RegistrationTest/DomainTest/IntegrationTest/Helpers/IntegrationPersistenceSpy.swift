@@ -1,7 +1,19 @@
 import EssentialFeed
 import Foundation
 
-public class IntegrationPersistenceSpy: KeychainProtocol, TokenStorage, OfflineRegistrationStore {
+typealias ComprehensiveRegistrationPersistence = KeychainProtocol & OfflineRegistrationStore & TokenStorage & UserRegistrationPersistenceService
+
+public class IntegrationPersistenceSpy: ComprehensiveRegistrationPersistence {
+    public func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult {
+        save(data: passwordData, forKey: email) // Calls KeychainProtocol's save
+    }
+
+    public func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws {
+        try await save(registrationData) // Calls OfflineRegistrationStore's save
+    }
+
+    // MARK: - KeychainProtocol Conformance
+
     var saveKeychainDataCalls = [(data: Data, key: String)]()
     var saveKeychainReturnValues: [KeychainSaveResult] = []
     var loadKeychainDataCalls = [String]()

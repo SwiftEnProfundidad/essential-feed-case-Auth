@@ -33,7 +33,7 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
         let validatorStub = RegistrationValidatorTestStub()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
+            persistenceService: persistenceSpy,
             validator: validatorStub,
             httpClient: httpClient,
             registrationEndpoint: URL(string: "https://test-register-endpoint.com")!,
@@ -72,7 +72,15 @@ final class RegistrationHTTPClientSpy: HTTPClient {
     }
 }
 
-final class RegistrationPersistenceSpy: RegistrationPersistenceInterfaces {
+final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
+    func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult {
+        save(data: passwordData, forKey: email)
+    }
+
+    func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws {
+        try await save(registrationData)
+    }
+
     var keychainSaveDataCalls = [(data: Data, key: String)]()
     var keychainSaveResults: [KeychainSaveResult] = []
     func save(data: Data, forKey key: String) -> KeychainSaveResult {

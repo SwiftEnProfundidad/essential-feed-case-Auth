@@ -22,7 +22,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         let validator = RegistrationValidatorAlwaysValid()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
+            persistenceService: persistenceSpy,
             validator: validator,
             httpClient: httpClientStub,
             registrationEndpoint: anyURL(),
@@ -78,7 +78,7 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         let validator = RegistrationValidatorAlwaysValid()
 
         let sut = UserRegistrationUseCase(
-            persistence: persistenceSpy,
+            persistenceService: persistenceSpy,
             validator: validator,
             httpClient: httpClientStub,
             registrationEndpoint: anyURL(),

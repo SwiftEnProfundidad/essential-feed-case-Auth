@@ -1,6 +1,10 @@
 import Foundation
 
-public typealias RegistrationPersistenceInterfaces = KeychainProtocol & OfflineRegistrationStore & TokenStorage
+public protocol UserRegistrationPersistenceService {
+    func save(tokenBundle: Token) async throws
+    func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult
+    func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws
+}
 
 public enum RegistrationValidationError: Error, Equatable {
     case emptyName
@@ -22,27 +26,29 @@ public protocol UserRegistrationNotifier {
 }
 
 public actor UserRegistrationUseCase {
-    private let persistence: RegistrationPersistenceInterfaces
+    private let persistenceService: UserRegistrationPersistenceService
     private let validator: RegistrationValidatorProtocol
     private let httpClient: HTTPClient
     private let registrationEndpoint: URL
     private let notifier: UserRegistrationNotifier?
 
     public init(
-        persistence: RegistrationPersistenceInterfaces,
+        persistenceService: UserRegistrationPersistenceService,
         validator: RegistrationValidatorProtocol,
         httpClient: HTTPClient,
         registrationEndpoint: URL,
         notifier: UserRegistrationNotifier? = nil
     ) {
-        self.persistence = persistence
+        self.persistenceService = persistenceService
         self.validator = validator
         self.httpClient = httpClient
         self.registrationEndpoint = registrationEndpoint
         self.notifier = notifier
     }
 
-    public func register(name: String, email: String, password: String) async -> UserRegistrationResult {
+    public func register(name: String, email: String, password: String) async
+        -> UserRegistrationResult
+    {
         if let validationError = validator.validate(name: name, email: email, password: password) {
             notifier?.notifyRegistrationFailed(with: validationError)
             return .failure(validationError)
@@ -71,10 +77,14 @@ public actor UserRegistrationUseCase {
         return request
     }
 
-    private func handleRegistrationResponse(data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData) async -> UserRegistrationResult {
+    private func handleRegistrationResponse(
+        data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData
+    ) async -> UserRegistrationResult {
         switch httpResponse.statusCode {
         case 201:
-            return await processSuccessfulRegistration(data: data, name: userData.name, email: userData.email, password: userData.password)
+            return await processSuccessfulRegistration(
+                data: data, name: userData.name, email: userData.email, password: userData.password
+            )
         case 409:
             notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
             return .failure(UserRegistrationError.emailAlreadyInUse)
@@ -92,7 +102,9 @@ public actor UserRegistrationUseCase {
         }
     }
 
-    private func processSuccessfulRegistration(data: Data, name: String, email: String, password: String) async -> UserRegistrationResult {
+    private func processSuccessfulRegistration(
+        data: Data, name: String, email: String, password: String
+    ) async -> UserRegistrationResult {
         do {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
@@ -103,8 +115,10 @@ public actor UserRegistrationUseCase {
                 refreshToken: nil
             )
 
-            try await persistence.save(tokenBundle: receivedToken)
-            _ = persistence.save(data: password.data(using: .utf8)!, forKey: email)
+            try await persistenceService.save(tokenBundle: receivedToken)
+            _ = persistenceService.saveCredentials(
+                passwordData: password.data(using: .utf8)!, forEmail: email
+            )
 
             return .success(User(name: name, email: email))
         } catch let tokenError as TokenParsingError {
@@ -119,11 +133,13 @@ public actor UserRegistrationUseCase {
         }
     }
 
-    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) -> UserRegistrationResult {
+    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData)
+        -> UserRegistrationResult
+    {
         if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
             Task {
                 do {
-                    try await persistence.save(userData)
+                    try await persistenceService.saveForOfflineProcessing(registrationData: userData)
                 } catch let offlineStoreError {
                     notifier?.notifyRegistrationFailed(with: offlineStoreError)
                 }
