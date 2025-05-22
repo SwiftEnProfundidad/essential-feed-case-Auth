@@ -98,12 +98,18 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     self?.window?.rootViewController = self?.navigationController
                 },
                 onRecoveryRequested: { [weak self] in
-                    guard let self, let presentingVC = self.window?.rootViewController else {
+                    guard let self,
+                          let window = self.window,
+                          let presentingVC = window.rootViewController
+                    else {
                         return
                     }
-                    let recoveryScreen = PasswordRecoveryComposer.passwordRecoveryViewScreen()
-                    let recoveryVC = UIHostingController(rootView: recoveryScreen)
-                    presentingVC.present(recoveryVC, animated: true)
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        let recoveryScreen = PasswordRecoveryComposer.passwordRecoveryViewScreen()
+                        let recoveryVC = UIHostingController(rootView: recoveryScreen)
+                        presentingVC.present(recoveryVC, animated: true)
+                    }
                 }
             )
         }
