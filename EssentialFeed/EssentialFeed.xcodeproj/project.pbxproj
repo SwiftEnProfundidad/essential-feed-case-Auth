@@ -233,6 +233,7 @@
 		B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */; };
 		B48914262DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */; };
 		B48991482DD3E85700A94850 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		B48B763A2DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48B76392DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift */; };
 		B48D30042DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */; };
 		B48D30062DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */; };
 		B48D30082DCCB571002943D9 /* UserRegistrationNotifierSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */; };
@@ -593,6 +594,7 @@
 		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptor.swift; sourceTree = "<group>"; };
 		B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptorTests.swift; sourceTree = "<group>"; };
+		B48B76392DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecorator.swift; sourceTree = "<group>"; };
 		B48D30032DCCB234002943D9 /* UserRegistrationUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
 		B48D30052DCCB4ED002943D9 /* OfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
 		B48D30072DCCB571002943D9 /* UserRegistrationNotifierSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationNotifierSpy.swift; sourceTree = "<group>"; };
@@ -1342,6 +1344,7 @@
 		B4047DAA2DDA6EA300A0C34C /* APIInterceptor */ = {
 			isa = PBXGroup;
 			children = (
+				B48B76392DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift */,
 				B4047DA92DDA6EA300A0C34C /* HTTPClient.swift */,
 			);
 			path = APIInterceptor;
@@ -2367,6 +2370,7 @@
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
 				B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */,
 				B4B5F40D2DDD763000C8B9D4 /* UserRegistrationUseCase.swift in Sources */,
+				B48B763A2DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */,
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
 				B4A746792DDD22C90087C33C /* SilentKeychainErrorHandler.swift in Sources */,
