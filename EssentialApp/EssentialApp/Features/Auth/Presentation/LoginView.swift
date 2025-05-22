@@ -71,8 +71,17 @@ struct NeumorphicButtonStyle: ButtonStyle {
                             ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal
                     )
             )
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .animation(.spring(), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+struct SimplePressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
@@ -248,6 +257,7 @@ public struct LoginView: View {
                 .font(Font.system(.callout, design: .rounded).weight(.medium))
                 .foregroundColor(AppTheme.Colors.textSecondary)
         }
+        .buttonStyle(SimplePressButtonStyle())
         .padding(.top, 5)
     }
 }
