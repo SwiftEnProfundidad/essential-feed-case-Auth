@@ -11,9 +11,18 @@ private let darkThemeLightShadowColor = Color(white: 0.2, opacity: 0.6)
 private let darkThemeDarkShadowColor = Color.black.opacity(0.7)
 
 struct NeumorphicTextFieldStyle: TextFieldStyle {
+    @Environment(\.colorScheme) var colorScheme
     var isFocused: Bool
-    let mainColor = AppTheme.Colors.neumorphicBase
-    let cornerRadius: CGFloat = neumorphicCornerRadius
+
+    public init(isFocused: Bool) {
+        self.isFocused = isFocused
+    }
+
+    private var mainColor: Color {
+        AppTheme.Colors.neumorphicBase
+    }
+
+    private var cornerRadius: CGFloat = neumorphicCornerRadius
 
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
@@ -100,6 +109,9 @@ public struct LoginView: View {
 
     @FocusState private var focusedField: Field?
 
+    private static let loginFormSpacing: CGFloat = 25
+    private static let loginPaddingHorizontal: CGFloat = 30
+
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
         _localUsername = State(initialValue: viewModel.username)
@@ -114,25 +126,22 @@ public struct LoginView: View {
                     focusedField = nil
                 }
 
-            VStack(spacing: 0) {
-                Spacer(minLength: 20)
+            VStack(spacing: LoginView.loginFormSpacing) {
                 titleView
-                Spacer().frame(height: 40)
                 formView
-                Spacer().frame(height: 30)
                 statusAreaView
-                Spacer(minLength: 20)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, LoginView.loginPaddingHorizontal)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             .opacity(contentAnimation ? 1 : 0)
-            .offset(y: contentAnimation ? 0 : 100)
-            .animation(
-                .interpolatingSpring(stiffness: 100, damping: 15).delay(0.2), value: contentAnimation
-            )
+            .offset(y: contentAnimation ? 0 : UIScreen.main.bounds.height / 3)
+            .animation(.spring(response: 0.5, dampingFraction: 0.5).delay(0.4), value: contentAnimation)
         }
         .onAppear {
+            withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+                contentAnimation = true
+            }
             titleAnimation = true
-            contentAnimation = true
         }
         .onChange(of: focusedField) { newValue in
             if newValue != nil {
@@ -146,10 +155,8 @@ public struct LoginView: View {
             .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
             .foregroundColor(AppTheme.Colors.accentLimeGreen)
             .opacity(titleAnimation ? 1 : 0)
-            .offset(y: titleAnimation ? 0 : -100)
-            .animation(
-                .interpolatingSpring(stiffness: 120, damping: 15).delay(0.1), value: titleAnimation
-            )
+            .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
+            .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
     }
 
     private var formView: some View {
