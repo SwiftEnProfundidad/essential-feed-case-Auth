@@ -15,20 +15,19 @@ public enum ViewState: Hashable {
 public final class LoginViewModel: ObservableObject {
     @Published public var username: String = "" {
         didSet {
-            // if oldValue != username { errorMessage = nil } // MANTENER COMENTADO
+            if oldValue != username { errorMessage = nil }
         }
     }
 
     @Published public var password: String = "" {
         didSet {
-            // if oldValue != password, errorMessage != nil { // MANTENER COMENTADO
-            //     userDidInitiateEditing()
-            // }
+            if oldValue != password, errorMessage != nil {
+                userDidInitiateEditing()
+            }
         }
     }
 
-    @Published public var viewState: ViewState = .idle
-    @Published public var errorMessage: String? = nil
+    @Published public var errorMessage: String?
     @Published public var loginSuccess: Bool = false
     @Published public var isLoginBlocked = false
     public let authenticated = PassthroughSubject<Void, Never>()
@@ -62,13 +61,6 @@ public final class LoginViewModel: ObservableObject {
 
     @MainActor
     public func login() async {
-        print("[LoginViewModel] login() called. Current state: \(viewState), User: \(username)")
-        guard viewState != .blocked else {
-            print("[LoginViewModel] Login attempt while already blocked. Aborting.") // DEBUG
-            return
-        }
-
-        viewState = .blocked
         await checkAccountUnlock(for: username)
         guard !isLoginBlocked else {
             errorMessage = blockMessageProvider.message(for: LoginError.accountLocked)
@@ -190,25 +182,28 @@ public final class LoginViewModel: ObservableObject {
         navigation?.showRecovery()
     }
 
-    public func userWillBeginEditing() {
-        if errorMessage != nil {
-            errorMessage = nil
-            objectWillChange.send()
-        }
-    }
-
     public func userDidInitiateEditing() {
-        debugPrint("LoginViewModel: userDidInitiateEditing - Clearing error message if present.")
+        print("[LoginViewModel] userDidInitiateEditing called.") // DEBUG PRINT
+        print("[LoginViewModel] errorMessage before clearing: \(String(describing: errorMessage))") // DEBUG PRINT
         if errorMessage != nil {
             errorMessage = nil
         }
-        debugPrint("LoginViewModel: userDidInitiateEditing - Error message after attempting to clear: \(errorMessage ?? "nil")")
+        print("[LoginViewModel] errorMessage after clearing: \(String(describing: errorMessage))") // DEBUG PRINT
     }
 
     // MARK: - Navigation
 
-    public var isLoginButtonDisabled: Bool {
-        username.isEmpty || password.isEmpty
+    public var viewState: ViewState {
+        if isLoginBlocked {
+            .blocked
+        } else if let message = errorMessage {
+            .error(message)
+        } else if loginSuccess {
+            // Puedes personalizar el mensaje de éxito si es necesario
+            .success("Login successful!")
+        } else {
+            .idle
+        }
     }
 
     deinit {

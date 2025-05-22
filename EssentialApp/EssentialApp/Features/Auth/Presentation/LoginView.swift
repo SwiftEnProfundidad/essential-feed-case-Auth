@@ -1,8 +1,6 @@
 import EssentialFeed
 import SwiftUI
 
-// MARK: - Neumorphic Style Definitions
-
 private let neumorphicCornerRadius: CGFloat = 15
 private let neumorphicShadowRadiusNormal: CGFloat = 5
 private let neumorphicShadowOffsetNormal: CGFloat = 5
@@ -80,17 +78,18 @@ struct NeumorphicButtonStyle: ButtonStyle {
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
-    @State private var localUsername = ""
-    @State private var localPassword = ""
-    @FocusState private var focusedField: Field?
+    @State private var localUsername: String
+    @State private var localPassword: String
 
-    @State private var titleAnimation = false
-    @State private var contentAnimation = false
+    @State private var titleAnimation: Bool = false
+    @State private var contentAnimation: Bool = false
 
-    enum Field: Hashable {
+    private enum Field: Hashable {
         case username
         case password
     }
+
+    @FocusState private var focusedField: Field?
 
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -106,27 +105,32 @@ public struct LoginView: View {
                     focusedField = nil
                 }
 
-            VStack {
-                Spacer()
+            VStack(spacing: 0) {
+                Spacer(minLength: 20)
                 titleView
-                Spacer().frame(height: 60)
+                Spacer().frame(height: 40)
                 formView
-                Spacer()
-                statusView
-                Spacer()
+                Spacer().frame(height: 30)
+                statusAreaView
+                Spacer(minLength: 20)
             }
             .padding(.horizontal)
+            .opacity(contentAnimation ? 1 : 0)
+            .offset(y: contentAnimation ? 0 : 100)
+            .animation(
+                .interpolatingSpring(stiffness: 100, damping: 15).delay(0.2), value: contentAnimation
+            )
         }
         .onAppear {
             titleAnimation = true
             contentAnimation = true
         }
-        .onChange(of: focusedField) { _ in
-            viewModel.userWillBeginEditing()
+        .onChange(of: focusedField) { newValue in
+            if newValue != nil {
+                viewModel.userDidInitiateEditing()
+            }
         }
     }
-
-    // MARK: - Computed UI Properties
 
     private var titleView: some View {
         Text("Mis Feeds")
@@ -140,12 +144,12 @@ public struct LoginView: View {
     }
 
     private var formView: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 25) {
             TextField(
                 "",
                 text: $localUsername,
                 prompt: Text("Usuario")
-                    .foregroundColor(AppTheme.Colors.textSecondary)
+                    .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
             .id(Field.username)
@@ -156,82 +160,94 @@ public struct LoginView: View {
             .onChange(of: localUsername) { newValue in
                 viewModel.username = newValue
             }
-            .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .username))
-            .foregroundColor(AppTheme.Colors.textPrimary)
-            .accentColor(AppTheme.Colors.accentLimeGreen)
-            .submitLabel(.next)
             .onSubmit {
                 focusedField = .password
             }
+            .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .username))
+            .foregroundColor(AppTheme.Colors.textPrimary)
+            .accentColor(AppTheme.Colors.accentLimeGreen)
 
             SecureField(
-                "",
-                text: $localPassword,
+                "", text: $localPassword,
                 prompt: Text("Contraseña")
-                    .foregroundColor(AppTheme.Colors.textSecondary)
+                    .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
             .id(Field.password)
             .focused($focusedField, equals: .password)
+            .onChange(of: localPassword) { newValue in
+                viewModel.password = newValue
+            }
+            .onSubmit {
+                focusedField = nil
+                Task { await viewModel.login() }
+            }
             .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .password))
             .foregroundColor(AppTheme.Colors.textPrimary)
             .accentColor(AppTheme.Colors.accentLimeGreen)
-            .submitLabel(.done)
-            .onSubmit {
-                Task {
-                    await viewModel.login()
-                }
-            }
-
-            Button(action: {
-                focusedField = nil
-                print("[LoginView] Login button tapped.")
-                Task {
-                    print("[LoginView] Calling viewModel.login()...")
-                    await viewModel.login()
-                }
-            }) {
-                Text("Iniciar sesión")
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(AppTheme.Colors.accentLimeGreen)
-                    .font(Font.system(.headline, design: .rounded).weight(.bold))
-            }
-            .buttonStyle(NeumorphicButtonStyle())
-            .disabled(viewModel.viewState == .blocked || viewModel.isLoginButtonDisabled)
-
-            NavigationLink(destination: PasswordRecoveryComposer.passwordRecoveryViewScreen()) {
-                Text("¿Olvidaste tu contraseña?")
-                    .font(Font.system(.subheadline, design: .rounded))
-                    .foregroundColor(AppTheme.Colors.textSecondary)
-            }
-            .padding(.top, 10)
         }
-        .opacity(contentAnimation ? 1 : 0)
-        .offset(y: contentAnimation ? 0 : 50)
-        .animation(.easeInOut(duration: 0.5).delay(0.3), value: contentAnimation)
     }
 
-    private var statusView: some View {
+    private var statusAreaView: some View {
         Group {
             switch viewModel.viewState {
-            case let .error(message):
-                Text(message)
-                    .foregroundColor(.red)
-                    .font(Font.system(.callout, design: .rounded))
-                    .multilineTextAlignment(.center)
-                    .padding()
+            case .idle:
+                VStack(spacing: 20) {
+                    loginButtonNeumorphic
+                    forgotPasswordButtonNeumorphic
+                }
             case .blocked:
                 ProgressView()
+                    .progressViewStyle(.circular)
                     .scaleEffect(1.5)
-                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.Colors.accentLimeGreen))
-                    .padding()
-                Text("Iniciando sesión...")
-                    .foregroundColor(AppTheme.Colors.textSecondary)
-                    .font(Font.system(.callout, design: .rounded))
-            default:
-                EmptyView()
+                    .padding(.vertical, 40)
+                    .tint(AppTheme.Colors.accentLimeGreen)
+                    .accessibilityIdentifier("login_activity_indicator")
+            case let .error(message):
+                VStack(spacing: 15) {
+                    Text(message)
+                        .font(Font.system(.caption, design: .rounded).weight(.medium))
+                        .foregroundColor(AppTheme.Colors.textError)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                        .accessibilityIdentifier("login_error_message")
+                    loginButtonNeumorphic
+                    forgotPasswordButtonNeumorphic
+                }
+            case let .success(message):
+                Text(message)
+                    .font(Font.system(.headline, design: .rounded).weight(.semibold))
+                    .foregroundColor(AppTheme.Colors.textSuccess)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 40)
+                    .accessibilityIdentifier("login_success_message")
             }
         }
-        .frame(height: 100)
+        .id(viewModel.viewState)
+        .frame(minHeight: 130)
+    }
+
+    private var loginButtonNeumorphic: some View {
+        Button {
+            focusedField = nil
+            Task { await viewModel.login() }
+        } label: {
+            Text("Iniciar sesión")
+                .font(Font.system(.headline, design: .rounded).weight(.bold))
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(NeumorphicButtonStyle())
+    }
+
+    private var forgotPasswordButtonNeumorphic: some View {
+        Button {
+            focusedField = nil
+            viewModel.handleRecoveryTap()
+        } label: {
+            Text("¿Olvidaste tu contraseña?")
+                .font(Font.system(.callout, design: .rounded).weight(.medium))
+                .foregroundColor(AppTheme.Colors.textSecondary)
+        }
+        .padding(.top, 5)
     }
 }

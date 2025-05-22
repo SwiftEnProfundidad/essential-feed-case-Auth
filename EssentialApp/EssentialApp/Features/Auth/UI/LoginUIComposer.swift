@@ -1,25 +1,32 @@
 import EssentialFeed
 import SwiftUI
+import UIKit
 
 public enum LoginUIComposer {
-    public static func composedLoginViewController(with viewModel: LoginViewModel, onRecoveryRequested: @escaping () -> Void) -> UIViewController {
-        let adapter = LoginNavigationAdapter(onRecoveryRequested: onRecoveryRequested)
-        viewModel.navigation = adapter
+    private class LoginNavigationHandler: LoginNavigation {
+        let onRecoveryRequested: () -> Void
 
-        let loginView = LoginView(viewModel: viewModel)
-        let navigationRootView = NavigationView { loginView }
-        return UIHostingController(rootView: navigationRootView)
-    }
-}
+        init(onRecoveryRequested: @escaping () -> Void) {
+            self.onRecoveryRequested = onRecoveryRequested
+        }
 
-private class LoginNavigationAdapter: LoginNavigation {
-    private let onRecoveryRequested: () -> Void
-
-    init(onRecoveryRequested: @escaping () -> Void) {
-        self.onRecoveryRequested = onRecoveryRequested
+        func showRecovery() {
+            onRecoveryRequested()
+        }
     }
 
-    func showRecovery() {
-        onRecoveryRequested()
+    public static func composedLoginViewController(
+        with viewModel: LoginViewModel,
+        onRecoveryRequested: @escaping () -> Void
+    ) -> UIViewController {
+        let navigationHandler = LoginNavigationHandler(onRecoveryRequested: onRecoveryRequested)
+        viewModel.navigation = navigationHandler
+
+        let swiftUIView = NavigationView {
+            LoginView(viewModel: viewModel)
+        }
+        .navigationViewStyle(.stack)
+
+        return UIHostingController(rootView: swiftUIView)
     }
 }
