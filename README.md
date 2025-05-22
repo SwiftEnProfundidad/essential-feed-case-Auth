@@ -252,7 +252,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
 - [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
-- [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
+- [✅] **Refactor: test helper uses concrete `KeychainSpy` for clear asserts**
 - [✅] **Documentation and architecture aligned**  
       (Technical diagram is up to date  
        // If the implementation omits a relevant technical point, flag it below.)
@@ -529,8 +529,8 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 
 #### 4. [🚧] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  
-- [🚧] Localized messages:  
-  - [❌] Spanish/English  
+- [✅] Localized messages:  
+  - [✅] Spanish/English  
   - [🚧] Screenshot tests  
 
 #### 5. [❌] Redirect to login if renewal is not possible  

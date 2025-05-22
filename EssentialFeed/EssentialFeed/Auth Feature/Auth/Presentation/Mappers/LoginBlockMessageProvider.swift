@@ -1,5 +1,7 @@
 import Foundation
 
+private final class EssentialFeedBundleMarker {}
+
 public protocol LoginBlockMessageProvider {
     func message(forAttempts attempts: Int, maxAttempts: Int) -> String
     func message(for error: Error) -> String
@@ -9,7 +11,7 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
     public init() {}
 
     public func message(forAttempts _: Int, maxAttempts _: Int) -> String {
-        "Account temporarily locked due to multiple failed attempts. Please try again later."
+        NSLocalizedString("error_login_accountLocked_attempts", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Account locked due to multiple failed attempts (specific).")
     }
 
     public func message(for error: Error) -> String {
@@ -19,27 +21,27 @@ public struct DefaultLoginBlockMessageProvider: LoginBlockMessageProvider {
         if let loginError = error as? LoginError {
             switch loginError {
             case .invalidCredentials:
-                return "Invalid credentials."
+                return NSLocalizedString("error_login_invalidCredentials", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Invalid username or password.")
             case .invalidEmailFormat:
-                return "Invalid email format."
+                return NSLocalizedString("error_login_invalidEmailFormat", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Email format is incorrect.")
             case .invalidPasswordFormat:
-                return "Password cannot be empty."
+                return NSLocalizedString("error_login_invalidPasswordFormat", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Password format is incorrect (e.g., empty).")
             case .network:
-                return "Could not connect. Please try again."
+                return NSLocalizedString("error_login_network", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Network connection issue.")
             case .unknown:
-                return "Something went wrong. Please try again."
+                return NSLocalizedString("error_login_unknown", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: An unspecified error occurred.")
             case .tokenStorageFailed:
-                return "Token storage failed. Please try again."
+                return NSLocalizedString("error_login_tokenStorageFailed", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Failed to store authentication token.")
             case .noConnectivity:
-                return "No connectivity. Please check your internet connection."
+                return NSLocalizedString("error_login_noConnectivity", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: No internet connectivity.")
             case .offlineStoreFailed:
-                return "Offline store failed. Please try again."
+                return NSLocalizedString("error_login_offlineStoreFailed", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Failed to store data offline.")
             case .accountLocked:
-                return "Account temporarily locked due to multiple failed attempts. Please try again later."
+                return NSLocalizedString("error_login_accountLocked", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Account locked after too many attempts (general).")
             case .messageForMaxAttemptsReached:
-                return "Maximum number of attempts reached. Please try again later."
+                return NSLocalizedString("error_login_maxAttemptsReached", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Login error: Maximum login attempts reached.")
             }
         }
-        return "An unknown error occurred. Please try again."
+        return NSLocalizedString("error_login_generic", tableName: nil, bundle: Bundle(for: EssentialFeedBundleMarker.self), comment: "Generic login error message.")
     }
 }
