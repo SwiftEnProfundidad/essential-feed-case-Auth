@@ -22,14 +22,20 @@ public final class LoginSecurityUseCase {
 // MARK: - LoginLockStatusProviderProtocol
 
 extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
-    public func isAccountLocked(username: String) -> Bool {
+    public func isAccountLocked(username: String) async -> Bool {
         let attempts = store.getAttempts(for: username)
         guard attempts >= maxAttempts,
               let lastAttempt = store.lastAttemptTime(for: username)
         else {
             return false
         }
-        return timeProvider().timeIntervalSince(lastAttempt) < blockDuration
+
+        let timeSinceLastAttempt = timeProvider().timeIntervalSince(lastAttempt)
+        if timeSinceLastAttempt >= blockDuration {
+            await store.resetAttempts(for: username)
+            return false
+        }
+        return true
     }
 
     public func getRemainingBlockTime(username: String) -> TimeInterval? {

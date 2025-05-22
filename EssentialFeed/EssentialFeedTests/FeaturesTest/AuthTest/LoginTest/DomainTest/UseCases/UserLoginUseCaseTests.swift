@@ -149,7 +149,11 @@ final class UserLoginUseCaseTests: XCTestCase {
     func test_login_blocksUser_afterMaxFailedAttempts_andNotifiesLockout() async {
         let email = Self.email(for: #function)
         let maxAttempts = 3
-        let (sut, api, _, notifier, flowHandler, userDefaults) = makeSUT(maxFailedAttempts: maxAttempts)
+        let lockoutDuration: TimeInterval = 300
+        let (sut, api, _, notifier, flowHandler, userDefaults) = makeSUT(
+            maxFailedAttempts: maxAttempts,
+            lockoutDuration: lockoutDuration
+        )
         clearUserDefaults(for: email, userDefaults: userDefaults)
         let credentials = LoginCredentials(email: email, password: Self.invalidPassword)
         api.stubbedResult = .failure(LoginError.invalidCredentials)
@@ -158,19 +162,34 @@ final class UserLoginUseCaseTests: XCTestCase {
             _ = await sut.login(with: credentials)
         }
         let result = await sut.login(with: credentials)
+
         switch result {
         case let .failure(error):
-            XCTAssertEqual(error, .accountLocked, "Should return accountLocked error after exceeding the threshold")
+            if case let .accountLocked(remainingTime) = error {
+                XCTAssertTrue(remainingTime > 0 && remainingTime <= Int(lockoutDuration), "Remaining time should be within lockout duration")
+            } else {
+                XCTFail("Expected accountLocked error with remaining time")
+            }
 
             let lastNotified = notifier.notifiedFailures.compactMap { $0 as? LoginError }.last
-            XCTAssertEqual(lastNotified, LoginError.accountLocked, "Notifier should notify accountLocked error")
+            if case let .accountLocked(notifiedRemainingTime)? = lastNotified {
+                XCTAssertTrue(notifiedRemainingTime > 0 && notifiedRemainingTime <= Int(lockoutDuration), "Notified remaining time should be within lockout duration")
+            } else {
+                XCTFail("Notifier should notify accountLocked error with remaining time")
+            }
 
             let lastFlowError = flowHandler.handledResults.compactMap { result, _ in
-                if case let .failure(error) = result { error } else { nil }
+                if case let .failure(error) = result { return error }
+                return nil
             }.last
-            XCTAssertEqual(lastFlowError, LoginError.accountLocked, "FlowHandler should handle accountLocked as a lockout error")
+
+            if case let .accountLocked(flowRemainingTime)? = lastFlowError {
+                XCTAssertTrue(flowRemainingTime > 0 && flowRemainingTime <= Int(lockoutDuration), "FlowHandler should receive accountLocked with remaining time")
+            } else {
+                XCTFail("FlowHandler should handle accountLocked with remaining time")
+            }
         default:
-            XCTFail("Expected accountLocked error")
+            XCTFail("Expected accountLocked error with remaining time")
         }
     }
 
@@ -188,9 +207,13 @@ final class UserLoginUseCaseTests: XCTestCase {
         let lockoutResult = await sut.login(with: credentials)
         switch lockoutResult {
         case let .failure(error):
-            XCTAssertEqual(error, .accountLocked, "Should return accountLocked error after exceeding the threshold")
+            if case .accountLocked = error {
+                // Success - we have an account locked error with remaining time
+            } else {
+                XCTFail("Expected accountLocked error with remaining time")
+            }
         default:
-            XCTFail("Expected accountLocked error")
+            XCTFail("Expected accountLocked error with remaining time")
         }
 
         let expectation = expectation(description: "Wait for lockout to expire")

@@ -1,16 +1,18 @@
-
+import SwiftUI
 import UIKit
 
 struct SnapshotConfiguration {
     let size: CGRect
     let style: UIUserInterfaceStyle
     let contentSize: CGSize?
+    let locale: Locale
 
-    static func iPhone13(style: UIUserInterfaceStyle = .light, contentSize _: UIContentSizeCategory? = nil) -> SnapshotConfiguration {
+    static func iPhone13(style: UIUserInterfaceStyle = .light, contentSize _: UIContentSizeCategory? = nil, locale: Locale = Locale(identifier: "en_US")) -> SnapshotConfiguration {
         SnapshotConfiguration(
             size: CGRect(x: 0, y: 0, width: 390, height: 844), // iPhone 13 size
             style: style,
-            contentSize: nil
+            contentSize: nil,
+            locale: locale
         )
     }
 }

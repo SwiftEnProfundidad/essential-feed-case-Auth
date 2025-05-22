@@ -502,6 +502,9 @@
 		B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageProtocols.swift; sourceTree = "<group>"; };
 		B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
+		B416599B2DDF7B210056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ImageComments.strings; sourceTree = "<group>"; };
+		B416599C2DDF7B260056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Feed.strings; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -2694,6 +2697,7 @@
 				087148B0232BE90A00D6BE1A /* en */,
 				087148B2232BE90C00D6BE1A /* pt-BR */,
 				087148B3232BE90D00D6BE1A /* el */,
+				B416599C2DDF7B260056B792 /* es */,
 			);
 			name = Feed.strings;
 			sourceTree = "<group>";
@@ -2704,6 +2708,7 @@
 				08EF9D20250BB7E8004539C2 /* en */,
 				08EF9D22250BB7EF004539C2 /* el */,
 				08EF9D23250BB7F0004539C2 /* pt-BR */,
+				B416599A2DDF7B1A0056B792 /* es */,
 			);
 			name = Shared.strings;
 			sourceTree = "<group>";
@@ -2714,6 +2719,7 @@
 				08EF9D35250BCA52004539C2 /* en */,
 				08EF9D37250BCA59004539C2 /* el */,
 				08EF9D38250BCA5A004539C2 /* pt-BR */,
+				B416599B2DDF7B210056B792 /* es */,
 			);
 			name = ImageComments.strings;
 			sourceTree = "<group>";

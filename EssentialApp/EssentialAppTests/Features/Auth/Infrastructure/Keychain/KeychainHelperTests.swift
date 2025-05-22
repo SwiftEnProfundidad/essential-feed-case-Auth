@@ -47,7 +47,7 @@ final class KeychainHelperTests: XCTestCase {
     func test_delete_nonexistentKey_doesNotCrash() {
         let (sut, key, _) = makeSUT()
 
-        sut.delete(key) // Should not crash
+        sut.delete(key)
 
         XCTAssertNil(sut.get(key))
     }
@@ -66,7 +66,7 @@ final class KeychainHelperTests: XCTestCase {
     }
 
     private func setValue(_ value: String, for key: String, in store: KeychainStore) {
-        store.set(value, for: key)
+        _ = store.save(value, for: key)
     }
 
     private func cleanup(key: String, in store: KeychainStore) {

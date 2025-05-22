@@ -1,6 +1,6 @@
 import Foundation
 
-private final class EssentialFeedBundleMarker {}
+public final class EssentialFeedBundleMarker {}
 
 public protocol LoginBlockMessageProvider {
     func message(forAttempts attempts: Int, maxAttempts: Int) -> String

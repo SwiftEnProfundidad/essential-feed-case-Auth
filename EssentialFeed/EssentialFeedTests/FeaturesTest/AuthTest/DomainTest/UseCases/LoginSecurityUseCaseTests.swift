@@ -9,7 +9,8 @@ final class LoginSecurityUseCaseTests: XCTestCase {
             await sut.handleFailedLogin(username: "user1")
         }
 
-        XCTAssertFalse(sut.isAccountLocked(username: "user1"))
+        let isLocked = await sut.isAccountLocked(username: "user1")
+        XCTAssertFalse(isLocked)
     }
 
     func test_isAccountLocked_returnsTrueWhenOverMaxAttempts() async {
@@ -20,7 +21,8 @@ final class LoginSecurityUseCaseTests: XCTestCase {
             await sut.handleFailedLogin(username: username)
         }
 
-        XCTAssertTrue(sut.isAccountLocked(username: username))
+        let isLocked = await sut.isAccountLocked(username: username)
+        XCTAssertTrue(isLocked)
     }
 
     func test_resetAttempts_removesLock() async {
@@ -33,7 +35,8 @@ final class LoginSecurityUseCaseTests: XCTestCase {
 
         await sut.resetAttempts(username: username)
 
-        XCTAssertFalse(sut.isAccountLocked(username: username))
+        let isLocked = await sut.isAccountLocked(username: username)
+        XCTAssertFalse(isLocked)
     }
 
     func test_getRemainingBlockTime_returnsCorrectTime() async {

@@ -40,7 +40,7 @@ extension XCTestCase {
         }
     }
 
-    private func makeSnapshotURL(named name: String, file: StaticString) -> URL {
+    func makeSnapshotURL(named name: String, file: StaticString) -> URL {
         URL(fileURLWithPath: String(describing: file))
             .deletingLastPathComponent()
             .appendingPathComponent("snapshots")

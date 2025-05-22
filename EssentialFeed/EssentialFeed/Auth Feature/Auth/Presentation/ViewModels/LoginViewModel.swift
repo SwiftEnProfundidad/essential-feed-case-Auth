@@ -63,7 +63,8 @@ public final class LoginViewModel: ObservableObject {
     public func login() async {
         await checkAccountUnlock(for: username)
         guard !isLoginBlocked else {
-            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked)
+            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
+            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             return
         }
 
@@ -133,27 +134,31 @@ public final class LoginViewModel: ObservableObject {
     private func handleFailedLogin(username: String, error: LoginError = .invalidCredentials) async {
         await loginSecurity.handleFailedLogin(username: username)
 
-        await MainActor.run { [weak self] in
-            guard let self else { return }
-
-            if self.loginSecurity.isAccountLocked(username: username) {
-                self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked)
+        let isLocked = await loginSecurity.isAccountLocked(username: username)
+        if isLocked {
+            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
+            await MainActor.run { [weak self] in
+                guard let self else { return }
+                self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
                 self.isLoginBlocked = true
-            } else {
-                self.errorMessage = self.blockMessageProvider.message(for: error)
+            }
+        } else {
+            await MainActor.run { [weak self] in
+                self?.errorMessage = self?.blockMessageProvider.message(for: error)
             }
         }
     }
 
+    @MainActor
     private func checkAccountUnlock(for username: String) async {
-        guard loginSecurity.isAccountLocked(username: username) else { return }
-
-        if loginSecurity.getRemainingBlockTime(username: username) == nil {
-            await loginSecurity.resetAttempts(username: username)
-            await MainActor.run { [weak self] in
-                self?.isLoginBlocked = false
-                self?.errorMessage = nil
-            }
+        let isLocked = await loginSecurity.isAccountLocked(username: username)
+        if isLocked {
+            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
+            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            isLoginBlocked = true
+        } else {
+            isLoginBlocked = false
+            errorMessage = nil
         }
     }
 
@@ -199,7 +204,7 @@ public final class LoginViewModel: ObservableObject {
         } else if let message = errorMessage {
             .error(message)
         } else if loginSuccess {
-            // Puedes personalizar el mensaje de éxito si es necesario
+            // Personalizar el mensaje de éxito si es necesario
             .success("Login successful!")
         } else {
             .idle
