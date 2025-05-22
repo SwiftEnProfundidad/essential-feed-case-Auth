@@ -7,7 +7,8 @@ public enum LoginUIComposer {
         viewModel.navigation = adapter
 
         let loginView = LoginView(viewModel: viewModel)
-        return UIHostingController(rootView: loginView)
+        let navigationRootView = NavigationView { loginView }
+        return UIHostingController(rootView: navigationRootView)
     }
 }
 

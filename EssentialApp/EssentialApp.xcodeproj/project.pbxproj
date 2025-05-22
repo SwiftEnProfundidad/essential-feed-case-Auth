@@ -75,6 +75,7 @@
 		B48991412DD3E41300A94850 /* LOGIN_IDLE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */; };
 		B48991422DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */; };
 		B48991432DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */; };
+		B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
@@ -181,6 +182,7 @@
 		B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
 		B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
 		B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
+		B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 		0895DA85234B3B950031BB2D /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
+				B48EEA652DDE9D880013D0A9 /* Shared */,
 				B4D6B25A2DC8D07900F5A3FE /* Features */,
 				0895DA86234B3B950031BB2D /* AppDelegate.swift */,
 				0895DA88234B3B950031BB2D /* SceneDelegate.swift */,
@@ -317,6 +320,22 @@
 				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
 			);
 			path = Keychain;
+			sourceTree = "<group>";
+		};
+		B48EEA652DDE9D880013D0A9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B48EEA662DDE9D960013D0A9 /* UI */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		B48EEA662DDE9D960013D0A9 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
@@ -575,6 +594,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */,
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
 				B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */,

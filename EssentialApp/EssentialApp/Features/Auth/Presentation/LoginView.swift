@@ -1,17 +1,96 @@
 import EssentialFeed
 import SwiftUI
 
+// MARK: - Neumorphic Style Definitions
+
+private let neumorphicCornerRadius: CGFloat = 15
+private let neumorphicShadowRadiusNormal: CGFloat = 5
+private let neumorphicShadowOffsetNormal: CGFloat = 5
+private let neumorphicShadowRadiusPressedFocused: CGFloat = 3
+private let neumorphicShadowOffsetPressedFocused: CGFloat = 2
+
+private let darkThemeLightShadowColor = Color(white: 0.2, opacity: 0.6)
+private let darkThemeDarkShadowColor = Color.black.opacity(0.7)
+
+struct NeumorphicTextFieldStyle: TextFieldStyle {
+    var isFocused: Bool
+    let mainColor = AppTheme.Colors.neumorphicBase
+    let cornerRadius: CGFloat = neumorphicCornerRadius
+
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(15)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(mainColor)
+                    .shadow(
+                        color: darkThemeLightShadowColor,
+                        radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
+                        x: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal,
+                        y: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
+                    )
+                    .shadow(
+                        color: darkThemeDarkShadowColor,
+                        radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
+                        x: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal,
+                        y: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal
+                    )
+            )
+            .animation(.easeInOut(duration: 0.2), value: isFocused)
+    }
+}
+
+struct NeumorphicButtonStyle: ButtonStyle {
+    let mainColor = AppTheme.Colors.neumorphicBase
+    let textColor = AppTheme.Colors.accentLimeGreen
+    let cornerRadius: CGFloat = neumorphicCornerRadius
+
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundColor(textColor)
+            .padding()
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(mainColor)
+                    .shadow(
+                        color: darkThemeLightShadowColor,
+                        radius: configuration.isPressed
+                            ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
+                        x: configuration.isPressed
+                            ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal,
+                        y: configuration.isPressed
+                            ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
+                    )
+                    .shadow(
+                        color: darkThemeDarkShadowColor,
+                        radius: configuration.isPressed
+                            ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
+                        x: configuration.isPressed
+                            ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal,
+                        y: configuration.isPressed
+                            ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal
+                    )
+            )
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.spring(), value: configuration.isPressed)
+    }
+}
+
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
-    @State private var localUsername: String
-    @State private var localPassword: String
+    @State private var localUsername = ""
+    @State private var localPassword = ""
+    @FocusState private var focusedField: Field?
 
-    private enum Field: Hashable {
+    @State private var titleAnimation = false
+    @State private var contentAnimation = false
+
+    enum Field: Hashable {
         case username
         case password
     }
-
-    @FocusState private var focusedField: Field?
 
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -21,154 +100,138 @@ public struct LoginView: View {
 
     public var body: some View {
         ZStack {
-            Color(UIColor.systemGroupedBackground)
+            AppTheme.Colors.neumorphicBase
                 .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    focusedField = nil
+                }
 
             VStack {
-                Text("MiApp")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 30)
-
-                VStack(spacing: 20) {
-                    TextField("Usuario", text: $localUsername)
-                        .id(Field.username)
-                        .focused($focusedField, equals: .username)
-                        .onChange(of: localUsername) { newValue in
-                            viewModel.username = newValue
-                        }
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-
-                    SecureField("Contraseña", text: $localPassword)
-                        .id(Field.password)
-                        .focused($focusedField, equals: .password)
-                        .onChange(of: localPassword) { newValue in
-                            viewModel.password = newValue
-                        }
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                }
-                .padding(.horizontal, 40)
-
-                Group {
-                    switch viewModel.viewState {
-                    case .idle:
-                        VStack(spacing: 16) {
-                            Text(" ")
-                                .font(.caption)
-                                .padding(.vertical, 4)
-                                .frame(maxWidth: .infinity)
-                                .opacity(0)
-                                .accessibilityHidden(true)
-                            loginButton
-                            forgotPasswordButton
-                        }
-                        .frame(maxWidth: .infinity)
-                    case .blocked:
-                        ProgressView()
-                            .padding(.vertical)
-                            .accessibilityIdentifier("login_activity_indicator")
-                    case let .error(message):
-                        VStack(spacing: 8) {
-                            Text(message)
-                                .font(.caption)
-                                .foregroundColor(.red)
-                                .padding(.vertical, 4)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .multilineTextAlignment(.center)
-                                .accessibilityIdentifier("login_error_message")
-                            VStack(spacing: 16) {
-                                loginButton
-                                forgotPasswordButton
-                            }
-                            .frame(maxWidth: .infinity)
-                        }
-                        .frame(maxWidth: .infinity)
-                    case let .success(message):
-                        Text(message)
-                            .font(.headline)
-                            .foregroundColor(.green)
-                            .padding(.vertical)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                            .accessibilityIdentifier("login_success_message")
-                    }
-                }
-                .id(viewModel.viewState)
-                .frame(minHeight: 80)
-                .padding(.horizontal, 40)
+                Spacer()
+                titleView
+                Spacer().frame(height: 60)
+                formView
+                Spacer()
+                statusView
+                Spacer()
             }
-            .onChange(of: focusedField) { newFocus in
-                if newFocus != nil {
-                    viewModel.userWillBeginEditing()
+            .padding(.horizontal)
+        }
+        .onAppear {
+            titleAnimation = true
+            contentAnimation = true
+        }
+        .onChange(of: focusedField) { _ in
+            viewModel.userWillBeginEditing()
+        }
+    }
+
+    // MARK: - Computed UI Properties
+
+    private var titleView: some View {
+        Text("Mis Feeds")
+            .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
+            .foregroundColor(AppTheme.Colors.accentLimeGreen)
+            .opacity(titleAnimation ? 1 : 0)
+            .offset(y: titleAnimation ? 0 : -100)
+            .animation(
+                .interpolatingSpring(stiffness: 120, damping: 15).delay(0.1), value: titleAnimation
+            )
+    }
+
+    private var formView: some View {
+        VStack(spacing: 20) {
+            TextField(
+                "",
+                text: $localUsername,
+                prompt: Text("Usuario")
+                    .foregroundColor(AppTheme.Colors.textSecondary)
+                    .font(Font.system(.callout, design: .rounded))
+            )
+            .id(Field.username)
+            .focused($focusedField, equals: .username)
+            .keyboardType(.emailAddress)
+            .autocapitalization(.none)
+            .disableAutocorrection(true)
+            .onChange(of: localUsername) { newValue in
+                viewModel.username = newValue
+            }
+            .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .username))
+            .foregroundColor(AppTheme.Colors.textPrimary)
+            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .submitLabel(.next)
+            .onSubmit {
+                focusedField = .password
+            }
+
+            SecureField(
+                "",
+                text: $localPassword,
+                prompt: Text("Contraseña")
+                    .foregroundColor(AppTheme.Colors.textSecondary)
+                    .font(Font.system(.callout, design: .rounded))
+            )
+            .id(Field.password)
+            .focused($focusedField, equals: .password)
+            .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .password))
+            .foregroundColor(AppTheme.Colors.textPrimary)
+            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .submitLabel(.done)
+            .onSubmit {
+                Task {
+                    await viewModel.login()
                 }
             }
+
+            Button(action: {
+                focusedField = nil
+                print("[LoginView] Login button tapped.")
+                Task {
+                    print("[LoginView] Calling viewModel.login()...")
+                    await viewModel.login()
+                }
+            }) {
+                Text("Iniciar sesión")
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(AppTheme.Colors.accentLimeGreen)
+                    .font(Font.system(.headline, design: .rounded).weight(.bold))
+            }
+            .buttonStyle(NeumorphicButtonStyle())
+            .disabled(viewModel.viewState == .blocked || viewModel.isLoginButtonDisabled)
+
+            NavigationLink(destination: PasswordRecoveryComposer.passwordRecoveryViewScreen()) {
+                Text("¿Olvidaste tu contraseña?")
+                    .font(Font.system(.subheadline, design: .rounded))
+                    .foregroundColor(AppTheme.Colors.textSecondary)
+            }
+            .padding(.top, 10)
         }
+        .opacity(contentAnimation ? 1 : 0)
+        .offset(y: contentAnimation ? 0 : 50)
+        .animation(.easeInOut(duration: 0.5).delay(0.3), value: contentAnimation)
     }
 
-    private var loginButton: some View {
-        Button("Iniciar sesión") {
-            Task { await viewModel.login() }
+    private var statusView: some View {
+        Group {
+            switch viewModel.viewState {
+            case let .error(message):
+                Text(message)
+                    .foregroundColor(.red)
+                    .font(Font.system(.callout, design: .rounded))
+                    .multilineTextAlignment(.center)
+                    .padding()
+            case .blocked:
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .progressViewStyle(CircularProgressViewStyle(tint: AppTheme.Colors.accentLimeGreen))
+                    .padding()
+                Text("Iniciando sesión...")
+                    .foregroundColor(AppTheme.Colors.textSecondary)
+                    .font(Font.system(.callout, design: .rounded))
+            default:
+                EmptyView()
+            }
         }
-        .font(.headline)
-        .foregroundColor(.white)
-        .padding()
-        .frame(maxWidth: .infinity)
-        .background(Color.blue)
-        .cornerRadius(10)
-        .shadow(color: Color.blue.opacity(0.3), radius: 5, x: 0, y: 5)
-    }
-
-    private var forgotPasswordButton: some View {
-        Button("¿Olvidaste tu contraseña?") {
-            viewModel.handleRecoveryTap()
-        }
-        .foregroundColor(.blue)
-    }
-
-    private func blockedView() -> some View {
-        VStack(spacing: 8) {
-            Image(systemName: "lock.fill")
-                .font(.title)
-                .foregroundColor(.red)
-            Text("Too many failed attempts. Please try again later.")
-                .font(.callout)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-        .padding(.horizontal)
-    }
-
-    private func successView(message: String) -> some View {
-        VStack(spacing: 8) {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.title)
-                .foregroundColor(.green)
-            Text(message)
-                .font(.callout)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .cornerRadius(10)
-        .padding(.horizontal)
-    }
-
-    private func errorView(message: String) -> some View {
-        VStack(spacing: 8) {
-            Image(systemName: "xmark.circle.fill")
-                .font(.title)
-                .foregroundColor(.red)
-            Text(message)
-                .font(.callout)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.red)
-        }
-        .padding()
-        .background(Color(UIColor.secondarySystemGroupedBackground).opacity(0.7))
-        .cornerRadius(10)
-        .padding(.horizontal)
+        .frame(height: 100)
     }
 }

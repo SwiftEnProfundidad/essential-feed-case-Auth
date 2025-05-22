@@ -27,7 +27,8 @@ public final class LoginViewModel: ObservableObject {
         }
     }
 
-    @Published public var errorMessage: String?
+    @Published public var viewState: ViewState = .idle
+    @Published public var errorMessage: String? = nil
     @Published public var loginSuccess: Bool = false
     @Published public var isLoginBlocked = false
     public let authenticated = PassthroughSubject<Void, Never>()
@@ -61,6 +62,13 @@ public final class LoginViewModel: ObservableObject {
 
     @MainActor
     public func login() async {
+        print("[LoginViewModel] login() called. Current state: \(viewState), User: \(username)")
+        guard viewState != .blocked else {
+            print("[LoginViewModel] Login attempt while already blocked. Aborting.") // DEBUG
+            return
+        }
+
+        viewState = .blocked
         await checkAccountUnlock(for: username)
         guard !isLoginBlocked else {
             errorMessage = blockMessageProvider.message(for: LoginError.accountLocked)
@@ -186,15 +194,10 @@ public final class LoginViewModel: ObservableObject {
         if errorMessage != nil {
             errorMessage = nil
             objectWillChange.send()
-            // Si userDidInitiateEditing() tenía más lógica relevante, considerar llamarla o moverla aquí.
-            // Por ahora, nos centramos en limpiar el error para estabilizar el TextField.
         }
     }
 
     public func userDidInitiateEditing() {
-        // Esta función ahora se llamaría explícitamente si es necesario para otras lógicas,
-        // o su contenido (si es solo limpiar error) se integra en userWillBeginEditing.
-        // Por ahora, la dejamos así, pero no se llamará desde didSet de password.
         debugPrint("LoginViewModel: userDidInitiateEditing - Clearing error message if present.")
         if errorMessage != nil {
             errorMessage = nil
@@ -204,17 +207,8 @@ public final class LoginViewModel: ObservableObject {
 
     // MARK: - Navigation
 
-    public var viewState: ViewState {
-        if isLoginBlocked {
-            .blocked
-        } else if let message = errorMessage {
-            .error(message)
-        } else if loginSuccess {
-            // Puedes personalizar el mensaje de éxito si es necesario
-            .success("Login successful!")
-        } else {
-            .idle
-        }
+    public var isLoginButtonDisabled: Bool {
+        username.isEmpty || password.isEmpty
     }
 
     deinit {
