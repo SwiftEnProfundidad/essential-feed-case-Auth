@@ -87,10 +87,11 @@ public final class UserLoginUseCase {
         guard now < until else {
             defaults.removeObject(forKey: attemptsKey)
             defaults.removeObject(forKey: lockoutKey)
-            return nil // No está bloqueado
+            return nil
         }
 
-        return .accountLocked
+        let remainingTime = Int(until.timeIntervalSince(now))
+        return .accountLocked(remainingTime: remainingTime)
     }
 
     private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
@@ -125,7 +126,9 @@ public final class UserLoginUseCase {
         let newAttempts = prevAttempts + 1
         defaults.set(newAttempts, forKey: attemptsKey)
         guard newAttempts <= config.maxFailedAttempts else {
-            return await handleFailure(.failure(LoginError.accountLocked), credentials)
+            let until = Date().addingTimeInterval(config.lockoutDuration)
+            let remainingTime = Int(until.timeIntervalSinceNow)
+            return await handleFailure(.failure(LoginError.accountLocked(remainingTime: remainingTime)), credentials)
         }
         guard newAttempts != config.maxFailedAttempts else {
             let until = Date().addingTimeInterval(config.lockoutDuration)

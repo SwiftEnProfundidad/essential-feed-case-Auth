@@ -162,6 +162,7 @@
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6422DBE28E100E738D3 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B44EA3952DDF309D008D41A1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */; };
 		B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369A2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift */; };
 		B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36BA2DDA92EE00184F55 /* PasswordRecoveryView.swift */; };
 		B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */; };
@@ -501,6 +502,9 @@
 		B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageProtocols.swift; sourceTree = "<group>"; };
 		B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
+		B416599B2DDF7B210056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ImageComments.strings; sourceTree = "<group>"; };
+		B416599C2DDF7B260056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Feed.strings; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
@@ -517,6 +521,7 @@
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
+		B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B45C367C2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
 		B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
 		B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
@@ -845,6 +850,7 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				B44EA3932DDF303F008D41A1 /* Resources */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
 				B4047DB72DDA6EA300A0C34C /* Security Feature */,
 				B4D6B2622DC8D15400F5A3FE /* Auth Feature */,
@@ -1467,6 +1473,14 @@
 				B42939692DDB8D9800811CBC /* TokenValidatorTests.swift */,
 			);
 			path = SharedTest;
+			sourceTree = "<group>";
+		};
+		B44EA3932DDF303F008D41A1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B45C36822DDA92EE00184F55 /* DataSources */ = {
@@ -2206,6 +2220,7 @@
 				Base,
 				"pt-BR",
 				el,
+				es,
 			);
 			mainGroup = 080EDEE721B6DA7E00813479;
 			productRefGroup = 080EDEF221B6DA7E00813479 /* Products */;
@@ -2231,6 +2246,7 @@
 			files = (
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 				08EF9D1F250BB7E8004539C2 /* Shared.strings in Resources */,
+				B44EA3952DDF309D008D41A1 /* Localizable.xcstrings in Resources */,
 				08EF9D34250BCA52004539C2 /* ImageComments.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2681,6 +2697,7 @@
 				087148B0232BE90A00D6BE1A /* en */,
 				087148B2232BE90C00D6BE1A /* pt-BR */,
 				087148B3232BE90D00D6BE1A /* el */,
+				B416599C2DDF7B260056B792 /* es */,
 			);
 			name = Feed.strings;
 			sourceTree = "<group>";
@@ -2691,6 +2708,7 @@
 				08EF9D20250BB7E8004539C2 /* en */,
 				08EF9D22250BB7EF004539C2 /* el */,
 				08EF9D23250BB7F0004539C2 /* pt-BR */,
+				B416599A2DDF7B1A0056B792 /* es */,
 			);
 			name = Shared.strings;
 			sourceTree = "<group>";
@@ -2701,6 +2719,7 @@
 				08EF9D35250BCA52004539C2 /* en */,
 				08EF9D37250BCA59004539C2 /* el */,
 				08EF9D38250BCA5A004539C2 /* pt-BR */,
+				B416599B2DDF7B210056B792 /* es */,
 			);
 			name = ImageComments.strings;
 			sourceTree = "<group>";
@@ -2769,6 +2788,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2829,6 +2849,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

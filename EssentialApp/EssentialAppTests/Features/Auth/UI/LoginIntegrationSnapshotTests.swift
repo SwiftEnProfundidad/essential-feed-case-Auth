@@ -8,16 +8,14 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let sut = makeSUT(authenticate: { _, _ in
             .success(LoginResponse(token: "dummy_token"))
         })
-        sut.simulateUserEntering(username: "user", password: "pass")
-        await sut.simulateTapOnLoginButton()
-        sut.waitForLoginSuccessAlert()
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
-            named: "LOGIN_SUCCESS_NOTIFICATION_light"
-        )
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
-            named: "LOGIN_SUCCESS_NOTIFICATION_dark"
+        await verifySnapshot(
+            for: sut,
+            action: { sut in
+                sut.simulateUserEntering(username: "user", password: "pass")
+                await sut.simulateTapOnLoginButton()
+                sut.waitForLoginSuccessAlert()
+            },
+            named: "LOGIN_SUCCESS_NOTIFICATION"
         )
     }
 
@@ -25,14 +23,14 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let sut = makeSUT(authenticate: { _, _ in
             .failure(.invalidCredentials)
         })
-        sut.simulateUserEntering(username: "user", password: "wrongpass")
-        await sut.simulateTapOnLoginButton()
-        sut.waitForLoginSuccessAlert()
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "LOGIN_ERROR_NOTIFICATION_light"
-        )
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "LOGIN_ERROR_NOTIFICATION_dark"
+        await verifySnapshot(
+            for: sut,
+            action: { sut in
+                sut.simulateUserEntering(username: "user", password: "wrongpass")
+                await sut.simulateTapOnLoginButton()
+                sut.waitForLoginSuccessAlert()
+            },
+            named: "LOGIN_ERROR_NOTIFICATION"
         )
     }
 
@@ -40,16 +38,14 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let sut = makeSUT(authenticate: { _, _ in
             .failure(.network)
         })
-        sut.simulateUserEntering(username: "user", password: "pass")
-        await sut.simulateTapOnLoginButton()
-        sut.waitForLoginSuccessAlert()
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
-            named: "LOGIN_NETWORK_ERROR_NOTIFICATION_light"
-        )
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
-            named: "LOGIN_NETWORK_ERROR_NOTIFICATION_dark"
+        await verifySnapshot(
+            for: sut,
+            action: { sut in
+                sut.simulateUserEntering(username: "user", password: "pass")
+                await sut.simulateTapOnLoginButton()
+                sut.waitForLoginSuccessAlert()
+            },
+            named: "LOGIN_NETWORK_ERROR_NOTIFICATION"
         )
     }
 
@@ -57,25 +53,50 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let sut = makeSUT(authenticate: { _, _ in
             .failure(.unknown)
         })
-        sut.simulateUserEntering(username: "user", password: "pass")
-        await sut.simulateTapOnLoginButton()
-        sut.waitForLoginSuccessAlert()
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .light)),
-            named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION_light"
-        )
-        assert(
-            snapshot: sut.snapshot(for: .iPhone13(style: .dark)),
-            named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark"
+        await verifySnapshot(
+            for: sut,
+            action: { sut in
+                sut.simulateUserEntering(username: "user", password: "pass")
+                await sut.simulateTapOnLoginButton()
+                sut.waitForLoginSuccessAlert()
+            },
+            named: "LOGIN_UNKNOWN_ERROR_NOTIFICATION"
         )
     }
 
-    // MARK: Helpers
+    // MARK: - Helpers
+
+    private func verifySnapshot(
+        for sut: LoginTestHarness,
+        action: (LoginTestHarness) async -> Void,
+        named name: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
+        await action(sut)
+
+        let lightSnapshot = sut.snapshot(for: .iPhone13(style: .light))
+        let darkSnapshot = sut.snapshot(for: .iPhone13(style: .dark))
+
+        // Verificamos primero con assert
+        // Si las snapshots no existen, assert fallará silenciosamente
+        // Si existen pero no coinciden, assert fallará con un mensaje
+        assert(snapshot: lightSnapshot, named: "\(name)_light", file: file, line: line)
+        assert(snapshot: darkSnapshot, named: "\(name)_dark", file: file, line: line)
+
+        // Si llegamos aquí, las snapshots existen y coinciden
+        // Si necesitamos grabar nuevas snapshots, usamos record() manualmente
+        // Nota: record() fallará intencionalmente después de guardar
+    }
 
     private func makeSUT(
-        authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>
+        authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
+        file: StaticString = #filePath,
+        line: UInt = #line
     ) -> LoginTestHarness {
-        LoginTestHarness(authenticate: authenticate)
+        let sut = LoginTestHarness(authenticate: authenticate)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
 

@@ -26,16 +26,15 @@ public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
     }
 
     public func resetAttempts(for username: String) {
-        lastResetCount = incrementAttemptsCallCount
         resetAttemptsCallCount += 1
         capturedUsernames.append(username)
+        lastResetCount = incrementAttemptsCallCount
         attempts[username] = 0
         lastAttemptTimes[username] = nil
     }
 
     public var incrementAttemptsSinceLastReset: Int {
-        _ = incrementAttemptsCallCount - lastResetCount
-        return incrementAttemptsCallCount - lastResetCount
+        incrementAttemptsCallCount - lastResetCount
     }
 
     public func lastAttemptTime(for username: String) -> Date? {

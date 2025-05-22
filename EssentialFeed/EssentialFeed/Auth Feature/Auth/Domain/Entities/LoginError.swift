@@ -13,7 +13,7 @@ public enum LoginError: Error, LoginErrorType, Equatable {
     case noConnectivity
     case unknown
     case offlineStoreFailed
-    case accountLocked
+    case accountLocked(remainingTime: Int)
     case messageForMaxAttemptsReached
     public func errorMessage() -> String {
         switch self {
@@ -33,8 +33,8 @@ public enum LoginError: Error, LoginErrorType, Equatable {
             "Something went wrong. Please try again."
         case .offlineStoreFailed:
             "Offline store failed. Please try again."
-        case .accountLocked:
-            "Account temporarily locked due to multiple failed attempts. Please try again later."
+        case let .accountLocked(remainingTime):
+            String(format: "Account locked. Please try again in %d seconds.", remainingTime)
         case .messageForMaxAttemptsReached:
             "Maximum number of attempts reached. Please try again later."
         }

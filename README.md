@@ -145,8 +145,7 @@ _(Only reference for QA/business. Progress is marked only in the technical check
     - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
     - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
     - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
-    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
-    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+
 
 #### Technical Diagram
 *(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
@@ -253,7 +252,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
 - [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
-- [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
+- [✅] **Refactor: test helper uses concrete `KeychainSpy` for clear asserts**
 - [✅] **Documentation and architecture aligned**  
       (Technical diagram is up to date  
        // If the implementation omits a relevant technical point, flag it below.)
@@ -289,11 +288,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-### Technical Diagram
-*(The original diagram is conceptually valid, but the implementation of C[UserRegistrationUseCase] currently omits step G[Token stored] and retry logic)*
-
----
-
 ### Registration Technical Diagram Flow
 
 ```mermaid
@@ -312,20 +306,20 @@ flowchart TD
 
 ### Technical Checklist Registration <-> Tests (Reviewed)
 
-| Technical Checklist Item                                                                                                   | Test covering it (real name)                                                                                                      | Test Type          | Coverage (Reviewed) | Brief Comment                                                                                         |
-|-----------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|--------------------|---------------------|--------------------------------------------------------------------------------------------------------|
-| Store initial credentials securely (Keychain)                                                                               | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit)                                               | Integration        | ✅                  | Test verifies success; Keychain write asserted via `KeychainFullSpy`.                                  |
-| Store authentication token received (OAuth/JWT) securely after registration                                                 | `test_registerUser_withValidData_storesAuthToken`                                                                                  | Unit / Integration | ✅                  | `UserRegistrationUseCase` saves token via `TokenStorage`; spy confirms call.                           |
-| Notify registration success                                                                                                 | `test_registerUser_withValidData_notifiesSuccessObserver`                                                                          | Integration        | ✅                  | Success path notifies observer.                                                                       |
-| Notify that the email is already in use                                                                                     | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter` <br> `test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError` | Unit / Integration | ✅                  | Both UI-level and domain-level notification covered.                                                   |
-| Show appropriate and specific error messages                                                                                | `test_registerUser_withInvalidEmail_returnsInvalidEmailError`, <br>`test_registerUser_withWeakPassword_returnsWeakPasswordError`   | Unit               | ✅                  | Domain errors map one-to-one to presentation.                                                          |
-| Save data for retry if no connection and notify error                                                                       | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError`                                              | Integration        | ✅                  | Error `.noConnectivity` returned and data persisted via `OfflineRegistrationStoreSpy`.                 |
-| **Implement logic to retry saved offline registration requests** (When connectivity is restored)                            | `RetryOfflineRegistrationsUseCaseTests` (5 tests: *no data*, *success*, *api fails*, *token fails*, *delete fails*)                | Unit               | ✅                  | All sub-cases covered; verifies side-effects on store & token storage.                                 |
-| Refactor: test helper uses concrete KeychainSpy for clear asserts                                                         | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
-| Documentation and architecture aligned                                                                                      | Compilation + all `UserRegistrationUseCase*Tests` pass                                                                             | N/A                | ✅                  | Constructor now receives `RegistrationPersistenceInterfaces` typealias.                                |
-| Unit and integration tests for all paths (happy/sad path)                                                                   | Entire `UserRegistrationUseCaseTests`, `UserRegistrationUseCaseIntegrationTests`, `RetryOfflineRegistrationsUseCaseTests`          | Unit / Integration | ✅                  | Every path now exercised, including offline save + retry logic.                                       |
-| Refactor: test helper uses concrete `KeychainSpy` for clear asserts                                                         | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
-| Documentation and architecture aligned                                                                                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
+| 🛠️ Technical Task (BDD Original)                                    | ✅ Test that covers it (real/proposed)                     | Test Type          | Coverage (Reviewed) | Brief Comment                                                                 |
+|-----------------------------------------------------------------------|-----------------------------------------------------------|--------------------|---------------------|----------------------------------------------------------------------------------|
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Store initial credentials securely (Keychain)                  | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit)                                               | Integration        | ✅                  | Test verifies success; Keychain write asserted via `KeychainFullSpy`.                                  |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Store authentication token received (OAuth/JWT) securely after registration | `test_registerUser_withValidData_storesAuthToken`                                                                                  | Unit / Integration | ✅                  | `UserRegistrationUseCase` saves token via `TokenStorage`; spy confirms call.                           |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Notify registration success                                     | `test_registerUser_withValidData_notifiesSuccessObserver`                                                                          | Integration        | ✅                  | Success path notifies observer.                                                                       |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Notify that the email is already in use                              | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter` <br> `test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError` | Unit / Integration | ✅                  | Both UI-level and domain-level notification covered.                                                   |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Show appropriate and specific error messages                        | `test_registerUser_withInvalidEmail_returnsInvalidEmailError`, <br>`test_registerUser_withWeakPassword_returnsWeakPasswordError`   | Unit               | ✅                  | Domain errors map one-to-one to presentation.                                                          |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Save data for retry if no connection and notify error              | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError`                                              | Integration        | ✅                  | Error `.noConnectivity` returned and data persisted via `OfflineRegistrationStoreSpy`.                 |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Implement logic to retry saved offline registration requests     | `RetryOfflineRegistrationsUseCaseTests` (5 tests: *no data*, *success*, *api fails*, *token fails*, *delete fails*)                | Unit               | ✅                  | All sub-cases covered; verifies side-effects on store & token storage.                                 |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Refactor: test helper uses concrete KeychainSpy for clear asserts | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Documentation and architecture aligned                      | Compilation + all `UserRegistrationUseCase*Tests` pass                                                                             | N/A                | ✅                  | Constructor now receives `RegistrationPersistenceInterfaces` typealias.                                |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Unit and integration tests for all paths (happy/sad path) | Entire `UserRegistrationUseCaseTests`, `UserRegistrationUseCaseIntegrationTests`, `RetryOfflineRegistrationsUseCaseTests`          | Unit / Integration | ✅                  | Every path now exercised, including offline save + retry logic.                                       |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Refactor: test helper uses concrete `KeychainSpy` for clear asserts | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Documentation and architecture aligned                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
                                                                          
 ---
 
@@ -533,9 +527,9 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
     - [✅] Tests that verify encryption (AES-256) on write
     - [✅] Negative/error-path & advanced security tests
 
-#### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
+#### 4. [🚧] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  
-- [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Localized messages:  
+- [✅] Localized messages:  
   - [✅] Spanish/English  
   - [🚧] Screenshot tests  
 
@@ -553,7 +547,6 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 ---
 
 #### Still missing / To improve
-
 - [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - Detect 401 responses (token expired)
     - Trigger token refresh cycle (transparently to feature code)
@@ -616,7 +609,9 @@ flowchart TD
 
 ## 5. Password Recovery
 
-### Functional Narrative
+### Story: User Wants to Recover Password
+
+**Narrative:**  
 As a user who has forgotten their password,
 I want to be able to reset it securely,
 so that I can regain access to my account.
@@ -703,7 +698,9 @@ flowchart TD
 
 ## 6. Session Management
 
-### Functional Narrative
+### Story: User Wants to View and Manage Active Sessions
+
+**Narrative:**  
 As a security-conscious user,
 I want to be able to view and manage my active sessions,
 so I can detect and terminate unauthorized access.
@@ -1591,8 +1588,6 @@ ensuring that they are only requested when necessary and that the user understan
 - [❌] Tests for all request flows and permission states.
 
 ---
-
-
 
 ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-iOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-macOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/Deploy/badge.svg)
 
