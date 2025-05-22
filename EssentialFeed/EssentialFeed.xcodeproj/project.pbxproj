@@ -162,6 +162,7 @@
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6422DBE28E100E738D3 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B44EA3952DDF309D008D41A1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */; };
 		B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369A2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift */; };
 		B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36BA2DDA92EE00184F55 /* PasswordRecoveryView.swift */; };
 		B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */; };
@@ -517,6 +518,7 @@
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseIntegrationTests.swift; sourceTree = "<group>"; };
+		B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		B45C367C2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
 		B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
 		B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
@@ -845,6 +847,7 @@
 		080EDEF321B6DA7E00813479 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				B44EA3932DDF303F008D41A1 /* Resources */,
 				080EDEF521B6DA7E00813479 /* Info.plist */,
 				B4047DB72DDA6EA300A0C34C /* Security Feature */,
 				B4D6B2622DC8D15400F5A3FE /* Auth Feature */,
@@ -1467,6 +1470,14 @@
 				B42939692DDB8D9800811CBC /* TokenValidatorTests.swift */,
 			);
 			path = SharedTest;
+			sourceTree = "<group>";
+		};
+		B44EA3932DDF303F008D41A1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B45C36822DDA92EE00184F55 /* DataSources */ = {
@@ -2206,6 +2217,7 @@
 				Base,
 				"pt-BR",
 				el,
+				es,
 			);
 			mainGroup = 080EDEE721B6DA7E00813479;
 			productRefGroup = 080EDEF221B6DA7E00813479 /* Products */;
@@ -2231,6 +2243,7 @@
 			files = (
 				087148B7232BEB5400D6BE1A /* Feed.strings in Resources */,
 				08EF9D1F250BB7E8004539C2 /* Shared.strings in Resources */,
+				B44EA3952DDF309D008D41A1 /* Localizable.xcstrings in Resources */,
 				08EF9D34250BCA52004539C2 /* ImageComments.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2769,6 +2782,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2829,6 +2843,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
