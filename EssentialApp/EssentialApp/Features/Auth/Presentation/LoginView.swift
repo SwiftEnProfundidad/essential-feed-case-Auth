@@ -131,8 +131,10 @@ public struct LoginView: View {
             )
         }
         .onAppear {
+            withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+                contentAnimation = true
+            }
             titleAnimation = true
-            contentAnimation = true
         }
         .onChange(of: focusedField) { newValue in
             if newValue != nil {
@@ -146,10 +148,8 @@ public struct LoginView: View {
             .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
             .foregroundColor(AppTheme.Colors.accentLimeGreen)
             .opacity(titleAnimation ? 1 : 0)
-            .offset(y: titleAnimation ? 0 : -100)
-            .animation(
-                .interpolatingSpring(stiffness: 120, damping: 15).delay(0.1), value: titleAnimation
-            )
+            .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
+            .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
     }
 
     private var formView: some View {
