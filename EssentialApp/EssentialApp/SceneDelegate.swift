@@ -6,10 +6,10 @@ import Combine
 import CoreData
 import EssentialFeed
 import os
+import SwiftUI
 import UIKit
 
 public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-    // UIKit necesita este init para instanciar desde Storyboard/Scene
     override public init() {
         self.isUserAuthenticatedClosure = {
             KeychainSessionManager(keychain: KeychainHelper()).isAuthenticated
@@ -93,9 +93,19 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if isUserAuthenticated() {
             navigationController
         } else {
-            AuthComposer.authViewController { [weak self] in
-                self?.window?.rootViewController = self?.navigationController
-            }
+            AuthComposer.authViewController(
+                onAuthenticated: { [weak self] in
+                    self?.window?.rootViewController = self?.navigationController
+                },
+                onRecoveryRequested: { [weak self] in
+                    guard let self, let presentingVC = self.window?.rootViewController else {
+                        return
+                    }
+                    let recoveryScreen = PasswordRecoveryComposer.passwordRecoveryViewScreen()
+                    let recoveryVC = UIHostingController(rootView: recoveryScreen)
+                    presentingVC.present(recoveryVC, animated: true)
+                }
+            )
         }
     }
 

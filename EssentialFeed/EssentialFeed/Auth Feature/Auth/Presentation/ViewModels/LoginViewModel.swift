@@ -5,6 +5,13 @@ public protocol LoginNavigation: AnyObject {
     func showRecovery()
 }
 
+public enum ViewState: Hashable {
+    case idle
+    case blocked
+    case error(String)
+    case success(String)
+}
+
 public final class LoginViewModel: ObservableObject {
     @Published public var username: String = "" {
         didSet {
@@ -14,7 +21,9 @@ public final class LoginViewModel: ObservableObject {
 
     @Published public var password: String = "" {
         didSet {
-            if oldValue != password { errorMessage = nil }
+            if oldValue != password, errorMessage != nil {
+                userDidInitiateEditing()
+            }
         }
     }
 
@@ -30,7 +39,7 @@ public final class LoginViewModel: ObservableObject {
     private let pendingRequestStore: AnyLoginRequestStore?
     private let loginSecurity: LoginSecurityUseCase
     private let blockMessageProvider: LoginBlockMessageProvider
-    public weak var navigation: LoginNavigation?
+    public var navigation: LoginNavigation?
 
     public init(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
@@ -171,6 +180,30 @@ public final class LoginViewModel: ObservableObject {
 
     public func handleRecoveryTap() {
         navigation?.showRecovery()
+    }
+
+    public func userDidInitiateEditing() {
+        print("[LoginViewModel] userDidInitiateEditing called.") // DEBUG PRINT
+        print("[LoginViewModel] errorMessage before clearing: \(String(describing: errorMessage))") // DEBUG PRINT
+        if errorMessage != nil {
+            errorMessage = nil
+        }
+        print("[LoginViewModel] errorMessage after clearing: \(String(describing: errorMessage))") // DEBUG PRINT
+    }
+
+    // MARK: - Navigation
+
+    public var viewState: ViewState {
+        if isLoginBlocked {
+            .blocked
+        } else if let message = errorMessage {
+            .error(message)
+        } else if loginSuccess {
+            // Puedes personalizar el mensaje de éxito si es necesario
+            .success("Login successful!")
+        } else {
+            .idle
+        }
     }
 
     deinit {

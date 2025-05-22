@@ -3,12 +3,10 @@ import EssentialFeed
 import SwiftUI
 
 public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordRecoveryView {
-    // Inputs
     @Published public var email: String = "" {
         didSet { handleEmailChange(from: oldValue, to: email) }
     }
 
-    // Outputs
     @Published public var feedbackMessage: String = ""
     @Published public var isSuccess: Bool = false
     @Published public var showingFeedback: Bool = false

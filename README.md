@@ -71,6 +71,7 @@ The navigation between Registration and Login is orchestrated by the Composer (o
 | Emoji | Status           | Completion Criteria                                  |
 |-------|------------------|-----------------------------------------------------|
 | ✅    | **Completed**    | Implemented + tests (≥80%) + documented             |
+| 🚧    | **In Progress**  | In development or testing                           |
 | ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
 | ❌    | **Pending**      | Not implemented or not found in current code.        |
 | 🔜    | **Soon**         | Implementation is planned but not yet started.       |
@@ -536,7 +537,7 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [✅] Basic alerts (Snackbar)  
 - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Localized messages:  
   - [✅] Spanish/English  
-  - [❌] Screenshot tests  
+  - [🚧] Screenshot tests  
 
 #### 5. [❌] Redirect to login if renewal is not possible  
 - [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
