@@ -544,8 +544,6 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
   - [❌] `RefreshFailed`  
 - [❌] Integration with Firebase/Sentry  
 
----
-
 #### 7. [🚧] Automatic Token Management & Refresh Flow
 - [🚧] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - [🚧] Detect 401 responses (token expired)
