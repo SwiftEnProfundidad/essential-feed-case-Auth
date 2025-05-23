@@ -1,48 +1,46 @@
 import Foundation
 
-/// A decorator that adds authentication to an HTTP client.
-/// It automatically handles token refresh and authentication errors.
-public final class AuthenticatedHTTPClientDecorator: HTTPClient {
+public enum SessionError: Error {
+    case tokenRefreshFailed
+}
+
+public final class AuthenticatedHTTPClientDecorator: HTTPClient, @unchecked Sendable {
     private let client: HTTPClient
     private let tokenStore: TokenStore
     private let authUseCase: AuthUseCaseProtocol
-    private let sessionManager: SessionManager
-    private let requestQueue = DispatchQueue(label: "com.essentialdeveloper.auth-queue", qos: .userInitiated, attributes: .concurrent)
+    private let sessionManager: SessionManagerProtocol
+    private let requestQueue: DispatchQueue
 
-    /// Initializes the decorator with the required dependencies.
-    /// - Parameters:
-    ///   - client: The underlying HTTP client to decorate.
-    ///   - tokenStore: The token store to manage authentication tokens.
-    ///   - authUseCase: The authentication use case to handle login.
-    ///   - sessionManager: The session manager to handle session state.
     public init(
         client: HTTPClient,
         tokenStore: TokenStore,
         authUseCase: AuthUseCaseProtocol,
-        sessionManager: SessionManager
+        sessionManager: SessionManagerProtocol,
+        requestQueue: DispatchQueue = DispatchQueue(
+            label: "com.essentialdeveloper.auth-queue",
+            qos: .userInitiated,
+            attributes: .concurrent
+        )
     ) {
         self.client = client
         self.tokenStore = tokenStore
         self.authUseCase = authUseCase
         self.sessionManager = sessionManager
+        self.requestQueue = requestQueue
     }
 
     public func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        // If the request doesn't need authentication, forward it directly
         if !requiresAuthentication(request) {
             return try await client.send(request)
         }
 
-        // Get the current token
         let tokenResult = await tokenStore.retrieve()
 
-        // If we have a valid token, try the request with it
-        if case let .success(.some(token)) = tokenResult, !token.isExpired {
+        if case let .success(token) = tokenResult, token.expiry > Date() {
             do {
-                let authenticatedRequest = addToken(token.value, to: request)
+                let authenticatedRequest = addToken(token.accessToken, to: request)
                 return try await client.send(authenticatedRequest)
             } catch {
-                // If we get an authentication error, try to refresh the token
                 if isUnauthorizedError(error) {
                     return try await handleUnauthorizedError(for: request)
                 }
@@ -50,16 +48,14 @@ public final class AuthenticatedHTTPClientDecorator: HTTPClient {
             }
         }
 
-        // If we don't have a token or it's expired, try to refresh it
         return try await handleUnauthorizedError(for: request)
     }
 
     // MARK: - Private Methods
 
     private func requiresAuthentication(_ request: URLRequest) -> Bool {
-        // Skip authentication for certain paths (e.g., login, public endpoints)
-        guard let url = request.url else { return true }
-        return !url.path.hasPrefix("/public/")
+        guard let path = request.url?.path else { return true }
+        return !path.hasPrefix("/public/")
     }
 
     private func addToken(_ token: String, to request: URLRequest) -> URLRequest {
@@ -69,63 +65,60 @@ public final class AuthenticatedHTTPClientDecorator: HTTPClient {
     }
 
     private func isUnauthorizedError(_ error: Error) -> Bool {
-        // Check if the error is an HTTP 401 Unauthorized
         if let urlError = error as? URLError {
-            return urlError.code == .userAuthenticationRequired ||
-                urlError.code == .userCancelledAuthentication ||
-                (urlError.errorCode == 401)
+            return urlError.code == .userAuthenticationRequired
+                || urlError.code == .userCancelledAuthentication || (urlError.errorCode == 401)
         }
         return false
     }
 
     private func handleUnauthorizedError(for request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        // Prevent multiple refresh attempts
-        guard await !sessionManager.isRefreshing else {
-            // If already refreshing, queue the request
-            return try await withCheckedThrowingContinuation { continuation in
-                requestQueue.async { [weak self] in
-                    guard let self else { return }
-                    Task {
-                        do {
-                            let result = try await self.client.send(request)
-                            continuation.resume(returning: result)
-                        } catch {
-                            continuation.resume(throwing: error)
-                        }
-                    }
-                }
-            }
+        if await sessionManager.isRefreshing {
+            return try await enqueueRequestForRetry(request)
         }
 
-        // Mark as refreshing
         await sessionManager.startRefreshing()
 
+        defer {
+            Task { await sessionManager.endRefreshing() }
+        }
+
         do {
-            // Try to refresh the token
             let refreshToken = try await tokenStore.retrieveRefreshToken()
-            let result = await authUseCase.refreshToken(refreshToken)
+            let result = await authUseCase.refreshToken(refreshToken: refreshToken)
 
             switch result {
-            case let .success(authResponse):
-                // Save the new tokens
-                try await tokenStore.save(authResponse.accessToken, refreshToken: authResponse.refreshToken)
+            case let .success(response):
+                let token = Token(accessToken: response.accessToken, expiry: response.expiry, refreshToken: response.refreshToken)
+                try await tokenStore.save(token)
 
-                // Retry the original request with the new token
-                let authenticatedRequest = addToken(authResponse.accessToken, to: request)
-                let response = try await client.send(authenticatedRequest)
-                await sessionManager.endRefreshing()
-                return response
+                let authenticatedRequest = addToken(token.accessToken, to: request)
+                return try await client.send(authenticatedRequest)
 
             case .failure:
-                // Cerrar sesión completamente
                 await sessionManager.logout()
-                // Limpiar credenciales
-                try? await tokenStore.delete()
                 throw SessionError.tokenRefreshFailed
             }
         } catch {
-            await sessionManager.endRefreshing()
+            await sessionManager.logout()
             throw error
+        }
+    }
+
+    private func enqueueRequestForRetry(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        try await withCheckedThrowingContinuation { continuation in
+            let task = Task.detached(priority: .userInitiated) { [client] in
+                try await client.send(request)
+            }
+
+            Task {
+                do {
+                    let result = try await task.value
+                    continuation.resume(returning: result)
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
         }
     }
 }
@@ -133,8 +126,8 @@ public final class AuthenticatedHTTPClientDecorator: HTTPClient {
 // MARK: - TokenStore Protocol
 
 public protocol TokenStore {
-    func save(_ token: String, refreshToken: String) async throws
-    func retrieve() async -> Result<String, Error>
+    func save(_ token: Token) async throws
+    func retrieve() async -> Result<Token, Error>
     func retrieveRefreshToken() async throws -> String
     func delete() async throws
 }
@@ -142,7 +135,7 @@ public protocol TokenStore {
 // MARK: - SessionManager Protocol
 
 @MainActor
-public protocol SessionManager: AnyObject {
+public protocol SessionManagerProtocol: AnyObject {
     var isRefreshing: Bool { get }
     func startRefreshing()
     func endRefreshing()

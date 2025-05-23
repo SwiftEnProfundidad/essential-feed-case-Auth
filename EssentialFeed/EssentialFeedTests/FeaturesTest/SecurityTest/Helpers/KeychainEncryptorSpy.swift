@@ -12,7 +12,6 @@ final class KeychainEncryptorSpy: KeychainEncryptor {
     private var encryptResult: Result<Data, Error>?
     private var decryptResult: Result<Data, Error>?
 
-    // Encrypt
     func encrypt(_ data: Data) throws -> Data {
         receivedMessages.append(.encrypt(data: data))
         guard let encryptResult else {
@@ -34,7 +33,6 @@ final class KeychainEncryptorSpy: KeychainEncryptor {
         encryptResult = .failure(error)
     }
 
-    // Decrypt
     func decrypt(_ data: Data) throws -> Data {
         receivedMessages.append(.decrypt(data: data))
         guard let decryptResult else {

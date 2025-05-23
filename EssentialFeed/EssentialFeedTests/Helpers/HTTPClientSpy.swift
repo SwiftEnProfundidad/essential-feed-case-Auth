@@ -32,6 +32,7 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         queue.sync { _requests.map { $0.allHTTPHeaderFields ?? [:] } }
     }
 
+    public var onRequest: ((URLRequest) -> Void)?
     private var _requests: [URLRequest] = .init()
     private var tasks: [Task] = .init()
     private var _messages: [Message] = .init()
@@ -52,6 +53,7 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         queue.sync(flags: .barrier) {
             _requests.append(request)
+            onRequest?(request)
             let task = Task(request: request, completion: { _ in })
             tasks.append(task)
         }

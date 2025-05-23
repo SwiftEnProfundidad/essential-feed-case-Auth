@@ -6,7 +6,7 @@ public final class AnyLoginRequestStore {
     private let _remove: (LoginRequest) -> Void
     private let _removeAll: () -> Void
 
-    public init<Store: PendingRequestSaver & PendingRequestLoader & PendingRequestRemover>(_ store: Store) where Store.RequestType == LoginRequest {
+    public init<Store: PendingRequestStore>(_ store: Store) where Store.RequestType == LoginRequest {
         _save = store.save
         _loadAll = store.loadAll
         _remove = store.remove

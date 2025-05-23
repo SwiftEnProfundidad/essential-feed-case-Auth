@@ -51,6 +51,14 @@
 - **Factory** para creación de dependencias
 - **Router/Coordinator** para navegación (si proyecto lo requiere)
 - **Repository** para acceso a datos
+- **Decorator** para decorar comportamientos
+- **Observer** para observar cambios
+- **Strategy** para estrategias de comportamiento
+- **Adapter** para adaptar comportamientos
+- **Facade** para abstraer comportamiento
+- **Bridge** para abstraer comportamiento
+- **Proxy** para abstraer comportamiento
+- **Composable** para composición de dependencias
 
 ---
 
@@ -119,7 +127,6 @@ Features/
 ### Estructura
 - Archivos: Máximo 500 líneas
 - Funciones: Máximo 50 líneas
-### - Líneas: 120 caracteres máximo
 - Espaciado:
   - 1 línea entre métodos
   - 2 líneas entre secciones
@@ -271,10 +278,6 @@ private func makeSUT(
 ## 7. Documentación
 
 ### Código
-### - Documentar APIs públicas con `///`
-### - Incluir ejemplos de uso
-### - Documentar parámetros y valores de retorno
-### - Especificar precondiciones y postcondiciones
 - Minimizar comentarios en el código, solo para aclaraciones críticas indispensables.
 
 ### Proyecto
