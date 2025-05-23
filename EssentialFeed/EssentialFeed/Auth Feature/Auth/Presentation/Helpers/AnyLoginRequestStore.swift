@@ -1,6 +1,8 @@
 import Foundation
 
-public final class AnyLoginRequestStore {
+public final class AnyLoginRequestStore: PendingRequestStore {
+    public typealias RequestType = LoginRequest
+
     private let _save: (LoginRequest) -> Void
     private let _loadAll: () -> [LoginRequest]
     private let _remove: (LoginRequest) -> Void
@@ -13,8 +15,8 @@ public final class AnyLoginRequestStore {
         _removeAll = store.removeAll
     }
 
-    func save(_ request: LoginRequest) { _save(request) }
-    func loadAll() -> [LoginRequest] { _loadAll() }
-    func remove(_ request: LoginRequest) { _remove(request) }
-    func removeAll() { _removeAll() }
+    public func save(_ request: LoginRequest) { _save(request) }
+    public func loadAll() -> [LoginRequest] { _loadAll() }
+    public func remove(_ request: LoginRequest) { _remove(request) }
+    public func removeAll() { _removeAll() }
 }

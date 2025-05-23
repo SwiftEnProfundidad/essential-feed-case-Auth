@@ -1,33 +1,27 @@
 import EssentialFeed
 
-class InMemoryPendingRequestStore<Request: Equatable>: PendingRequestStore {
-    private(set) var savedRequests = [Request]()
-    var save: ((Request) -> Void)?
+public final class InMemoryPendingRequestStoreSpy<Request: Codable & Equatable>: PendingRequestStore {
+    public typealias RequestType = Request
 
-    func save(_ request: Request) {
-        savedRequests.append(request)
-        save?(request)
+    private var requests: [Request] = []
+    public var saveAction: ((Request) -> Void)?
+
+    public init() {}
+
+    public func save(_ request: Request) {
+        requests.append(request)
+        saveAction?(request)
     }
 
-    func loadAll() -> [Request] {
-        savedRequests
+    public func loadAll() -> [Request] {
+        requests
     }
 
-    func remove(_ request: Request) {
-        savedRequests.removeAll { $0 == request }
+    public func remove(_ request: Request) {
+        requests.removeAll { $0 == request }
     }
 
-    func removeAll() {
-        savedRequests.removeAll()
+    public func removeAll() {
+        requests.removeAll()
     }
-}
-
-// MARK: - PendingRequestStore Protocol
-
-protocol PendingRequestStore {
-    associatedtype Request: Equatable
-    func save(_ request: Request)
-    func loadAll() -> [Request]
-    func remove(_ request: Request)
-    func removeAll()
 }

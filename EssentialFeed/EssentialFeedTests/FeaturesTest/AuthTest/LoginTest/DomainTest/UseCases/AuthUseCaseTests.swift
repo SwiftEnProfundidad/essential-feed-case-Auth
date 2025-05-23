@@ -2,19 +2,19 @@ import EssentialFeed
 import XCTest
 
 final class AuthUseCaseTests: XCTestCase {
-    private var requestStore: InMemoryPendingRequestStore<LoginRequest>!
+    private var requestStoreSpy: InMemoryPendingRequestStoreSpy<LoginRequest>!
     private var savedRequest: LoginRequest?
 
     override func setUp() {
         super.setUp()
-        requestStore = InMemoryPendingRequestStore<LoginRequest>()
-        requestStore.save = { [weak self] request in
+        requestStoreSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        requestStoreSpy.saveAction = { [weak self] request in
             self?.savedRequest = request
         }
     }
 
     override func tearDown() {
-        requestStore = nil
+        requestStoreSpy = nil
         savedRequest = nil
         super.tearDown()
     }
@@ -65,29 +65,35 @@ final class AuthUseCaseTests: XCTestCase {
     }
 
     func test_execute_savesRequestOnNetworkError() async {
-        let (sut, authSpy, _) = makeSUT()
-        authSpy.stubbedResult = .failure(.network)
+        let storeSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        let anyStore = AnyLoginRequestStore(storeSpy)
+        let (sut, authSpy, _) = makeSUT(requestStore: anyStore)
+
+        authSpy.stubbedResult = Result<LoginResponse, LoginError>.failure(LoginError.network)
+
         let username = "any@test.com"
         let password = "any"
 
         _ = await sut.execute(username: username, password: password)
 
-        XCTAssertNotNil(savedRequest)
-        XCTAssertEqual(savedRequest?.username, username)
-        XCTAssertEqual(savedRequest?.password, password)
+        let savedRequests = storeSpy.loadAll()
+        XCTAssertEqual(savedRequests.count, 1)
+        XCTAssertEqual(savedRequests.first?.username, username)
+        XCTAssertEqual(savedRequests.first?.password, password)
     }
 
     func test_execute_doesNotSaveRequestOnNonNetworkError() async {
         var saveCallCount = 0
-        requestStore.save = { _ in saveCallCount += 1 }
+        let storeSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        storeSpy.saveAction = { _ in saveCallCount += 1 }
 
-        let (sut, authSpy, _) = makeSUT()
+        let (sut, authSpy, _) = makeSUT(requestStore: AnyLoginRequestStore(storeSpy))
         authSpy.stubbedResult = .failure(.invalidCredentials)
 
         _ = await sut.execute(username: "any@test.com", password: "any")
 
         XCTAssertEqual(saveCallCount, 0)
-        XCTAssertTrue(requestStore.loadAll().isEmpty)
+        XCTAssertTrue(storeSpy.loadAll().isEmpty)
     }
 
     // MARK: - Refresh Token Tests
