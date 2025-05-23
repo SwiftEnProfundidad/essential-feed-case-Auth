@@ -14,8 +14,11 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
 
         _ = await sut.register(name: name, email: email, password: password)
 
-        XCTAssertEqual(httpClient.requestedURLs, [URL(string: "https://test-register-endpoint.com")!], "Should send request to correct registration endpoint")
-        XCTAssertEqual(httpClient.lastHTTPBody, [
+        let requestedURLs = await httpClient.requestedURLs
+        let lastHTTPBody = await httpClient.lastHTTPBody
+
+        XCTAssertEqual(requestedURLs, [URL(string: "https://test-register-endpoint.com")!], "Should send request to correct registration endpoint")
+        XCTAssertEqual(lastHTTPBody, [
             "name": name,
             "email": email,
             "password": password
@@ -46,106 +49,6 @@ final class UserRegistrationServerUseCaseTests: XCTestCase {
         // trackForMemoryLeaks(validatorStub, file: file, line: line)
         return (sut, httpClient, persistenceSpy, notifierSpy)
     }
-}
-
-// MARK: - Test Doubles
-
-final class RegistrationHTTPClientSpy: HTTPClient {
-    private(set) var requests = [URLRequest]()
-
-    func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
-        requests.append(request)
-        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        return (Data(), response)
-    }
-
-    var requestedURLs: [URL] {
-        requests.map { $0.url! }
-    }
-
-    var lastHTTPBody: [String: String]? {
-        guard let lastRequest = requests.last,
-              let body = lastRequest.httpBody,
-              let json = try? JSONSerialization.jsonObject(with: body) as? [String: String]
-        else { return nil }
-        return json
-    }
-}
-
-final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
-    func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult {
-        save(data: passwordData, forKey: email)
-    }
-
-    func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws {
-        try await save(registrationData)
-    }
-
-    var keychainSaveDataCalls = [(data: Data, key: String)]()
-    var keychainSaveResults: [KeychainSaveResult] = []
-    func save(data: Data, forKey key: String) -> KeychainSaveResult {
-        keychainSaveDataCalls.append((data, key))
-        guard !keychainSaveResults.isEmpty else { return .success }
-        return keychainSaveResults.removeFirst()
-    }
-
-    var keychainLoadKeyCalls = [String]()
-    var keychainLoadDataToReturn: Data?
-    func load(forKey key: String) -> Data? {
-        keychainLoadKeyCalls.append(key)
-        return keychainLoadDataToReturn
-    }
-
-    enum TokenStorageMessage: Equatable {
-        case save(tokenBundle: Token)
-        case loadTokenBundle
-        case deleteTokenBundle
-    }
-
-    var tokenStorageMessages = [TokenStorageMessage]()
-    var tokenStorageSaveTokenCalls = [Token]()
-    var tokenStorageShouldSaveError = false
-
-    func save(tokenBundle token: Token) async throws {
-        if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
-        tokenStorageSaveTokenCalls.append(token)
-        tokenStorageMessages.append(.save(tokenBundle: token))
-    }
-
-    var tokenBundleToLoad: Token?
-    var tokenStorageShouldLoadBundleError = false
-    func loadTokenBundle() async throws -> Token? {
-        tokenStorageMessages.append(.loadTokenBundle)
-        if tokenStorageShouldLoadBundleError { throw TestError(id: "loadTokenBundleError") }
-        return tokenBundleToLoad
-    }
-
-    var tokenStorageShouldDeleteBundleError = false
-    func deleteTokenBundle() async throws {
-        tokenStorageMessages.append(.deleteTokenBundle)
-        if tokenStorageShouldDeleteBundleError { throw TestError(id: "deleteTokenBundleError") }
-    }
-
-    var offlineStoreSaveCalls = [UserRegistrationData]()
-    var offlineStoreShouldSaveThrowError = false
-    func save(_ data: UserRegistrationData) async throws {
-        if offlineStoreShouldSaveThrowError { throw TestError(id: "offlineStoreSaveCallsError") }
-        offlineStoreSaveCalls.append(data)
-    }
-
-    var keychainDeleteKeyCalls = [String]()
-    var keychainDeleteResults: [Bool] = []
-
-    func delete(forKey key: String) -> Bool {
-        keychainDeleteKeyCalls.append(key)
-        guard !keychainDeleteResults.isEmpty else { return true }
-        return keychainDeleteResults.removeFirst()
-    }
-
-    var tokenStorageSaveRefreshTokenCalls = [String?]()
-    var tokenToLoad: Token?
-    var tokenStorageDeleteTokenCalled = false
-    var tokenStorageDeleteRefreshTokenCalled = false
 }
 
 struct TestError: Error { let id: String }

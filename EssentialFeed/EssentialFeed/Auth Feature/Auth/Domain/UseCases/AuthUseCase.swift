@@ -1,18 +1,24 @@
-import Foundation
+// MARK: - AuthUseCaseProtocol
 
 public protocol AuthUseCaseProtocol {
     func execute(username: String, password: String) async -> Result<LoginResponse, LoginError>
+    func refreshToken(refreshToken: String) async -> Result<TokenRefreshResult, TokenRefreshError>
 }
+
+// MARK: - AuthUseCase
 
 public final class AuthUseCase: AuthUseCaseProtocol {
     private let authenticate: (String, String) async -> Result<LoginResponse, LoginError>
+    private let tokenRefreshService: TokenRefreshService
     private let pendingRequestStore: AnyLoginRequestStore?
 
     public init(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
+        tokenRefreshService: TokenRefreshService,
         pendingRequestStore: AnyLoginRequestStore? = nil
     ) {
         self.authenticate = authenticate
+        self.tokenRefreshService = tokenRefreshService
         self.pendingRequestStore = pendingRequestStore
     }
 
@@ -25,6 +31,10 @@ public final class AuthUseCase: AuthUseCaseProtocol {
         }
 
         return result
+    }
+
+    public func refreshToken(refreshToken: String) async -> Result<TokenRefreshResult, TokenRefreshError> {
+        await tokenRefreshService.refreshToken(refreshToken: refreshToken)
     }
 }
 

@@ -2,27 +2,44 @@ import EssentialFeed
 import XCTest
 
 final class AuthUseCaseTests: XCTestCase {
+    private var requestStoreSpy: InMemoryPendingRequestStoreSpy<LoginRequest>!
+    private var savedRequest: LoginRequest?
+
+    override func setUp() {
+        super.setUp()
+        requestStoreSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        requestStoreSpy.saveAction = { [weak self] request in
+            self?.savedRequest = request
+        }
+    }
+
+    override func tearDown() {
+        requestStoreSpy = nil
+        savedRequest = nil
+        super.tearDown()
+    }
+
     func test_init_doesNotPerformAnyRequest() async {
-        let (_, spy) = makeSUT()
-        XCTAssertFalse(spy.wasCalled)
+        let (_, authSpy, _) = makeSUT()
+        XCTAssertTrue(authSpy.messages.isEmpty)
     }
 
     func test_execute_performsAuthentication() async {
-        let (sut, spy) = makeSUT()
-        let email = "test@user.com"
+        let (sut, authSpy, _) = makeSUT()
+        let username = "test@user.com"
         let password = "password123"
 
-        _ = await sut.execute(username: email, password: password)
+        _ = await sut.execute(username: username, password: password)
 
-        XCTAssertEqual(spy.messages.count, 1)
-        XCTAssertEqual(spy.messages[0].email, email)
-        XCTAssertEqual(spy.messages[0].password, password)
+        XCTAssertEqual(authSpy.messages.count, 1)
+        XCTAssertEqual(authSpy.messages[0].username, username)
+        XCTAssertEqual(authSpy.messages[0].password, password)
     }
 
     func test_execute_returnsSuccessOnSuccessfulAuthentication() async {
         let expectedResponse = LoginResponse(token: "a-token")
-        let (sut, spy) = makeSUT()
-        spy.stubbedResult = .success(expectedResponse)
+        let (sut, authSpy, _) = makeSUT()
+        authSpy.stubbedResult = .success(expectedResponse)
 
         let result = await sut.execute(username: "any@test.com", password: "any")
 
@@ -35,8 +52,8 @@ final class AuthUseCaseTests: XCTestCase {
 
     func test_execute_returnsFailureOnFailedAuthentication() async {
         let expectedError = LoginError.invalidCredentials
-        let (sut, spy) = makeSUT()
-        spy.stubbedResult = .failure(expectedError)
+        let (sut, authSpy, _) = makeSUT()
+        authSpy.stubbedResult = .failure(expectedError)
 
         let result = await sut.execute(username: "any@test.com", password: "any")
 
@@ -48,30 +65,78 @@ final class AuthUseCaseTests: XCTestCase {
     }
 
     func test_execute_savesRequestOnNetworkError() async {
-        let store = InMemoryPendingRequestStore<LoginRequest>()
-        let requestStore = AnyLoginRequestStore(store)
-        let (sut, spy) = makeSUT(requestStore: requestStore)
-        spy.stubbedResult = .failure(.network)
+        let storeSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        let anyStore = AnyLoginRequestStore(storeSpy)
+        let (sut, authSpy, _) = makeSUT(requestStore: anyStore)
 
-        let email = "test@user.com"
-        let password = "password123"
-        _ = await sut.execute(username: email, password: password)
+        authSpy.stubbedResult = Result<LoginResponse, LoginError>.failure(LoginError.network)
 
-        let savedRequests = store.loadAll()
+        let username = "any@test.com"
+        let password = "any"
+
+        _ = await sut.execute(username: username, password: password)
+
+        let savedRequests = storeSpy.loadAll()
         XCTAssertEqual(savedRequests.count, 1)
-        XCTAssertEqual(savedRequests.first?.username, email)
+        XCTAssertEqual(savedRequests.first?.username, username)
         XCTAssertEqual(savedRequests.first?.password, password)
     }
 
     func test_execute_doesNotSaveRequestOnNonNetworkError() async {
-        let store = InMemoryPendingRequestStore<LoginRequest>()
-        let requestStore = AnyLoginRequestStore(store)
-        let (sut, spy) = makeSUT(requestStore: requestStore)
-        spy.stubbedResult = .failure(.invalidCredentials)
+        var saveCallCount = 0
+        let storeSpy = InMemoryPendingRequestStoreSpy<LoginRequest>()
+        storeSpy.saveAction = { _ in saveCallCount += 1 }
+
+        let (sut, authSpy, _) = makeSUT(requestStore: AnyLoginRequestStore(storeSpy))
+        authSpy.stubbedResult = .failure(.invalidCredentials)
 
         _ = await sut.execute(username: "any@test.com", password: "any")
 
-        XCTAssertTrue(store.loadAll().isEmpty)
+        XCTAssertEqual(saveCallCount, 0)
+        XCTAssertTrue(storeSpy.loadAll().isEmpty)
+    }
+
+    // MARK: - Refresh Token Tests
+
+    func test_refreshToken_performsTokenRefresh() async {
+        let (sut, _, tokenRefreshSpy) = makeSUT()
+        let refreshToken = "a-refresh-token"
+
+        _ = await sut.refreshToken(refreshToken: refreshToken)
+
+        XCTAssertEqual(tokenRefreshSpy.messages, [refreshToken])
+    }
+
+    func test_refreshToken_returnsSuccessOnSuccessfulTokenRefresh() async {
+        let expectedResult = TokenRefreshResult(
+            accessToken: "new-access-token",
+            refreshToken: "new-refresh-token",
+            expiry: Date()
+        )
+        let (sut, _, tokenRefreshSpy) = makeSUT()
+        tokenRefreshSpy.stubbedResult = .success(expectedResult)
+
+        let result = await sut.refreshToken(refreshToken: "any")
+
+        if case let .success(response) = result {
+            XCTAssertEqual(response, expectedResult)
+        } else {
+            XCTFail("Expected success, got \(result)")
+        }
+    }
+
+    func test_refreshToken_returnsFailureOnFailedTokenRefresh() async {
+        let expectedError = TokenRefreshError.invalidRefreshToken
+        let (sut, _, tokenRefreshSpy) = makeSUT()
+        tokenRefreshSpy.stubbedResult = .failure(expectedError)
+
+        let result = await sut.refreshToken(refreshToken: "invalid-token")
+
+        if case let .failure(error) = result {
+            XCTAssertEqual(error, expectedError)
+        } else {
+            XCTFail("Expected failure, got \(result)")
+        }
     }
 
     // MARK: - Helpers
@@ -80,18 +145,17 @@ final class AuthUseCaseTests: XCTestCase {
         requestStore: AnyLoginRequestStore? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
-    ) -> (sut: AuthUseCase, spy: AuthAPISpy) {
-        let spy = AuthAPISpy()
+    ) -> (sut: AuthUseCase, authSpy: AuthServiceSpy, tokenRefreshSpy: TokenRefreshServiceSpy) {
+        let authSpy = AuthServiceSpy()
+        let tokenRefreshSpy = TokenRefreshServiceSpy()
         let sut = AuthUseCase(
-            authenticate: { email, password in
-                await spy.login(with: LoginCredentials(email: email, password: password))
-            },
+            authenticate: authSpy.authenticate,
+            tokenRefreshService: tokenRefreshSpy,
             pendingRequestStore: requestStore
         )
-
+        trackForMemoryLeaks(authSpy, file: file, line: line)
+        trackForMemoryLeaks(tokenRefreshSpy, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(spy, file: file, line: line)
-
-        return (sut, spy)
+        return (sut, authSpy, tokenRefreshSpy)
     }
 }

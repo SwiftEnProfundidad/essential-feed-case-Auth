@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-class HTTPClientStub: HTTPClient {
+class HTTPClientStub: HTTPClient, @unchecked Sendable {
     private let stub: (URLRequest) -> Result<(Data, HTTPURLResponse), Error>
 
     init(stub: @escaping (URLRequest) -> Result<(Data, HTTPURLResponse), Error>) {

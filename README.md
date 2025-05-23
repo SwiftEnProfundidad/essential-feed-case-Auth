@@ -348,7 +348,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [❓] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
         - [❓] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
@@ -527,11 +527,11 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
     - [✅] Tests that verify encryption (AES-256) on write
     - [✅] Negative/error-path & advanced security tests
 
-#### 4. [🚧] Notify the user if renewal fails  
+#### 4. [✅] Notify the user if renewal fails  
 - [✅] Basic alerts (Snackbar)  
 - [✅] Localized messages:  
   - [✅] Spanish/English  
-  - [🚧] Screenshot tests  
+  - [✅] Screenshot tests  
 
 #### 5. [❌] Redirect to login if renewal is not possible  
 - [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
@@ -546,17 +546,27 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 
 ---
 
-#### Still missing / To improve
-- [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
-    - Detect 401 responses (token expired)
-    - Trigger token refresh cycle (transparently to feature code)
-    - Retry original request with fresh token when possible
-    - Deduplicate concurrent refreshes (single refresh in-flight)
+#### 7. [🚧] Automatic Token Management & Refresh Flow
+- [🚧] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
+    - [🚧] Detect 401 responses (token expired)
+        - [🚧] Validate server error structure
+        - [🔜] Handle different response formats (JSON/plain text)
+        - [🔜] Add detailed logging
+        - [🔜] Write unit tests for each case
+    - [❌] Trigger token refresh cycle (transparently to feature code)
+    - [❌] Retry original request with fresh token when possible
+    - [❌] Deduplicate concurrent refreshes (single refresh in-flight)
 - [❌] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [❌] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
 - [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
 - [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
 - [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+
+#### Detalles Técnicos
+- **Patrón**: Decorator sobre `HTTPClient` existente
+- **Seguridad**: Uso de Keychain con cifrado AES-256
+- **Concurrencia**: `DispatchSemaphore` para evitar condiciones de carrera
+- **Localización**: Mensajes en ES/EN
 
 ---
 
