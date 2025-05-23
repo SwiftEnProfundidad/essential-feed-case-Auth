@@ -96,8 +96,6 @@ struct SimplePressButtonStyle: ButtonStyle {
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
-    @State private var localUsername: String
-    @State private var localPassword: String
 
     @State private var titleAnimation: Bool = false
     @State private var contentAnimation: Bool = false
@@ -114,8 +112,6 @@ public struct LoginView: View {
 
     public init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
-        _localUsername = State(initialValue: viewModel.username)
-        _localPassword = State(initialValue: viewModel.password)
     }
 
     public var body: some View {
@@ -163,7 +159,7 @@ public struct LoginView: View {
         VStack(spacing: 25) {
             TextField(
                 "",
-                text: $localUsername,
+                text: $viewModel.username,
                 prompt: Text("Usuario")
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
@@ -173,9 +169,6 @@ public struct LoginView: View {
             .keyboardType(.emailAddress)
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            .onChange(of: localUsername) { newValue in
-                viewModel.username = newValue
-            }
             .onSubmit {
                 focusedField = .password
             }
@@ -184,16 +177,13 @@ public struct LoginView: View {
             .accentColor(AppTheme.Colors.accentLimeGreen)
 
             SecureField(
-                "", text: $localPassword,
+                "", text: $viewModel.password,
                 prompt: Text("Contraseña")
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
             .id(Field.password)
             .focused($focusedField, equals: .password)
-            .onChange(of: localPassword) { newValue in
-                viewModel.password = newValue
-            }
             .onSubmit {
                 focusedField = nil
                 Task { await viewModel.login() }
