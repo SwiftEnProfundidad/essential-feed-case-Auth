@@ -348,9 +348,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [❓] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [✅] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
-        - [❓] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [✅] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
@@ -420,10 +420,19 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### Still missing / To improve
 - [❌] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
-- [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
-- [❓] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
-- [❌] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
-- [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
+- [✅] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts** (Implemented with `ThreadSafeFailedLoginAttemptsStore` and lockout logic)
+- [✅] **Clarify if you must also save login credentials to Keychain for login flow (or only token)** (Only token is stored, not complete credentials)
+- [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)** (Implemented with `ThreadSafeInMemoryPendingRequestStore`)
+- [🚧] **End-to-end integration/UI tests covering lockout and recovery suggestion flows** (In progress)
+
+### Next Steps
+- [🔜] Implement snapshot tests for `LoginView` in different states
+- [🔜] Enhance brute force protection with exponential backoff
+- [🔜] Complete the password recovery flow
+- [🔜] Implement end-to-end integration tests for the complete authentication flow
+- [🔜] Optimize UI performance on low-end devices
+- [🔜] Review and update technical documentation
+- [🔜] Perform load and stress testing on the authentication system
 
 > **Technical note:**
 > - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
