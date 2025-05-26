@@ -5,10 +5,10 @@
 import EssentialFeed
 import Foundation
 
-class HTTPClientStub: HTTPClient {
-    private let stub: (URLRequest) -> Result<(Data, HTTPURLResponse), Error>
+final class HTTPClientStub: @unchecked Sendable, HTTPClient {
+    private let stub: @Sendable (URLRequest) -> Result<(Data, HTTPURLResponse), any Error>
 
-    init(stub: @escaping (URLRequest) -> Result<(Data, HTTPURLResponse), Error>) {
+    init(stub: @escaping @Sendable (URLRequest) -> Result<(Data, HTTPURLResponse), any Error>) {
         self.stub = stub
     }
 
@@ -27,7 +27,7 @@ extension HTTPClientStub {
         HTTPClientStub(stub: { _ in .failure(NSError(domain: "offline", code: 0, userInfo: [NSLocalizedDescriptionKey: "Simulated offline error"])) })
     }
 
-    static func online(_ perURLStub: @escaping (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
+    static func online(_ perURLStub: @escaping @Sendable (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
         HTTPClientStub { request in
             guard let url = request.url else {
                 let noURLError = NSError(domain: "HTTPClientStub.online", code: 1, userInfo: [NSLocalizedDescriptionKey: "Request provided to 'online' stub had no URL"])

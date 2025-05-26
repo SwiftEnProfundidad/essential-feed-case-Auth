@@ -62,32 +62,14 @@
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
 		B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
-		B48991302DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
-		B48991312DD3E41300A94850 /* LOGIN_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */; };
-		B48991322DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */; };
-		B48991332DD3E41300A94850 /* LOGIN_SUCCESS_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */; };
-		B48991342DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */; };
-		B48991352DD3E41300A94850 /* LOGIN_ERROR_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */; };
-		B48991362DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */; };
-		B48991372DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */; };
-		B48991382DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */; };
-		B48991392DD3E41300A94850 /* LOGIN_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */; };
-		B489913A2DD3E41300A94850 /* LOGIN_BLOCKED_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */; };
-		B489913B2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */; };
-		B489913C2DD3E41300A94850 /* LOGIN_LOADING_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */; };
-		B489913D2DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */; };
-		B489913E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */; };
-		B489913F2DD3E41300A94850 /* LOGIN_IDLE_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */; };
-		B48991402DD3E41300A94850 /* LOGIN_LOADING_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */; };
-		B48991412DD3E41300A94850 /* LOGIN_IDLE_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */; };
-		B48991422DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */; };
-		B48991432DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */; };
 		B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
 		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
+		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
+		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,32 +157,14 @@
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
-		B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_dark.png; sourceTree = "<group>"; };
-		B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_light.png; sourceTree = "<group>"; };
-		B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_dark.png; sourceTree = "<group>"; };
-		B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_light.png; sourceTree = "<group>"; };
-		B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
-		B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_dark.png; sourceTree = "<group>"; };
-		B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE_light.png; sourceTree = "<group>"; };
-		B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_dark.png; sourceTree = "<group>"; };
-		B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_LOADING_light.png; sourceTree = "<group>"; };
-		B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
-		B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_dark.png; sourceTree = "<group>"; };
-		B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_light.png; sourceTree = "<group>"; };
-		B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_dark.png; sourceTree = "<group>"; };
-		B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png; sourceTree = "<group>"; };
-		B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png; sourceTree = "<group>"; };
-		B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
-		B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
 		B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
+		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
+		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -390,26 +354,6 @@
 		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
 			isa = PBXGroup;
 			children = (
-				B489911C2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png */,
-				B489911D2DD3E41300A94850 /* LOGIN_BLOCKED_light.png */,
-				B489911E2DD3E41300A94850 /* LOGIN_ERROR_dark.png */,
-				B489911F2DD3E41300A94850 /* LOGIN_ERROR_light.png */,
-				B48991202DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png */,
-				B48991212DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png */,
-				B48991222DD3E41300A94850 /* LOGIN_IDLE_dark.png */,
-				B48991232DD3E41300A94850 /* LOGIN_IDLE_light.png */,
-				B48991242DD3E41300A94850 /* LOGIN_LOADING_dark.png */,
-				B48991252DD3E41300A94850 /* LOGIN_LOADING_light.png */,
-				B48991262DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png */,
-				B48991272DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png */,
-				B48991282DD3E41300A94850 /* LOGIN_SUCCESS_dark.png */,
-				B48991292DD3E41300A94850 /* LOGIN_SUCCESS_light.png */,
-				B489912A2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png */,
-				B489912B2DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png */,
-				B489912C2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png */,
-				B489912D2DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png */,
-				B489912E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png */,
-				B489912F2DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png */,
 			);
 			path = snapshots;
 			sourceTree = "<group>";
@@ -459,6 +403,7 @@
 		B4D6B2712DC8E42800F5A3FE /* Integration */ = {
 			isa = PBXGroup;
 			children = (
+				B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */,
 				B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */,
 				B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */,
 				B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */,
@@ -469,6 +414,7 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */,
 				B4D0FE632DBEEEE000033FF3 /* snapshots */,
 				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
 				B46DAAB82DC22A780080160E /* LoginViewTests.swift */,
@@ -594,27 +540,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B48991302DD3E41300A94850 /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
-				B48991312DD3E41300A94850 /* LOGIN_ERROR_dark.png in Resources */,
-				B48991322DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_light.png in Resources */,
-				B48991332DD3E41300A94850 /* LOGIN_SUCCESS_dark.png in Resources */,
 				B423AB8B2DDF733500373E8A /* Assets.xcassets in Resources */,
-				B48991342DD3E41300A94850 /* LOGIN_ERROR_NOTIFICATION_dark.png in Resources */,
-				B48991352DD3E41300A94850 /* LOGIN_ERROR_light.png in Resources */,
-				B48991362DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_light.png in Resources */,
-				B48991372DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_dark.png in Resources */,
-				B48991382DD3E41300A94850 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION_light.png in Resources */,
-				B48991392DD3E41300A94850 /* LOGIN_SUCCESS_light.png in Resources */,
-				B489913A2DD3E41300A94850 /* LOGIN_BLOCKED_light.png in Resources */,
-				B489913B2DD3E41300A94850 /* LOGIN_BLOCKED_dark.png in Resources */,
-				B489913C2DD3E41300A94850 /* LOGIN_LOADING_dark.png in Resources */,
-				B489913D2DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_light.png in Resources */,
-				B489913E2DD3E41300A94850 /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
-				B489913F2DD3E41300A94850 /* LOGIN_IDLE_light.png in Resources */,
-				B48991402DD3E41300A94850 /* LOGIN_LOADING_light.png in Resources */,
-				B48991412DD3E41300A94850 /* LOGIN_IDLE_dark.png in Resources */,
-				B48991422DD3E41300A94850 /* LOGIN_NETWORK_ERROR_NOTIFICATION_dark.png in Resources */,
-				B48991432DD3E41300A94850 /* LOGIN_SUCCESS_NOTIFICATION_dark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -677,6 +603,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */,
+				B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
 				082C00062359E4C6008927D3 /* SharedTestHelpers.swift in Sources */,
 				088B441925309AA300D75AAD /* CommentsUIIntegrationTests.swift in Sources */,
@@ -694,6 +621,7 @@
 				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */,
+				B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */,
 				B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */,
