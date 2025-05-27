@@ -154,7 +154,7 @@ public struct LoginView: View {
     }
 
     private var titleView: some View {
-        Text("Mis Feeds")
+        Text(LocalizedStringKey("LOGIN_VIEW_TITLE"))
             .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
             .foregroundColor(AppTheme.Colors.accentLimeGreen)
             .opacity(titleAnimation ? 1 : 0)
@@ -167,7 +167,7 @@ public struct LoginView: View {
             TextField(
                 "",
                 text: $viewModel.username,
-                prompt: Text("Usuario")
+                prompt: Text(LocalizedStringKey("LOGIN_VIEW_USERNAME_PLACEHOLDER"))
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
@@ -184,8 +184,9 @@ public struct LoginView: View {
             .accentColor(AppTheme.Colors.accentLimeGreen)
 
             SecureField(
-                "", text: $viewModel.password,
-                prompt: Text("Contraseña")
+                "",
+                text: $viewModel.password,
+                prompt: Text(LocalizedStringKey("LOGIN_VIEW_PASSWORD_PLACEHOLDER"))
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
@@ -243,7 +244,7 @@ public struct LoginView: View {
             focusedField = nil
             Task { await viewModel.login() }
         } label: {
-            Text("Iniciar sesión")
+            Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
                 .font(Font.system(.headline, design: .rounded).weight(.bold))
                 .frame(maxWidth: .infinity)
         }
@@ -255,7 +256,7 @@ public struct LoginView: View {
             focusedField = nil
             viewModel.handleRecoveryTap()
         } label: {
-            Text("¿Olvidaste tu contraseña?")
+            Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
                 .font(Font.system(.callout, design: .rounded).weight(.medium))
                 .foregroundColor(AppTheme.Colors.textSecondary)
         }
@@ -263,20 +264,3 @@ public struct LoginView: View {
         .padding(.top, 5)
     }
 }
-
-// public struct LoginView: View {
-//    @ObservedObject var viewModel: LoginViewModel
-//
-//    public init(viewModel: LoginViewModel, animationsEnabled _: Bool = true) {
-//        self.viewModel = viewModel
-//    }
-//
-//    public var body: some View {
-//        VStack {
-//            Text("Hello Snapshot")
-//            Text("Username: \(viewModel.username)")
-//            Text("Password: \(viewModel.password)")
-//            Text("State: \(String(describing: viewModel.publishedViewState))")
-//        }
-//    }
-// }
