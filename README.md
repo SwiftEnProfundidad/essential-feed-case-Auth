@@ -392,15 +392,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 - [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` stores the token via `TokenStorage`.)
 - [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by `UserLoginUseCase`.)
-- [🚧] **Notify login success** (Via `LoginSuccessObserver`)
+- [✅] **Notify login success** (Via `LoginSuccessObserver`)
     #### Subtasks
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [🚧] Integration and snapshot tests validating the full flow (login → notification):
+    - [✅] Integration and snapshot tests validating the full flow (login → notification):
        #### Subtasks
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
-        - [🚧] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [✅] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
@@ -575,8 +575,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🔜] Redirect to login if renewal is not possible
-- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+#### 5. [🚧] Redirect to login if renewal is not possible
+- [🚧 Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
 - [❌] Credentials cleanup
 - [❌] Integration tests
 
