@@ -367,17 +367,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Integration tests ensure no HTTP request or Keychain access is made when there are format errors
     - [✅] The cycle is covered by automated tests in CI
 
-- [❌] **Offer password recovery** (`UserLoginUseCase` does not include this. It's a separate feature, referenced in Use Case 5. The ✅ here in BDD is a **discrepancy** if expected as part of *this* use case.)
-    #### Subtasks (Move to Use Case 5 if not done)
-    - [❌] Endpoint and DTO for password recovery
-    - [❌] UseCase for requesting recovery
-    - [❌] Email validation before sending the request
-    - [❌] Notify user of success/error
-    - [❌] Unit tests for the use case
-    - [❌] Integration tests (no Keychain or login access)
-    - [❌] Presenter and view for user feedback
-    - [❌] CI coverage
-
 - [✅] **Save login credentials offline on connectivity error and notify** (`UserLoginUseCase` saves credentials via `offlineStore` and returns `.noConnectivity`.)
     #### Subtasks
     - [✅] Define DTO/model for pending login request (`LoginCredentials` is used and is `Equatable`)
@@ -423,10 +412,19 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts** (Implemented with `ThreadSafeFailedLoginAttemptsStore` and lockout logic)
 - [✅] **Clarify if you must also save login credentials to Keychain for login flow (or only token)** (Only token is stored, not complete credentials)
 - [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)** (Implemented with `ThreadSafeInMemoryPendingRequestStore`)
-- [🚧] **End-to-end integration/UI tests covering lockout and recovery suggestion flows** (In progress)
-
+- [✅] **End-to-end integration/Snapshot tests covering lockout and recovery suggestion flows**
+    #### Subtasks
+    - [✅] Internationalize LoginView UI
+    - [✅] Localize static text elements
+    - [✅] Update snapshot tests for multiple languages
+    - [✅] Verify correct display in different locales
+- [✅] Implement snapshot tests for `LoginView` in different states
+- [🚧] Improve light mode compatibility for LoginView UI
+    #### Subtasks
+    - [🚧] Update neumorphic styles to work properly in light mode
+    - [❌] Adjust color schemes for better contrast in light mode
+    - [❌] Update snapshot tests to verify light mode improvements
 ### Next Steps
-- [🔜] Implement snapshot tests for `LoginView` in different states
 - [🔜] Enhance brute force protection with exponential backoff
 - [🔜] Complete the password recovery flow
 - [🔜] Implement end-to-end integration tests for the complete authentication flow
@@ -654,6 +652,17 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [❌] Show error and allow requesting a new link if the link is invalid or expired
 - [❌] Log all attempts and changes for security metrics
 - [❌] Notify by email after password change
+
+- [❌] Offer password recovery
+    #### Subtasks 
+    - [❌] Endpoint and DTO for password recovery
+    - [❌] UseCase for requesting recovery
+    - [❌] Email validation before sending the request
+    - [❌] Notify user of success/error
+    - [❌] Unit tests for the use case
+    - [❌] Integration tests (no Keychain or login access)
+    - [❌] Presenter and view for user feedback
+    - [❌] CI coverage
 
 ---
 
