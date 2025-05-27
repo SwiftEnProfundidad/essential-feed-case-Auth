@@ -91,13 +91,11 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
     @MainActor
     private func waitForRender() async {
         await Task.yield()
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        try? await Task.sleep(nanoseconds: 3_000_000_000)
     }
 
-    @MainActor private func recordSnapshot(
-        for view: some View, named name: String, locale: Locale, file: StaticString = #filePath,
-        line: UInt = #line
-    ) async {
+    @MainActor
+    private func recordSnapshot(for view: some View, named name: String, locale: Locale, file: StaticString = #filePath, line: UInt = #line) async {
         let styles: [(UIUserInterfaceStyle, String)] = [
             (.light, "light"),
             (.dark, "dark")
@@ -114,7 +112,7 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             let contentView =
                 view
                     .environment(\.locale, .init(identifier: locale.identifier))
-                    .preferredColorScheme(style == .dark ? .dark : .light)
+                    .preferredColorScheme(style == .light ? .dark : .light)
                     .frame(
                         width: SnapshotConfiguration.iPhone13().size.width,
                         height: SnapshotConfiguration.iPhone13().size.height
@@ -122,7 +120,6 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
 
             let viewController = UIHostingController(rootView: contentView)
             viewController.view.frame = window.bounds
-            viewController.view.backgroundColor = style == .dark ? .black : .white
 
             window.rootViewController = viewController
             window.makeKeyAndVisible()
@@ -130,8 +127,7 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             viewController.view.setNeedsLayout()
             viewController.view.layoutIfNeeded()
 
-            try? await Task.sleep(nanoseconds: 200_000_000)
-
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
             let renderer = UIGraphicsImageRenderer(bounds: viewController.view.bounds)
             let snapshot = renderer.image { _ in
                 viewController.view.drawHierarchy(
