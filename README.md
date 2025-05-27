@@ -419,13 +419,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Update snapshot tests for multiple languages
     - [✅] Verify correct display in different locales
 - [✅] Implement snapshot tests for `LoginView` in different states
-- [🚧] Improve light mode compatibility for LoginView UI
+- [✅] Implement snapshot tests for `LoginView` in different states
+- [✅] Restore original neumorphic design and colors for LoginView in dark mode.
+- [✅] Improve light mode compatibility for LoginView UI
     #### Subtasks
-    - [🚧] Update neumorphic styles to work properly in light mode
-    - [❌] Adjust color schemes for better contrast in light mode
-    - [❌] Update snapshot tests to verify light mode improvements
+    - [✅] Update neumorphic styles to work properly in light mode
+    - [✅] Adjust color schemes for better contrast in light mode
+    - [✅] Update snapshot tests to verify light mode improvements
 ### Next Steps
-- [🔜] Enhance brute force protection with exponential backoff
+- [🚧] Enhance brute force protection with exponential backoff
 - [🔜] Complete the password recovery flow
 - [🔜] Implement end-to-end integration tests for the complete authentication flow
 - [🔜] Optimize UI performance on low-end devices
@@ -433,7 +435,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [🔜] Perform load and stress testing on the authentication system
 
 > **Technical note:**
-> - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
+> - Integration y lockout logic en el main use case (`UserLoginUseCase`) this is implemented and covered for unit test, integratios and CI.
 
 ---
 
