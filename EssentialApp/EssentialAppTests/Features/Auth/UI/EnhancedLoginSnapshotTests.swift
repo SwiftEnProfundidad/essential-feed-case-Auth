@@ -1,36 +1,31 @@
-import EssentialApp
 import EssentialFeed
 import SwiftUI
 import XCTest
 
+@testable import EssentialApp
+
 final class EnhancedLoginSnapshotTests: XCTestCase {
-    func test_loginView_allStates() async {
-        let localesToTest = [
+    func testLoginViewInDifferentStates() async throws {
+        let locales: [Locale] = [
             Locale(identifier: "en"),
             Locale(identifier: "es")
         ]
 
-        for locale in localesToTest {
-            let idleVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
-            idleVM.username = "idle_user@email.com"
-            idleVM.password = "idle_password"
-            idleVM.errorMessage = nil
-            idleVM.loginSuccess = false
-            idleVM.isLoginBlocked = false
+        for locale in locales {
+            let idleVM = makeViewModel()
             let idleView = await LoginView(viewModel: idleVM, animationsEnabled: false)
             await waitForRender()
             await recordSnapshot(for: idleView, named: "LOGIN_IDLE", locale: locale)
 
-            let validationVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
-            validationVM.username = ""
+            let validationVM = makeViewModel()
+            validationVM.username = "invalid@email"
             validationVM.password = ""
-            validationVM.errorMessage = "Validation error"
+            await validationVM.login()
             let validationView = await LoginView(viewModel: validationVM, animationsEnabled: false)
             await waitForRender()
             await recordSnapshot(for: validationView, named: "LOGIN_FORM_VALIDATION", locale: locale)
 
-            let successVM = makeViewModel(
-                authenticateResult: .success(LoginResponse(token: "valid_token")))
+            let successVM = makeViewModel(authenticateResult: .success(LoginResponse(token: "token123")))
             successVM.username = "success@email.com"
             successVM.password = "valid_password"
             await successVM.login()
@@ -95,7 +90,10 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
     }
 
     @MainActor
-    private func recordSnapshot(for view: some View, named name: String, locale: Locale, file: StaticString = #filePath, line: UInt = #line) async {
+    private func recordSnapshot(
+        for view: some View, named name: String, locale: Locale, file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
         let styles: [(UIUserInterfaceStyle, String)] = [
             (.light, "light"),
             (.dark, "dark")
@@ -112,13 +110,14 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             let contentView =
                 view
                     .environment(\.locale, .init(identifier: locale.identifier))
-                    .preferredColorScheme(style == .light ? .dark : .light)
+                    .preferredColorScheme(style == .dark ? .dark : .light)
                     .frame(
-                        width: SnapshotConfiguration.iPhone13().size.width,
-                        height: SnapshotConfiguration.iPhone13().size.height
+                        width: SnapshotConfiguration.iPhone16().size.width,
+                        height: SnapshotConfiguration.iPhone16().size.height
                     )
 
             let viewController = UIHostingController(rootView: contentView)
+            viewController.overrideUserInterfaceStyle = style
             viewController.view.frame = window.bounds
 
             window.rootViewController = viewController
@@ -128,6 +127,7 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             viewController.view.layoutIfNeeded()
 
             try? await Task.sleep(nanoseconds: 3_000_000_000)
+
             let renderer = UIGraphicsImageRenderer(bounds: viewController.view.bounds)
             let snapshot = renderer.image { _ in
                 viewController.view.drawHierarchy(
@@ -176,5 +176,24 @@ private extension View {
         return renderer.image { _ in
             view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
         }
+    }
+}
+
+struct ViewImageConfig {
+    let size: CGSize
+    let safeAreaInsets: UIEdgeInsets
+
+    static func iPhone13(style _: UIUserInterfaceStyle) -> ViewImageConfig {
+        ViewImageConfig(
+            size: CGSize(width: 390, height: 844),
+            safeAreaInsets: UIEdgeInsets(top: 47, left: 0, bottom: 34, right: 0)
+        )
+    }
+
+    static func iPhone16(style _: UIUserInterfaceStyle) -> ViewImageConfig {
+        ViewImageConfig(
+            size: CGSize(width: 430, height: 932),
+            safeAreaInsets: UIEdgeInsets(top: 47, left: 0, bottom: 34, right: 0)
+        )
     }
 }

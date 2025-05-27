@@ -16,19 +16,19 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
     }
 
     private var mainColor: Color {
-        AppTheme.Colors.neumorphicBase
+        AppTheme.Colors.neumorphicBase(for: colorScheme)
     }
 
     private var lightShadowColor: Color {
         colorScheme == .dark
-            ? Color(white: 0.2, opacity: 0.6)
-            : Color.white.opacity(0.8)
+            ? Color(white: 0.2, opacity: 0.25) // Made much more subtle for dark mode
+            : Color.white.opacity(0.7)
     }
 
     private var darkShadowColor: Color {
         colorScheme == .dark
             ? Color.black.opacity(0.7)
-            : Color(white: 0.7, opacity: 0.8)
+            : Color(white: 0.6, opacity: 0.6)
     }
 
     private var cornerRadius: CGFloat = neumorphicCornerRadius
@@ -60,23 +60,23 @@ struct NeumorphicButtonStyle: ButtonStyle {
     @Environment(\.colorScheme) var colorScheme
 
     var mainColor: Color {
-        AppTheme.Colors.neumorphicBase
+        AppTheme.Colors.neumorphicBase(for: colorScheme)
     }
 
     var textColor: Color {
-        AppTheme.Colors.accentLimeGreen
+        AppTheme.Colors.accentLimeGreen(for: colorScheme)
     }
 
     var lightShadowColor: Color {
         colorScheme == .dark
-            ? Color(white: 0.2, opacity: 0.6)
-            : Color.white.opacity(0.8)
+            ? Color(white: 0.2, opacity: 0.25) // Made much more subtle for dark mode
+            : Color.white.opacity(0.9)
     }
 
     var darkShadowColor: Color {
         colorScheme == .dark
             ? Color.black.opacity(0.7)
-            : Color(white: 0.7, opacity: 0.8)
+            : Color(white: 0.6, opacity: 0.7)
     }
 
     let cornerRadius: CGFloat = neumorphicCornerRadius
@@ -125,6 +125,7 @@ struct SimplePressButtonStyle: ButtonStyle {
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
+    @Environment(\.colorScheme) var colorScheme
 
     @State private var titleAnimation: Bool = false
     @State private var contentAnimation: Bool = false
@@ -147,7 +148,7 @@ public struct LoginView: View {
 
     public var body: some View {
         ZStack {
-            AppTheme.Colors.neumorphicBase
+            AppTheme.Colors.neumorphicBase(for: colorScheme)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     focusedField = nil
@@ -185,7 +186,7 @@ public struct LoginView: View {
     private var titleView: some View {
         Text(LocalizedStringKey("LOGIN_VIEW_TITLE"))
             .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
-            .foregroundColor(AppTheme.Colors.accentLimeGreen)
+            .foregroundColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
             .opacity(titleAnimation ? 1 : 0)
             .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
             .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
@@ -210,7 +211,7 @@ public struct LoginView: View {
             }
             .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .username))
             .foregroundColor(AppTheme.Colors.textPrimary)
-            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
 
             SecureField(
                 "",
@@ -227,7 +228,7 @@ public struct LoginView: View {
             }
             .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .password))
             .foregroundColor(AppTheme.Colors.textPrimary)
-            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
         }
     }
 
@@ -244,7 +245,8 @@ public struct LoginView: View {
                     ProgressView()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                        .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
+                        .accessibilityIdentifier(
+                            String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
@@ -261,7 +263,8 @@ public struct LoginView: View {
                     .foregroundColor(AppTheme.Colors.textSuccess)
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 40)
-                    .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
+                    .accessibilityIdentifier(
+                        String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
             }
         }
         .id(viewModel.publishedViewState)
