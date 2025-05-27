@@ -61,21 +61,35 @@ The navigation between Registration and Login is orchestrated by the Composer (o
 
 ---
 
-> **Professional note about Keychain tests:**
-> To ensure reliability and reproducibility of integration tests related to Keychain, it is recommended to always run on **macOS** target unless UIKit dependency is essential. On iOS simulator and CLI (xcodebuild), Keychain tests may fail intermittently due to sandboxing and synchronization issues. This preference applies both in CI/CD and local validations.
-> For EssentialFeed, for example: **xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES**  
+**Example Diagram:**
 
-## 🛠 DEVELOPMENT STANDARDS
+```mermaid
+flowchart TD
+    A[Login Screen] -- "No account?" --> B[Registration Screen]
+    B -- "Registration Success" --> A
+```
 
-### Status System
-| Emoji | Status           | Completion Criteria                                  |
-|-------|------------------|-----------------------------------------------------|
-| ✅    | **Completed**    | Implemented + tests (≥80%) + documented             |
-| 🚧    | **In Progress**  | In development or testing                           |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
-| ❌    | **Pending**      | Not implemented or not found in current code.        |
-| 🔜    | **Soon**         | Implementation is planned but not yet started.       |
-| 🔒    | **Documented Only (Concept)** | The feature is defined and documented, but implementation has not started. Awaiting validation. |
+---
+
+**Tip:** For scalable projects, consider migrating the navigation logic to a Coordinator pattern for even better modularity and testability.
+
+---
+
+## Key Documentation
+
+# BDD - Security Features Implementation Status
+
+This document tracks the implementation of critical security features in the application, following a Behavior-Driven Development (BDD) approach. Each feature is broken down into specific scenarios or acceptance criteria.
+
+## Status Legend:
+
+*   ✅ **Implemented and Verified:** The feature is fully implemented and tests (unit, integration, UI) confirm it.
+*   🚧 **In Progress:** Implementation has started but is not complete.
+*   🔜 **Soon:** Implementation is planned but not yet started.
+*   ❌ **Not Implemented (Critical):** The feature is critical and has not yet been addressed.
+*   ⚠️ **Partially Implemented / Needs Review:** Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.
+*   ❓ **Pending Analysis/Definition:** The feature needs further discussion or definition before it can be implemented.
+*   🔒 **Documented Only (Concept):** The feature is defined and documented, but implementation has not started. Awaiting validation.
 
 # Implementation Status
 
@@ -108,6 +122,38 @@ The navigation between Registration and Login is orchestrated by the Composer (o
 > **Professional note about Keychain tests:**
 > To ensure reliability and reproducibility of integration tests related to Keychain, it is recommended to always run on **macOS** target unless UIKit dependency is essential. On iOS simulator and CLI (xcodebuild), Keychain tests may fail intermittently due to sandboxing and synchronization issues. This preference applies both in CI/CD and local validations.
 > For EssentialFeed, for example: **xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES**  
+
+## 🛠 DEVELOPMENT STANDARDS
+
+### Status System
+| Emoji | Status           | Completion Criteria                                  |
+|-------|------------------|-----------------------------------------------------|
+| ✅    | **Completed**    | Implemented + tests (≥80%) + documented             |
+| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.    | **Partial**      | Functional implementation but does not cover all advanced aspects of the original BDD or needs further validation. |
+| ❌    | **Pending**      | Not implemented or not found in current code.        |
+
+- ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
+    - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
+    - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
+    - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
+    - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
+    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
+    - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
+    - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
+    - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
+    - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
+    - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
+    - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
+    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
+    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+
+#### Technical Diagram
+*(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
+
+> **Note:** Snapshot testing has been evaluated and discarded for secure storage, since relevant outputs (results and errors) are validated directly through asserts and explicit comparisons. This decision follows professional iOS testing best practices and avoids adding redundant or low-value tests for the Keychain domain.
+    - [✅] Coverage of all critical code branches (add specific tests for each uncovered branch)
 
 ## 1. Secure storage
 
@@ -145,7 +191,8 @@ _(Only reference for QA/business. Progress is marked only in the technical check
     - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
     - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
     - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
-
+    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
+    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
 
 #### Technical Diagram
 *(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
@@ -252,7 +299,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
 - [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
-- [✅] **Refactor: test helper uses concrete `KeychainSpy` for clear asserts**
+- [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
 - [✅] **Documentation and architecture aligned**  
       (Technical diagram is up to date  
        // If the implementation omits a relevant technical point, flag it below.)
@@ -274,22 +321,25 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ### Technical Flows (happy/sad path) (Reviewed)
 **Happy path:**
 - Execute "Register User" command with provided data.
-- System validates data format.
+- Validate data format.
 - Send registration request to the server.
 - Receive account creation confirmation **and authentication token.**
 - Store credentials and **authentication token** securely.
 - Notify registration success.
 
-**Sad path 1:**
+**Sad path:**
 - Invalid data: system does not send request or store credentials.
-- System logs failed attempt for metrics and lockout logic (`FailedLoginAttempt` registrado y cubierto por tests).
-- If maximum failed attempts reached, system applies lockout/delay and sugiere recuperación de contraseña.
-- If connectivity error: system **(should)** store the request for retry, notifies error and offers notification option to user. *(Currently not implemented)*
+- Email already registered (409): system returns domain error and does not store credentials, notifies and suggests recovery.
+- No connectivity: system **(should)** store the request for retry, notifies error and offers notification option to user. *(Currently not implemented)*
+
+---
+
+### Technical Diagram
+*(The original diagram is conceptually valid, but the implementation of C[UserRegistrationUseCase] currently omits step G[Token stored] and retry logic)*
 
 ---
 
 ### Registration Technical Diagram Flow
-
 ```mermaid
 flowchart TD
     A[UI Layer] --> B[RegistrationViewModel]
@@ -306,20 +356,19 @@ flowchart TD
 
 ### Technical Checklist Registration <-> Tests (Reviewed)
 
-| 🛠️ Technical Task (BDD Original)                                    | ✅ Test that covers it (real/proposed)                     | Test Type          | Coverage (Reviewed) | Brief Comment                                                                 |
-|-----------------------------------------------------------------------|-----------------------------------------------------------|--------------------|---------------------|----------------------------------------------------------------------------------|
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Store initial credentials securely (Keychain)                  | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit)                                               | Integration        | ✅                  | Test verifies success; Keychain write asserted via `KeychainFullSpy`.                                  |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Store authentication token received (OAuth/JWT) securely after registration | `test_registerUser_withValidData_storesAuthToken`                                                                                  | Unit / Integration | ✅                  | `UserRegistrationUseCase` saves token via `TokenStorage`; spy confirms call.                           |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Notify registration success                                     | `test_registerUser_withValidData_notifiesSuccessObserver`                                                                          | Integration        | ✅                  | Success path notifies observer.                                                                       |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Notify that the email is already in use                              | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter` <br> `test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError` | Unit / Integration | ✅                  | Both UI-level and domain-level notification covered.                                                   |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Show appropriate and specific error messages                        | `test_registerUser_withInvalidEmail_returnsInvalidEmailError`, <br>`test_registerUser_withWeakPassword_returnsWeakPasswordError`   | Unit               | ✅                  | Domain errors map one-to-one to presentation.                                                          |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Save data for retry if no connection and notify error              | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError`                                              | Integration        | ✅                  | Error `.noConnectivity` returned and data persisted via `OfflineRegistrationStoreSpy`.                 |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Implement logic to retry saved offline registration requests     | `RetryOfflineRegistrationsUseCaseTests` (5 tests: *no data*, *success*, *api fails*, *token fails*, *delete fails*)                | Unit               | ✅                  | All sub-cases covered; verifies side-effects on store & token storage.                                 |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Refactor: test helper uses concrete KeychainSpy for clear asserts | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Documentation and architecture aligned                      | Compilation + all `UserRegistrationUseCase*Tests` pass                                                                             | N/A                | ✅                  | Constructor now receives `RegistrationPersistenceInterfaces` typealias.                                |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Unit and integration tests for all paths (happy/sad path) | Entire `UserRegistrationUseCaseTests`, `UserRegistrationUseCaseIntegrationTests`, `RetryOfflineRegistrationsUseCaseTests`          | Unit / Integration | ✅                  | Every path now exercised, including offline save + retry logic.                                       |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Refactor: test helper uses concrete `KeychainSpy` for clear asserts | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
-| ⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive. Documentation and architecture aligned                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
+| Technical Checklist Item                                                                                                   | Test covering it (real name)                                                                                                      | Test Type          | Coverage (Reviewed) | Brief Comment                                                                                         |
+|-----------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|--------------------|---------------------|--------------------------------------------------------------------------------------------------------|
+| Store initial credentials securely (Keychain)                                                                               | `test_registerUser_withValidData_createsUserAndStoresCredentialsSecurely` (implicit)                                               | Integration        | ✅                  | Test verifies success; Keychain write asserted via `KeychainFullSpy`.                                  |
+| Store authentication token received (OAuth/JWT) securely after registration                                                 | `test_registerUser_withValidData_storesAuthToken`                                                                                  | Unit / Integration | ✅                  | `UserRegistrationUseCase` saves token via `TokenStorage`; spy confirms call.                           |
+| Notify registration success                                                                                                 | `test_registerUser_withValidData_notifiesSuccessObserver`                                                                          | Integration        | ✅                  | Success path notifies observer.                                                                       |
+| Notify that the email is already in use                                                                                     | `test_registerUser_withAlreadyRegisteredEmail_notifiesEmailAlreadyInUsePresenter` <br> `test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError` | Unit / Integration | ✅                  | Both UI-level and domain-level notification covered.                                                   |
+| Show appropriate and specific error messages                                                                                | `test_registerUser_withInvalidEmail_returnsInvalidEmailError`, <br>`test_registerUser_withWeakPassword_returnsWeakPasswordError`   | Unit               | ✅                  | Domain errors map one-to-one to presentation.                                                          |
+| Save data for retry if no connection and notify error                                                                       | `test_register_whenNoConnectivity_savesDataToOfflineStoreAndReturnsConnectivityError`                                              | Integration        | ✅                  | Error `.noConnectivity` returned and data persisted via `OfflineRegistrationStoreSpy`.                 |
+| **Implement logic to retry saved offline registration requests** (When connectivity is restored)                            | `RetryOfflineRegistrationsUseCaseTests` (5 tests: *no data*, *success*, *api fails*, *token fails*, *delete fails*)                | Unit               | ✅                  | All sub-cases covered; verifies side-effects on store & token storage.                                 |
+| Refactor `UserRegistrationUseCase` constructor (group persistence deps / SRP)                                               | Compilation + all `UserRegistrationUseCase*Tests` pass                                                                             | N/A                | ✅                  | Constructor now receives `RegistrationPersistenceInterfaces` typealias.                                |
+| Unit and integration tests for all paths (happy/sad path)                                                                   | Entire `UserRegistrationUseCaseTests`, `UserRegistrationUseCaseIntegrationTests`, `RetryOfflineRegistrationsUseCaseTests`          | Unit / Integration | ✅                  | Every path now exercised, including offline save + retry logic.                                       |
+| Refactor: test helper uses concrete `KeychainSpy` for clear asserts                                                         | Helpers use `KeychainFullSpy` (or specific spy)                                                                                    | Unit / Integration | ✅                  | Avoids duplicate spy definitions.                                                                     |
+| Documentation and architecture aligned                                                                                      | Checklist + diagrams reviewed                                                                                                      | N/A                | ✅                  | BDD and tech diagrams updated after recent refactors.                                                 |
                                                                          
 ---
 
@@ -348,14 +397,16 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [✅] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [✅] Integration and snapshot tests validating the full flow (login → notification):
+       #### Subtasks
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
         - [✅] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
         - [✅] Ensure tests run in CI (update scheme + record on first run)
-    - [✅] The cycle is covered by automated tests in CI
+    - [✅] The cycle is covered by automated tests en CI
+    
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
     #### Subtasks
@@ -366,6 +417,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Unit tests cover all format validation scenarios (email, password, empty fields, etc)
     - [✅] Integration tests ensure no HTTP request or Keychain access is made when there are format errors
     - [✅] The cycle is covered by automated tests in CI
+    
+<!-- ESTADO: Todo validado y cubierto, no hay tareas pendientes aquí. -->
 
 - [✅] **Save login credentials offline on connectivity error and notify** (`UserLoginUseCase` saves credentials via `offlineStore` and returns `.noConnectivity`.)
     #### Subtasks
@@ -408,29 +461,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ---
 
 #### Still missing / To improve
+
 - [❌] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
-- [✅] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts** (Implemented with `ThreadSafeFailedLoginAttemptsStore` and lockout logic)
-- [✅] **Clarify if you must also save login credentials to Keychain for login flow (or only token)** (Only token is stored, not complete credentials)
-- [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)** (Implemented with `ThreadSafeInMemoryPendingRequestStore`)
-- [✅] **End-to-end integration/Snapshot tests covering lockout and recovery suggestion flows**
-    #### Subtasks
-    - [✅] Internationalize LoginView UI
-    - [✅] Localize static text elements
-    - [✅] Update snapshot tests for multiple languages
-    - [✅] Verify correct display in different locales
-- [✅] Implement snapshot tests for `LoginView` in different states
-- [🚧] Improve light mode compatibility for LoginView UI
-    #### Subtasks
-    - [🚧] Update neumorphic styles to work properly in light mode
-    - [❌] Adjust color schemes for better contrast in light mode
-    - [❌] Update snapshot tests to verify light mode improvements
-### Next Steps
-- [🔜] Enhance brute force protection with exponential backoff
-- [🔜] Complete the password recovery flow
-- [🔜] Implement end-to-end integration tests for the complete authentication flow
-- [🔜] Optimize UI performance on low-end devices
-- [🔜] Review and update technical documentation
-- [🔜] Perform load and stress testing on the authentication system
+- [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
+- [❓] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
+- [❌] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
+- [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
 
 > **Technical note:**
 > - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
@@ -448,11 +484,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - System registers the active session (el estado de sesión se deriva automáticamente del Keychain, no requiere activación explícita).
 - System notifies login success (via observer to the presenter/UI).
 
-**Sad path 1:**
+**Sad path:**
 - Incorrect credentials: system notifies error and allows retry.
 - System logs failed attempt for metrics and lockout logic (`FailedLoginAttempt` registrado y cubierto por tests).
 - If maximum failed attempts reached, system applies lockout/delay and sugiere recuperación de contraseña.
-- If connectivity error: system **(should)** store the request for retry, notifies error and offers notification option to user. *(Currently not implemented)*
+- If connectivity error: system saves credentials for offline retry and notifies user of connectivity issue.
+- Validation errors: system shows clear, specific messages and does not send request.
 
 ---
 
@@ -474,21 +511,19 @@ flowchart TD
 
 ```
 
----
+### Checklist Traceability <-> Tests
 
-### Technical Checklist Login <-> Tests (Reviewed)
-
-| Login Checklist Item              | Test Present (or N/A if missing functionality)               | Test Type          | Coverage (Reviewed) | Brief Comment                                                                 |
-|-----------------------------------|--------------------------------------------------------------|--------------------|---------------------|----------------------------------------------------------------------------------|
-| Secure token after login         | `test_login_succeeds_storesToken_andNotifiesObserver`        | Integration        | ✅                  | Test verifies token storage is attempted.                                       |
-| Register active session          | *Not tested in `UserLoginUseCaseTests`*                      | ❌                   | ❌                   | Functionality not in `UserLoginUseCase`.                                       |
-| Notify login success             | `test_login_succeeds_storesToken_andNotifiesObserver`        | Integration        | ✅                  | Test verifies notification to `successObserver`.                                |
-| Specific validation errors       | `test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest`, etc. | Unit               | ✅                  | Thoroughly covered.                                                             |
-| Credentials error                | `test_login_fails_onInvalidCredentials`                      | Unit               | ✅                  | Covered.                                                                        |
-| Password recovery                | *Not applicable to `UserLoginUseCase`*                       | ❌                   | ❌                   | Separate feature.                                                               |
-| Retry without connection         | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | Integration        | ✅                  | Covers saving credentials and returning error. Retry logic not yet implemented. |
-| Connectivity error               | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | Integration        | ✅                  | Specific `noConnectivity` error is handled.                                      |
-| Delay/lockout after failures     | *Not tested, functionality not implemented*                  | ❌                   | ❌                   |                                                                                |
+| Login Checklist Item              | Test Present (or N/A if missing functionality)               | Coverage (Reviewed)  | Brief Comment                                                                |
+|-----------------------------------|--------------------------------------------------------------|----------------------|-------------------------------------------------------------------------------|
+| Secure token after login         | `test_login_succeeds_storesToken_andNotifiesObserver`        | ✅                   | Test verifies token storage is attempted.                                       |
+| Register active session          | *Not tested in `UserLoginUseCaseTests`*                      | ❌                   | Functionality not in `UserLoginUseCase`.                                       |
+| Notify login success             | `test_login_succeeds_storesToken_andNotifiesObserver`        | ✅                   | Test verifies notification to `successObserver`.                                |
+| Specific validation errors       | `test_login_fails_withInvalidEmailFormat_andDoesNotSendRequest`, etc. | ✅                   | Thoroughly covered.                                                             |
+| Credentials error                | `test_login_fails_onInvalidCredentials`                      | ✅                   | Covered.                                                                        |
+| Password recovery                | *Not applicable to `UserLoginUseCase`*                       | ❌                   | Separate feature.                                                               |
+| Retry without connection         | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | ✅                   | Covers saving credentials and returning error. Retry logic not yet implemented. |
+| Connectivity error               | `test_login_whenNoConnectivity_savesCredentialsToOfflineStoreAndReturnsConnectivityError` | ✅                   | Specific `noConnectivity` error is handled.                                      |
+| Delay/lockout after failures     | *Not tested, functionality not implemented*                  | ❌                   |                                                                                |
 
 ---
 
@@ -502,7 +537,7 @@ to keep my session active and secure without unnecessary interruptions.
 ---
 
 ### Scenarios (Acceptance Criteria)
-_(Reference only for QA/business. Progress is tracked solely in the technical checklist)_
+_(Reference only for QA/business. Progress is only marked in the technical checklist)_
 - Detect expired token in any protected operation
 - Automatically renew the token if possible (refresh token)
 - Notify the user if renewal fails
@@ -525,53 +560,46 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
   - [✅] Exponential backoff (3 retries)  
   - [✅] Semaphore to avoid race conditions  
 
-#### 3. [✅] Store the new token securely after renewal
+#### 3. [⚠️] Store the new token securely after renewal
 - [✅] KeychainManager:
-  - [✅] AES-256 encryption             
-  - [✅] Migration of existing tokens  
-  - [✅] Security tests (Keychain Spy): 
+  - [✅] AES-256 encryption
+  - [❌] Migration of existing tokens (advanced scenarios/mocking)
+  - [✅] Security tests (Keychain Spy):
     - [✅] Stores token in Keychain on successful refresh (happy path)
     - [✅] Tests that verify encryption (AES-256) on write
-    - [✅] Negative/error-path & advanced security tests
+    - [❌] Negative/error-path & advanced security tests
 
-#### 4. [✅] Notify the user if renewal fails  
-- [✅] Basic alerts (Snackbar)  
-- [✅] Localized messages:  
-  - [✅] Spanish/English  
-  - [✅] Screenshot tests  
+#### 4. [⚠️] Notify the user if renewal fails
+- [✅] Basic alerts (Snackbar)
+- [✅] Localized messages:
+  - [✅] Spanish/English
+  - [❌] Screenshot tests
 
-#### 5. [❌] Redirect to login if renewal is not possible  
-- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
-- [❌] Credentials cleanup  
-- [❌] Integration tests  
+#### 5. [🚧] Redirect to login if renewal is not possible
+- [🚧 Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+- [❌] Credentials cleanup
+- [❌] Integration tests
 
-#### 6. [❌] Log the expiration event for metrics  
-- [❌] Unified events:  
-  - [❌] `TokenExpired`  
-  - [❌] `RefreshFailed`  
-- [❌] Integration with Firebase/Sentry  
+#### 6. [❌] Log the expiration event for metrics
+- [❌] Unified events:
+  - [❌] `TokenExpired`
+  - [❌] `RefreshFailed`
+- [❌] Integration with Firebase/Sentry
 
-#### 7. [🚧] Automatic Token Management & Refresh Flow
-- [🚧] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
-    - [🚧] Detect 401 responses (token expired)
-        - [🚧] Validate server error structure
-        - [🔜] Handle different response formats (JSON/plain text)
-        - [🔜] Add detailed logging
-        - [🔜] Write unit tests for each case
-    - [❌] Trigger token refresh cycle (transparently to feature code)
-    - [❌] Retry original request with fresh token when possible
-    - [❌] Deduplicate concurrent refreshes (single refresh in-flight)
+---
+
+#### Still missing / To improve
+
+- [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
+    - Detect 401 responses (token expired)
+    - Trigger token refresh cycle (transparently to feature code)
+    - Retry original request with fresh token when possible
+    - Deduplicate concurrent refreshes (single refresh in-flight)
 - [❌] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [❌] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
 - [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
 - [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
 - [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
-
-#### Detalles Técnicos
-- **Patrón**: Decorator sobre `HTTPClient` existente
-- **Seguridad**: Uso de Keychain con cifrado AES-256
-- **Concurrencia**: `DispatchSemaphore` para evitar condiciones de carrera
-- **Localización**: Mensajes en ES/EN
 
 ---
 
@@ -624,9 +652,7 @@ flowchart TD
 
 ## 5. Password Recovery
 
-### Story: User Wants to Recover Password
-
-**Narrative:**  
+### Functional Narrative
 As a user who has forgotten their password,
 I want to be able to reset it securely,
 so that I can regain access to my account.
@@ -654,7 +680,7 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [❌] Notify by email after password change
 
 - [❌] Offer password recovery
-    #### Subtasks 
+    #### Subtasks (Move to Use Case 5 if not done)
     - [❌] Endpoint and DTO for password recovery
     - [❌] UseCase for requesting recovery
     - [❌] Email validation before sending the request
@@ -720,13 +746,13 @@ flowchart TD
 | Logging of attempts/changes for metrics      | No            |    ❌     |
 | Email notification after change              | No            |    ❌     |
 
+> Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
+
 ---
 
 ## 6. Session Management
 
-### Story: User Wants to View and Manage Active Sessions
-
-**Narrative:**  
+### Functional Narrative
 As a security-conscious user,
 I want to be able to view and manage my active sessions,
 so I can detect and terminate unauthorized access.
@@ -1387,7 +1413,7 @@ This section describes additional use cases focused on strengthening application
 ### Functional Narrative
 As an application handling sensitive data,
 I need to attempt to detect if I am running on a compromised device (jailbroken or rooted),
-so that I can take preventive measures and protect data integrity and application functionality.
+so I can take preventive measures and protect data integrity and application functionality.
 
 ### Scenarios (Acceptance Criteria)
 - Positive detection of a compromised environment.
@@ -1614,6 +1640,8 @@ ensuring that they are only requested when necessary and that the user understan
 - [❌] Tests for all request flows and permission states.
 
 ---
+
+
 
 ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-iOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-macOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/Deploy/badge.svg)
 
@@ -2036,5 +2064,3 @@ All production files have at least one associated test.
 
 > For coverage by class or function, check the `coverage-report.txt` file.
 <!-- COVERAGE-REPORT-END -->
-
-```

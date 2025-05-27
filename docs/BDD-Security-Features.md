@@ -392,19 +392,21 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 - [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` stores the token via `TokenStorage`.)
 - [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by `UserLoginUseCase`.)
-- [✅] **Notify login success** (Via `LoginSuccessObserver`)
+- [🚧] **Notify login success** (Via `LoginSuccessObserver`)
     #### Subtasks
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [🚧] There are integration and snapshot tests validating the full flow (login → notification) (`UserLoginUseCase` tests reach the observer. E2E/UI tests would validate the full flow.)
+    - [🚧] Integration and snapshot tests validating the full flow (login → notification):
+       #### Subtasks
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
-        - [❓] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [🚧] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
         - [✅] Ensure tests run in CI (update scheme + record on first run)
-    - [✅] The cycle is covered by automated tests in CI
+    - [✅] The cycle is covered by automated tests en CI
+    
 
 - [✅] **Notify specific validation errors** (Implemented in `UserLoginUseCase` and covered by unit tests)
     #### Subtasks
@@ -415,17 +417,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Unit tests cover all format validation scenarios (email, password, empty fields, etc)
     - [✅] Integration tests ensure no HTTP request or Keychain access is made when there are format errors
     - [✅] The cycle is covered by automated tests in CI
-
-- [❌] **Offer password recovery** (`UserLoginUseCase` does not include this. It's a separate feature, referenced in Use Case 5. The ✅ here in BDD is a **discrepancy** if expected as part of *this* use case.)
-    #### Subtasks (Move to Use Case 5 if not done)
-    - [❌] Endpoint and DTO for password recovery
-    - [❌] UseCase for requesting recovery
-    - [❌] Email validation before sending the request
-    - [❌] Notify user of success/error
-    - [❌] Unit tests for the use case
-    - [❌] Integration tests (no Keychain or login access)
-    - [❌] Presenter and view for user feedback
-    - [❌] CI coverage
+    
+<!-- ESTADO: Todo validado y cubierto, no hay tareas pendientes aquí. -->
 
 - [✅] **Save login credentials offline on connectivity error and notify** (`UserLoginUseCase` saves credentials via `offlineStore` and returns `.noConnectivity`.)
     #### Subtasks
@@ -567,31 +560,31 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Exponential backoff (3 retries)  
   - [✅] Semaphore to avoid race conditions  
 
-#### 3. [🚧] Store the new token securely after renewal
-- [🚧] KeychainManager:
-  - [✅] AES-256 encryption             
-  - [🔜] Migration of existing tokens  
-  - [⚠️] Security tests (Keychain Spy): 
+#### 3. [⚠️] Store the new token securely after renewal
+- [✅] KeychainManager:
+  - [✅] AES-256 encryption
+  - [❌] Migration of existing tokens (advanced scenarios/mocking)
+  - [✅] Security tests (Keychain Spy):
     - [✅] Stores token in Keychain on successful refresh (happy path)
-    - [🚧] Tests that verify encryption (AES-256) on write
-    - [🔜] Negative/error-path & advanced security tests
+    - [✅] Tests that verify encryption (AES-256) on write
+    - [❌] Negative/error-path & advanced security tests
 
-#### 4. [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Notify the user if renewal fails  
-- [✅] Basic alerts (Snackbar)  
-- [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] Localized messages:  
-  - [✅] Spanish/English  
-  - [❌] Screenshot tests  
+#### 4. [⚠️] Notify the user if renewal fails
+- [✅] Basic alerts (Snackbar)
+- [✅] Localized messages:
+  - [✅] Spanish/English
+  - [❌] Screenshot tests
 
-#### 5. [❌] Redirect to login if renewal is not possible  
-- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`  
-- [❌] Credentials cleanup  
-- [❌] Integration tests  
+#### 5. [🔜] Redirect to login if renewal is not possible
+- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+- [❌] Credentials cleanup
+- [❌] Integration tests
 
-#### 6. [❌] Log the expiration event for metrics  
-- [❌] Unified events:  
-  - [❌] `TokenExpired`  
-  - [❌] `RefreshFailed`  
-- [❌] Integration with Firebase/Sentry  
+#### 6. [❌] Log the expiration event for metrics
+- [❌] Unified events:
+  - [❌] `TokenExpired`
+  - [❌] `RefreshFailed`
+- [❌] Integration with Firebase/Sentry
 
 ---
 
@@ -685,6 +678,17 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [❌] Show error and allow requesting a new link if the link is invalid or expired
 - [❌] Log all attempts and changes for security metrics
 - [❌] Notify by email after password change
+
+- [❌] Offer password recovery
+    #### Subtasks (Move to Use Case 5 if not done)
+    - [❌] Endpoint and DTO for password recovery
+    - [❌] UseCase for requesting recovery
+    - [❌] Email validation before sending the request
+    - [❌] Notify user of success/error
+    - [❌] Unit tests for the use case
+    - [❌] Integration tests (no Keychain or login access)
+    - [❌] Presenter and view for user feedback
+    - [❌] CI coverage
 
 ---
 
