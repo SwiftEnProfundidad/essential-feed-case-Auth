@@ -426,7 +426,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Update neumorphic styles to work properly in light mode
     - [✅] Adjust color schemes for better contrast in light mode
     - [✅] Update snapshot tests to verify light mode improvements
-### Next Steps
 - [🚧] Enhance brute force protection with exponential backoff
 - [🔜] Complete the password recovery flow
 - [🔜] Implement end-to-end integration tests for the complete authentication flow
