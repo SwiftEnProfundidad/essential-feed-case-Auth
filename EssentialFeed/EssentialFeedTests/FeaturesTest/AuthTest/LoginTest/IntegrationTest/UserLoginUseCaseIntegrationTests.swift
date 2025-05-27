@@ -17,6 +17,17 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
     }
 
+    func test_login_withValidCredentials_notifiesSuccessObserver_andUIShowsSuccess() async {
+        let (sut, api) = makeSUT()
+        let credentials = LoginCredentials(email: "success@example.com", password: "ValidPassword123")
+        let expectedResponse = LoginResponse(token: "VALID_TOKEN")
+        api.stubbedResult = .success(expectedResponse)
+        let successObserver = LoginSuccessObserverSpy()
+        sut.successObserver = successObserver
+        let _ = await sut.login(with: credentials)
+        XCTAssertEqual(successObserver.receivedResponses, [expectedResponse], "Success observer should be notified with the correct response")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserLoginUseCase, api: AuthAPISpy) {
