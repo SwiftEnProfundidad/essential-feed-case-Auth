@@ -1,0 +1,15 @@
+// EssentialApp/Features/Auth/Resources/Localizable (Greek).strings
+
+"LOGIN_VIEW_TITLE" = "Οι Ροές Μου";
+"LOGIN_VIEW_USERNAME_PLACEHOLDER" = "Όνομα χρήστη";
+"LOGIN_VIEW_PASSWORD_PLACEHOLDER" = "Κωδικός πρόσβασης";
+"LOGIN_VIEW_LOGIN_BUTTON" = "Σύνδεση";
+"LOGIN_VIEW_FORGOT_PASSWORD" = "Ξεχάσατε τον κωδικό σας;";
+
+"LOGIN_ERROR_VALIDATION" = "Σφάλμα επικύρωσης";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυρα διαπιστευτήρια";
+"LOGIN_ERROR_NETWORK" = "Σφάλμα δικτύου";
+"LOGIN_ERROR_ACCOUNT_BLOCKED" = "Ο λογαριασμός είναι κλειδωμένος";
+"LOGIN_ERROR_MESSAGE_ID" = "Μήνυμα σφάλματος";
+"LOGIN_SUCCESS_MESSAGE" = "Η σύνδεση επιτυχής!";
+"LOGIN_SUCCESS_MESSAGE_ID" = "Μήνυμα επιτυχίας";

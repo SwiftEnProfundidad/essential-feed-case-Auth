@@ -7,9 +7,6 @@ private let neumorphicShadowOffsetNormal: CGFloat = 5
 private let neumorphicShadowRadiusPressedFocused: CGFloat = 3
 private let neumorphicShadowOffsetPressedFocused: CGFloat = 2
 
-private let darkThemeLightShadowColor = Color(white: 0.2, opacity: 0.6)
-private let darkThemeDarkShadowColor = Color.black.opacity(0.7)
-
 struct NeumorphicTextFieldStyle: TextFieldStyle {
     @Environment(\.colorScheme) var colorScheme
     var isFocused: Bool
@@ -19,7 +16,19 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
     }
 
     private var mainColor: Color {
-        AppTheme.Colors.neumorphicBase
+        AppTheme.Colors.neumorphicBase(for: colorScheme)
+    }
+
+    private var lightShadowColor: Color {
+        colorScheme == .dark
+            ? Color(white: 0.2, opacity: 0.25) // Made much more subtle for dark mode
+            : Color.white.opacity(0.7)
+    }
+
+    private var darkShadowColor: Color {
+        colorScheme == .dark
+            ? Color.black.opacity(0.7)
+            : Color(white: 0.6, opacity: 0.6)
     }
 
     private var cornerRadius: CGFloat = neumorphicCornerRadius
@@ -31,13 +40,13 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(mainColor)
                     .shadow(
-                        color: darkThemeLightShadowColor,
+                        color: lightShadowColor,
                         radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal,
                         y: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: darkThemeDarkShadowColor,
+                        color: darkShadowColor,
                         radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal,
                         y: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal
@@ -48,8 +57,28 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
 }
 
 struct NeumorphicButtonStyle: ButtonStyle {
-    let mainColor = AppTheme.Colors.neumorphicBase
-    let textColor = AppTheme.Colors.accentLimeGreen
+    @Environment(\.colorScheme) var colorScheme
+
+    var mainColor: Color {
+        AppTheme.Colors.neumorphicBase(for: colorScheme)
+    }
+
+    var textColor: Color {
+        AppTheme.Colors.accentLimeGreen(for: colorScheme)
+    }
+
+    var lightShadowColor: Color {
+        colorScheme == .dark
+            ? Color(white: 0.2, opacity: 0.25) // Made much more subtle for dark mode
+            : Color.white.opacity(0.9)
+    }
+
+    var darkShadowColor: Color {
+        colorScheme == .dark
+            ? Color.black.opacity(0.7)
+            : Color(white: 0.6, opacity: 0.7)
+    }
+
     let cornerRadius: CGFloat = neumorphicCornerRadius
 
     func makeBody(configuration: Self.Configuration) -> some View {
@@ -62,7 +91,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(mainColor)
                     .shadow(
-                        color: darkThemeLightShadowColor,
+                        color: lightShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -71,7 +100,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
                             ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: darkThemeDarkShadowColor,
+                        color: darkShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -96,8 +125,7 @@ struct SimplePressButtonStyle: ButtonStyle {
 
 public struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
-    @State private var localUsername: String
-    @State private var localPassword: String
+    @Environment(\.colorScheme) var colorScheme
 
     @State private var titleAnimation: Bool = false
     @State private var contentAnimation: Bool = false
@@ -111,16 +139,16 @@ public struct LoginView: View {
 
     private static let loginFormSpacing: CGFloat = 25
     private static let loginPaddingHorizontal: CGFloat = 30
+    private let animationsEnabled: Bool
 
-    public init(viewModel: LoginViewModel) {
+    public init(viewModel: LoginViewModel, animationsEnabled: Bool = true) {
         self.viewModel = viewModel
-        _localUsername = State(initialValue: viewModel.username)
-        _localPassword = State(initialValue: viewModel.password)
+        self.animationsEnabled = animationsEnabled
     }
 
     public var body: some View {
         ZStack {
-            AppTheme.Colors.neumorphicBase
+            AppTheme.Colors.neumorphicBase(for: colorScheme)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     focusedField = nil
@@ -138,10 +166,15 @@ public struct LoginView: View {
             .animation(.spring(response: 0.5, dampingFraction: 0.5).delay(0.4), value: contentAnimation)
         }
         .onAppear {
-            withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+            if animationsEnabled {
+                withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+                    contentAnimation = true
+                }
+                titleAnimation = true
+            } else {
                 contentAnimation = true
+                titleAnimation = true
             }
-            titleAnimation = true
         }
         .onChange(of: focusedField) { newValue in
             if newValue != nil {
@@ -151,9 +184,9 @@ public struct LoginView: View {
     }
 
     private var titleView: some View {
-        Text("Mis Feeds")
+        Text(LocalizedStringKey("LOGIN_VIEW_TITLE"))
             .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
-            .foregroundColor(AppTheme.Colors.accentLimeGreen)
+            .foregroundColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
             .opacity(titleAnimation ? 1 : 0)
             .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
             .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
@@ -163,8 +196,8 @@ public struct LoginView: View {
         VStack(spacing: 25) {
             TextField(
                 "",
-                text: $localUsername,
-                prompt: Text("Usuario")
+                text: $viewModel.username,
+                prompt: Text(LocalizedStringKey("LOGIN_VIEW_USERNAME_PLACEHOLDER"))
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
@@ -173,73 +206,68 @@ public struct LoginView: View {
             .keyboardType(.emailAddress)
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            .onChange(of: localUsername) { newValue in
-                viewModel.username = newValue
-            }
             .onSubmit {
                 focusedField = .password
             }
             .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .username))
             .foregroundColor(AppTheme.Colors.textPrimary)
-            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
 
             SecureField(
-                "", text: $localPassword,
-                prompt: Text("Contraseña")
+                "",
+                text: $viewModel.password,
+                prompt: Text(LocalizedStringKey("LOGIN_VIEW_PASSWORD_PLACEHOLDER"))
                     .foregroundColor(AppTheme.Colors.textSecondary.opacity(0.8))
                     .font(Font.system(.callout, design: .rounded))
             )
             .id(Field.password)
             .focused($focusedField, equals: .password)
-            .onChange(of: localPassword) { newValue in
-                viewModel.password = newValue
-            }
             .onSubmit {
                 focusedField = nil
                 Task { await viewModel.login() }
             }
             .textFieldStyle(NeumorphicTextFieldStyle(isFocused: focusedField == .password))
             .foregroundColor(AppTheme.Colors.textPrimary)
-            .accentColor(AppTheme.Colors.accentLimeGreen)
+            .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
         }
     }
 
     private var statusAreaView: some View {
         Group {
-            switch viewModel.viewState {
+            switch viewModel.publishedViewState {
             case .idle:
                 VStack(spacing: 20) {
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
             case .blocked:
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(1.5)
-                    .padding(.vertical, 40)
-                    .tint(AppTheme.Colors.accentLimeGreen)
-                    .accessibilityIdentifier("login_activity_indicator")
-            case let .error(message):
-                VStack(spacing: 15) {
-                    Text(message)
-                        .font(Font.system(.caption, design: .rounded).weight(.medium))
-                        .foregroundColor(AppTheme.Colors.textError)
+                VStack(spacing: 16) {
+                    ProgressView()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                        .accessibilityIdentifier("login_error_message")
+                        .accessibilityIdentifier(
+                            String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
+            case let .error(message):
+                Text(message)
+                    .font(Font.system(.headline, design: .rounded).weight(.semibold))
+                    .foregroundColor(AppTheme.Colors.textError)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 40)
+                    .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
             case let .success(message):
                 Text(message)
                     .font(Font.system(.headline, design: .rounded).weight(.semibold))
                     .foregroundColor(AppTheme.Colors.textSuccess)
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 40)
-                    .accessibilityIdentifier("login_success_message")
+                    .accessibilityIdentifier(
+                        String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
             }
         }
-        .id(viewModel.viewState)
+        .id(viewModel.publishedViewState)
         .frame(minHeight: 130)
     }
 
@@ -248,7 +276,7 @@ public struct LoginView: View {
             focusedField = nil
             Task { await viewModel.login() }
         } label: {
-            Text("Iniciar sesión")
+            Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
                 .font(Font.system(.headline, design: .rounded).weight(.bold))
                 .frame(maxWidth: .infinity)
         }
@@ -260,7 +288,7 @@ public struct LoginView: View {
             focusedField = nil
             viewModel.handleRecoveryTap()
         } label: {
-            Text("¿Olvidaste tu contraseña?")
+            Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
                 .font(Font.system(.callout, design: .rounded).weight(.medium))
                 .foregroundColor(AppTheme.Colors.textSecondary)
         }

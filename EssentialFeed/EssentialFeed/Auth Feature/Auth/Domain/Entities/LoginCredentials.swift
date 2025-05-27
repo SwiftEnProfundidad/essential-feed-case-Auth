@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LoginCredentials: Equatable {
+public struct LoginCredentials: Equatable, Codable {
     public let email: String
     public let password: String
 

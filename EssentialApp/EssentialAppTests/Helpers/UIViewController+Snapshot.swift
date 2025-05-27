@@ -15,6 +15,15 @@ struct SnapshotConfiguration {
             locale: locale
         )
     }
+
+    static func iPhone16(style: UIUserInterfaceStyle = .light, contentSize _: UIContentSizeCategory? = nil, locale: Locale = Locale(identifier: "en_US")) -> SnapshotConfiguration {
+        SnapshotConfiguration(
+            size: CGRect(x: 0, y: 0, width: 430, height: 932), // iPhone 16 (using iPhone 15 Pro Max dimensions as placeholder)
+            style: style,
+            contentSize: nil,
+            locale: locale
+        )
+    }
 }
 
 extension UIViewController {
