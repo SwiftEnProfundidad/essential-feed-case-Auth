@@ -221,6 +221,8 @@
 		B45C37012DDACCC300184F55 /* LoginFlowHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C37002DDACCC300184F55 /* LoginFlowHandlerProtocol.swift */; };
 		B45C37032DDAD2E500184F55 /* AuthUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C37022DDAD2E500184F55 /* AuthUseCase.swift */; };
 		B45C37052DDAD54D00184F55 /* AuthUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C37042DDAD54D00184F55 /* AuthUseCaseTests.swift */; };
+		B45D92702DE6308200B3CD1E /* ExponentialBackoffPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45D926F2DE6308200B3CD1E /* ExponentialBackoffPolicy.swift */; };
+		B45D92722DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45D92712DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift */; };
 		B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */; };
 		B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */; };
 		B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */; };
@@ -593,6 +595,8 @@
 		B45C37002DDACCC300184F55 /* LoginFlowHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowHandlerProtocol.swift; sourceTree = "<group>"; };
 		B45C37022DDAD2E500184F55 /* AuthUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCase.swift; sourceTree = "<group>"; };
 		B45C37042DDAD54D00184F55 /* AuthUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthUseCaseTests.swift; sourceTree = "<group>"; };
+		B45D926F2DE6308200B3CD1E /* ExponentialBackoffPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicy.swift; sourceTree = "<group>"; };
+		B45D92712DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExponentialBackoffPolicyTests.swift; sourceTree = "<group>"; };
 		B46CA1442DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPresenterTests.swift; sourceTree = "<group>"; };
 		B46CA14E2DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationValidatorWithLogicStub.swift; sourceTree = "<group>"; };
 		B46CA1502DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationServerUseCaseTests.swift; sourceTree = "<group>"; };
@@ -1466,6 +1470,7 @@
 		B41D5DF42DE034DA0020B37B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B45D926F2DE6308200B3CD1E /* ExponentialBackoffPolicy.swift */,
 				B41D5DF52DE0354F0020B37B /* LoginRequest.swift */,
 			);
 			path = Models;
@@ -1847,6 +1852,7 @@
 		B4AF1BAF2DDB527200FD2ED2 /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
+				B45D92712DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift */,
 				B4AF1BAE2DDB527200FD2ED2 /* UseCases */,
 			);
 			path = DomainTest;
@@ -2462,6 +2468,7 @@
 				B4A7468F2DDD3BB10087C33C /* User.swift in Sources */,
 				B4A746902DDD3BB10087C33C /* UserRegistrationData.swift in Sources */,
 				B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */,
+				B45D92702DE6308200B3CD1E /* ExponentialBackoffPolicy.swift in Sources */,
 				B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */,
 				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
 				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
@@ -2557,6 +2564,7 @@
 				B40E6B832DE03FB500A0202F /* SessionManagerSpy.swift in Sources */,
 				B40E6B842DE03FB500A0202F /* TokenStoreSpy.swift in Sources */,
 				B41D5DF12DE034370020B37B /* AuthServiceSpy.swift in Sources */,
+				B45D92722DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift in Sources */,
 				B41D5DF32DE034370020B37B /* InMemoryPendingRequestStore.swift in Sources */,
 				B4E5AC99B2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift in Sources */,
 				B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */,
