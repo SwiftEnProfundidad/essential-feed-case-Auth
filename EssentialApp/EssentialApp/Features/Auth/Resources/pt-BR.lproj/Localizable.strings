@@ -10,4 +10,6 @@
 "LOGIN_ERROR_INVALID_CREDENTIALS" = "Credenciais inválidas";
 "LOGIN_ERROR_NETWORK" = "Erro de rede";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Conta bloqueada";
+"LOGIN_ERROR_MESSAGE_ID" = "Mensagem de erro";
 "LOGIN_SUCCESS_MESSAGE" = "Login bem-sucedido!";
+"LOGIN_SUCCESS_MESSAGE_ID" = "Mensagem de sucesso";

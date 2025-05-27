@@ -9,5 +9,7 @@
 "LOGIN_ERROR_VALIDATION" = "Validation error";
 "LOGIN_ERROR_INVALID_CREDENTIALS" = "Invalid credentials";
 "LOGIN_ERROR_NETWORK" = "Network error";
+"LOGIN_ERROR_MESSAGE_ID" = "Error message";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Account blocked";
 "LOGIN_SUCCESS_MESSAGE" = "Login successful!";
+"LOGIN_SUCCESS_MESSAGE_ID" = "Success message";

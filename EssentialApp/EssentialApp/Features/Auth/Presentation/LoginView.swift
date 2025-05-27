@@ -7,9 +7,6 @@ private let neumorphicShadowOffsetNormal: CGFloat = 5
 private let neumorphicShadowRadiusPressedFocused: CGFloat = 3
 private let neumorphicShadowOffsetPressedFocused: CGFloat = 2
 
-private let darkThemeLightShadowColor = Color(white: 0.2, opacity: 0.6)
-private let darkThemeDarkShadowColor = Color.black.opacity(0.7)
-
 struct NeumorphicTextFieldStyle: TextFieldStyle {
     @Environment(\.colorScheme) var colorScheme
     var isFocused: Bool
@@ -22,6 +19,18 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
         AppTheme.Colors.neumorphicBase
     }
 
+    private var lightShadowColor: Color {
+        colorScheme == .dark
+            ? Color(white: 0.2, opacity: 0.6)
+            : Color.white.opacity(0.8)
+    }
+
+    private var darkShadowColor: Color {
+        colorScheme == .dark
+            ? Color.black.opacity(0.7)
+            : Color(white: 0.7, opacity: 0.8)
+    }
+
     private var cornerRadius: CGFloat = neumorphicCornerRadius
 
     func _body(configuration: TextField<Self._Label>) -> some View {
@@ -31,13 +40,13 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(mainColor)
                     .shadow(
-                        color: darkThemeLightShadowColor,
+                        color: lightShadowColor,
                         radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal,
                         y: isFocused ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: darkThemeDarkShadowColor,
+                        color: darkShadowColor,
                         radius: isFocused ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal,
                         y: isFocused ? neumorphicShadowOffsetPressedFocused : neumorphicShadowOffsetNormal
@@ -48,8 +57,28 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
 }
 
 struct NeumorphicButtonStyle: ButtonStyle {
-    let mainColor = AppTheme.Colors.neumorphicBase
-    let textColor = AppTheme.Colors.accentLimeGreen
+    @Environment(\.colorScheme) var colorScheme
+
+    var mainColor: Color {
+        AppTheme.Colors.neumorphicBase
+    }
+
+    var textColor: Color {
+        AppTheme.Colors.accentLimeGreen
+    }
+
+    var lightShadowColor: Color {
+        colorScheme == .dark
+            ? Color(white: 0.2, opacity: 0.6)
+            : Color.white.opacity(0.8)
+    }
+
+    var darkShadowColor: Color {
+        colorScheme == .dark
+            ? Color.black.opacity(0.7)
+            : Color(white: 0.7, opacity: 0.8)
+    }
+
     let cornerRadius: CGFloat = neumorphicCornerRadius
 
     func makeBody(configuration: Self.Configuration) -> some View {
@@ -62,7 +91,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(mainColor)
                     .shadow(
-                        color: darkThemeLightShadowColor,
+                        color: lightShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -71,7 +100,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
                             ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: darkThemeDarkShadowColor,
+                        color: darkShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -215,7 +244,7 @@ public struct LoginView: View {
                     ProgressView()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
-                        .accessibilityIdentifier("login_error_message")
+                        .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
@@ -225,14 +254,14 @@ public struct LoginView: View {
                     .foregroundColor(AppTheme.Colors.textError)
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 40)
-                    .accessibilityIdentifier("login_error_message")
+                    .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
             case let .success(message):
                 Text(message)
                     .font(Font.system(.headline, design: .rounded).weight(.semibold))
                     .foregroundColor(AppTheme.Colors.textSuccess)
                     .multilineTextAlignment(.center)
                     .padding(.vertical, 40)
-                    .accessibilityIdentifier("login_success_message")
+                    .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
             }
         }
         .id(viewModel.publishedViewState)

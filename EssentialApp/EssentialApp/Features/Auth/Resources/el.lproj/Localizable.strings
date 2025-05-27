@@ -10,4 +10,6 @@
 "LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυρα διαπιστευτήρια";
 "LOGIN_ERROR_NETWORK" = "Σφάλμα δικτύου";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Ο λογαριασμός είναι κλειδωμένος";
+"LOGIN_ERROR_MESSAGE_ID" = "Μήνυμα σφάλματος";
 "LOGIN_SUCCESS_MESSAGE" = "Η σύνδεση επιτυχής!";
+"LOGIN_SUCCESS_MESSAGE_ID" = "Μήνυμα επιτυχίας";
