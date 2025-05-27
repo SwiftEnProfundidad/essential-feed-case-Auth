@@ -27,9 +27,19 @@ public final class LoginViewModel: ObservableObject {
         }
     }
 
-    @Published public var errorMessage: String?
-    @Published public var loginSuccess: Bool = false
-    @Published public var isLoginBlocked = false
+    @Published public var errorMessage: String? {
+        didSet { updateViewState() }
+    }
+
+    @Published public var loginSuccess: Bool = false {
+        didSet { updateViewState() }
+    }
+
+    @Published public var isLoginBlocked = false {
+        didSet { updateViewState() }
+    }
+
+    @Published public private(set) var publishedViewState: ViewState = .idle
     public let authenticated = PassthroughSubject<Void, Never>()
     public let recoveryRequested = PassthroughSubject<Void, Never>()
     private var cancellables: Set<AnyCancellable> = []
@@ -204,10 +214,21 @@ public final class LoginViewModel: ObservableObject {
         } else if let message = errorMessage {
             .error(message)
         } else if loginSuccess {
-            // Personalizar el mensaje de éxito si es necesario
             .success("Login successful!")
         } else {
             .idle
+        }
+    }
+
+    private func updateViewState() {
+        if isLoginBlocked {
+            publishedViewState = .blocked
+        } else if let message = errorMessage {
+            publishedViewState = .error(message)
+        } else if loginSuccess {
+            publishedViewState = .success("Login successful!")
+        } else {
+            publishedViewState = .idle
         }
     }
 

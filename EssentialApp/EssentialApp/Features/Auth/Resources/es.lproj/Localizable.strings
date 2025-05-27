@@ -1,0 +1,13 @@
+// EssentialApp/Features/Auth/Resources/Localizable (Spanish).strings
+
+"LOGIN_VIEW_TITLE" = "Mis Feeds";
+"LOGIN_VIEW_USERNAME_PLACEHOLDER" = "Usuario";
+"LOGIN_VIEW_PASSWORD_PLACEHOLDER" = "Contraseña";
+"LOGIN_VIEW_LOGIN_BUTTON" = "Iniciar sesión";
+"LOGIN_VIEW_FORGOT_PASSWORD" = "¿Olvidaste tu contraseña?";
+
+"LOGIN_ERROR_VALIDATION" = "Error de validación";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Credenciales inválidas";
+"LOGIN_ERROR_NETWORK" = "Error de red";
+"LOGIN_ERROR_ACCOUNT_BLOCKED" = "Cuenta bloqueada";
+"LOGIN_SUCCESS_MESSAGE" = "¡Inicio de sesión exitoso!";

@@ -109,9 +109,11 @@ public struct LoginView: View {
 
     private static let loginFormSpacing: CGFloat = 25
     private static let loginPaddingHorizontal: CGFloat = 30
+    private let animationsEnabled: Bool
 
-    public init(viewModel: LoginViewModel) {
+    public init(viewModel: LoginViewModel, animationsEnabled: Bool = true) {
         self.viewModel = viewModel
+        self.animationsEnabled = animationsEnabled
     }
 
     public var body: some View {
@@ -134,10 +136,15 @@ public struct LoginView: View {
             .animation(.spring(response: 0.5, dampingFraction: 0.5).delay(0.4), value: contentAnimation)
         }
         .onAppear {
-            withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+            if animationsEnabled {
+                withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+                    contentAnimation = true
+                }
+                titleAnimation = true
+            } else {
                 contentAnimation = true
+                titleAnimation = true
             }
-            titleAnimation = true
         }
         .onChange(of: focusedField) { newValue in
             if newValue != nil {
@@ -196,30 +203,28 @@ public struct LoginView: View {
 
     private var statusAreaView: some View {
         Group {
-            switch viewModel.viewState {
+            switch viewModel.publishedViewState {
             case .idle:
                 VStack(spacing: 20) {
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
             case .blocked:
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(1.5)
-                    .padding(.vertical, 40)
-                    .tint(AppTheme.Colors.accentLimeGreen)
-                    .accessibilityIdentifier("login_activity_indicator")
-            case let .error(message):
-                VStack(spacing: 15) {
-                    Text(message)
-                        .font(Font.system(.caption, design: .rounded).weight(.medium))
-                        .foregroundColor(AppTheme.Colors.textError)
+                VStack(spacing: 16) {
+                    ProgressView()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                         .accessibilityIdentifier("login_error_message")
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                 }
+            case let .error(message):
+                Text(message)
+                    .font(Font.system(.headline, design: .rounded).weight(.semibold))
+                    .foregroundColor(AppTheme.Colors.textError)
+                    .multilineTextAlignment(.center)
+                    .padding(.vertical, 40)
+                    .accessibilityIdentifier("login_error_message")
             case let .success(message):
                 Text(message)
                     .font(Font.system(.headline, design: .rounded).weight(.semibold))
@@ -229,7 +234,7 @@ public struct LoginView: View {
                     .accessibilityIdentifier("login_success_message")
             }
         }
-        .id(viewModel.viewState)
+        .id(viewModel.publishedViewState)
         .frame(minHeight: 130)
     }
 
@@ -258,3 +263,20 @@ public struct LoginView: View {
         .padding(.top, 5)
     }
 }
+
+// public struct LoginView: View {
+//    @ObservedObject var viewModel: LoginViewModel
+//
+//    public init(viewModel: LoginViewModel, animationsEnabled _: Bool = true) {
+//        self.viewModel = viewModel
+//    }
+//
+//    public var body: some View {
+//        VStack {
+//            Text("Hello Snapshot")
+//            Text("Username: \(viewModel.username)")
+//            Text("Password: \(viewModel.password)")
+//            Text("State: \(String(describing: viewModel.publishedViewState))")
+//        }
+//    }
+// }

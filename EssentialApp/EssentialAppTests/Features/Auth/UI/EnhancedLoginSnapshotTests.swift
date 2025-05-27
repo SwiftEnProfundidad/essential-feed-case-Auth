@@ -11,105 +11,70 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
         ]
 
         for locale in localesToTest {
-            await verifyLoginViewState(
-                viewModel: makeViewModel(),
-                state: .idle,
-                locale: locale
-            )
+            let idleVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
+            idleVM.username = "idle_user@email.com"
+            idleVM.password = "idle_password"
+            idleVM.errorMessage = nil
+            idleVM.loginSuccess = false
+            idleVM.isLoginBlocked = false
+            let idleView = await LoginView(viewModel: idleVM, animationsEnabled: false)
+            await waitForRender()
+            await recordSnapshot(for: idleView, named: "LOGIN_IDLE", locale: locale)
+
+            let validationVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
+            validationVM.username = ""
+            validationVM.password = ""
+            validationVM.errorMessage = "Validation error"
+            let validationView = await LoginView(viewModel: validationVM, animationsEnabled: false)
+            await waitForRender()
+            await recordSnapshot(for: validationView, named: "LOGIN_FORM_VALIDATION", locale: locale)
 
             let successVM = makeViewModel(
                 authenticateResult: .success(LoginResponse(token: "valid_token")))
-            successVM.loginSuccess = true
-            await verifyLoginViewState(
-                viewModel: successVM,
-                state: .success,
-                locale: locale
-            )
+            successVM.username = "success@email.com"
+            successVM.password = "valid_password"
+            await successVM.login()
+            let successView = await LoginView(viewModel: successVM, animationsEnabled: false)
+            await waitForRender()
+            await recordSnapshot(for: successView, named: "LOGIN_SUCCESS", locale: locale)
 
-            let errorStates: [(LoginError, String)] = [
+            let errorCases: [(LoginError, String)] = [
                 (.invalidCredentials, "INVALID_CREDENTIALS"),
                 (.network, "NETWORK"),
                 (.noConnectivity, "NO_CONNECTIVITY"),
                 (.tokenStorageFailed, "TOKEN_STORAGE_FAILED"),
                 (.offlineStoreFailed, "OFFLINE_STORE_FAILED")
             ]
-
-            for (error, stateName) in errorStates {
+            for (error, stateName) in errorCases {
                 let errorVM = makeViewModel(authenticateResult: .failure(error))
-                let blockMessageProvider = DefaultLoginBlockMessageProvider()
-                errorVM.errorMessage = blockMessageProvider.message(for: error)
-                await verifyLoginViewState(
-                    viewModel: errorVM,
-                    state: .error(stateName),
-                    locale: locale
-                )
+                errorVM.username = "error@email.com"
+                errorVM.password = "wrong_password"
+                await errorVM.login()
+                let errorView = await LoginView(viewModel: errorVM, animationsEnabled: false)
+                await waitForRender()
+                await recordSnapshot(for: errorView, named: "LOGIN_ERROR_\(stateName)", locale: locale)
             }
 
-            let lockedStore = InMemoryFailedLoginAttemptsStore()
-            let lockedSecurity = LoginSecurityUseCase(
-                store: lockedStore,
-                maxAttempts: 3,
-                blockDuration: 300,
-                timeProvider: { Date() }
+            let blockedStore = InMemoryFailedLoginAttemptsStore()
+            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, maxAttempts: 1)
+            let blockedVM = LoginViewModel(
+                authenticate: { _, _ in .failure(.invalidCredentials) },
+                loginSecurity: blockedSecurityUseCase
             )
-            let lockedVM = LoginViewModel(
-                authenticate: { _, _ in .failure(.accountLocked(remainingTime: 300)) },
-                loginSecurity: lockedSecurity
-            )
-            lockedVM.errorMessage = "Account is locked"
-            lockedVM.isLoginBlocked = true
-            await verifyLoginViewState(
-                viewModel: lockedVM,
-                state: .accountLocked,
-                locale: locale
-            )
-
-            let validationVM = makeViewModel()
-            validationVM.username = ""
-            validationVM.password = ""
-            await verifyLoginViewState(
-                viewModel: validationVM,
-                state: .formValidation,
-                locale: locale
-            )
+            blockedVM.username = "blocked@email.com"
+            blockedVM.password = "blocked_password"
+            await blockedVM.login()
+            await blockedVM.login()
+            let blockedView = await LoginView(viewModel: blockedVM, animationsEnabled: false)
+            await waitForRender()
+            await recordSnapshot(for: blockedView, named: "LOGIN_ACCOUNT_LOCKED", locale: locale)
         }
     }
 
     // MARK: - Helpers
 
-    private enum ViewState {
-        case idle
-        case success
-        case error(String)
-        case accountLocked
-        case formValidation
-    }
-
-    private func verifyLoginViewState(
-        viewModel: LoginViewModel, state: ViewState, locale: Locale, file: StaticString = #filePath,
-        line: UInt = #line
-    ) async {
-        let view = await LoginView(viewModel: viewModel)
-        let stateName =
-            switch state {
-            case .idle: "IDLE"
-            case .success: "SUCCESS"
-            case let .error(error): "ERROR_\(error)"
-            case .accountLocked: "ACCOUNT_LOCKED"
-            case .formValidation: "FORM_VALIDATION"
-            }
-
-        await recordSnapshot(
-            for: view,
-            named: "LOGIN_\(stateName)",
-            locale: locale,
-            file: file,
-            line: line
-        )
-    }
-
     private func makeViewModel(
-        authenticateResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
+        authenticateResult: Result<LoginResponse, LoginError> = .failure(LoginError.invalidCredentials)
     ) -> LoginViewModel {
         LoginViewModel(
             authenticate: { _, _ in authenticateResult },
@@ -121,6 +86,12 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
                 timeProvider: { Date() }
             )
         )
+    }
+
+    @MainActor
+    private func waitForRender() async {
+        await Task.yield()
+        try? await Task.sleep(nanoseconds: 100_000_000)
     }
 
     @MainActor private func recordSnapshot(
@@ -137,53 +108,52 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             .appendingPathComponent("snapshots")
 
         for (style, styleName) in styles {
-            let contentView = view
-                .environment(\.locale, .init(identifier: locale.identifier))
-                .preferredColorScheme(style == .dark ? .dark : .light)
-                .environment(\.colorScheme, style == .dark ? .dark : .light)
-
             let window = UIWindow(frame: UIScreen.main.bounds)
             window.overrideUserInterfaceStyle = style
 
+            let contentView =
+                view
+                    .environment(\.locale, .init(identifier: locale.identifier))
+                    .preferredColorScheme(style == .dark ? .dark : .light)
+                    .frame(
+                        width: SnapshotConfiguration.iPhone13().size.width,
+                        height: SnapshotConfiguration.iPhone13().size.height
+                    )
+
             let viewController = UIHostingController(rootView: contentView)
             viewController.view.frame = window.bounds
+            viewController.view.backgroundColor = style == .dark ? .black : .white
 
             window.rootViewController = viewController
             window.makeKeyAndVisible()
 
-            try? await Task.sleep(nanoseconds: 100_000_000)
-
             viewController.view.setNeedsLayout()
             viewController.view.layoutIfNeeded()
 
-            try? await Task.sleep(nanoseconds: 100_000_000)
+            try? await Task.sleep(nanoseconds: 200_000_000)
 
-            let backgroundColor = style == .dark ? UIColor.black : UIColor.white
-            let renderer = UIGraphicsImageRenderer(size: viewController.view.bounds.size)
-            let snapshot = renderer.image { context in
-                backgroundColor.setFill()
-                context.fill(viewController.view.bounds)
+            let renderer = UIGraphicsImageRenderer(bounds: viewController.view.bounds)
+            let snapshot = renderer.image { _ in
                 viewController.view.drawHierarchy(
                     in: viewController.view.bounds,
                     afterScreenUpdates: true
                 )
             }
 
-            let localeFolder =
+            let folderPath =
                 snapshotsFolder
                     .appendingPathComponent(locale.identifier)
                     .appendingPathComponent(styleName)
 
             try? FileManager.default.createDirectory(
-                at: localeFolder,
+                at: folderPath,
                 withIntermediateDirectories: true
             )
 
-            let snapshotURL = localeFolder.appendingPathComponent("\(name).png")
+            let fileURL = folderPath.appendingPathComponent("\(name).png")
 
             if let data = snapshot.pngData() {
-                try? data.write(to: snapshotURL)
-                print("Snapshot guardado en: \(snapshotURL.path)")
+                try? data.write(to: fileURL)
             } else {
                 XCTFail("Failed to generate snapshot data", file: file, line: line)
             }
