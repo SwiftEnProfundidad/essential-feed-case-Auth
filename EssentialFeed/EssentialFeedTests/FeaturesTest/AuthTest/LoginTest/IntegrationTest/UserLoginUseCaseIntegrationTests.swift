@@ -17,33 +17,27 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
         XCTAssertFalse(api.wasCalled, "API should NOT be called when password is invalid")
     }
 
-    // TODO: Si existe Keychain/secure storage en el flujo, añadir spy y test equivalente:
-    // func test_login_doesNotAccessKeychain_whenValidationFails() async { ... }
-
     // MARK: - Helpers
 
-    private func makeSUT(
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> (
-        sut: UserLoginUseCase,
-        api: AuthAPISpy
-    ) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserLoginUseCase, api: AuthAPISpy) {
         let api = AuthAPISpy()
-
         let persistence = LoginPersistenceSpy()
         let notifier = LoginEventNotifierSpy()
         let flowHandler = LoginFlowHandlerSpy()
+        let lockStatusProvider = LoginLockStatusProviderSpy()
+        let failedLoginHandler = FailedLoginHandlerSpy()
+        let config = UserLoginConfiguration(maxFailedAttempts: 5, lockoutDuration: 300, tokenDuration: 3600)
         let sut = UserLoginUseCase(
             api: api,
             persistence: persistence,
             notifier: notifier,
-            flowHandler: flowHandler
+            flowHandler: flowHandler,
+            lockStatusProvider: lockStatusProvider,
+            failedLoginHandler: failedLoginHandler,
+            config: config
         )
-
         trackForMemoryLeaks(api, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-
         return (sut, api)
     }
 
