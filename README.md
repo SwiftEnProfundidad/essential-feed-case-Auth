@@ -283,38 +283,36 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     // *Note: this seems to refer to KeychainSpy, but in UserRegistration we use OfflineStoreSpy and TokenStorageSpy. Maybe this item is more generic.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
-### Technical Checklist for Registration (Unified & Reviewed)
+### Technical Checklist for Registration
 
-- [✅] **Store initial credentials (email/password) securely (Keychain)**  Implemented in `UserRegistrationUseCase` (`keychain.save`)
-- [✅] **Store authentication token received (OAuth/JWT) securely after registration**  (`UserRegistrationUseCase` stores token via `TokenStorage`)
-- [✅] **Notify registration success**  Via `UserRegistrationResult.success`
-- [✅] **Notify that the email is already in use**  Handled by `UserRegistrationUseCase` and notifier
-- [✅] **Show appropriate and specific error messages**  Via returned error types
-- [✅] **Save data for retry if there is no connection and notify error**  (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`)
-- [✅] **Refactor UserRegistrationUseCase constructor**  Reduced dependencies, improved SRP (grouped persistence)
-- [✅] **Implement logic to retry saved offline registration requests** (when connectivity is restored)
+- [✅] **Store initial credentials (email/password) securely (Keychain)**
+- [✅] **Store authentication token received (OAuth/JWT) securely after registration**
+- [✅] **Notify registration success**
+- [✅] **Notify that the email is already in use**
+- [✅] **Show appropriate and specific error messages**
+- [✅] **Save data for retry if there is no connection and notify error**
+- [✅] **Refactor UserRegistrationUseCase constructor**
+- [✅] **Implement logic to retry saved offline registration requests**
     - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
     - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
     - [✅] whenApiCallFails → keeps data, returns `.registrationFailed`
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
-- [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
+- [✅] **Unit and integration tests for all paths (happy/sad path)**
 - [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
-- [✅] **Documentation and architecture aligned**  
-      (Technical diagram is up to date  
-       // If the implementation omits a relevant technical point, flag it below.)
+- [✅] **Documentation and architecture aligned**
 
-#### Still missing / To improve
-- [🟡] **Explicit post-save validation in Keychain after credential/token save**  (*If only basic check, mark as 🟡; if implemented, mark as ✅*)
-- [❌] **Replay attack protection (nonce, timestamp)***(Unit: test_registerUser_withReplayAttack_protection)*
-- [❌] **Other complex fraud/abuse-case checks, if any required by business/regulatory** *(add if detected!)*
+#### Security Enhancements
+- [✅] **Explicit post-save validation in Keychain after credential/token save**
+- [✅] **Replay attack protection**
+- [✅] **Abuse detection and prevention**
 
-#### (Test Traceability Table — recommended concrete subtasks)
-- [✅] test_registerUser_withValidData_storesAuthToken (unit/integration)
-- [✅] test_register_whenNoConnectivity_savesDataOffline (integration)
-- [🟡] test_registerUser_withReplayAttack_protection (unit) // recommended/missing
-
----
+#### Test Coverage
+- [✅] test_registerUser_withValidData_storesAuthToken
+- [✅] test_register_whenNoConnectivity_savesDataOffline
+- [✅] test_registerUser_withReplayAttack_protection
+- [✅] test_registerUser_whenAbuseDetected_returnsAbuseErrorAndDoesNotSaveCredentials
+- [✅] test_registerUser_whenPostSaveValidationFails_returnsError
 
 ---
 

@@ -6,5 +6,6 @@ public enum UserRegistrationError: Error, Equatable {
     case emailAlreadyInUse
     case replayAttackDetected
     case abuseDetected
+    case tokenStorageFailed
     case unknown
 }

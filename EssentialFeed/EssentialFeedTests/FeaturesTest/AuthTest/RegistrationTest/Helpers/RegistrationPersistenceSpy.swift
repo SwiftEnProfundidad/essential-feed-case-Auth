@@ -12,8 +12,10 @@ final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
 
     var keychainSaveDataCalls = [(data: Data, key: String)]()
     var keychainSaveResults: [KeychainSaveResult] = []
+    private var savedData = [String: Data]()
     func save(data: Data, forKey key: String) -> KeychainSaveResult {
         keychainSaveDataCalls.append((data, key))
+        savedData[key] = data
         guard !keychainSaveResults.isEmpty else { return .success }
         return keychainSaveResults.removeFirst()
     }
@@ -22,14 +24,7 @@ final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
     var keychainLoadDataToReturn: Data?
     func load(forKey key: String) -> Data? {
         keychainLoadKeyCalls.append(key)
-        return keychainLoadDataToReturn
-    }
-
-    var keychainLoadKeyCalls = [String]()
-    var keychainLoadDataToReturn: Data?
-    func load(forKey key: String) -> Data? {
-        keychainLoadKeyCalls.append(key)
-        return keychainLoadDataToReturn
+        return keychainLoadDataToReturn ?? savedData[key]
     }
 
     enum TokenStorageMessage: Equatable {
