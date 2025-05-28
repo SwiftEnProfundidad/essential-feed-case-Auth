@@ -41,7 +41,7 @@
    - ViewModels/Presenters (`@MainActor`)
    - Vistas (SwiftUI Views/UIViewControllers)
    - Estados de UI (carga/éxito/error)
-   - Coordinadores/Routers(si proyecto lo requiere)
+   - Mejor utilizar eventos tipo arquitectura TCA para la navegación general de la app entre pantallas
    - Inyección de dependencias (**explícita**: por `init` o función, nunca singleton oculto ni `@EnvironmentObject` para lógica core/testable)
    - ⬆️ Depende del Domain
 
@@ -49,7 +49,7 @@
 - **MVVM** para SwiftUI y para UIKit 
 - **MVP** para UIKit y SwiftUI (si proyecto lo requiere)
 - **Factory** para creación de dependencias
-- **Router/Coordinator** para navegación (si proyecto lo requiere)
+- Mejor utilizar eventos tipo arquitectura TCA para la navegación general de la app entre pantallas
 - **Repository** para acceso a datos
 - **Decorator** para decorar comportamientos
 - **Observer** para observar cambios
@@ -118,6 +118,7 @@ Features/
 - Tipos: `PascalCase` (`LoginViewController`, `UserRepository`)
 - Variables/Funciones: `camelCase` (`userName`, `fetchUserData()`)
 - Constantes: `camelCase` con contexto (`maxRetryCount`)
+- No truncar en varias línea las firmas de los tipos, ni los if-else, do-catch, gurads, Asserts, etc
 - Protocolos: 
   - `-able` para capacidades (`Cacheable`)
   - `-ing` para comportamientos (`Logging`)
@@ -279,6 +280,7 @@ private func makeSUT(
 
 ### Código
 - Minimizar comentarios en el código, solo para aclaraciones críticas indispensables.
+- Analizar proyecto y estructura antes de implementar para no generar duplicados
 
 ### Proyecto
 - Mantener actualizado el README.md
@@ -289,7 +291,7 @@ private func makeSUT(
 ### Comunicación
 - Explicaciones en español
 - Código, commits y mensajes en inglés
-- Comentarios en código en inglés
+- No incluir comentarios en el código
 
 ---
 
@@ -349,8 +351,7 @@ private func makeSUT(
 
 ---
 
-*Última actualización: 2025-05-19*  
-*Documento generado automáticamente. Para editar, modificar este archivo directamente.*
+*Última actualización: 2025-05-28*  
 ```
 ---
 

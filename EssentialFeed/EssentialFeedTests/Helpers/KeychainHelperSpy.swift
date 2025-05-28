@@ -3,6 +3,8 @@ import Foundation
 
 public final class KeychainHelperSpy: KeychainStore {
     public var stubbedValue: String?
+    public var stubbedSaveError: KeychainError?
+    public var stubbedDeleteError: KeychainError?
 
     public private(set) var getCalls: [String] = []
     public private(set) var saveCalls: [(String, String)] = []
@@ -16,14 +18,20 @@ public final class KeychainHelperSpy: KeychainStore {
     }
 
     @discardableResult
-    public func save(_ value: String, for key: String) -> Bool {
+    public func save(_ value: String, for key: String) -> KeychainOperationResult {
         saveCalls.append((key, value))
-        return true
+        if let error = stubbedSaveError {
+            return .failure(error)
+        }
+        return .success
     }
 
     @discardableResult
-    public func delete(_ key: String) -> Bool {
+    public func delete(_ key: String) -> KeychainOperationResult {
         deleteCalls.append(key)
-        return true
+        if let error = stubbedDeleteError {
+            return .failure(error)
+        }
+        return .success
     }
 }

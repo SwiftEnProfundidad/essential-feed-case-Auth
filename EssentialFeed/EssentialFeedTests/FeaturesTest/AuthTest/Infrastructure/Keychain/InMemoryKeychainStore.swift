@@ -5,24 +5,23 @@ final class InMemoryKeychainStore: KeychainStore {
     private var store = [String: String]()
     private let queue = DispatchQueue(label: "InMemoryKeychainStore.Queue")
 
-    // MARK: - KeychainStore
-
     func get(_ key: String) -> String? {
         queue.sync { store[key] }
     }
 
     @discardableResult
-    func save(_ value: String, for key: String) -> Bool {
+    func save(_ value: String, for key: String) -> KeychainOperationResult {
         queue.sync {
             store[key] = value
-            return true
+            return .success
         }
     }
 
     @discardableResult
-    func delete(_ key: String) -> Bool {
+    func delete(_ key: String) -> KeychainOperationResult {
         queue.sync {
-            store.removeValue(forKey: key) != nil
+            store.removeValue(forKey: key)
+            return .success
         }
     }
 }

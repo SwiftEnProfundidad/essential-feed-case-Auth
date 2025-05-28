@@ -179,13 +179,13 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 - [✅] **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
 - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
 - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
-- [🚧 ] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
+- [✅] **Post-save validation** (Implementado en `KeychainHelper.save`. Verifica que el valor guardado coincida con el valor original.)
 - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
 - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
 
 #### Advanced Features
-- [🔜⚠️] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. Would need extension for `Data`.)
-- [⚠️] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`.)
+- [🚧] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. Would need extension for `Data`.)
+- [🔜] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`.)
 - [⚠️] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences.)
 - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
 
