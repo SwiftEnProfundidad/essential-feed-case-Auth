@@ -49,6 +49,17 @@ final class KeychainHelperTests: XCTestCase {
         XCTAssertNil(sut.get(key))
     }
 
+    func test_save_performsPostSaveValidation() {
+        let (sut, key, value) = makeSUT()
+        cleanUp(key: key, in: sut)
+
+        let saveResult = sut.save(value, for: key)
+
+        XCTAssertTrue(saveResult)
+        XCTAssertEqual(sut.get(key), value)
+        cleanUp(key: key, in: sut)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -57,7 +68,7 @@ final class KeychainHelperTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: KeychainStore, key: String, value: String) {
-        let sut = InMemoryKeychainStore()
+        let sut = KeychainHelper()
         trackForMemoryLeaks(sut as AnyObject, file: file, line: line)
         return (sut, key, value)
     }

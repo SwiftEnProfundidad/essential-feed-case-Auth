@@ -31,7 +31,14 @@ public final class KeychainHelper: KeychainStore {
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
-        return SecItemAdd(attributes as CFDictionary, nil) == errSecSuccess
+        let saveSuccess = SecItemAdd(attributes as CFDictionary, nil) == errSecSuccess
+
+        if saveSuccess {
+            let savedValue = get(key)
+            return savedValue == value
+        }
+
+        return false
     }
 
     @discardableResult
