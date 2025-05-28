@@ -5,34 +5,23 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
     func test_register_withSuccessfulServerResponse_savesTokenAndCredentials() async throws {
         let uniqueUser = UserRegistrationData.makeUnique()
         let expectedToken = Token.make()
-        let userPayload = ServerAuthResponse.UserPayload(name: uniqueUser.name, email: uniqueUser.email)
-        let tokenPayload = ServerAuthResponse.TokenPayload(value: expectedToken.accessToken, expiry: expectedToken.expiry)
-        let serverResponsePayload = ServerAuthResponse(user: userPayload, token: tokenPayload)
-
-        let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-        let serverResponseData = try encoder.encode(serverResponsePayload)
+        let serverResponseData = try makeServerResponseData(for: uniqueUser, token: expectedToken)
 
         let httpClientStub = HTTPClientStub.online { _ in
-            (serverResponseData, HTTPURLResponse(url: anyURL(), statusCode: 201, httpVersion: nil, headerFields: nil)!)
+            (
+                serverResponseData,
+                HTTPURLResponse(url: anyURL(), statusCode: 201, httpVersion: nil, headerFields: nil)!
+            )
         }
 
         let persistenceSpy = IntegrationPersistenceSpy()
         let notifierSpy = UserRegistrationNotifierSpy()
-        let validator = RegistrationValidatorAlwaysValid()
 
-        let sut = UserRegistrationUseCase(
-            persistenceService: persistenceSpy,
-            validator: validator,
+        let (sut, _) = makeSUT(
             httpClient: httpClientStub,
-            registrationEndpoint: anyURL(),
-            notifier: notifierSpy
+            persistenceSpy: persistenceSpy,
+            notifierSpy: notifierSpy
         )
-
-        trackForMemoryLeaks(sut, file: #file, line: #line)
-        trackForMemoryLeaks(httpClientStub, file: #file, line: #line)
-        trackForMemoryLeaks(persistenceSpy, file: #file, line: #line)
-        trackForMemoryLeaks(notifierSpy, file: #file, line: #line)
 
         let result = await sut.register(
             name: uniqueUser.name,
@@ -41,9 +30,9 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         )
 
         switch result {
-        case let .success(registeredUser):
-            XCTAssertEqual(registeredUser.name, uniqueUser.name)
-            XCTAssertEqual(registeredUser.email, uniqueUser.email)
+        case let .success(tokenAndUser):
+            XCTAssertEqual(tokenAndUser.user.name, uniqueUser.name)
+            XCTAssertEqual(tokenAndUser.user.email, uniqueUser.email)
 
             XCTAssertEqual(persistenceSpy.tokenStorageMessages.count, 1)
             if case let .save(tokenBundle: savedToken) = persistenceSpy.tokenStorageMessages.first {
@@ -58,7 +47,6 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
             XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 1)
             XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.key, uniqueUser.email)
             XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.data, uniqueUser.password.data(using: .utf8))
-
             XCTAssertTrue(persistenceSpy.offlineStoreMessages.isEmpty)
             XCTAssertTrue(notifierSpy.receivedErrors.isEmpty, "Expected no errors to be notified on success")
 
@@ -72,24 +60,14 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         let connectivityError = NSError(domain: NSURLErrorDomain, code: URLError.notConnectedToInternet.rawValue)
 
         let httpClientStub = HTTPClientStub.stubForError(connectivityError)
-
         let persistenceSpy = IntegrationPersistenceSpy()
         let notifierSpy = UserRegistrationNotifierSpy()
-        let validator = RegistrationValidatorAlwaysValid()
 
-        let sut = UserRegistrationUseCase(
-            persistenceService: persistenceSpy,
-            validator: validator,
+        let (sut, _) = makeSUT(
             httpClient: httpClientStub,
-            registrationEndpoint: anyURL(),
-            notifier: notifierSpy
+            persistenceSpy: persistenceSpy,
+            notifierSpy: notifierSpy
         )
-
-        trackForMemoryLeaks(sut, file: #file, line: #line)
-        trackForMemoryLeaks(httpClientStub, file: #file, line: #line)
-        trackForMemoryLeaks(persistenceSpy, file: #file, line: #line)
-        trackForMemoryLeaks(notifierSpy, file: #file, line: #line)
-        trackForMemoryLeaks(validator, file: #file, line: #line)
 
         let result = await sut.register(
             name: uniqueUser.name,
@@ -99,33 +77,78 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
 
         switch result {
         case .success:
-            XCTFail("Se esperaba un fallo por conectividad, pero se obtuvo éxito.")
+            XCTFail("Expected connectivity failure, but got success instead.")
 
         case let .failure(error):
-            XCTAssertEqual(error as? NetworkError, .noConnectivity, "El error devuelto debe ser .noConnectivity")
+            XCTAssertEqual(error as? NetworkError, .noConnectivity, "The returned error should be .noConnectivity")
 
-            XCTAssertEqual(persistenceSpy.offlineStoreMessages.count, 1, "OfflineRegistrationStoreSpy debe intentar guardar los datos una vez")
+            XCTAssertEqual(persistenceSpy.offlineStoreMessages.count, 1, "OfflineRegistrationStoreSpy should attempt to save data once")
             if case let .save(savedData) = persistenceSpy.offlineStoreMessages.first {
-                let expectedDataToSave = UserRegistrationData(name: uniqueUser.name, email: uniqueUser.email, password: uniqueUser.password)
-                XCTAssertEqual(savedData, expectedDataToSave, "Los datos guardados en offline store no coinciden")
+                let expectedDataToSave = UserRegistrationData(
+                    name: uniqueUser.name, email: uniqueUser.email, password: uniqueUser.password
+                )
+                XCTAssertEqual(savedData, expectedDataToSave, "The data saved in offline store does not match expected data")
             } else {
-                XCTFail("Se esperaba un mensaje .save en OfflineRegistrationStoreSpy, se obtuvo \(String(describing: persistenceSpy.offlineStoreMessages.first))")
+                XCTFail("Expected a .save message in OfflineRegistrationStoreSpy, got \(String(describing: persistenceSpy.offlineStoreMessages.first))")
             }
 
-            XCTAssertEqual(notifierSpy.receivedErrors.count, 1, "UserRegistrationNotifierSpy debe haber sido notificado una vez")
-            XCTAssertEqual(notifierSpy.receivedErrors.first as? NetworkError, .noConnectivity, "El notifier debe ser notificado con el error .noConnectivity")
+            XCTAssertEqual(notifierSpy.receivedErrors.count, 1, "UserRegistrationNotifierSpy should have been notified once")
+            XCTAssertEqual(notifierSpy.receivedErrors.first as? NetworkError, .noConnectivity, "The notifier should be notified with the .noConnectivity error")
 
-            XCTAssertTrue(persistenceSpy.tokenStorageMessages.isEmpty, "TokenStorage no debería tener interacciones en fallo de conectividad")
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain no debería guardar nada en fallo de conectividad")
+            XCTAssertTrue(persistenceSpy.tokenStorageMessages.isEmpty, "TokenStorage should not have any interactions on connectivity failure")
+            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain should not save anything on connectivity failure")
         }
     }
 
-    // TODO: Considerar añadir tests de integración para otros errores de servidor (409, 500) si se ve necesario, aunque los unit tests ya los cubren bien.
+    // TODO: Consider adding integration tests for other server errors (409, 500) if needed, although the unit tests already cover them well.
+
+    // MARK: - Helpers
+
+    private func makeSUT(
+        httpClient: HTTPClientStub,
+        persistenceSpy: IntegrationPersistenceSpy,
+        notifierSpy: UserRegistrationNotifierSpy,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (sut: UserRegistrationUseCase, validator: RegistrationValidatorAlwaysValid) {
+        let validator = RegistrationValidatorAlwaysValid()
+
+        let sut = UserRegistrationUseCase(
+            persistenceService: persistenceSpy,
+            validator: validator,
+            httpClient: httpClient,
+            registrationEndpoint: anyURL(),
+            notifier: notifierSpy
+        )
+
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(httpClient, file: file, line: line)
+        trackForMemoryLeaks(persistenceSpy, file: file, line: line)
+        trackForMemoryLeaks(notifierSpy, file: file, line: line)
+        trackForMemoryLeaks(validator, file: file, line: line)
+
+        return (sut, validator)
+    }
+
+    private func makeServerResponseData(for userData: UserRegistrationData, token: Token) throws -> Data {
+        let userPayload = ServerAuthResponse.UserPayload(name: userData.name, email: userData.email)
+        let tokenPayload = ServerAuthResponse.TokenPayload(
+            value: token.accessToken, expiry: token.expiry
+        )
+        let serverResponsePayload = ServerAuthResponse(user: userPayload, token: tokenPayload)
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        return try encoder.encode(serverResponsePayload)
+    }
 }
 
 private extension UserRegistrationData {
     static func makeUnique(id: UUID = UUID()) -> UserRegistrationData {
-        UserRegistrationData(name: "User \(id.uuidString.prefix(8))", email: "user-\(id.uuidString.prefix(8))@example.com", password: "Password\(id.uuidString.prefix(8))")
+        UserRegistrationData(
+            name: "User \(id.uuidString.prefix(8))", email: "user-\(id.uuidString.prefix(8))@example.com",
+            password: "Password\(id.uuidString.prefix(8))"
+        )
     }
 }
 
@@ -135,6 +158,9 @@ private extension Token {
         expiryInterval: TimeInterval = 3600,
         refreshToken: String? = nil
     ) -> Token {
-        Token(accessToken: accessToken, expiry: Date().addingTimeInterval(expiryInterval), refreshToken: refreshToken)
+        Token(
+            accessToken: accessToken, expiry: Date().addingTimeInterval(expiryInterval),
+            refreshToken: refreshToken
+        )
     }
 }

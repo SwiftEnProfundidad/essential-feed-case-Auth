@@ -1,78 +1,78 @@
 import EssentialFeed
 import Foundation
 
-final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
-    func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult {
+public final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
+    public func saveCredentials(passwordData: Data, forEmail email: String) -> KeychainSaveResult {
         save(data: passwordData, forKey: email)
     }
 
-    func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws {
+    public func saveForOfflineProcessing(registrationData: UserRegistrationData) async throws {
         try await save(registrationData)
     }
 
-    var keychainSaveDataCalls = [(data: Data, key: String)]()
-    var keychainSaveResults: [KeychainSaveResult] = []
-    func save(data: Data, forKey key: String) -> KeychainSaveResult {
+    public var keychainSaveDataCalls = [(data: Data, key: String)]()
+    public var keychainSaveResults: [KeychainSaveResult] = []
+    public func save(data: Data, forKey key: String) -> KeychainSaveResult {
         keychainSaveDataCalls.append((data, key))
         guard !keychainSaveResults.isEmpty else { return .success }
         return keychainSaveResults.removeFirst()
     }
 
-    var keychainLoadKeyCalls = [String]()
-    var keychainLoadDataToReturn: Data?
-    func load(forKey key: String) -> Data? {
+    public var keychainLoadKeyCalls = [String]()
+    public var keychainLoadDataToReturn: Data?
+    public func load(forKey key: String) -> Data? {
         keychainLoadKeyCalls.append(key)
         return keychainLoadDataToReturn
     }
 
-    enum TokenStorageMessage: Equatable {
+    public enum TokenStorageMessage: Equatable {
         case save(tokenBundle: Token)
         case loadTokenBundle
         case deleteTokenBundle
     }
 
-    var tokenStorageMessages = [TokenStorageMessage]()
-    var tokenStorageSaveTokenCalls = [Token]()
-    var tokenStorageShouldSaveError = false
+    public var tokenStorageMessages = [TokenStorageMessage]()
+    public var tokenStorageSaveTokenCalls = [Token]()
+    public var tokenStorageShouldSaveError = false
 
-    func save(tokenBundle token: Token) async throws {
+    public func save(tokenBundle token: Token) async throws {
         if tokenStorageShouldSaveError { throw TestError(id: "tokenStorageSaveTokenError") }
         tokenStorageSaveTokenCalls.append(token)
         tokenStorageMessages.append(.save(tokenBundle: token))
     }
 
-    var tokenBundleToLoad: Token?
-    var tokenStorageShouldLoadBundleError = false
-    func loadTokenBundle() async throws -> Token? {
+    public var tokenBundleToLoad: Token?
+    public var tokenStorageShouldLoadBundleError = false
+    public func loadTokenBundle() async throws -> Token? {
         tokenStorageMessages.append(.loadTokenBundle)
         if tokenStorageShouldLoadBundleError { throw TestError(id: "loadTokenBundleError") }
         return tokenBundleToLoad
     }
 
-    var tokenStorageShouldDeleteBundleError = false
-    func deleteTokenBundle() async throws {
+    public var tokenStorageShouldDeleteBundleError = false
+    public func deleteTokenBundle() async throws {
         tokenStorageMessages.append(.deleteTokenBundle)
         if tokenStorageShouldDeleteBundleError { throw TestError(id: "deleteTokenBundleError") }
     }
 
-    var offlineStoreSaveCalls = [UserRegistrationData]()
-    var offlineStoreShouldSaveThrowError = false
-    func save(_ data: UserRegistrationData) async throws {
+    public var offlineStoreSaveCalls = [UserRegistrationData]()
+    public var offlineStoreShouldSaveThrowError = false
+    public func save(_ data: UserRegistrationData) async throws {
         if offlineStoreShouldSaveThrowError { throw TestError(id: "offlineStoreSaveCallsError") }
         offlineStoreSaveCalls.append(data)
     }
 
-    var keychainDeleteKeyCalls = [String]()
-    var keychainDeleteResults: [Bool] = []
+    public var keychainDeleteKeyCalls = [String]()
+    public var keychainDeleteResults: [Bool] = []
 
-    func delete(forKey key: String) -> Bool {
+    public func delete(forKey key: String) -> Bool {
         keychainDeleteKeyCalls.append(key)
         guard !keychainDeleteResults.isEmpty else { return true }
         return keychainDeleteResults.removeFirst()
     }
 
-    var tokenStorageSaveRefreshTokenCalls = [String?]()
-    var tokenToLoad: Token?
-    var tokenStorageDeleteTokenCalled = false
-    var tokenStorageDeleteRefreshTokenCalled = false
+    public var tokenStorageSaveRefreshTokenCalls = [String?]()
+    public var tokenToLoad: Token?
+    public var tokenStorageDeleteTokenCalled = false
+    public var tokenStorageDeleteRefreshTokenCalled = false
 }
