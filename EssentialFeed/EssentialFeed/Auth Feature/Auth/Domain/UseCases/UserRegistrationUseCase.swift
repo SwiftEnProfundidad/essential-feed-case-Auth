@@ -50,7 +50,9 @@ public actor UserRegistrationUseCase: UserRegisterer {
         self.notifier = notifier
     }
 
-    public func register(name: String, email: String, password: String) async -> UserRegistrationResult {
+    public func register(name: String, email: String, password: String) async
+        -> UserRegistrationResult
+    {
         if let validationError = validator.validate(name: name, email: email, password: password) {
             notifier?.notifyRegistrationFailed(with: validationError)
             return .failure(validationError)
@@ -61,7 +63,9 @@ public actor UserRegistrationUseCase: UserRegisterer {
         do {
             let request = try makeRequest(for: userData)
             let (data, httpResponse) = try await httpClient.send(request)
-            return await mapHTTPResponseToRegistrationResult(data: data, httpResponse: httpResponse, for: userData)
+            return await mapHTTPResponseToRegistrationResult(
+                data: data, httpResponse: httpResponse, for: userData
+            )
         } catch {
             return await handleRegistrationError(error, for: userData)
         }
@@ -79,7 +83,9 @@ public actor UserRegistrationUseCase: UserRegisterer {
         return request
     }
 
-    private func mapHTTPResponseToRegistrationResult(data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData) async -> UserRegistrationResult {
+    private func mapHTTPResponseToRegistrationResult(
+        data: Data, httpResponse: HTTPURLResponse, for userData: UserRegistrationData
+    ) async -> UserRegistrationResult {
         switch httpResponse.statusCode {
         case 201:
             do {
@@ -110,8 +116,26 @@ public actor UserRegistrationUseCase: UserRegisterer {
                 return .failure(error)
             }
         case 409:
-            notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
-            return .failure(UserRegistrationError.emailAlreadyInUse)
+            if let errorData = try? JSONDecoder().decode([String: String].self, from: data),
+               errorData["error"] == "replay_attack_detected"
+            {
+                notifier?.notifyRegistrationFailed(with: UserRegistrationError.replayAttackDetected)
+                return .failure(UserRegistrationError.replayAttackDetected)
+            } else {
+                notifier?.notifyRegistrationFailed(with: UserRegistrationError.emailAlreadyInUse)
+                return .failure(UserRegistrationError.emailAlreadyInUse)
+            }
+        case 429:
+            if let errorData = try? JSONDecoder().decode([String: String].self, from: data),
+               errorData["error"] == "abuse_detected"
+            {
+                notifier?.notifyRegistrationFailed(with: UserRegistrationError.abuseDetected)
+                return .failure(UserRegistrationError.abuseDetected)
+            } else {
+                let clientError = NetworkError.clientError(statusCode: httpResponse.statusCode)
+                notifier?.notifyRegistrationFailed(with: clientError)
+                return .failure(clientError)
+            }
         case 400 ..< 500:
             let clientError = NetworkError.clientError(statusCode: httpResponse.statusCode)
             notifier?.notifyRegistrationFailed(with: clientError)
@@ -126,16 +150,14 @@ public actor UserRegistrationUseCase: UserRegisterer {
         }
     }
 
-    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) async -> UserRegistrationResult {
+    private func handleRegistrationError(_ error: Error, for userData: UserRegistrationData) async
+        -> UserRegistrationResult
+    {
         if let urlError = error as? URLError, urlError.code == .notConnectedToInternet {
             do {
                 try await persistenceService.saveForOfflineProcessing(registrationData: userData)
             } catch let offlineStoreError {
                 notifier?.notifyRegistrationFailed(with: offlineStoreError)
-                // Note: The original logic only notified. If this offline save failure
-                // should also make the overall registration fail with this specific error,
-                // we might consider returning .failure(offlineStoreError) here.
-                // For now, sticking to notifying and then proceeding to notify/return .noConnectivity.
             }
             notifier?.notifyRegistrationFailed(with: NetworkError.noConnectivity)
             return .failure(NetworkError.noConnectivity)

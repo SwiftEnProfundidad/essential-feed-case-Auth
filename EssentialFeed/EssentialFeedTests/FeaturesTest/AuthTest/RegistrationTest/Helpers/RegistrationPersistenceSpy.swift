@@ -25,6 +25,13 @@ final class RegistrationPersistenceSpy: UserRegistrationPersistenceService {
         return keychainLoadDataToReturn
     }
 
+    var keychainLoadKeyCalls = [String]()
+    var keychainLoadDataToReturn: Data?
+    func load(forKey key: String) -> Data? {
+        keychainLoadKeyCalls.append(key)
+        return keychainLoadDataToReturn
+    }
+
     enum TokenStorageMessage: Equatable {
         case save(tokenBundle: Token)
         case loadTokenBundle
