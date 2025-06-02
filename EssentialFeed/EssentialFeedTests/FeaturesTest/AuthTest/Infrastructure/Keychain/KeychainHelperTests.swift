@@ -4,12 +4,16 @@ import XCTest
 final class KeychainHelperTests: XCTestCase {
     func test_setAndGet_returnsSavedValue() {
         let (sut, key, value) = makeRealKeychainSUT()
+        let data = value.data(using: .utf8)!
 
         _ = sut.delete(key)
-        let saveResult = sut.save(value, for: key)
+        let saveResult = sut.save(data, for: key)
 
         XCTAssertEqual(saveResult, KeychainOperationResult.success, "Expected save to succeed")
-        XCTAssertEqual(sut.getString(key), value, "Expected to retrieve the saved value")
+        let retrievedData = sut.getData(key)
+
+        XCTAssertNotNil(retrievedData, "Expected to retrieve some data")
+        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), value, "Expected to retrieve the saved value")
 
         cleanUp(key: key, in: sut)
     }
@@ -18,35 +22,41 @@ final class KeychainHelperTests: XCTestCase {
         let (sut, key, _) = makeRealKeychainSUT()
         cleanUp(key: key, in: sut)
 
-        XCTAssertNil(sut.getString(key), "Expected nil for non-existent key")
+        XCTAssertNil(sut.getData(key), "Expected nil for non-existent key")
     }
 
     func test_set_overwritesPreviousValue() {
         let (sut, key, value) = makeRealKeychainSUT()
         let otherValue = "other_value"
+        let valueData = value.data(using: .utf8)!
+        let otherValueData = otherValue.data(using: .utf8)!
 
         cleanUp(key: key, in: sut)
 
-        let firstSaveResult = sut.save(value, for: key)
-        let secondSaveResult = sut.save(otherValue, for: key)
+        let firstSaveResult = sut.save(valueData, for: key)
+        let secondSaveResult = sut.save(otherValueData, for: key)
 
         XCTAssertEqual(firstSaveResult, KeychainOperationResult.success, "Expected first save to succeed")
         XCTAssertEqual(secondSaveResult, KeychainOperationResult.success, "Expected second save to succeed")
-        XCTAssertEqual(sut.getString(key), otherValue, "Expected the last saved value")
+
+        let retrievedData = sut.getData(key)
+        XCTAssertNotNil(retrievedData)
+        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), otherValue, "Expected the last saved value")
 
         cleanUp(key: key, in: sut)
     }
 
     func test_delete_removesValue() {
         let (sut, key, value) = makeRealKeychainSUT()
+        let valueData = value.data(using: .utf8)!
 
-        let saveResult = sut.save(value, for: key)
+        let saveResult = sut.save(valueData, for: key)
         XCTAssertEqual(saveResult, KeychainOperationResult.success, "Expected save to succeed")
 
         let deleteResult = sut.delete(key)
         XCTAssertEqual(deleteResult, KeychainOperationResult.success, "Expected delete to succeed")
 
-        XCTAssertNil(sut.getString(key), "Expected value to be deleted")
+        XCTAssertNil(sut.getData(key), "Expected value to be deleted")
     }
 
     func test_delete_nonexistentKey_doesNotFail() {
@@ -55,7 +65,7 @@ final class KeychainHelperTests: XCTestCase {
 
         let deleteResult = sut.delete(key)
         XCTAssertEqual(deleteResult, KeychainOperationResult.success, "Expected delete to succeed for non-existent key")
-        XCTAssertNil(sut.getString(key), "Expected no value for non-existent key")
+        XCTAssertNil(sut.getData(key), "Expected no value for non-existent key")
     }
 
     func test_save_propagatesStringToDataConversionFailedError_fromDependency() {
@@ -71,12 +81,15 @@ final class KeychainHelperTests: XCTestCase {
 
     func test_save_validatesPostSaveRetrieval() {
         let (sut, key, value) = makeRealKeychainSUT()
+        let valueData = value.data(using: .utf8)!
         cleanUp(key: key, in: sut)
 
-        let saveResult = sut.save(value, for: key)
+        let saveResult = sut.save(valueData, for: key)
 
         XCTAssertEqual(saveResult, KeychainOperationResult.success, "Expected save to succeed")
-        XCTAssertEqual(sut.getString(key), value, "Expected to retrieve the saved value")
+        let retrievedData = sut.getData(key)
+        XCTAssertNotNil(retrievedData)
+        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), value, "Expected to retrieve the saved value")
 
         cleanUp(key: key, in: sut)
     }
@@ -85,24 +98,26 @@ final class KeychainHelperTests: XCTestCase {
         let (sut, spy) = makeSpySUT()
         let key = "test_key"
         let expectedValue = "test_value"
-        spy.stubbedValue = expectedValue
+        let expectedData = expectedValue.data(using: .utf8)!
+        spy.stubbedData = expectedData
 
-        let result = sut.getString(key)
+        let result = sut.getData(key)
 
         XCTAssertEqual(spy.getCalls, [key], "Expected get to be called once with the correct key")
-        XCTAssertEqual(result, expectedValue, "Expected the stubbed value")
+        XCTAssertEqual(result, expectedData, "Expected the stubbed data")
     }
 
     func test_save_delegatesToSpy() {
         let (sut, spy) = makeSpySUT()
         let key = "test_key"
         let value = "test_value"
+        let valueData = value.data(using: .utf8)!
 
-        let result = sut.save(value, for: key)
+        let result = sut.save(valueData, for: key)
 
         XCTAssertEqual(spy.saveCalls.count, 1, "Expected save to be called once")
         XCTAssertEqual(spy.saveCalls.first?.0, key, "Expected save with correct key")
-        XCTAssertEqual(spy.saveCalls.first?.1, value, "Expected save with correct value")
+        XCTAssertEqual(spy.saveCalls.first?.1, valueData, "Expected save with correct value data")
         XCTAssertEqual(result, KeychainOperationResult.success, "Expected success result")
     }
 
@@ -110,10 +125,11 @@ final class KeychainHelperTests: XCTestCase {
         let (sut, spy) = makeSpySUT()
         let key = "test_key"
         let value = "test_value"
+        let valueData = value.data(using: .utf8)!
         let expectedError = KeychainError.duplicateItem
         spy.stubbedSaveError = expectedError
 
-        let result = sut.save(value, for: key)
+        let result = sut.save(valueData, for: key)
 
         if case let .failure(error) = result {
             XCTAssertEqual(error, expectedError, "Expected save to fail with the stubbed error")
@@ -240,10 +256,13 @@ final class KeychainHelperTests: XCTestCase {
             value: "string-value-compatible"
         )
         _ = sut.delete(key)
-        let saveResult = sut.save(value, for: key)
+        let valueData = value.data(using: .utf8)!
+        let saveResult = sut.save(valueData, for: key)
         XCTAssertEqual(saveResult, KeychainOperationResult.success)
-        let retrieved = sut.getString(key)
-        XCTAssertEqual(retrieved, value)
+        let retrievedData = sut.getData(key)
+        XCTAssertNotNil(retrievedData)
+        let retrievedString = String(data: retrievedData!, encoding: .utf8)
+        XCTAssertEqual(retrievedString, value)
     }
 
     // MARK: - Doubles
@@ -299,25 +318,23 @@ final class KeychainHelperTests: XCTestCase {
 
     private class KeychainHelperSpy: KeychainReadable, KeychainWritable, KeychainRemovable {
         var getCalls: [String] = []
-        var saveCalls: [(String, String)] = []
+        var saveCalls: [(String, Data)] = []
         var deleteCalls: [String] = []
-        var stubbedValue: String?
+        var stubbedData: Data?
         var stubbedSaveError: KeychainError?
         var stubbedDeleteError: KeychainError?
 
-        func getData(_: String) -> Data? { nil }
-        func getString(_ key: String) -> String? {
+        func getData(_ key: String) -> Data? {
             getCalls.append(key)
-            return stubbedValue
+            return stubbedData
         }
 
-        func save(_ string: String, for key: String) -> KeychainOperationResult {
-            saveCalls.append((key, string))
+        func save(_ data: Data, for key: String) -> KeychainOperationResult {
+            saveCalls.append((key, data))
             if let error = stubbedSaveError { return .failure(error) }
             return .success
         }
 
-        func save(_: Data, for _: String) -> KeychainOperationResult { .success }
         func delete(_ key: String) -> KeychainOperationResult {
             deleteCalls.append(key)
             if let error = stubbedDeleteError { return .failure(error) }

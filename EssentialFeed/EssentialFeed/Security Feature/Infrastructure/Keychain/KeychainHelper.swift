@@ -1,44 +1,12 @@
+
 import Foundation
 import Security
 
-public protocol KeychainReadable {
-    func getData(_ key: String) -> Data?
-}
-
-public protocol KeychainWritable {
-    @discardableResult
-    func save(_ data: Data, for key: String) -> KeychainOperationResult
-}
-
-public protocol KeychainRemovable {
-    @discardableResult
-    func delete(_ key: String) -> KeychainOperationResult
-}
-
-public extension KeychainReadable {
-    func getString(_ key: String) -> String? {
-        getData(key).flatMap { String(data: $0, encoding: .utf8) }
-    }
-}
-
-public extension KeychainWritable {
-    @discardableResult
-    func save(_ string: String, for key: String) -> KeychainOperationResult {
-        guard let data = string.data(using: .utf8) else {
-            return .failure(.stringToDataConversionFailed)
-        }
-        let result = save(data, for: key)
-        if case let .failure(error) = result, error == .stringToDataConversionFailed {
-            return .failure(.stringToDataConversionFailed)
-        }
-        return result
-    }
-}
-
-public final class KeychainHelper: KeychainReadable, KeychainWritable, KeychainRemovable {
+public final class KeychainHelper: KeychainStore {
     private let queue = DispatchQueue(
         label: "com.essentialdeveloper.keychain", qos: .userInitiated, attributes: .concurrent
     )
+
     public init() {}
 
     public func getData(_ key: String) -> Data? {
