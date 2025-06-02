@@ -1,91 +1,98 @@
 import Foundation
 import Security
 
-public final class KeychainHelper: KeychainStore {
+public protocol KeychainReadable {
+    func getData(_ key: String) -> Data?
+}
+
+public protocol KeychainWritable {
+    @discardableResult
+    func save(_ data: Data, for key: String) -> KeychainOperationResult
+}
+
+public protocol KeychainRemovable {
+    @discardableResult
+    func delete(_ key: String) -> KeychainOperationResult
+}
+
+public extension KeychainReadable {
+    func getString(_ key: String) -> String? {
+        getData(key).flatMap { String(data: $0, encoding: .utf8) }
+    }
+}
+
+public extension KeychainWritable {
+    @discardableResult
+    func save(_ string: String, for key: String) -> KeychainOperationResult {
+        guard let data = string.data(using: .utf8) else {
+            return .failure(.stringToDataConversionFailed)
+        }
+        let result = save(data, for: key)
+        if case let .failure(error) = result, error == .stringToDataConversionFailed {
+            return .failure(.stringToDataConversionFailed)
+        }
+        return result
+    }
+}
+
+public final class KeychainHelper: KeychainReadable, KeychainWritable, KeychainRemovable {
+    private let queue = DispatchQueue(
+        label: "com.essentialdeveloper.keychain", qos: .userInitiated, attributes: .concurrent
+    )
     public init() {}
 
-    private func mapError(from status: OSStatus) -> KeychainError {
-        switch status {
-        case errSecItemNotFound:
-            .itemNotFound
-        case errSecDuplicateItem:
-            .duplicateItem
-        case errSecInteractionNotAllowed:
-            .interactionNotAllowed
-        case errSecSuccess:
-            .unhandledError(status: status)
-        default:
-            .unhandledError(status: status)
+    public func getData(_ key: String) -> Data? {
+        queue.sync {
+            getData_nosync(key)
         }
-    }
-
-    public func get(_ key: String) -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecReturnData as String: true
-        ]
-        var item: CFTypeRef?
-        guard SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess,
-              let data = item as? Data,
-              let value = String(data: data, encoding: .utf8)
-        else { return nil }
-        return value
     }
 
     @discardableResult
-    public func save(_ value: String, for key: String) -> KeychainOperationResult {
-        guard let data = value.data(using: .utf8) else {
-            return .failure(.stringToDataConversionFailed)
+    public func save(_ data: Data, for key: String) -> KeychainOperationResult {
+        queue.sync(flags: .barrier) {
+            _ = delete_nosync(key)
+            var query = baseQuery(for: key)
+            query[kSecValueData as String] = data
+            query[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+            let status = SecItemAdd(query as CFDictionary, nil)
+            return (status == errSecSuccess) ? .success : .failure(mapError(from: status))
         }
-
-        let deleteQuery: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-
-        let deleteStatus = SecItemDelete(deleteQuery as CFDictionary)
-        guard deleteStatus == errSecSuccess || deleteStatus == errSecItemNotFound else {
-            return .failure(mapError(from: deleteStatus))
-        }
-
-        let attributes: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecValueData as String: data,
-            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-        ]
-
-        let status = SecItemAdd(attributes as CFDictionary, nil)
-        guard status == errSecSuccess else {
-            return .failure(mapError(from: status))
-        }
-
-        guard let savedValue = get(key) else {
-            _ = SecItemDelete(attributes as CFDictionary)
-            return .failure(.dataToStringConversionFailed)
-        }
-
-        guard savedValue == value else {
-            _ = SecItemDelete(attributes as CFDictionary)
-            return .failure(.invalidItemFormat)
-        }
-
-        return .success
     }
 
     @discardableResult
     public func delete(_ key: String) -> KeychainOperationResult {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-
-        let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            return .failure(mapError(from: status))
+        queue.sync(flags: .barrier) {
+            delete_nosync(key)
         }
+    }
 
-        return .success
+    private func getData_nosync(_ key: String) -> Data? {
+        var query = baseQuery(for: key)
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        return (status == errSecSuccess) ? (result as? Data) : nil
+    }
+
+    private func delete_nosync(_ key: String) -> KeychainOperationResult {
+        let query = baseQuery(for: key)
+        let status = SecItemDelete(query as CFDictionary)
+        return (status == errSecSuccess || status == errSecItemNotFound)
+            ? .success : .failure(mapError(from: status))
+    }
+
+    private func baseQuery(for key: String) -> [String: Any] {
+        [kSecClass as String: kSecClassGenericPassword, kSecAttrAccount as String: key]
+    }
+
+    private func mapError(from status: OSStatus) -> KeychainError {
+        switch status {
+        case errSecItemNotFound: .itemNotFound
+        case errSecDuplicateItem: .duplicateItem
+        case errSecInteractionNotAllowed: .interactionNotAllowed
+        case errSecDecode: .decryptionFailed
+        default: .unhandledError(status: status)
+        }
     }
 }

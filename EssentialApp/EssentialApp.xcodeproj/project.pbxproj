@@ -43,7 +43,6 @@
 		B423AB8B2DDF733500373E8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0895DA8F234B3B970031BB2D /* Assets.xcassets */; };
 		B423AB8E2DDF76B400373E8A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AB8D2DDF76B400373E8A /* SwiftUI.framework */; };
 		B423AB902DDF76BC00373E8A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AB8F2DDF76BC00373E8A /* UIKit.framework */; };
-		B43385222DD43E0A006B6C37 /* InMemoryKeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */; };
 		B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44823382DD3A226009E59A5 /* LoginUIComposer.swift */; };
 		B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */; };
 		B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */; };
@@ -58,7 +57,6 @@
 		B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */; };
 		B46DAAB92DC22A780080160E /* LoginViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB82DC22A780080160E /* LoginViewTests.swift */; };
 		B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */; };
-		B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */; };
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
@@ -143,7 +141,6 @@
 		B40563EE2DE5C3E10063C09A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B423AB8D2DDF76B400373E8A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/iOSSupport/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		B423AB8F2DDF76BC00373E8A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
-		B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryKeychainStore.swift; sourceTree = "<group>"; };
 		B44823382DD3A226009E59A5 /* LoginUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUIComposer.swift; sourceTree = "<group>"; };
 		B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUISnapshotTests.swift; sourceTree = "<group>"; };
 		B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelAdapterTest.swift; sourceTree = "<group>"; };
@@ -159,7 +156,6 @@
 		B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryScreen.swift; sourceTree = "<group>"; };
 		B46DAAB82DC22A780080160E /* LoginViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewTests.swift; sourceTree = "<group>"; };
 		B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
-		B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperTests.swift; sourceTree = "<group>"; };
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
@@ -332,23 +328,6 @@
 			path = Routing;
 			sourceTree = "<group>";
 		};
-		B4702E312DC150BB0055B3D9 /* Infrastructure */ = {
-			isa = PBXGroup;
-			children = (
-				B4702E322DC150C00055B3D9 /* Keychain */,
-			);
-			path = Infrastructure;
-			sourceTree = "<group>";
-		};
-		B4702E322DC150C00055B3D9 /* Keychain */ = {
-			isa = PBXGroup;
-			children = (
-				B43385212DD43E0A006B6C37 /* InMemoryKeychainStore.swift */,
-				B4702E2B2DC14E980055B3D9 /* KeychainHelperTests.swift */,
-			);
-			path = Keychain;
-			sourceTree = "<group>";
-		};
 		B48EEA652DDE9D880013D0A9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -446,7 +425,6 @@
 			children = (
 				B4D6B2712DC8E42800F5A3FE /* Integration */,
 				B4D6B2732DC8E42800F5A3FE /* UI */,
-				B4702E312DC150BB0055B3D9 /* Infrastructure */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -628,7 +606,6 @@
 				B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */,
 				08073B56238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift in Sources */,
 				0832C9D0238D2811002314C9 /* SceneDelegateTests.swift in Sources */,
-				B43385222DD43E0A006B6C37 /* InMemoryKeychainStore.swift in Sources */,
 				B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */,
 				B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */,
 				08073B5B238D2E1000A75DC6 /* ListViewController+TestHelpers.swift in Sources */,
@@ -639,7 +616,6 @@
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */,
 				B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */,
-				B4702E2C2DC14E980055B3D9 /* KeychainHelperTests.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */,
 				B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */,
