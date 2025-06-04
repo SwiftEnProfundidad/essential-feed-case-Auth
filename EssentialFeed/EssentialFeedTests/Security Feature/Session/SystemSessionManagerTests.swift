@@ -1,7 +1,7 @@
-
 import EssentialFeed
 import XCTest
 
+@MainActor
 final class SystemSessionManagerTests: XCTestCase {
     func test_registerSession_delegatesToStore() {
         let (sut, store) = makeSUT()

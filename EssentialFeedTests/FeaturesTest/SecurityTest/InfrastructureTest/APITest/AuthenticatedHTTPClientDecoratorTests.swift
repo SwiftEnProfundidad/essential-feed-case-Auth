@@ -4,7 +4,7 @@ import XCTest
 @MainActor
 final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     func test_send_whenRequestIsPublic_doesNotAddAuthorizationHeader() async {
-        let (sut, client, _, _, _) = makeSUT()
+        let (sut, client, _, _, _, _) = makeSUT() // CHANGE: Updated for new parameter
         let publicRequest = URLRequest(url: URL(string: "https://api.example.com/public/feed")!)
 
         let task = Task {
@@ -21,7 +21,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     }
 
     func test_send_whenRequestRequiresAuthAndTokenIsValid_addsAuthorizationHeader() async {
-        let (sut, client, tokenStorage, _, _) = makeSUT()
+        let (sut, client, tokenStorage, _, _, _) = makeSUT() // CHANGE: Updated for new parameter
         let validToken = Token(accessToken: "valid-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
         tokenStorage.completeLoadTokenBundle(with: validToken)
 
@@ -42,7 +42,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     }
 
     func test_send_whenTokenIsExpired_doesNotAddToken() async {
-        let (sut, client, tokenStorage, _, _) = makeSUT()
+        let (sut, client, tokenStorage, _, _, _) = makeSUT() // CHANGE: Updated for new parameter
         let expiredToken = Token(accessToken: "expired-token", expiry: Date().addingTimeInterval(-3600), refreshToken: "refresh-token")
         tokenStorage.completeLoadTokenBundle(with: expiredToken)
 
@@ -63,7 +63,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     }
 
     func test_send_whenNoTokenAvailable_sendsRequestWithoutAuth() async {
-        let (sut, client, tokenStorage, _, _) = makeSUT()
+        let (sut, client, tokenStorage, _, _, _) = makeSUT() // CHANGE: Updated for new parameter
         tokenStorage.completeLoadTokenBundle(with: nil)
 
         let protectedRequest = URLRequest(url: URL(string: "https://api.example.com/protected/data")!)
@@ -83,7 +83,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     }
 
     func test_send_whenTokenStorageThrowsError_sendsRequestWithoutAuth() async {
-        let (sut, client, tokenStorage, _, _) = makeSUT()
+        let (sut, client, tokenStorage, _, _, _) = makeSUT() // CHANGE: Updated for new parameter
         tokenStorage.completeLoadTokenBundle(withError: NSError(domain: "test", code: 1))
 
         let protectedRequest = URLRequest(url: URL(string: "https://api.example.com/protected/data")!)
@@ -103,7 +103,7 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
     }
 
     func test_send_whenUnauthorizedErrorOccurs_triggersTokenRefresh() async {
-        let (sut, client, tokenStorage, refreshUseCase, _) = makeSUT()
+        let (sut, client, tokenStorage, refreshUseCase, _, _) = makeSUT() // CHANGE: Updated for new parameter
         let validToken = Token(accessToken: "valid-token", expiry: Date().addingTimeInterval(3600), refreshToken: "refresh-token")
         tokenStorage.completeLoadTokenBundle(with: validToken)
 
@@ -131,8 +131,44 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         XCTAssertEqual(client.requests.last?.value(forHTTPHeaderField: "Authorization"), "Bearer refreshed-token", "Should use refreshed token")
     }
 
+    // ADD: New test for global logout when refresh fails
+    func test_send_whenTokenRefreshFails_performsGlobalLogoutAndThrowsError() async {
+        let (sut, client, tokenStorage, refreshUseCase, _, logoutManager) = makeSUT()
+        let validToken = Token(accessToken: "valid-token", expiry: Date().addingTimeInterval(3600), refreshToken: "refresh-token")
+        tokenStorage.completeLoadTokenBundle(with: validToken)
+
+        refreshUseCase.stubResult = .failure(SessionError.tokenRefreshFailed)
+
+        let protectedRequest = URLRequest(url: URL(string: "https://api.example.com/protected/data")!)
+
+        var capturedError: Error?
+        let task = Task {
+            do {
+                _ = try await sut.send(protectedRequest)
+            } catch {
+                capturedError = error
+            }
+        }
+
+        try? await Task.sleep(nanoseconds: 10_000_000)
+
+        client.complete(with: URLError(.userAuthenticationRequired), at: 0)
+
+        _ = await task.value
+
+        XCTAssertEqual(refreshUseCase.executeCallCount, 1, "Should attempt token refresh")
+        XCTAssertEqual(logoutManager.performGlobalLogoutCallCount, 1, "Should perform global logout when refresh fails")
+        XCTAssertNotNil(capturedError, "Should capture error when refresh fails")
+        XCTAssertTrue(capturedError is SessionError, "Should throw SessionError")
+        if case SessionError.globalLogoutRequired = capturedError! {
+            // Test passes
+        } else {
+            XCTFail("Should throw globalLogoutRequired error")
+        }
+    }
+
     func test_send_whenTokenRefreshFails_throwsError() async {
-        let (sut, client, tokenStorage, refreshUseCase, _) = makeSUT()
+        let (sut, client, tokenStorage, refreshUseCase, _, _) = makeSUT() // CHANGE: Updated for new parameter
         let validToken = Token(accessToken: "valid-token", expiry: Date().addingTimeInterval(3600), refreshToken: "refresh-token")
         tokenStorage.completeLoadTokenBundle(with: validToken)
 
@@ -170,27 +206,31 @@ final class AuthenticatedHTTPClientDecoratorTests: XCTestCase {
         client: HTTPClientSpy,
         tokenStorage: TokenStorageSpy,
         refreshUseCase: RefreshTokenUseCaseSpy,
-        logoutManager: SessionLogoutManagerSpy
+        sessionManager: SessionManagerSpy,
+        logoutManager: SessionLogoutManagerSpy // ADD: New spy
     ) {
         let client = HTTPClientSpy()
         let tokenStorage = TokenStorageSpy()
         let refreshUseCase = RefreshTokenUseCaseSpy()
-        let logoutManager = SessionLogoutManagerSpy()
+        let sessionManager = SessionManagerSpy()
+        let logoutManager = SessionLogoutManagerSpy() // ADD: Create logout manager spy
 
         let sut = AuthenticatedHTTPClientDecorator(
             client: client,
             tokenStorage: tokenStorage,
             refreshTokenUseCase: refreshUseCase,
-            logoutManager: logoutManager
+            sessionManager: sessionManager,
+            logoutManager: logoutManager // ADD: Inject logout manager
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(tokenStorage, file: file, line: line)
         trackForMemoryLeaks(refreshUseCase, file: file, line: line)
-        trackForMemoryLeaks(logoutManager, file: file, line: line)
+        trackForMemoryLeaks(sessionManager, file: file, line: line)
+        trackForMemoryLeaks(logoutManager, file: file, line: line) // ADD: Track logout manager
 
-        return (sut, client, tokenStorage, refreshUseCase, logoutManager)
+        return (sut, client, tokenStorage, refreshUseCase, sessionManager, logoutManager)
     }
 
     private func anyHTTPURLResponse() -> HTTPURLResponse {
@@ -215,12 +255,24 @@ final class RefreshTokenUseCaseSpy: RefreshTokenUseCase {
     }
 }
 
+@MainActor
+final class SessionManagerSpy: SessionManaging {
+    private(set) var registerSessionCalls: [(userID: String, token: String, date: Date)] = []
+
+    func registerSession(userID: String, token: String, date: Date) {
+        registerSessionCalls.append((userID, token, date))
+    }
+}
+
+// ADD: New spy for logout manager
 final class SessionLogoutManagerSpy: SessionLogoutManager {
     private(set) var performGlobalLogoutCallCount = 0
-    var stubbedPerformGlobalLogoutResult: Result<Void, Error> = .success(())
+    var stubError: Error?
 
     func performGlobalLogout() async throws {
         performGlobalLogoutCallCount += 1
-        try stubbedPerformGlobalLogoutResult.get()
+        if let error = stubError {
+            throw error
+        }
     }
 }
