@@ -237,6 +237,15 @@
 		B47A6AA22DF04AD3001D47CE /* AuthenticationStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AA12DF04AD3001D47CE /* AuthenticationStrategies.swift */; };
 		B47A6AA52DF04B00001D47CE /* TokenAuthenticationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AA32DF04B00001D47CE /* TokenAuthenticationInterceptor.swift */; };
 		B47A6AA62DF04B00001D47CE /* TokenRefreshInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AA42DF04B00001D47CE /* TokenRefreshInterceptor.swift */; };
+		B47A6AAB2DF06C08001D47CE /* SessionLogoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AA92DF06C08001D47CE /* SessionLogoutManager.swift */; };
+		B47A6AAD2DF06C24001D47CE /* GlobalLogoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AAC2DF06C24001D47CE /* GlobalLogoutManager.swift */; };
+		B47A6AB12DF06C6E001D47CE /* InMemoryFailedLoginHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AAE2DF06C6E001D47CE /* InMemoryFailedLoginHandler.swift */; };
+		B47A6AB22DF06C6E001D47CE /* InMemoryLoginLockStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AAF2DF06C6E001D47CE /* InMemoryLoginLockStatusProvider.swift */; };
+		B47A6AB82DF06F66001D47CE /* InterceptorChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AB52DF06F66001D47CE /* InterceptorChain.swift */; };
+		B47A6AB92DF06F66001D47CE /* HTTPClientInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AB42DF06F66001D47CE /* HTTPClientInterceptor.swift */; };
+		B47A6ABA2DF06F66001D47CE /* TokenValidationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AB72DF06F66001D47CE /* TokenValidationInterceptor.swift */; };
+		B47A6ABB2DF06F66001D47CE /* RouteAuthenticationInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AB62DF06F66001D47CE /* RouteAuthenticationInterceptor.swift */; };
+		B47A6ABC2DF06F66001D47CE /* GlobalLogoutInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AB32DF06F66001D47CE /* GlobalLogoutInterceptor.swift */; };
 		B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47D59792DB3D67F00034806 /* SecureStorageTests.swift */; };
 		B48407B82DDC407E00834C15 /* KeychainHelperSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407B42DDC407E00834C15 /* KeychainHelperSpy.swift */; };
 		B48407B92DDC407E00834C15 /* TokenRefreshServiceStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407B72DDC407E00834C15 /* TokenRefreshServiceStub.swift */; };
@@ -619,6 +628,15 @@
 		B47A6AA12DF04AD3001D47CE /* AuthenticationStrategies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationStrategies.swift; sourceTree = "<group>"; };
 		B47A6AA32DF04B00001D47CE /* TokenAuthenticationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAuthenticationInterceptor.swift; sourceTree = "<group>"; };
 		B47A6AA42DF04B00001D47CE /* TokenRefreshInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshInterceptor.swift; sourceTree = "<group>"; };
+		B47A6AA92DF06C08001D47CE /* SessionLogoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLogoutManager.swift; sourceTree = "<group>"; };
+		B47A6AAC2DF06C24001D47CE /* GlobalLogoutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutManager.swift; sourceTree = "<group>"; };
+		B47A6AAE2DF06C6E001D47CE /* InMemoryFailedLoginHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginHandler.swift; sourceTree = "<group>"; };
+		B47A6AAF2DF06C6E001D47CE /* InMemoryLoginLockStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryLoginLockStatusProvider.swift; sourceTree = "<group>"; };
+		B47A6AB32DF06F66001D47CE /* GlobalLogoutInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutInterceptor.swift; sourceTree = "<group>"; };
+		B47A6AB42DF06F66001D47CE /* HTTPClientInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientInterceptor.swift; sourceTree = "<group>"; };
+		B47A6AB52DF06F66001D47CE /* InterceptorChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterceptorChain.swift; sourceTree = "<group>"; };
+		B47A6AB62DF06F66001D47CE /* RouteAuthenticationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAuthenticationInterceptor.swift; sourceTree = "<group>"; };
+		B47A6AB72DF06F66001D47CE /* TokenValidationInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenValidationInterceptor.swift; sourceTree = "<group>"; };
 		B47D59792DB3D67F00034806 /* SecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageTests.swift; sourceTree = "<group>"; };
 		B48407B42DDC407E00834C15 /* KeychainHelperSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelperSpy.swift; sourceTree = "<group>"; };
 		B48407B52DDC407E00834C15 /* KeychainSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSpy.swift; sourceTree = "<group>"; };
@@ -1344,6 +1362,7 @@
 		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				B47A6AAA2DF06C08001D47CE /* Session */,
 				B47A6AA12DF04AD3001D47CE /* AuthenticationStrategies.swift */,
 				B4A7466A2DDD1F5B0087C33C /* Keychain */,
 				B4047DC52DDA71A600A0C34C /* Storage */,
@@ -1364,6 +1383,11 @@
 		B4047DAA2DDA6EA300A0C34C /* APIInterceptor */ = {
 			isa = PBXGroup;
 			children = (
+				B47A6AB32DF06F66001D47CE /* GlobalLogoutInterceptor.swift */,
+				B47A6AB42DF06F66001D47CE /* HTTPClientInterceptor.swift */,
+				B47A6AB52DF06F66001D47CE /* InterceptorChain.swift */,
+				B47A6AB62DF06F66001D47CE /* RouteAuthenticationInterceptor.swift */,
+				B47A6AB72DF06F66001D47CE /* TokenValidationInterceptor.swift */,
 				B47A6AA32DF04B00001D47CE /* TokenAuthenticationInterceptor.swift */,
 				B47A6AA42DF04B00001D47CE /* TokenRefreshInterceptor.swift */,
 				B48B76392DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift */,
@@ -1387,6 +1411,7 @@
 		B4047DB12DDA6EA300A0C34C /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				B47A6AAC2DF06C24001D47CE /* GlobalLogoutManager.swift */,
 				B4047DAF2DDA6EA300A0C34C /* SessionManaging.swift */,
 				B4047DB02DDA6EA300A0C34C /* SystemSessionManager.swift */,
 			);
@@ -1740,6 +1765,23 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		B47A6AAA2DF06C08001D47CE /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				B47A6AA92DF06C08001D47CE /* SessionLogoutManager.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		B47A6AB02DF06C6E001D47CE /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				B47A6AAE2DF06C6E001D47CE /* InMemoryFailedLoginHandler.swift */,
+				B47A6AAF2DF06C6E001D47CE /* InMemoryLoginLockStatusProvider.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
 		B48914212DDDFB7900C6EF73 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -1831,6 +1873,7 @@
 		B4A746892DDD2D950087C33C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B47A6AB02DF06C6E001D47CE /* Security */,
 				B4A746882DDD2D950087C33C /* KeychainTokenStore.swift */,
 			);
 			path = Infrastructure;
@@ -2434,12 +2477,15 @@
 				B429396F2DDB927800811CBC /* DefaultTokenRefreshService.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* (null) in Sources */,
+				B47A6AAB2DF06C08001D47CE /* SessionLogoutManager.swift in Sources */,
 				B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */,
 				B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */,
 				B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */,
 				B4047DBC2DDA6EA300A0C34C /* HTTPClient.swift in Sources */,
 				B4A7466B2DDD1F5B0087C33C /* KeychainWriter.swift in Sources */,
 				B4A7466C2DDD1F5B0087C33C /* KeychainEncryptor.swift in Sources */,
+				B47A6AB12DF06C6E001D47CE /* InMemoryFailedLoginHandler.swift in Sources */,
+				B47A6AB22DF06C6E001D47CE /* InMemoryLoginLockStatusProvider.swift in Sources */,
 				B4D2DC672DEE568900606891 /* KeychainMigrationManager.swift in Sources */,
 				B4A7466D2DDD1F5B0087C33C /* KeychainReader.swift in Sources */,
 				B4586AB32DE6976800A82535 /* UserRegistrationResponseMapper.swift in Sources */,
@@ -2448,6 +2494,7 @@
 				B4047DBF2DDA6EA300A0C34C /* SessionViewModel.swift in Sources */,
 				B4047DC02DDA6EA300A0C34C /* SecureStorage.swift in Sources */,
 				B47A6AA22DF04AD3001D47CE /* AuthenticationStrategies.swift in Sources */,
+				B47A6AAD2DF06C24001D47CE /* GlobalLogoutManager.swift in Sources */,
 				B4AF1BAB2DDB51B700FD2ED2 /* FailedLoginHandlerProtocol.swift in Sources */,
 				B4AF1BAC2DDB51B700FD2ED2 /* LoginLockStatusProviderProtocol.swift in Sources */,
 				B4047DC22DDA6EA300A0C34C /* SystemKeychain.swift in Sources */,
@@ -2482,6 +2529,11 @@
 				B45C36D52DDA92EE00184F55 /* PasswordRecoveryPresenter.swift in Sources */,
 				B45C36D62DDA92EE00184F55 /* UserLoginUseCase.swift in Sources */,
 				B45C36D72DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift in Sources */,
+				B47A6AB82DF06F66001D47CE /* InterceptorChain.swift in Sources */,
+				B47A6AB92DF06F66001D47CE /* HTTPClientInterceptor.swift in Sources */,
+				B47A6ABA2DF06F66001D47CE /* TokenValidationInterceptor.swift in Sources */,
+				B47A6ABB2DF06F66001D47CE /* RouteAuthenticationInterceptor.swift in Sources */,
+				B47A6ABC2DF06F66001D47CE /* GlobalLogoutInterceptor.swift in Sources */,
 				B45C36D82DDA92EE00184F55 /* FailedLoginAttemptEvent.swift in Sources */,
 				B45C36D92DDA92EE00184F55 /* LoginViewModel.swift in Sources */,
 				B4AF1BB22DDB549900FD2ED2 /* FailedLoginAttemptsStore.swift in Sources */,

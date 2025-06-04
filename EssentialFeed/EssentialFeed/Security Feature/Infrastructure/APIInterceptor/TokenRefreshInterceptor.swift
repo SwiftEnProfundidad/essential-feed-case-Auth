@@ -1,35 +1,33 @@
 import Foundation
 
-public final class TokenRefreshInterceptor: HTTPClient, @unchecked Sendable {
-    private let client: HTTPClient
+public final class TokenRefreshInterceptor: HTTPClientInterceptor {
     private let refreshTokenUseCase: RefreshTokenUseCase
     private let tokenStorage: TokenWriter
 
-    public init(
-        client: HTTPClient,
-        refreshTokenUseCase: RefreshTokenUseCase,
-        tokenStorage: TokenWriter
-    ) {
-        self.client = client
+    public init(refreshTokenUseCase: RefreshTokenUseCase, tokenStorage: TokenWriter) {
         self.refreshTokenUseCase = refreshTokenUseCase
         self.tokenStorage = tokenStorage
     }
 
-    public func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+    public func intercept(_ request: URLRequest, next: HTTPClient) async throws -> (Data, HTTPURLResponse) {
         do {
-            return try await client.send(request)
+            return try await next.send(request)
         } catch {
-            // Si es error 401, intentar refresh y reintentar
-            if isUnauthorizedError(error) {
-                let refreshedToken = try await refreshTokenUseCase.execute()
-                try await tokenStorage.save(tokenBundle: refreshedToken)
-
-                // Reintentar con el nuevo token
-                return try await client.send(request)
+            guard isUnauthorizedError(error) else {
+                throw error
             }
 
-            throw error
+            return try await handleTokenRefreshAndRetry(for: request, next: next)
         }
+    }
+
+    private func handleTokenRefreshAndRetry(for request: URLRequest, next: HTTPClient) async throws -> (Data, HTTPURLResponse) {
+        let refreshedToken = try await refreshTokenUseCase.execute()
+        try await tokenStorage.save(tokenBundle: refreshedToken)
+
+        var authenticatedRequest = request
+        authenticatedRequest.setValue("Bearer \(refreshedToken.accessToken)", forHTTPHeaderField: "Authorization")
+        return try await next.send(authenticatedRequest)
     }
 
     private func isUnauthorizedError(_ error: Error) -> Bool {
