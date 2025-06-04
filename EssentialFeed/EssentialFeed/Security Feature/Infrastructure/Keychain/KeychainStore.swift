@@ -1,9 +1,6 @@
 import Foundation
 
-public enum KeychainOperationResult: Equatable {
-    case success
-    case failure(KeychainError)
-}
+public typealias KeychainOperationResult = Result<Void, KeychainError>
 
 // MARK: - Core Protocols
 

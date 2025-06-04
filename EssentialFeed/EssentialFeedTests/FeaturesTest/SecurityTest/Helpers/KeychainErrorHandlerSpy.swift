@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-public final class KeychainErrorHandlerSpy: KeychainErrorHandler {
+public final class KeychainErrorHandlerSpy: KeychainErrorHandling {
     public enum Message: Equatable {
         case handled(error: KeychainError, key: String?, operation: String)
     }
@@ -18,6 +18,8 @@ public final class KeychainErrorHandlerSpy: KeychainErrorHandler {
         receivedMessages.removeAll()
     }
 
-    // Helper to simulate specific behavior if needed in more complex tests,
-    // for now, just recording is enough.
+    public func handleUnexpectedError(forKey key: String?, operation: String) {
+        let error = KeychainError.unhandledError(-1)
+        handle(error: error, forKey: key, operation: "\(operation) - unexpected error type")
+    }
 }

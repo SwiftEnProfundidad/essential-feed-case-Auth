@@ -1,34 +1,41 @@
-
 import EssentialFeed
 import XCTest
 
 final class RealSessionManagerTests: XCTestCase {
     func test_isAuthenticated_queriesKeychainWithAuthTokenKey() {
-        let spy = KeychainHelperSpy()
-        let sut = makeSUT(keychain: spy)
+        let (sut, keychainSpy) = makeSUT()
+
         _ = sut.isAuthenticated
-        XCTAssertEqual(spy.getCalls, ["auth_token"])
+
+        XCTAssertEqual(keychainSpy.getDataCalls, ["auth_token"])
     }
 
     func test_isAuthenticated_returnsTrueWhenKeychainHasToken() {
-        let spy = KeychainHelperSpy()
-        spy.stubbedValue = "any_token"
-        let sut = makeSUT(keychain: spy)
+        let (sut, keychainSpy) = makeSUT()
+        keychainSpy.stubbedData = "any_token".data(using: .utf8)
+
         XCTAssertTrue(sut.isAuthenticated)
     }
 
     func test_isAuthenticated_returnsFalseWhenKeychainHasNoToken() {
-        let spy = KeychainHelperSpy()
-        spy.stubbedValue = nil
-        let sut = makeSUT(keychain: spy)
+        let (sut, keychainSpy) = makeSUT()
+        keychainSpy.stubbedData = nil
+
         XCTAssertFalse(sut.isAuthenticated)
     }
 
     // MARK: - Helpers
 
-    private func makeSUT(keychain: KeychainStore, file: StaticString = #file, line: UInt = #line) -> KeychainSessionManager {
-        let sut = KeychainSessionManager(keychain: keychain)
+    private func makeSUT(
+        file: StaticString = #file,
+        line: UInt = #line
+    ) -> (sut: KeychainSessionManager, keychainSpy: KeychainHelperSpy) {
+        let keychainSpy = KeychainHelperSpy()
+        let sut = KeychainSessionManager(keychain: keychainSpy)
+
         trackForMemoryLeaks(sut, file: file, line: line)
-        return sut
+        trackForMemoryLeaks(keychainSpy, file: file, line: line)
+
+        return (sut, keychainSpy)
     }
 }

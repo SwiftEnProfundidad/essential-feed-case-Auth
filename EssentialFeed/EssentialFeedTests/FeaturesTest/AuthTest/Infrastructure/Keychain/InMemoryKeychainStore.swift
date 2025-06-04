@@ -21,7 +21,7 @@ final class InMemoryKeychainStore: KeychainStore {
         queue.sync {
             self.stringStore[key] = value
         }
-        return .success
+        return .success(())
     }
 
     @discardableResult
@@ -32,7 +32,7 @@ final class InMemoryKeychainStore: KeychainStore {
                 existed = true
             }
         }
-        return existed ? .success : .failure(.itemNotFound)
+        return existed ? .success(()) : .failure(.itemNotFound)
     }
 
     // MARK: - Data methods
@@ -50,7 +50,7 @@ final class InMemoryKeychainStore: KeychainStore {
         queue.sync {
             self.dataStore[key] = value
         }
-        return .success
+        return .success(())
     }
 
     @discardableResult
@@ -61,6 +61,6 @@ final class InMemoryKeychainStore: KeychainStore {
                 existed = true
             }
         }
-        return existed ? .success : .failure(.itemNotFound)
+        return existed ? .success(()) : .failure(.itemNotFound)
     }
 }

@@ -32,7 +32,7 @@ public final class KeychainHelperSpy: KeychainStore {
         if let error = stubbedSaveError {
             return .failure(error)
         }
-        return .success
+        return .success(())
     }
 
     @discardableResult
@@ -41,7 +41,7 @@ public final class KeychainHelperSpy: KeychainStore {
         if let error = stubbedDeleteError {
             return .failure(error)
         }
-        return .success
+        return .success(())
     }
 
     // MARK: - Data
@@ -57,7 +57,7 @@ public final class KeychainHelperSpy: KeychainStore {
         if let error = stubbedDataSaveError {
             return .failure(error)
         }
-        return .success
+        return .success(())
     }
 
     @discardableResult
@@ -66,6 +66,6 @@ public final class KeychainHelperSpy: KeychainStore {
         if let error = stubbedDataDeleteError {
             return .failure(error)
         }
-        return .success
+        return .success(())
     }
 }

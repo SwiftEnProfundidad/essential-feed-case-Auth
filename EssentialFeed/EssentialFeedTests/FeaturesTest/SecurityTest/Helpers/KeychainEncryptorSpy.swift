@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-final class KeychainEncryptorSpy: KeychainEncryptor {
+final class KeychainEncryptorSpy: KeychainEncryptor, @unchecked Sendable {
     enum Message: Equatable {
         case encrypt(data: Data)
         case decrypt(data: Data)

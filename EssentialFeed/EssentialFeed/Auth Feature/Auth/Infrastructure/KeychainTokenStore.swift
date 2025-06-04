@@ -4,7 +4,9 @@ public final class KeychainTokenStore: TokenStorage {
     private let keychainManager: KeychainManager
     private let tokenKeychainKey: String
 
-    public init(keychainManager: KeychainManager, tokenKeychainKey: String = "com.essentialfeed.authTokenBundle") {
+    public init(
+        keychainManager: KeychainManager, tokenKeychainKey: String = "com.essentialfeed.authTokenBundle"
+    ) {
         self.keychainManager = keychainManager
         self.tokenKeychainKey = tokenKeychainKey
     }

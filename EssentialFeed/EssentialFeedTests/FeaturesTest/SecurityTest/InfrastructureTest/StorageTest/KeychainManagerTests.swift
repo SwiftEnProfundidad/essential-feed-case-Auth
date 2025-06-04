@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -15,27 +14,30 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected load to rethrow the same error from reader.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "load (read from keychain)")])
-        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow the exact error from KeychainReader")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "load (decrypt)")], "Should notify error handler with correct error details")
+        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
     }
 
     func test_load_whenReaderSucceeds_returnsDataAndDoesNotNotifyHandler() {
-        let (sut, readerSpy, _, _, errorHandlerSpy) = makeSUT()
-        let expectedData = Data("any data load success".utf8)
+        let (sut, readerSpy, _, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let plainData = Data("any data load success".utf8)
+        let encryptedData = Data("encrypted data load success".utf8)
         let testKey = "anyKeyLoadSuccess"
 
-        readerSpy.completeLoad(with: expectedData)
+        readerSpy.completeLoad(with: encryptedData)
+        encryptorSpy.completeDecrypt(with: plainData)
 
         var capturedData: Data?
-        XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey))
+        XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey), "Should not throw when reader and decryptor succeed")
 
-        XCTAssertEqual(capturedData, expectedData, "Expected load to return the same data from reader.")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected errorHandler not to be notified on success.")
-        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
+        XCTAssertEqual(capturedData, plainData, "Should return decrypted plain data")
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful operation")
+        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Should decrypt the data from reader")
     }
 
-    func test_load_whenReaderThrowsGenericNsError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
+    func test_load_whenReaderThrowsGenericError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
         let (sut, readerSpy, _, _, errorHandlerSpy) = makeSUT()
         let testKey = "anyKeyLoadGenericError"
         let genericError = NSError(domain: "LoadGenericErrorDomain", code: 123, userInfo: nil)
@@ -47,23 +49,21 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertIdentical(capturedError as NSError?, genericError, "Expected load to rethrow the same generic NSError from reader.")
-
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Expected one message to errorHandler.")
+        XCTAssertIdentical(capturedError as NSError?, genericError, "Should rethrow the original generic error")
+        let expectedKeychainError = KeychainError.unhandledError(-1)
+        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler exactly once")
         if let firstMessage = errorHandlerSpy.receivedMessages.first {
             if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError, "Error mismatch in errorHandler.")
-                XCTAssertEqual(reportedKey, testKey, "Key mismatch in errorHandler.")
-                XCTAssertEqual(reportedOperation, "load (read from keychain) - unexpected error type", "Operation mismatch in errorHandler.")
+                XCTAssertEqual(reportedError, expectedKeychainError, "Should report unhandled error type to handler")
+                XCTAssertEqual(reportedKey, testKey, "Should report correct key to error handler")
+                XCTAssertEqual(reportedOperation, "load (decrypt) - unexpected error type", "Should indicate unexpected error type in operation description")
             } else {
-                XCTFail("Unexpected message type from errorHandler: \(firstMessage)")
+                XCTFail("Error handler should receive handled message type")
             }
         } else {
-            XCTFail("ErrorHandler was not notified.")
+            XCTFail("Error handler should be notified when generic error occurs")
         }
-
-        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
+        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
     }
 
     // MARK: - Save Tests
@@ -72,7 +72,7 @@ final class KeychainManagerTests: XCTestCase {
         let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
         let testData = Data("any data save encryptor fail".utf8)
         let testKey = "anyKeySaveEncryptorFail"
-        let expectedError = KeychainError.encryptionFailed
+        let expectedError = KeychainError.dataConversionFailed
 
         encryptorSpy.completeEncrypt(with: expectedError)
 
@@ -81,9 +81,9 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected save to rethrow the same error from encryptor.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")])
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow encryption error")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about encryption failure")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)], "Should attempt to encrypt provided data")
     }
 
     func test_save_whenWriterFails_notifiesHandlerAndRethrowsError() {
@@ -101,10 +101,10 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected save to rethrow the same error from writer.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")])
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)])
-        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow writer error")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about writer failure")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt data before attempting to write")
+        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should attempt to save encrypted data")
     }
 
     func test_save_whenEncryptionAndWriteSucceed_doesNotNotifyHandler() {
@@ -116,79 +116,11 @@ final class KeychainManagerTests: XCTestCase {
         encryptorSpy.completeEncrypt(with: encryptedData)
         writerSpy.completeSaveSuccessfully()
 
-        XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Expected save to not throw an error.")
+        XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Should not throw when encryption and writing succeed")
 
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected errorHandler not to be notified on success.")
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)])
-        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)])
-    }
-
-    func test_save_whenEncryptorThrowsGenericNsError_duringSave_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
-        let (sut, _, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
-        let plainData = Data("plain data save encryptor generic fail".utf8)
-        let testKey = "anyKeySaveEncryptorGenericFail"
-        let genericEncryptionError = NSError(domain: "EncryptDuringSaveDomain", code: 999, userInfo: nil)
-
-        encryptorSpy.completeEncrypt(with: genericEncryptionError)
-
-        var capturedError: Error?
-        XCTAssertThrowsError(try sut.save(data: plainData, forKey: testKey)) { error in
-            capturedError = error
-        }
-
-        XCTAssertIdentical(capturedError as NSError?, genericEncryptionError, "Expected save to rethrow the same generic NSError from encryptor.")
-
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Expected one message to errorHandler.")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError, "Error mismatch in errorHandler.")
-                XCTAssertEqual(reportedKey, testKey, "Key mismatch in errorHandler.")
-                XCTAssertEqual(reportedOperation, "save - unexpected error type", "Operation mismatch in errorHandler.")
-            } else {
-                XCTFail("Unexpected message type from errorHandler: \(firstMessage)")
-            }
-        } else {
-            XCTFail("ErrorHandler was not notified.")
-        }
-
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)])
-        XCTAssertTrue(writerSpy.receivedMessages.isEmpty, "Expected writer not to be called if encryptor fails during save.")
-    }
-
-    func test_save_whenWriterThrowsGenericNsError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
-        let (sut, _, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
-        let plainData = Data("plain data save writer generic fail".utf8)
-        let encryptedData = Data("encrypted data save writer generic fail".utf8)
-        let testKey = "anyKeySaveWriterGenericFail"
-        let genericError = NSError(domain: "WriterGenericErrorDomain", code: 189, userInfo: nil)
-
-        encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSave(with: genericError)
-
-        var capturedError: Error?
-        XCTAssertThrowsError(try sut.save(data: plainData, forKey: testKey)) { error in
-            capturedError = error
-        }
-
-        XCTAssertIdentical(capturedError as NSError?, genericError, "Expected save to rethrow the same generic NSError from writer.")
-
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Expected one message to errorHandler.")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError, "Error mismatch in errorHandler.")
-                XCTAssertEqual(reportedKey, testKey, "Key mismatch in errorHandler.")
-                XCTAssertEqual(reportedOperation, "save - unexpected error type", "Operation mismatch in errorHandler.")
-            } else {
-                XCTFail("Unexpected message type from errorHandler: \(firstMessage)")
-            }
-        } else {
-            XCTFail("ErrorHandler was not notified.")
-        }
-
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)])
-        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)])
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful operation")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt provided data")
+        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted data with correct key")
     }
 
     // MARK: - Delete Tests
@@ -205,9 +137,9 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected delete to rethrow the same error from writer.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "delete")])
-        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow deletion error")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "delete")], "Should notify error handler about deletion failure")
+        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Should attempt to delete with correct key")
     }
 
     func test_delete_whenWriterSucceeds_doesNotNotifyHandler() {
@@ -216,41 +148,10 @@ final class KeychainManagerTests: XCTestCase {
 
         writerSpy.completeDeleteSuccessfully()
 
-        XCTAssertNoThrow(try sut.delete(forKey: testKey), "Expected delete to not throw an error.")
+        XCTAssertNoThrow(try sut.delete(forKey: testKey), "Should not throw when deletion succeeds")
 
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected errorHandler not to be notified on success.")
-        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)])
-    }
-
-    func test_delete_whenWriterThrowsGenericNsError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
-        let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
-        let testKey = "anyKeyDeleteGenericError"
-        let genericError = NSError(domain: "DeleteGenericErrorDomain", code: 789, userInfo: nil)
-
-        writerSpy.completeDelete(with: genericError)
-
-        var capturedError: Error?
-        XCTAssertThrowsError(try sut.delete(forKey: testKey)) { error in
-            capturedError = error
-        }
-
-        XCTAssertIdentical(capturedError as NSError?, genericError, "Expected delete to rethrow the same generic NSError from writer.")
-
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Expected one message to errorHandler.")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError, "Error mismatch in errorHandler.")
-                XCTAssertEqual(reportedKey, testKey, "Key mismatch in errorHandler.")
-                XCTAssertEqual(reportedOperation, "delete - unexpected error type", "Operation mismatch in errorHandler.")
-            } else {
-                XCTFail("Unexpected message type from errorHandler: \(firstMessage)")
-            }
-        } else {
-            XCTFail("ErrorHandler was not notified.")
-        }
-
-        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)])
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful deletion")
+        XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Should delete with correct key")
     }
 
     // MARK: - Encrypt Tests (Standalone)
@@ -258,7 +159,7 @@ final class KeychainManagerTests: XCTestCase {
     func test_encrypt_whenEncryptorThrowsError_notifiesHandlerAndRethrowsError() {
         let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
         let testData = Data("plain data encrypt error".utf8)
-        let expectedError = KeychainError.encryptionFailed
+        let expectedError = KeychainError.dataConversionFailed
 
         encryptorSpy.completeEncrypt(with: expectedError)
 
@@ -267,9 +168,9 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected encrypt to rethrow error from encryptor.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "encrypt")])
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow encryption error")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "encrypt")], "Should notify error handler about standalone encryption failure")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)], "Should attempt to encrypt provided data")
     }
 
     func test_encrypt_whenEncryptorSucceeds_returnsDataAndDoesNotNotifyHandler() {
@@ -280,37 +181,11 @@ final class KeychainManagerTests: XCTestCase {
         encryptorSpy.completeEncrypt(with: expectedEncryptedData)
 
         var capturedData: Data?
-        XCTAssertNoThrow(capturedData = try sut.encrypt(plainData))
+        XCTAssertNoThrow(capturedData = try sut.encrypt(plainData), "Should not throw when encryption succeeds")
 
-        XCTAssertEqual(capturedData, expectedEncryptedData, "Expected encrypt to return data from encryptor.")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected no errorHandler notification on encrypt success.")
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)])
-    }
-
-    func test_encrypt_whenEncryptorThrowsGenericNsError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
-        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
-        let testData = Data("plain data encrypt generic error".utf8)
-        let genericError = NSError(domain: "EncryptGenericErrorDomain", code: 101, userInfo: nil)
-
-        encryptorSpy.completeEncrypt(with: genericError)
-
-        var capturedError: Error?
-        XCTAssertThrowsError(try sut.encrypt(testData)) { error in
-            capturedError = error
-        }
-
-        XCTAssertIdentical(capturedError as NSError?, genericError)
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1)
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError)
-                XCTAssertNil(reportedKey)
-                XCTAssertEqual(reportedOperation, "encrypt - unexpected error type")
-            } else { XCTFail("Unexpected errorHandler message: \(firstMessage)") }
-        } else { XCTFail("ErrorHandler not notified") }
-
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)])
+        XCTAssertEqual(capturedData, expectedEncryptedData, "Should return encrypted data from encryptor")
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful standalone encryption")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt provided data")
     }
 
     // MARK: - Decrypt Tests (Standalone)
@@ -327,9 +202,9 @@ final class KeychainManagerTests: XCTestCase {
             capturedError = error
         }
 
-        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Expected decrypt to rethrow error from encryptor.")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "decrypt")])
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)])
+        XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow decryption error")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: nil, operation: "decrypt")], "Should notify error handler about standalone decryption failure")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Should attempt to decrypt provided data")
     }
 
     func test_decrypt_whenEncryptorSucceeds_returnsDataAndDoesNotNotifyHandler() {
@@ -340,136 +215,80 @@ final class KeychainManagerTests: XCTestCase {
         encryptorSpy.completeDecrypt(with: expectedPlainData)
 
         var capturedData: Data?
-        XCTAssertNoThrow(capturedData = try sut.decrypt(encryptedData))
+        XCTAssertNoThrow(capturedData = try sut.decrypt(encryptedData), "Should not throw when decryption succeeds")
 
-        XCTAssertEqual(capturedData, expectedPlainData, "Expected decrypt to return data from encryptor.")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Expected no errorHandler notification on decrypt success.")
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)])
+        XCTAssertEqual(capturedData, expectedPlainData, "Should return decrypted plain data")
+        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful standalone decryption")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Should decrypt provided data")
     }
 
-    func test_decrypt_whenEncryptorThrowsGenericNsError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError() {
-        let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
-        let testData = Data("encrypted data decrypt generic error".utf8)
-        let genericError = NSError(domain: "DecryptGenericErrorDomain", code: 202, userInfo: nil)
+    // MARK: - Migration Tests
 
-        encryptorSpy.completeDecrypt(with: genericError)
-
-        var capturedError: Error?
-        XCTAssertThrowsError(try sut.decrypt(testData)) { error in
-            capturedError = error
-        }
-
-        XCTAssertIdentical(capturedError as NSError?, genericError)
-        let expectedKeychainError = KeychainError.unhandledError(status: -1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1)
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError)
-                XCTAssertNil(reportedKey)
-                XCTAssertEqual(reportedOperation, "decrypt - unexpected error type")
-            } else { XCTFail("Unexpected errorHandler message: \(firstMessage)") }
-        } else { XCTFail("ErrorHandler not notified") }
-
-        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: testData)])
-    }
-
-    func test_load_whenMigrationOccursButEncryptorFailsToEncrypt_failsWithEncryptionFailed() {
-        let (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
+    func test_load_whenMigrationOccursButEncryptorFailsToEncrypt_failsWithMigrationError() {
+        let (sut, readerSpy, _, encryptorSpy, _) = makeSUT()
         let testKey = "migrationEncryptFailKey"
-        let plainTextTokenString = "old-plain-text-token-for-encrypt-fail"
-        guard let plainTextTokenData = plainTextTokenString.data(using: .utf8) else {
-            XCTFail("Failed to create plain text token data for encrypt fail test")
-            return
-        }
-        let encryptionProcessError = KeychainError.encryptionFailed
+        let plainTextTokenData = Data("old-plain-text-token".utf8)
+        let encryptionError = KeychainError.dataConversionFailed
 
         readerSpy.completeLoad(with: plainTextTokenData)
-
         encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
+        encryptorSpy.completeEncrypt(with: encryptionError)
 
-        encryptorSpy.completeEncrypt(with: encryptionProcessError)
-
-        var capturedError: Error?
         XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
-            capturedError = error
+            XCTAssertEqual(error as? KeychainError, KeychainError.migrationFailedSaveError(encryptionError), "Should throw migration failed save error")
         }
-
-        XCTAssertEqual(capturedError as? KeychainError, KeychainError.migrationFailedSaveError(encryptionProcessError), "Expected load to fail with migrationFailedSaveError wrapping encryptionFailed when encryptor fails during migration.")
-
-        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
-        let expectedEncryptorMessages: [KeychainEncryptorSpy.Message] = [
-            .decrypt(data: plainTextTokenData),
-            .encrypt(data: plainTextTokenData)
-        ]
-        XCTAssertEqual(encryptorSpy.receivedMessages, expectedEncryptorMessages)
-        XCTAssertTrue(writerSpy.receivedMessages.isEmpty, "Writer should not be called if encryption fails during migration")
-
-        let expectedErrorHandlerMessage = KeychainErrorHandlerSpy.Message.handled(
-            error: KeychainError.migrationFailedSaveError(encryptionProcessError),
-            key: testKey,
-            operation: "load (migration save failed)"
-        )
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [expectedErrorHandlerMessage], "Error handler messages mismatch for migration encryption failure.")
     }
 
-    func test_load_whenOldEmptyPlainTextTokenExists_migratesToEncryptedEmptyToken_andReturnsEmptyData() {
+    func test_load_whenMigrationSucceeds_returnsOriginalDataAndNotifiesHandler() {
         let (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
-        let testKey = "emptyMigratableTokenKey"
-        let emptyPlainTextTokenData = Data()
-        let expectedEncryptedEmptyData = Data("encrypted-empty-string".utf8)
+        let testKey = "migrationSuccessKey"
+        let plainTextTokenData = Data("old-plain-text-token".utf8)
+        let encryptedData = Data("encrypted-data".utf8)
 
-        readerSpy.completeLoad(with: emptyPlainTextTokenData)
+        readerSpy.completeLoad(with: plainTextTokenData)
         encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
-        encryptorSpy.completeEncrypt(with: expectedEncryptedEmptyData)
+        encryptorSpy.completeEncrypt(with: encryptedData)
         writerSpy.completeSaveSuccessfully()
 
         var returnedData: Data?
-        XCTAssertNoThrow(returnedData = try sut.load(forKey: testKey))
+        XCTAssertNoThrow(returnedData = try sut.load(forKey: testKey), "Should not throw during successful migration")
 
-        XCTAssertEqual(returnedData, emptyPlainTextTokenData, "Load should return empty data for migrated empty token.")
-        XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)])
-        let expectedEncryptorMessages: [KeychainEncryptorSpy.Message] = [
-            .decrypt(data: emptyPlainTextTokenData),
-            .encrypt(data: emptyPlainTextTokenData)
-        ]
-        XCTAssertEqual(encryptorSpy.receivedMessages, expectedEncryptorMessages)
-        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: expectedEncryptedEmptyData, key: testKey)])
-        let expectedErrorHandlerMessage = KeychainErrorHandlerSpy.Message.handled(
-            error: .decryptionFailed,
-            key: testKey,
-            operation: "load (migration successful: old token was plain text, now encrypted and saved)"
-        )
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [expectedErrorHandlerMessage])
+        XCTAssertEqual(returnedData, plainTextTokenData, "Should return original plain text data after successful migration")
+        XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: plainTextTokenData), .encrypt(data: plainTextTokenData)], "Should attempt decrypt then encrypt for migration")
+        XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted version during migration")
+        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler once about successful migration")
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
-        reader: KeychainReader = KeychainReaderSpy(),
-        writer: KeychainWriter = KeychainWriterSpy(),
-        encryptor: KeychainEncryptor = KeychainEncryptorSpy(),
-        errorHandler: KeychainErrorHandler = KeychainErrorHandlerSpy(),
-        file _: StaticString = #filePath,
-        line _: UInt = #line
-    ) -> (sut: KeychainManager, readerSpy: KeychainReaderSpy, writerSpy: KeychainWriterSpy, encryptorSpy: KeychainEncryptorSpy, errorHandlerSpy: KeychainErrorHandlerSpy) {
-        let readerSpyCasted = reader as! KeychainReaderSpy
-        let writerSpyCasted = writer as! KeychainWriterSpy
-        let encryptorSpyCasted = encryptor as! KeychainEncryptorSpy
-        let errorHandlerSpyCasted = errorHandler as! KeychainErrorHandlerSpy
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (
+        sut: KeychainManager,
+        readerSpy: KeychainReaderSpy,
+        writerSpy: KeychainWriterSpy,
+        encryptorSpy: KeychainEncryptorSpy,
+        errorHandlerSpy: KeychainErrorHandlerSpy
+    ) {
+        let readerSpy = KeychainReaderSpy()
+        let writerSpy = KeychainWriterSpy()
+        let encryptorSpy = KeychainEncryptorSpy()
+        let errorHandlerSpy = KeychainErrorHandlerSpy()
 
         let sut = KeychainManager(
-            reader: readerSpyCasted,
-            writer: writerSpyCasted,
-            encryptor: encryptorSpyCasted,
-            errorHandler: errorHandlerSpyCasted
+            reader: readerSpy,
+            writer: writerSpy,
+            encryptor: encryptorSpy,
+            errorHandler: errorHandlerSpy
         )
 
-        trackForMemoryLeaks(sut, file: #file, line: #line)
-        trackForMemoryLeaks(readerSpyCasted, file: #file, line: #line)
-        trackForMemoryLeaks(writerSpyCasted, file: #file, line: #line)
-        trackForMemoryLeaks(encryptorSpyCasted, file: #file, line: #line)
-        trackForMemoryLeaks(errorHandlerSpyCasted, file: #file, line: #line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(readerSpy, file: file, line: line)
+        trackForMemoryLeaks(writerSpy, file: file, line: line)
+        trackForMemoryLeaks(encryptorSpy, file: file, line: line)
+        trackForMemoryLeaks(errorHandlerSpy, file: file, line: line)
 
-        return (sut, readerSpyCasted, writerSpyCasted, encryptorSpyCasted, errorHandlerSpyCasted)
+        return (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy)
     }
 }
