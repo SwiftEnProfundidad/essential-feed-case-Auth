@@ -204,7 +204,7 @@ final class KeychainHelperTests: XCTestCase {
     }
 
     func test_saveLargeData_shouldRetrieveIdenticalData() {
-        let largeString = String(repeating: "🚀0123456789漢字", count: 1000)
+        let largeString = String(repeating: "🚀0123456789漢字", count: 10000)
         let largeData = largeString.data(using: .utf8)!
         let (sut, key, value) = makeRealKeychainDataSUT(
             key: "large_data_key_🗄️",
@@ -305,18 +305,20 @@ final class KeychainHelperTests: XCTestCase {
         XCTAssertEqual(retrievedString, value)
     }
 
+    // MARK: - Unicode Keys Tests
+
     func test_handleUnicodeKeys_correctly() {
         let unicodeKeys = [
             "🔑-clave-segura-漢字-😀-𝄞-😺",
             "k͏e͏y͏-w͏i͏t͏h͏-z͏e͏r͏o͏-w͏i͏d͏t͏h͏-s͏p͏a͏c͏e͏s͏",
-            "ǩ̸̌̽̉̉̊̔̽̽̈́̀̎̈́͆̎̈́̎̌̽̌̽̈́̽̇͌̉̇̈́͌̌̈́̉͌̈́̌̈́̉͝͝͝͝͝͝͝͝͝͝͝",
+            "ǩ̸̌̽̉̉̊̔̽̽̈́̀̎̈́͆̎̈́̎̌̽̌̽̈́̽̇͌̉̇̈́͌̌̈́̉͌̈́̌̈́̉͝͝͝͝͝͝͝͝͝͝͝",
             "مرحبا-بالعالم-😊",
             "こんにちは-世界-🌏",
             "Привет-мир-🚀"
         ]
 
         for unicodeKey in unicodeKeys {
-            let (sut, _, _) = makeRealKeychainSUT()
+            let (sut, key, _) = makeRealKeychainSUT()
             let testData = "Test data for key: \(unicodeKey)".data(using: .utf8)!
 
             _ = sut.delete(unicodeKey)
@@ -338,15 +340,60 @@ final class KeychainHelperTests: XCTestCase {
         }
     }
 
-    func test_save_rejectsEmptyKeys() {
+    // MARK: - Large Data Tests
+
+    func test_handleLargeData_correctly() {
+        let (sut, key, _) = makeRealKeychainSUT()
+        let largeData = Data((0 ..< 1024 * 1024).map { UInt8($0 % 256) })
+
+        _ = sut.delete(key)
+
+        let saveResult = sut.save(largeData, for: key)
+        if case .failure = saveResult {
+            XCTFail("Failed to save large data")
+        }
+
+        let retrievedData = sut.getData(key)
+        XCTAssertNotNil(retrievedData, "Could not retrieve large data")
+        XCTAssertEqual(retrievedData, largeData, "Retrieved large data doesn't match")
+
+        _ = sut.delete(key)
+    }
+
+    func test_validateKey_rejectsInvalidKeys() {
         let (sut, _, _) = makeRealKeychainSUT()
+
         let emptyKey = ""
         let emptyKeyResult = sut.save(Data(), for: emptyKey)
-
         if case let .failure(error) = emptyKeyResult {
-            XCTAssertEqual(error, .invalidKeyFormat, "Should reject empty keys with invalidKeyFormat error")
+            XCTAssertTrue(
+                error.localizedDescription.contains("cannot be empty"),
+                "Should reject empty keys"
+            )
         } else {
             XCTFail("Should fail with empty key")
+        }
+
+        let longKey = String(repeating: "a", count: 300)
+        let longKeyResult = sut.save(Data(), for: longKey)
+        if case let .failure(error) = longKeyResult {
+            XCTAssertTrue(
+                error.localizedDescription.contains("exceeds maximum length"),
+                "Should reject keys that are too long"
+            )
+        } else {
+            XCTFail("Should fail with keys that are too long")
+        }
+
+        let controlKey = "key\nwith\tcontrol\rcharacters"
+        let controlKeyResult = sut.save(Data(), for: controlKey)
+        if case let .failure(error) = controlKeyResult {
+            XCTAssertTrue(
+                error.localizedDescription.contains("invalid characters"),
+                "Should reject keys with control characters"
+            )
+        } else {
+            XCTFail("Should fail with control characters in key")
         }
     }
 

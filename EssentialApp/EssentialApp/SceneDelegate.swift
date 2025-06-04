@@ -61,7 +61,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     public convenience init(
         httpClient: HTTPClient, store: FeedStore & FeedImageDataStore,
         scheduler: AnyDispatchQueueScheduler,
-        sessionManager: SessionManager = KeychainSessionManager(keychain: KeychainHelper())
+        sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())
     ) {
         self.init(sessionManager: sessionManager)
         self.httpClient = httpClient
@@ -69,7 +69,7 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.scheduler = scheduler
     }
 
-    public init(sessionManager: SessionManager = KeychainSessionManager(keychain: KeychainHelper())) {
+    public init(sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())) {
         self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
         super.init()
     }

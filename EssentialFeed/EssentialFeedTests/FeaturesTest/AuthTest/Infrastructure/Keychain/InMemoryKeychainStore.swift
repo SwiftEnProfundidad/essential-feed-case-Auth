@@ -2,27 +2,65 @@ import EssentialFeed
 import Foundation
 
 final class InMemoryKeychainStore: KeychainStore {
-    private var store = [String: String]()
+    private var stringStore = [String: String]()
+    private var dataStore = [String: Data]()
     private let queue = DispatchQueue(label: "InMemoryKeychainStore.Queue")
 
-    // MARK: - KeychainStore
+    // MARK: - String methods
 
     func get(_ key: String) -> String? {
-        queue.sync { store[key] }
+        var result: String?
+        queue.sync {
+            result = self.stringStore[key]
+        }
+        return result
     }
 
     @discardableResult
-    func save(_ value: String, for key: String) -> Bool {
+    func save(_ value: String, for key: String) -> KeychainOperationResult {
         queue.sync {
-            store[key] = value
-            return true
+            self.stringStore[key] = value
         }
+        return .success(())
     }
 
     @discardableResult
-    func delete(_ key: String) -> Bool {
+    func delete(_ key: String) -> KeychainOperationResult {
+        var existed = false
         queue.sync {
-            store.removeValue(forKey: key) != nil
+            if self.stringStore.removeValue(forKey: key) != nil {
+                existed = true
+            }
         }
+        return existed ? .success(()) : .failure(.itemNotFound)
+    }
+
+    // MARK: - Data methods
+
+    func getData(_ key: String) -> Data? {
+        var result: Data?
+        queue.sync {
+            result = self.dataStore[key]
+        }
+        return result
+    }
+
+    @discardableResult
+    func save(_ value: Data, for key: String) -> KeychainOperationResult {
+        queue.sync {
+            self.dataStore[key] = value
+        }
+        return .success(())
+    }
+
+    @discardableResult
+    func deleteData(_ key: String) -> KeychainOperationResult {
+        var existed = false
+        queue.sync {
+            if self.dataStore.removeValue(forKey: key) != nil {
+                existed = true
+            }
+        }
+        return existed ? .success(()) : .failure(.itemNotFound)
     }
 }

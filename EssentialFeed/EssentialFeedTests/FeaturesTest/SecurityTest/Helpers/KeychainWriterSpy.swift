@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-final class KeychainWriterSpy: KeychainWriter {
+final class KeychainWriterSpy: KeychainWriter, @unchecked Sendable {
     enum Message: Equatable {
         case save(data: Data, key: String)
         case delete(key: String)

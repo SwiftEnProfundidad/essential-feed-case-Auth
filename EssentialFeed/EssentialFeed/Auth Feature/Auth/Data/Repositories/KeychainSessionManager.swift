@@ -9,6 +9,6 @@ public final class KeychainSessionManager: SessionManager {
     }
 
     public var isAuthenticated: Bool {
-        keychain.get("auth_token") != nil
+        keychain.getData("auth_token") != nil
     }
 }

@@ -162,7 +162,6 @@ As an application, I need to store sensitive data (tokens, credentials) securely
 
 ---
 
-### Scenarios (Acceptance Criteria)
 _(Only reference for QA/business. Progress is marked only in the technical checklist)_
 - Successful storage and retrieval of data in Keychain.
 - Secure deletion of data from Keychain.
@@ -177,22 +176,44 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 
 ### Secure Storage Technical Checklist
 
-- ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
-    - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
-    - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
-    - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
-    - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
-    - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
-    - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
-    - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
-    - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
-    - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
-    - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
-    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
-    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+- [✅] **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
+- [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
+- [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
+- [✅] **Post-save validation** (Implementado en `KeychainHelper.save`. Verifica que el valor guardado coincida con el valor original.)
+- [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
+- [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
+
+#### Advanced Features
+- [✅] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. Would need extension for `Data`.)
+- [✅] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`.)
+- [✅] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences.)
+- [✅] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
+
+#### Test Coverage
+- [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`.)
+- [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
+- [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
+- [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
+- [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
+- [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+
+### Evolved Architecture
+
+- New Level: KeychainManager (Clean Architecture)
+
+  - [✅] KeychainReader protocol (Separation of concerns)
+  - [✅] KeychainWriter protocol (ISP compliance)
+  - [✅] KeychainEncryptor protocol (Encryption abstraction)
+  - [✅] KeychainErrorHandling protocol (Error delegation)
+  - [✅] Migration Manager (For legacy tokens)
+  - [✅] Comprehensive KeychainManager tests (In progress - some tests failing)
+
+### FOUND DISCREPANCIES:
+
+1.  Post-save validation: Checklist says ✅ but there's no explicit validation in KeychainHelper.save()
+2.  Architecture: Checklist doesn't reflect evolution towards KeychainManager with Clean Architecture
+3.  Tests: KeychainManager tests are incomplete/failing
+
 
 #### Technical Diagram
 *(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*

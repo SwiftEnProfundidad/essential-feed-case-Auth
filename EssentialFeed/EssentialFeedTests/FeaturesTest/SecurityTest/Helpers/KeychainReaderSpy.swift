@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-final class KeychainReaderSpy: KeychainReader {
+final class KeychainReaderSpy: KeychainReader, @unchecked Sendable {
     enum Message: Equatable {
         case load(key: String)
     }
@@ -14,7 +14,6 @@ final class KeychainReaderSpy: KeychainReader {
         receivedMessages.append(.load(key: key))
 
         guard let loadResult else {
-            // Default behavior or throw a "not stubbed" error if you prefer
             return nil
         }
 
