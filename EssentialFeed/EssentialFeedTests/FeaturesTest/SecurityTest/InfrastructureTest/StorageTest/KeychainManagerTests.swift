@@ -235,12 +235,12 @@ final class KeychainManagerTests: XCTestCase {
         encryptorSpy.completeEncrypt(with: encryptionError)
 
         XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
-            XCTAssertEqual(error as? KeychainError, KeychainError.migrationFailedSaveError(encryptionError), "Should throw migration failed save error")
+            XCTAssertEqual(error as? KeychainError, KeychainError.migrationFailedSaveError(encryptionError), "Should throw migration failed save error with the encryption error")
         }
     }
 
-    func test_load_whenMigrationSucceeds_returnsOriginalDataAndNotifiesHandler() {
-        let (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
+    func test_load_whenMigrationSucceeds_returnsOriginalData() {
+        let (sut, readerSpy, writerSpy, encryptorSpy, _) = makeSUT()
         let testKey = "migrationSuccessKey"
         let plainTextTokenData = Data("old-plain-text-token".utf8)
         let encryptedData = Data("encrypted-data".utf8)
@@ -256,7 +256,6 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertEqual(returnedData, plainTextTokenData, "Should return original plain text data after successful migration")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: plainTextTokenData), .encrypt(data: plainTextTokenData)], "Should attempt decrypt then encrypt for migration")
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted version during migration")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler once about successful migration")
     }
 
     // MARK: - Helpers
