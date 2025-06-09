@@ -44,11 +44,11 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
                 XCTFail("Expected token to be saved with correct message, got \(String(describing: persistenceSpy.tokenStorageMessages.first))")
             }
 
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 1)
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.key, uniqueUser.email)
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.first?.data, uniqueUser.password.data(using: .utf8))
-            XCTAssertTrue(persistenceSpy.offlineStoreMessages.isEmpty)
-            XCTAssertTrue(notifierSpy.receivedErrors.isEmpty, "Expected no errors to be notified on success")
+            XCTAssertEqual(persistenceSpy.keychainSaveDataCalls.count, 1)
+            XCTAssertEqual(persistenceSpy.keychainSaveDataCalls.first?.key, uniqueUser.email)
+            XCTAssertEqual(persistenceSpy.keychainSaveDataCalls.first?.data, uniqueUser.password.data(using: .utf8))
+            XCTAssertTrue(persistenceSpy.offlineStoreSaveCalls.isEmpty)
+            XCTAssertTrue(notifierSpy.receivedErrors.isEmpty)
 
         case let .failure(error):
             XCTFail("Expected successful registration, got \(error) instead")
@@ -82,21 +82,21 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         case let .failure(error):
             XCTAssertEqual(error as? NetworkError, .noConnectivity, "The returned error should be .noConnectivity")
 
-            XCTAssertEqual(persistenceSpy.offlineStoreMessages.count, 1, "OfflineRegistrationStoreSpy should attempt to save data once")
-            if case let .save(savedData) = persistenceSpy.offlineStoreMessages.first {
+            XCTAssertEqual(persistenceSpy.offlineStoreSaveCalls.count, 1)
+            if let savedData = persistenceSpy.offlineStoreSaveCalls.first {
                 let expectedDataToSave = UserRegistrationData(
                     name: uniqueUser.name, email: uniqueUser.email, password: uniqueUser.password
                 )
-                XCTAssertEqual(savedData, expectedDataToSave, "The data saved in offline store does not match expected data")
+                XCTAssertEqual(savedData, expectedDataToSave)
             } else {
-                XCTFail("Expected a .save message in OfflineRegistrationStoreSpy, got \(String(describing: persistenceSpy.offlineStoreMessages.first))")
+                XCTFail("Expected offline store to save registration data")
             }
 
             XCTAssertEqual(notifierSpy.receivedErrors.count, 1, "UserRegistrationNotifierSpy should have been notified once")
             XCTAssertEqual(notifierSpy.receivedErrors.first as? NetworkError, .noConnectivity, "The notifier should be notified with the .noConnectivity error")
 
             XCTAssertTrue(persistenceSpy.tokenStorageMessages.isEmpty, "TokenStorage should not have any interactions on connectivity failure")
-            XCTAssertEqual(persistenceSpy.saveKeychainDataCalls.count, 0, "Keychain should not save anything on connectivity failure")
+            XCTAssertEqual(persistenceSpy.keychainSaveDataCalls.count, 0)
         }
     }
 
@@ -112,14 +112,22 @@ class UserRegistrationUseCaseIntegrationTests: XCTestCase {
         line: UInt = #line
     ) -> (sut: UserRegistrationUseCase, validator: RegistrationValidatorAlwaysValid) {
         let validator = RegistrationValidatorAlwaysValid()
+        let replayProtector = ReplayAttackProtectorSpy()
+        let responseMapper = UserRegistrationResponseMapper(notifier: notifierSpy)
+        let registrationPersistenceService = DefaultRegistrationPersistenceService(tokenStorage: persistenceSpy, credentialsStore: persistenceSpy, offlineStore: persistenceSpy)
+        let offlineHandler = DefaultOfflineRegistrationHandler(offlineStore: persistenceSpy, notifier: notifierSpy)
 
-        let sut = UserRegistrationUseCase(
-            persistenceService: persistenceSpy,
-            validator: validator,
-            httpClient: httpClient,
-            registrationEndpoint: anyURL(),
-            notifier: notifierSpy
-        )
+        let commands: [RegistrationCommand] = [
+            ValidationCommand(validator: validator, notifier: notifierSpy),
+            RequestCreationCommand(registrationEndpoint: anyURL()),
+            ReplayProtectionCommand(replayProtector: replayProtector),
+            HTTPRequestCommand(httpClient: httpClient),
+            ResponseMappingCommand(responseMapper: responseMapper),
+            PersistenceCommand(persistenceService: registrationPersistenceService)
+        ]
+
+        let registrationService = RegistrationCommandChain(commands: commands, offlineHandler: offlineHandler, notifier: notifierSpy)
+        let sut = UserRegistrationUseCase(registrationService: registrationService)
 
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(httpClient, file: file, line: line)

@@ -94,7 +94,6 @@ public actor UserRegistrationResponseMapper: UserRegistrationResponseMapping {
     }
 
     private func notifyAndReturnError(_ error: Error) -> UserRegistrationResult {
-        // No notificamos aquí, dejamos que el caso de uso lo haga
         .failure(error)
     }
 }

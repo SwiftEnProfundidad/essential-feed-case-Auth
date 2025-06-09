@@ -7,5 +7,6 @@ public enum UserRegistrationError: Error, Equatable {
     case replayAttackDetected
     case abuseDetected
     case tokenStorageFailed
+    case credentialsSaveFailed
     case unknown
 }
