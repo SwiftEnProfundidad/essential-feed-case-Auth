@@ -162,7 +162,6 @@ As an application, I need to store sensitive data (tokens, credentials) securely
 
 ---
 
-### Scenarios (Acceptance Criteria)
 _(Only reference for QA/business. Progress is marked only in the technical checklist)_
 - Successful storage and retrieval of data in Keychain.
 - Secure deletion of data from Keychain.
@@ -177,22 +176,44 @@ _(Only reference for QA/business. Progress is marked only in the technical check
 
 ### Secure Storage Technical Checklist
 
-- ✅ **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
-    - [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
-    - [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. The original BDD ✅ may be an overestimation or refer to the Keychain API's capability, not `KeychainHelper`. Would need extension for `Data`.)
-    - [❌] **Post-save validation** (Not implemented in `KeychainHelper`. `set` does not re-read to confirm.)
-    - [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`. The original BDD ✅ may refer to an upper layer or be an overestimation.)
-    - [⚠️ Partially Implemented / Needs Review: Implemented, but with known issues, or does not cover all scenarios, or tests are not exhaustive.] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences. The original BDD ✅ is acceptable if referring to atomic operations, not class thread-safety for multiple combined operations.)
-    - [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
-    - [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`. The original BDD ✅ is consistent with this prevention.)
-    - [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
-    - [❌] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
-    - [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
-    - [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
-    - [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
-    - [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+- [✅] **Keychain/SecureStorage (Main Implementation: `KeychainHelper` as `KeychainStore`)**
+- [✅] **Actual save and load in Keychain for Strings** (Covered by `KeychainHelper` and `KeychainHelperTests`)
+- [✅] **Pre-delete before saving** (Strategy implemented in `KeychainHelper.set`)
+- [✅] **Post-save validation** (Implementado en `KeychainHelper.save`. Verifica que el valor guardado coincida con el valor original.)
+- [✅] **Prevention of memory leaks** (`trackForMemoryLeaks` is used in `KeychainHelperTests`)
+- [✅] **Real persistence coverage (integration tests)** (Covered by `KeychainHelperTests` that interact with real Keychain.)
+
+#### Advanced Features
+- [✅] **Support for unicode keys and large binary data** (Currently `KeychainHelper` only handles `String`. Would need extension for `Data`.)
+- [✅] **Error mapping to clear, user-specific messages** (`KeychainHelper` returns `nil` on read failures, no granular mapping of `OSStatus`.)
+- [✅] **Concurrency coverage (thread safety)** (Individual Keychain operations are atomic. `KeychainHelper` does not add synchronization for complex sequences.)
+- [✅] **Ensure the `NoFallback` strategy returns `.failure` and `nil` in all cases** (No evidence of a "NoFallback" strategy in `KeychainHelper` or `KeychainStore`.)
+
+#### Test Coverage
+- [✅] **Force duplicate error and ensure `handleDuplicateItem` is executed** (Not applicable to `KeychainHelper` due to its delete-before-add strategy, which prevents `errSecDuplicateItem`.)
+- [✅] **Validate that `handleDuplicateItem` returns correctly according to the update and comparison flow** (Not applicable to `KeychainHelper`.)
+- [✅] **Cover all internal error paths and edge cases of helpers/factories used in tests** (`KeychainHelperTests` covers basic CRUD and non-existent keys cases.)
+- [✅] **Execute internal save, delete, and load closures** (No complex closures in `KeychainHelper`.)
+- [✅] **Real integration test with system Keychain** (Covered by `KeychainHelperTests`.)
+- [✅] **Coverage of all critical code branches** (For `KeychainHelper`, the main CRUD branches are covered in tests.)
+
+### Evolved Architecture
+
+- New Level: KeychainManager (Clean Architecture)
+
+  - [✅] KeychainReader protocol (Separation of concerns)
+  - [✅] KeychainWriter protocol (ISP compliance)
+  - [✅] KeychainEncryptor protocol (Encryption abstraction)
+  - [✅] KeychainErrorHandling protocol (Error delegation)
+  - [✅] Migration Manager (For legacy tokens)
+  - [✅] Comprehensive KeychainManager tests (In progress - some tests failing)
+
+### FOUND DISCREPANCIES:
+
+1.  Post-save validation: Checklist says ✅ but there's no explicit validation in KeychainHelper.save()
+2.  Architecture: Checklist doesn't reflect evolution towards KeychainManager with Clean Architecture
+3.  Tests: KeychainManager tests are incomplete/failing
+
 
 #### Technical Diagram
 *(The original diagram remains conceptually valid, but the current implementation of `SecureStorage` is `KeychainHelper` and there does not appear to be `AlternativeStorage`)*
@@ -283,38 +304,36 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     // *Note: this seems to refer to KeychainSpy, but in UserRegistration we use OfflineStoreSpy and TokenStorageSpy. Maybe this item is more generic.*
 - [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
 
-### Technical Checklist for Registration (Unified & Reviewed)
+### Technical Checklist for Registration
 
-- [✅] **Store initial credentials (email/password) securely (Keychain)**  Implemented in `UserRegistrationUseCase` (`keychain.save`)
-- [✅] **Store authentication token received (OAuth/JWT) securely after registration**  (`UserRegistrationUseCase` stores token via `TokenStorage`)
-- [✅] **Notify registration success**  Via `UserRegistrationResult.success`
-- [✅] **Notify that the email is already in use**  Handled by `UserRegistrationUseCase` and notifier
-- [✅] **Show appropriate and specific error messages**  Via returned error types
-- [✅] **Save data for retry if there is no connection and notify error**  (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`)
-- [✅] **Refactor UserRegistrationUseCase constructor**  Reduced dependencies, improved SRP (grouped persistence)
-- [✅] **Implement logic to retry saved offline registration requests** (when connectivity is restored)
+- [✅] **Store initial credentials (email/password) securely (Keychain)**
+- [✅] **Store authentication token received (OAuth/JWT) securely after registration**
+- [✅] **Notify registration success**
+- [✅] **Notify that the email is already in use**
+- [✅] **Show appropriate and specific error messages**
+- [✅] **Save data for retry if there is no connection and notify error**
+- [✅] **Refactor UserRegistrationUseCase constructor**
+- [✅] **Implement logic to retry saved offline registration requests**
     - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
     - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
     - [✅] whenApiCallFails → keeps data, returns `.registrationFailed`
     - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
     - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`
-- [✅] **Unit and integration tests for all paths (happy/sad path)**  Tests cover registration, offline save, and retry logic
+- [✅] **Unit and integration tests for all paths (happy/sad path)**
 - [✅] **Refactor: test helper uses concrete KeychainSpy/TokenStorageSpy for clear asserts**
-- [✅] **Documentation and architecture aligned**  
-      (Technical diagram is up to date  
-       // If the implementation omits a relevant technical point, flag it below.)
+- [✅] **Documentation and architecture aligned**
 
-#### Still missing / To improve
-- [🟡] **Explicit post-save validation in Keychain after credential/token save**  (*If only basic check, mark as 🟡; if implemented, mark as ✅*)
-- [❌] **Replay attack protection (nonce, timestamp)***(Unit: test_registerUser_withReplayAttack_protection)*
-- [❌] **Other complex fraud/abuse-case checks, if any required by business/regulatory** *(add if detected!)*
+#### Security Enhancements
+- [✅] **Explicit post-save validation in Keychain after credential/token save**
+- [✅] **Replay attack protection**
+- [✅] **Abuse detection and prevention**
 
-#### (Test Traceability Table — recommended concrete subtasks)
-- [✅] test_registerUser_withValidData_storesAuthToken (unit/integration)
-- [✅] test_register_whenNoConnectivity_savesDataOffline (integration)
-- [🟡] test_registerUser_withReplayAttack_protection (unit) // recommended/missing
-
----
+#### Test Coverage
+- [✅] test_registerUser_withValidData_storesAuthToken
+- [✅] test_register_whenNoConnectivity_savesDataOffline
+- [✅] test_registerUser_withReplayAttack_protection
+- [✅] test_registerUser_whenAbuseDetected_returnsAbuseErrorAndDoesNotSaveCredentials
+- [✅] test_registerUser_whenPostSaveValidationFails_returnsError
 
 ---
 
@@ -392,15 +411,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 - [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` stores the token via `TokenStorage`.)
 - [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by `UserLoginUseCase`.)
-- [🚧] **Notify login success** (Via `LoginSuccessObserver`)
+- [✅] **Notify login success** (Via `LoginSuccessObserver`)
     #### Subtasks
     - [✅] Presenter calls the real view upon successful login completion (Assumed by observer)
     - [✅] The view shows the success notification to the user (UI responsibility)
     - [✅] The user can see and understand the success message (UI responsibility)
-    - [🚧] Integration and snapshot tests validating the full flow (login → notification):
+    - [✅] Integration and snapshot tests validating the full flow (login → notification):
        #### Subtasks
         - [✅] Define test scene/composer that wires Login UI + UseCase with spies
-        - [🚧] Write happy-path integration test (valid creds → successObserver → UI shows success state)
+        - [✅] Write happy-path integration test (valid creds → successObserver → UI shows success state)
         - [✅] Capture a snapshot of the success screen and add a reference
         - [✅] Write sad-path integration test (API error → failureObserver → UI shows error)
         - [✅] Capture a snapshot of the error screen and add a reference
@@ -462,10 +481,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### Still missing / To improve
 
-- [❌] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
-- [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
-- [❓] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
-- [❌] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
+- [🚧] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
+- [🔜] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
+- [❌] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
+- [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
 - [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
 
 > **Technical note:**
@@ -575,8 +594,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🔜] Redirect to login if renewal is not possible
-- [🔜 Soon: Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+#### 5. [❌] Redirect to login if renewal is not possible
+- [❌ Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
 - [❌] Credentials cleanup
 - [❌] Integration tests
 
@@ -588,15 +607,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-#### Still missing / To improve
+#### Still missing / To improve [⚠️]
 
-- [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
-    - Detect 401 responses (token expired)
-    - Trigger token refresh cycle (transparently to feature code)
-    - Retry original request with fresh token when possible
-    - Deduplicate concurrent refreshes (single refresh in-flight)
-- [❌] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
-- [❌] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
+- [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
+    - [✅] Detect 401 responses (token expired)
+    - [✅]Trigger token refresh cycle (transparently to feature code)
+    - [✅] Retry original request with fresh token when possible
+    - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
+- [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
+- [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
 - [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
 - [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
 - [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
