@@ -73,10 +73,11 @@
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
 		B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
 		B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */; };
+		B49DC5902DF76D0D00C5ADE6 /* LoginIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
-		B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */; };
+		B4D0FE5D2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */; };
 		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
 		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
@@ -182,10 +183,11 @@
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationTests.swift; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
-		B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
+		B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNotificationSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
 		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
@@ -448,13 +450,14 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				B47A6ADE2DF1CA99001D47CE /* Helpers */,
-				B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */,
-				B4D0FE632DBEEEE000033FF3 /* snapshots */,
 				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
+				B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */,
+				B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */,
+				B47A6ADE2DF1CA99001D47CE /* Helpers */,
+				B4D0FE632DBEEEE000033FF3 /* snapshots */,
 				B46DAAB82DC22A780080160E /* LoginViewTests.swift */,
 				B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */,
-				B4D0FE5C2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift */,
+				B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */,
 				B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */,
 				B448233C2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift */,
 			);
@@ -652,6 +655,7 @@
 				08073B5B238D2E1000A75DC6 /* ListViewController+TestHelpers.swift in Sources */,
 				B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */,
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
+				B49DC5902DF76D0D00C5ADE6 /* LoginIntegrationTests.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
 				B47A6ADF2DF1CA99001D47CE /* TokenStorageSpy.swift in Sources */,
@@ -678,7 +682,7 @@
 				08367CD82486FB51009CD536 /* UIView+TestHelpers.swift in Sources */,
 				08073B5F238D2FF100A75DC6 /* FeedAcceptanceTests.swift in Sources */,
 				08073B5D238D2E2600A75DC6 /* FeedUIIntegrationTests.swift in Sources */,
-				B4D0FE5D2DBEEA5600033FF3 /* LoginIntegrationSnapshotTests.swift in Sources */,
+				B4D0FE5D2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift in Sources */,
 				082C00042359E46C008927D3 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

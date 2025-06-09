@@ -46,7 +46,7 @@ final class LoginSecurityUseCaseTests: XCTestCase {
         let travelTime: TimeInterval = 120
         let expectedRemainingTime = blockDuration - travelTime
         let (sut, _) = makeSUT(
-            blockDuration: blockDuration,
+            configuration: LoginSecurityConfiguration(maxAttempts: 5, blockDuration: blockDuration),
             timeProvider: { timeTraveler.currentDate }
         )
         let username = "user1"
@@ -73,8 +73,7 @@ final class LoginSecurityUseCaseTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(
-        maxAttempts: Int = 5,
-        blockDuration: TimeInterval = 300,
+        configuration: LoginSecurityConfiguration = .default,
         timeProvider: @escaping () -> Date = { Date() },
         file: StaticString = #filePath,
         line: UInt = #line
@@ -82,8 +81,7 @@ final class LoginSecurityUseCaseTests: XCTestCase {
         let store = InMemoryFailedLoginAttemptsStore()
         let sut = LoginSecurityUseCase(
             store: store,
-            maxAttempts: maxAttempts,
-            blockDuration: blockDuration,
+            configuration: configuration,
             timeProvider: timeProvider
         )
 

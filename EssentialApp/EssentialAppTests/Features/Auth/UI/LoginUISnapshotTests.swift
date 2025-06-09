@@ -4,6 +4,8 @@ import SwiftUI
 import XCTest
 
 final class LoginUISnapshotTests: XCTestCase {
+    // MARK: - Snapshot Tests (Keep existing functionality)
+
     private func test_record_loginView_allStates() async {
         let localesToTest = [
             Locale(identifier: "en"),
@@ -33,7 +35,8 @@ final class LoginUISnapshotTests: XCTestCase {
             await recordSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, maxAttempts: 1)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
@@ -43,6 +46,11 @@ final class LoginUISnapshotTests: XCTestCase {
             blockedVM.password = "any_password"
             await blockedVM.login()
             await recordSnapshot(for: blockedView, named: "LOGIN_BLOCKED_ACCOUNT_LOCKED", locale: locale)
+
+            let recoveryVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
+            let recoveryView = await LoginView(viewModel: recoveryVM)
+            recoveryVM.errorMessage = "Your account is blocked. Please try again later or recover your password."
+            await recordSnapshot(for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale)
         }
     }
 
@@ -75,7 +83,8 @@ final class LoginUISnapshotTests: XCTestCase {
             assertSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, maxAttempts: 1)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
@@ -85,6 +94,11 @@ final class LoginUISnapshotTests: XCTestCase {
             blockedVM.password = "any_password"
             await blockedVM.login()
             assertSnapshot(for: blockedView, named: "LOGIN_BLOCKED_ACCOUNT_LOCKED", locale: locale)
+
+            let recoveryVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
+            let recoveryView = await LoginView(viewModel: recoveryVM)
+            recoveryVM.errorMessage = "Your account is blocked. Please try again later or recover your password."
+            assertSnapshot(for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale)
         }
     }
 
@@ -174,8 +188,6 @@ private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsReader,
     private var attemptCounts: [String: Int] = [:]
     private var lastAttemptTimestamps: [String: Date] = [:]
 
-    // MARK: - FailedLoginAttemptsWriter
-
     func incrementAttempts(for username: String) async {
         attemptCounts[username, default: 0] += 1
         lastAttemptTimestamps[username] = Date()
@@ -185,8 +197,6 @@ private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsReader,
         attemptCounts[username] = nil
         lastAttemptTimestamps[username] = nil
     }
-
-    // MARK: - FailedLoginAttemptsReader
 
     func getAttempts(for username: String) -> Int {
         attemptCounts[username] ?? 0
