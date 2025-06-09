@@ -1,20 +1,29 @@
 import Foundation
 
+public struct LoginSecurityConfiguration {
+    public let maxAttempts: Int
+    public let blockDuration: TimeInterval
+
+    public init(maxAttempts: Int, blockDuration: TimeInterval) {
+        self.maxAttempts = maxAttempts
+        self.blockDuration = blockDuration
+    }
+
+    public static let `default` = LoginSecurityConfiguration(maxAttempts: 5, blockDuration: 300)
+}
+
 public final class LoginSecurityUseCase {
     private let store: FailedLoginAttemptsStore
-    private let maxAttempts: Int
-    private let blockDuration: TimeInterval
+    private let configuration: LoginSecurityConfiguration
     private let timeProvider: () -> Date
 
     public init(
         store: FailedLoginAttemptsStore = InMemoryFailedLoginAttemptsStore(),
-        maxAttempts: Int = 5,
-        blockDuration: TimeInterval = 300,
+        configuration: LoginSecurityConfiguration = .default,
         timeProvider: @escaping () -> Date = { Date() }
     ) {
         self.store = store
-        self.maxAttempts = maxAttempts
-        self.blockDuration = blockDuration
+        self.configuration = configuration
         self.timeProvider = timeProvider
     }
 }
@@ -24,14 +33,14 @@ public final class LoginSecurityUseCase {
 extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
     public func isAccountLocked(username: String) async -> Bool {
         let attempts = store.getAttempts(for: username)
-        guard attempts >= maxAttempts,
+        guard attempts >= configuration.maxAttempts,
               let lastAttempt = store.lastAttemptTime(for: username)
         else {
             return false
         }
 
         let timeSinceLastAttempt = timeProvider().timeIntervalSince(lastAttempt)
-        if timeSinceLastAttempt >= blockDuration {
+        if timeSinceLastAttempt >= configuration.blockDuration {
             await store.resetAttempts(for: username)
             return false
         }
@@ -41,7 +50,7 @@ extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
     public func getRemainingBlockTime(username: String) -> TimeInterval? {
         guard let lastAttempt = store.lastAttemptTime(for: username) else { return nil }
         let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        return max(0, blockDuration - elapsed)
+        return max(0, configuration.blockDuration - elapsed)
     }
 }
 
