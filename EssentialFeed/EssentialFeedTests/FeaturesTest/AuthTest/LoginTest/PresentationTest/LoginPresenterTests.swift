@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import XCTest
 
@@ -22,7 +21,14 @@ final class LoginPresenterTests: XCTestCase {
     }
 
     func test_didLoginSuccessfully_doesNotCrashIfViewsAreNil() {
-        let sut = LoginPresenter(successView: nil, errorClearingView: nil)
+        let (useCase, notifier, flowHandler) = makeDependencies()
+        let sut = LoginPresenter(
+            useCase: useCase,
+            notifier: notifier,
+            flowHandler: flowHandler,
+            successView: nil,
+            errorClearingView: nil
+        )
         sut.didLoginSuccessfully()
     }
 
@@ -30,15 +36,37 @@ final class LoginPresenterTests: XCTestCase {
 
     private func makeSUTWithUnifiedSpy() -> (LoginPresenter, LoginViewSpy) {
         let view = LoginViewSpy()
-        let sut = LoginPresenter(successView: view, errorClearingView: view)
+        let (useCase, notifier, flowHandler) = makeDependencies()
+        let sut = LoginPresenter(
+            useCase: useCase,
+            notifier: notifier,
+            flowHandler: flowHandler,
+            successView: view,
+            errorClearingView: view
+        )
         return (sut, view)
     }
 
     private func makeSUTWithSeparateSpies() -> (LoginPresenter, SuccessViewSpy, ErrorClearingViewSpy) {
         let successSpy = SuccessViewSpy()
         let errorSpy = ErrorClearingViewSpy()
-        let sut = LoginPresenter(successView: successSpy, errorClearingView: errorSpy)
+        let (useCase, notifier, flowHandler) = makeDependencies()
+        let sut = LoginPresenter(
+            useCase: useCase,
+            notifier: notifier,
+            flowHandler: flowHandler,
+            successView: successSpy,
+            errorClearingView: errorSpy
+        )
         return (sut, successSpy, errorSpy)
+    }
+
+    private func makeDependencies() -> (UserLoginUseCase, LoginEventNotifierSpy, LoginFlowHandlerSpy) {
+        let loginService = LoginServiceSpy()
+        let useCase = UserLoginUseCase(loginService: loginService)
+        let notifier = LoginEventNotifierSpy()
+        let flowHandler = LoginFlowHandlerSpy()
+        return (useCase, notifier, flowHandler)
     }
 
     // MARK: - Test Doubles
@@ -58,5 +86,11 @@ final class LoginPresenterTests: XCTestCase {
     private class ErrorClearingViewSpy: LoginErrorClearingPresentingView {
         private(set) var clearErrorMessagesCallCount = 0
         func clearErrorMessages() { clearErrorMessagesCallCount += 1 }
+    }
+
+    private class LoginServiceSpy: LoginService {
+        func execute(credentials _: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+            .failure(.invalidCredentials)
+        }
     }
 }

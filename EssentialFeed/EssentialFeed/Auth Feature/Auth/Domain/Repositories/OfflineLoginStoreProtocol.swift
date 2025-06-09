@@ -5,7 +5,7 @@ public protocol OfflineLoginStoring {
 }
 
 public protocol OfflineLoginLoading {
-    func loadAll() async -> [LoginCredentials]
+    func loadAll() async throws -> [LoginCredentials]
 }
 
 public protocol OfflineLoginDeleting {

@@ -2,17 +2,17 @@ import EssentialFeed
 import XCTest
 
 final class RetryOfflineLoginsUseCaseTests: XCTestCase {
-    func test_execute_whenNoPendingRequests_returnsEmptyResultArray_andDoesNotCallLoginAPI() async {
+    func test_execute_whenNoPendingRequests_returnsEmptyResultArray_andDoesNotCallLoginAPI() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         offlineStore.stub_loadAll = []
 
-        let results = await sut.execute()
+        let results = try await sut.execute()
 
         XCTAssertEqual(results.count, 0)
         XCTAssertTrue(loginAPI.performedRequests.isEmpty)
     }
 
-    func test_execute_whenPendingRequests_callsLoginAPIWithEach_andReturnsResults() async {
+    func test_execute_whenPendingRequests_callsLoginAPIWithEach_andReturnsResults() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials1 = LoginCredentials(email: "a@a.com", password: "pw1")
         let credentials2 = LoginCredentials(email: "b@b.com", password: "pw2")
@@ -23,7 +23,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
             .failure(.invalidCredentials)
         ]
 
-        let results = await sut.execute()
+        let results = try await sut.execute()
 
         XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2])
         XCTAssertEqual(results.count, 2)
@@ -40,7 +40,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         }
     }
 
-    func test_execute_onSuccess_deletesRequestFromStore_onFailure_doesNotDelete() async {
+    func test_execute_onSuccess_deletesRequestFromStore_onFailure_doesNotDelete() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials1 = LoginCredentials(email: "x@a.com", password: "a")
         let credentials2 = LoginCredentials(email: "y@b.com", password: "b")
@@ -51,11 +51,11 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         ]
         var deleted: [LoginCredentials] = []
         offlineStore.onDelete = { cred in deleted.append(cred) }
-        _ = await sut.execute()
+        _ = try await sut.execute()
         XCTAssertEqual(deleted, [credentials1], "Should delete only success")
     }
 
-    func test_execute_returnsSuccessAndFailureResults_andDeletesOnlySuccesses() async {
+    func test_execute_returnsSuccessAndFailureResults_andDeletesOnlySuccesses() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials1 = LoginCredentials(email: "ok@a.com", password: "pw1")
         let credentials2 = LoginCredentials(email: "fail@b.com", password: "pw2")
@@ -69,7 +69,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         var deleted: [LoginCredentials] = []
         offlineStore.onDelete = { cred in deleted.append(cred) }
 
-        let results = await sut.execute()
+        let results = try await sut.execute()
 
         XCTAssertEqual(results.count, 3)
         XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2, credentials3])

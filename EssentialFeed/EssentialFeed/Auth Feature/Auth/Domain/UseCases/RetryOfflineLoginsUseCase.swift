@@ -9,8 +9,8 @@ public final class RetryOfflineLoginsUseCase {
         self.loginAPI = loginAPI
     }
 
-    public func execute() async -> [Result<LoginResponse, LoginError>] {
-        let requests = await offlineStore.loadAll()
+    public func execute() async throws -> [Result<LoginResponse, LoginError>] {
+        let requests = try await offlineStore.loadAll()
         var results: [Result<LoginResponse, LoginError>] = []
         for req in requests {
             let result = await loginAPI.login(with: req)

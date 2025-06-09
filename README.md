@@ -594,8 +594,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🚧] Redirect to login if renewal is not possible
-- [🚧 Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+#### 5. [🔜] Redirect to login if renewal is not possible
+- [🔜 Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
 - [❌] Credentials cleanup
 - [❌] Integration tests
 
@@ -609,14 +609,14 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### Still missing / To improve
 
-- [❌] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
-    - Detect 401 responses (token expired)
-    - Trigger token refresh cycle (transparently to feature code)
-    - Retry original request with fresh token when possible
-    - Deduplicate concurrent refreshes (single refresh in-flight)
-- [❌] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
-- [❌] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
-- [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
+    - [✅] Detect 401 responses (token expired)
+    - [✅]Trigger token refresh cycle (transparently to feature code)
+    - [✅] Retry original request with fresh token when possible
+    - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
+- [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
+- [🚧] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
+- [🔜] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
 - [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
 - [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
