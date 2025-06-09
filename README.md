@@ -481,10 +481,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### Still missing / To improve
 
-- [❌] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
+- [🔜] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
 - [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
-- [❓] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
-- [❌] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
+- [❌] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
+- [🚧] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
 - [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
 
 > **Technical note:**
@@ -594,8 +594,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🔜] Redirect to login if renewal is not possible
-- [🔜 Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
+#### 5. [❌] Redirect to login if renewal is not possible
+- [❌ Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
 - [❌] Credentials cleanup
 - [❌] Integration tests
 
@@ -607,7 +607,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-#### Still missing / To improve
+#### Still missing / To improve [⚠️]
 
 - [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - [✅] Detect 401 responses (token expired)
@@ -615,8 +615,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Retry original request with fresh token when possible
     - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
 - [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
-- [🚧] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
-- [🔜] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
+- [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
 - [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
 - [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 

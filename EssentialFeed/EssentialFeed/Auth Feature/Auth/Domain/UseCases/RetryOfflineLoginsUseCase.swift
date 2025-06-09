@@ -1,24 +1,27 @@
 import Foundation
 
 public final class RetryOfflineLoginsUseCase {
-    private let offlineStore: OfflineLoginStore
+    private let offlineStore: OfflineLoginLoading
     private let loginAPI: UserLoginAPI
 
-    public init(offlineStore: OfflineLoginStore, loginAPI: UserLoginAPI) {
+    public init(offlineStore: OfflineLoginLoading, loginAPI: UserLoginAPI) {
         self.offlineStore = offlineStore
         self.loginAPI = loginAPI
     }
 
-    public func execute() async throws -> [Result<LoginResponse, LoginError>] {
+    public func execute() async throws -> [OfflineLoginRetryResult] {
         let requests = try await offlineStore.loadAll()
-        var results: [Result<LoginResponse, LoginError>] = []
-        for req in requests {
-            let result = await loginAPI.login(with: req)
+        var results: [OfflineLoginRetryResult] = []
+
+        for credentials in requests {
+            let loginResult = await loginAPI.login(with: credentials)
+            let result = OfflineLoginRetryResult(
+                credentials: credentials,
+                loginResult: loginResult
+            )
             results.append(result)
-            if case .success = result {
-                try? await offlineStore.delete(credentials: req)
-            }
         }
+
         return results
     }
 }
