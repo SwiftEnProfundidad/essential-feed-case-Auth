@@ -2,7 +2,7 @@ import EssentialFeed
 import XCTest
 
 final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
-    func test_execute_endToEnd_flow_retriesStoredCredentials_andCleansUpStore() async throws {
+    func test_execute_endToEnd_flow_retriesStoredCredentials_returnsResults() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
 
         let credentials1 = LoginCredentials(email: "e2e_a@a.com", password: "pw1")
@@ -16,11 +16,27 @@ final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
 
         let results = try await sut.execute()
 
-        XCTAssertEqual(results.count, 2)
-        if case .success = results[0] {} else { XCTFail("Expected success for first credentials") }
-        if case let .failure(err) = results[1] { XCTAssertEqual(err, .invalidCredentials) } else { XCTFail("Expected failure for second credentials") }
+        XCTAssertEqual(results.count, 2, "Should return result for each stored credential")
+        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2], "Should call login API for all stored credentials")
+
+        XCTAssertTrue(results[0].isSuccessful, "First login retry should be successful")
+        XCTAssertEqual(results[0].credentials, credentials1, "First result should contain first credentials")
+        if case let .success(response) = results[0].loginResult {
+            XCTAssertEqual(response.token, "OKTOKEN", "Should contain the expected token")
+        } else {
+            XCTFail("Expected successful login result for first credentials")
+        }
+
+        XCTAssertFalse(results[1].isSuccessful, "Second login retry should fail")
+        XCTAssertEqual(results[1].credentials, credentials2, "Second result should contain second credentials")
+        if case let .failure(error) = results[1].loginResult {
+            XCTAssertEqual(error, .invalidCredentials, "Should contain the expected error")
+        } else {
+            XCTFail("Expected failed login result for second credentials")
+        }
+
         let remaining = await offlineStore.loadAll()
-        XCTAssertEqual(remaining, [credentials2], "Only failure remains in offline store after retry")
+        XCTAssertEqual(remaining, [credentials1, credentials2], "Use Case should not modify the store (it's pure)")
     }
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RetryOfflineLoginsUseCase, offlineStore: InMemoryOfflineLoginStore, loginAPI: FakeUserLoginAPI) {

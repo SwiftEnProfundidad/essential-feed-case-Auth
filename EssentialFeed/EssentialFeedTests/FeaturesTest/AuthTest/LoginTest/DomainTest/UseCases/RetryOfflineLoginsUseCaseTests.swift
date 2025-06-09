@@ -2,20 +2,20 @@ import EssentialFeed
 import XCTest
 
 final class RetryOfflineLoginsUseCaseTests: XCTestCase {
-    func test_execute_whenNoPendingRequests_returnsEmptyResultArray_andDoesNotCallLoginAPI() async throws {
+    func test_execute_whenNoPendingRequests_returnsEmptyArray() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         offlineStore.stub_loadAll = []
 
         let results = try await sut.execute()
 
-        XCTAssertEqual(results.count, 0)
-        XCTAssertTrue(loginAPI.performedRequests.isEmpty)
+        XCTAssertEqual(results.count, 0, "Should return empty array when no pending requests")
+        XCTAssertTrue(loginAPI.performedRequests.isEmpty, "Should not call login API when no pending requests")
     }
 
-    func test_execute_whenPendingRequests_callsLoginAPIWithEach_andReturnsResults() async throws {
+    func test_execute_whenPendingRequests_returnsResultsWithSameCredentials() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
-        let credentials1 = LoginCredentials(email: "a@a.com", password: "pw1")
-        let credentials2 = LoginCredentials(email: "b@b.com", password: "pw2")
+        let credentials1 = LoginCredentials(email: "user1@test.com", password: "password1")
+        let credentials2 = LoginCredentials(email: "user2@test.com", password: "password2")
         offlineStore.stub_loadAll = [credentials1, credentials2]
 
         loginAPI.stubbedResults = [
@@ -25,87 +25,101 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
 
         let results = try await sut.execute()
 
-        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2])
-        XCTAssertEqual(results.count, 2)
+        XCTAssertEqual(results.count, 2, "Should return result for each request")
+        XCTAssertEqual(results[0].credentials, credentials1, "First result should contain first credentials")
+        XCTAssertEqual(results[1].credentials, credentials2, "Second result should contain second credentials")
+        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2], "Should call login API for all credentials")
+    }
 
-        if case .success = results[0] {
-        } else {
-            XCTFail("Expected .success for first result")
-        }
+    func test_execute_whenLoginSucceeds_resultContainsSuccessfulLoginResponse() async throws {
+        let (sut, offlineStore, loginAPI) = makeSUT()
+        let credentials = LoginCredentials(email: "user@test.com", password: "password")
+        offlineStore.stub_loadAll = [credentials]
+        let expectedResponse = LoginResponse(token: "success-token")
+        loginAPI.stubbedResults = [.success(expectedResponse)]
 
-        if case let .failure(err) = results[1] {
-            XCTAssertEqual(err, .invalidCredentials)
+        let results = try await sut.execute()
+
+        XCTAssertEqual(results.count, 1, "Should return one result")
+        XCTAssertTrue(results[0].isSuccessful, "Result should be marked as successful")
+
+        if case let .success(response) = results[0].loginResult {
+            XCTAssertEqual(response.token, "success-token", "Should contain the login response from API")
         } else {
-            XCTFail("Expected .failure(.invalidCredentials) for second result")
+            XCTFail("Expected successful login result")
         }
     }
 
-    func test_execute_onSuccess_deletesRequestFromStore_onFailure_doesNotDelete() async throws {
+    func test_execute_whenLoginFails_resultContainsFailureError() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
-        let credentials1 = LoginCredentials(email: "x@a.com", password: "a")
-        let credentials2 = LoginCredentials(email: "y@b.com", password: "b")
-        offlineStore.stub_loadAll = [credentials1, credentials2]
-        loginAPI.stubbedResults = [
-            .success(LoginResponse(token: "tokenX")),
-            .failure(.invalidCredentials)
-        ]
-        var deleted: [LoginCredentials] = []
-        offlineStore.onDelete = { cred in deleted.append(cred) }
-        _ = try await sut.execute()
-        XCTAssertEqual(deleted, [credentials1], "Should delete only success")
+        let credentials = LoginCredentials(email: "user@test.com", password: "wrong-password")
+        offlineStore.stub_loadAll = [credentials]
+        loginAPI.stubbedResults = [.failure(.invalidCredentials)]
+
+        let results = try await sut.execute()
+
+        XCTAssertEqual(results.count, 1, "Should return one result")
+        XCTAssertFalse(results[0].isSuccessful, "Result should be marked as failed")
+
+        if case let .failure(error) = results[0].loginResult {
+            XCTAssertEqual(error, .invalidCredentials, "Should contain the login error from API")
+        } else {
+            XCTFail("Expected failed login result")
+        }
     }
 
-    func test_execute_returnsSuccessAndFailureResults_andDeletesOnlySuccesses() async throws {
+    func test_execute_withMixedResults_returnsBothSuccessAndFailureResults() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
-        let credentials1 = LoginCredentials(email: "ok@a.com", password: "pw1")
-        let credentials2 = LoginCredentials(email: "fail@b.com", password: "pw2")
-        let credentials3 = LoginCredentials(email: "ok2@c.com", password: "pw3")
+        let credentials1 = LoginCredentials(email: "success@test.com", password: "password")
+        let credentials2 = LoginCredentials(email: "fail@test.com", password: "password")
+        let credentials3 = LoginCredentials(email: "success2@test.com", password: "password")
+
         offlineStore.stub_loadAll = [credentials1, credentials2, credentials3]
         loginAPI.stubbedResults = [
             .success(LoginResponse(token: "token1")),
-            .failure(.invalidCredentials),
-            .success(LoginResponse(token: "token2"))
+            .failure(.network),
+            .success(LoginResponse(token: "token3"))
         ]
-        var deleted: [LoginCredentials] = []
-        offlineStore.onDelete = { cred in deleted.append(cred) }
 
         let results = try await sut.execute()
 
-        XCTAssertEqual(results.count, 3)
-        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2, credentials3])
-        XCTAssertEqual(deleted, [credentials1, credentials3])
-        if case .success = results[0] {} else { XCTFail("Expected .success for [0]") }
-        if case let .failure(err) = results[1] { XCTAssertEqual(err, .invalidCredentials) } else { XCTFail("Expected .failure for [1]") }
-        if case .success = results[2] {} else { XCTFail("Expected .success for [2]") }
+        XCTAssertEqual(results.count, 3, "Should return three results")
+        XCTAssertTrue(results[0].isSuccessful, "First should be successful")
+        XCTAssertFalse(results[1].isSuccessful, "Second should be failed")
+        XCTAssertTrue(results[2].isSuccessful, "Third should be successful")
+        XCTAssertEqual(loginAPI.performedRequests, [credentials1, credentials2, credentials3], "Should call API for all")
     }
 
-    // MARK: - Helpers & Spies
+    // MARK: - Helpers
 
-    private func makeSUT() -> (sut: RetryOfflineLoginsUseCase, offlineStore: OfflineLoginStoreSpy, loginAPI: LoginAPISpy) {
+    private func makeSUT(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> (
+        sut: RetryOfflineLoginsUseCase,
+        offlineStore: OfflineLoginStoreSpy,
+        loginAPI: LoginAPISpy
+    ) {
         let offlineStore = OfflineLoginStoreSpy()
         let loginAPI = LoginAPISpy()
         let sut = RetryOfflineLoginsUseCase(offlineStore: offlineStore, loginAPI: loginAPI)
-        trackForMemoryLeaks(offlineStore)
-        trackForMemoryLeaks(loginAPI)
-        trackForMemoryLeaks(sut)
+
+        trackForMemoryLeaks(offlineStore, file: file, line: line)
+        trackForMemoryLeaks(loginAPI, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+
         return (sut, offlineStore, loginAPI)
     }
 
-    final class OfflineLoginStoreSpy: OfflineLoginLoading, OfflineLoginDeleting, OfflineLoginStoring {
+    final class OfflineLoginStoreSpy: OfflineLoginLoading {
         var stub_loadAll: [LoginCredentials] = []
         func loadAll() async -> [LoginCredentials] { stub_loadAll }
-
-        var onDelete: ((LoginCredentials) -> Void)?
-        func delete(credentials: LoginCredentials) async throws {
-            onDelete?(credentials)
-        }
-
-        func save(credentials _: LoginCredentials) async throws {}
     }
 
     final class LoginAPISpy: UserLoginAPI {
         private(set) var performedRequests: [LoginCredentials] = []
         var stubbedResults: [Result<LoginResponse, LoginError>] = []
+
         func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
             performedRequests.append(credentials)
             if !stubbedResults.isEmpty {
