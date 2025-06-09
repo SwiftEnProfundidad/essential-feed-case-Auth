@@ -12,11 +12,19 @@ class UserDefaultsLoginPersistence: LoginPersistence {
         self.userDefaults = userDefaults
     }
 
-    func saveToken(_ token: Token) {
+    func saveToken(_ token: Token) async throws {
         print("Persistence: Saving token \(token.accessToken) and refresh token \(token.refreshToken ?? "nil") and expiry \(token.expiry)")
         userDefaults.set(token.accessToken, forKey: tokenKey)
         userDefaults.set(token.refreshToken, forKey: refreshTokenKey)
         userDefaults.set(token.expiry.timeIntervalSince1970, forKey: tokenExpiryKey)
+    }
+
+    func saveOfflineCredentials(_ credentials: LoginCredentials) async throws {
+        // En una app real, esto debería estar encriptado
+        print("Persistence: Saving offline credentials for \(credentials.email)")
+        if let encoded = try? JSONEncoder().encode(credentials) {
+            userDefaults.set(encoded, forKey: offlineCredentialsKey)
+        }
     }
 
     func getToken() -> Token? {
@@ -37,14 +45,6 @@ class UserDefaultsLoginPersistence: LoginPersistence {
         userDefaults.removeObject(forKey: tokenKey)
         userDefaults.removeObject(forKey: refreshTokenKey)
         userDefaults.removeObject(forKey: tokenExpiryKey)
-    }
-
-    func saveOfflineCredentials(_ credentials: LoginCredentials) {
-        // En una app real, esto debería estar encriptado
-        print("Persistence: Saving offline credentials for \(credentials.email)")
-        if let encoded = try? JSONEncoder().encode(credentials) {
-            userDefaults.set(encoded, forKey: offlineCredentialsKey)
-        }
     }
 
     func getOfflineCredentials() -> LoginCredentials? {

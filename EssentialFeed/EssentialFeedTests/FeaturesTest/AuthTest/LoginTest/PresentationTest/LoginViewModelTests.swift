@@ -1,12 +1,11 @@
-
 import EssentialFeed
 import XCTest
 
 final class LoginViewModelTests: XCTestCase {
     func test_login_success_whenCredentialsAreValid_shouldSetLoginSuccessAndNoErrorMessage() async {
         let credentials = (email: "carlos@example.com", password: "SafePass123!")
-        let (viewModel, api, _, _, _, _, _) = makeSUT()
-        api.stubbedResult = .success(LoginResponse(token: "test-token"))
+        let (viewModel, loginService) = makeSUT()
+        loginService.stubbedResult = .success(LoginResponse(token: "test-token"))
         viewModel.username = credentials.email
         viewModel.password = credentials.password
         await viewModel.login()
@@ -16,8 +15,8 @@ final class LoginViewModelTests: XCTestCase {
 
     func test_login_failure_whenInvalidCredentials_shouldShowInvalidCredentialsMessage() async {
         let credentials = (email: "fail@example.com", password: "WrongPass1")
-        let (viewModel, api, _, _, _, _, _) = makeSUT()
-        api.stubbedResult = .failure(.invalidCredentials)
+        let (viewModel, loginService) = makeSUT()
+        loginService.stubbedResult = .failure(.invalidCredentials)
         viewModel.username = credentials.email
         viewModel.password = credentials.password
         await viewModel.login()
@@ -28,8 +27,8 @@ final class LoginViewModelTests: XCTestCase {
 
     func test_login_networkError_whenNoConnectivity_shouldShowNetworkErrorMessage() async {
         let credentials = (email: "john@example.com", password: "SafePass123!")
-        let (viewModel, api, _, _, _, _, _) = makeSUT()
-        api.stubbedResult = .failure(.noConnectivity)
+        let (viewModel, loginService) = makeSUT()
+        loginService.stubbedResult = .failure(.noConnectivity)
         viewModel.username = credentials.email
         viewModel.password = credentials.password
         await viewModel.login()
@@ -45,41 +44,31 @@ final class LoginViewModelTests: XCTestCase {
         line: UInt = #line
     ) -> (
         viewModel: LoginViewModel,
-        api: AuthAPISpy,
-        persistence: LoginPersistenceSpy,
-        notifier: LoginEventNotifierSpy,
-        flowHandler: LoginFlowHandlerSpy,
-        lockStatusProvider: LoginLockStatusProviderSpy,
-        failedLoginHandler: FailedLoginHandlerSpy
+        loginService: LoginServiceSpy
     ) {
-        let api = AuthAPISpy()
-        let persistence = LoginPersistenceSpy()
-        let notifier = LoginEventNotifierSpy()
-        let flowHandler = LoginFlowHandlerSpy()
-        let lockStatusProvider = LoginLockStatusProviderSpy()
-        let failedLoginHandler = FailedLoginHandlerSpy()
-        let config = UserLoginConfiguration(maxFailedAttempts: 5, lockoutDuration: 300, tokenDuration: 3600)
-        let useCase = UserLoginUseCase(
-            api: api,
-            persistence: persistence,
-            notifier: notifier,
-            flowHandler: flowHandler,
-            lockStatusProvider: lockStatusProvider,
-            failedLoginHandler: failedLoginHandler,
-            config: config
-        )
+        let loginService = LoginServiceSpy()
+        let useCase = UserLoginUseCase(loginService: loginService)
         let viewModel = LoginViewModel(authenticate: { username, password in
             await useCase.login(with: LoginCredentials(email: username, password: password))
         })
-        trackForMemoryLeaks(api, file: file, line: line)
-        trackForMemoryLeaks(persistence, file: file, line: line)
-        trackForMemoryLeaks(notifier, file: file, line: line)
-        trackForMemoryLeaks(flowHandler, file: file, line: line)
-        trackForMemoryLeaks(lockStatusProvider, file: file, line: line)
-        trackForMemoryLeaks(failedLoginHandler, file: file, line: line)
+        trackForMemoryLeaks(loginService, file: file, line: line)
         trackForMemoryLeaks(useCase, file: file, line: line)
         trackForMemoryLeaks(viewModel, file: file, line: line)
-        return (viewModel, api, persistence, notifier, flowHandler, lockStatusProvider, failedLoginHandler)
+        return (viewModel, loginService)
+    }
+
+    // MARK: - Test Doubles
+
+    private class LoginServiceSpy: LoginService {
+        private(set) var executeCallCount = 0
+        private(set) var lastCredentials: LoginCredentials?
+        var stubbedResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
+
+        func execute(credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+            executeCallCount += 1
+            lastCredentials = credentials
+            return stubbedResult
+        }
     }
 }
 

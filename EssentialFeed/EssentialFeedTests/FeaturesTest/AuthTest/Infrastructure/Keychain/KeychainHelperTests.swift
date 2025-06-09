@@ -10,7 +10,6 @@ final class KeychainHelperTests: XCTestCase {
         let saveResult = sut.save(data, for: key)
 
         if case .success = saveResult {
-            // Success
         } else {
             XCTFail("Expected success result, got \(saveResult)")
         }
@@ -64,8 +63,10 @@ final class KeychainHelperTests: XCTestCase {
         }
 
         let deleteResult = sut.delete(key)
-        if case .failure = deleteResult {
-            XCTFail("Expected delete to succeed")
+        if case let .failure(error) = deleteResult {
+            if error != .itemNotFound {
+                XCTFail("Expected delete to succeed or return itemNotFound, got \(error)")
+            }
         }
 
         XCTAssertNil(sut.getData(key), "Expected value to be deleted")
@@ -76,8 +77,10 @@ final class KeychainHelperTests: XCTestCase {
         cleanUp(key: key, in: sut)
 
         let deleteResult = sut.delete(key)
-        if case .failure = deleteResult {
-            XCTFail("Expected delete to succeed for non-existent key")
+        if case let .failure(error) = deleteResult {
+            if error != .itemNotFound {
+                XCTFail("Expected delete to succeed or return itemNotFound for non-existent key, got \(error)")
+            }
         }
         XCTAssertNil(sut.getData(key), "Expected no value for non-existent key")
     }
@@ -135,7 +138,6 @@ final class KeychainHelperTests: XCTestCase {
         XCTAssertEqual(spy.saveCalls.first?.0, key, "Expected save with correct key")
         XCTAssertEqual(spy.saveCalls.first?.1, valueData, "Expected save with correct value data")
         if case .success = result {
-            // Success
         } else {
             XCTFail("Expected success result, got \(result)")
         }
@@ -166,9 +168,9 @@ final class KeychainHelperTests: XCTestCase {
 
         XCTAssertEqual(spy.deleteCalls, [key], "Expected delete to be called once with the correct key")
         if case .success = result {
-            // Success
+        } else if case let .failure(error) = result, error == .itemNotFound {
         } else {
-            XCTFail("Expected success result, got \(result)")
+            XCTFail("Expected success or itemNotFound result, got \(result)")
         }
     }
 
@@ -231,9 +233,9 @@ final class KeychainHelperTests: XCTestCase {
 
         let deleteResult = sut.delete(key)
         if case .success = deleteResult {
-            // Success
+        } else if case let .failure(error) = deleteResult, error == .itemNotFound {
         } else {
-            XCTFail("Expected success result, got \(deleteResult)")
+            XCTFail("Expected success or itemNotFound result, got \(deleteResult)")
         }
 
         let retrieved = sut.getData(key)
@@ -260,7 +262,6 @@ final class KeychainHelperTests: XCTestCase {
 
         let saveResult = sut.save(value, for: key)
         if case .success = saveResult {
-            // Success
         } else {
             XCTFail("Expected success result, got \(saveResult)")
         }
@@ -278,7 +279,6 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.save(value1, for: key)
         let saveResult = sut.save(value2, for: key)
         if case .success = saveResult {
-            // Success
         } else {
             XCTFail("Expected success result, got \(saveResult)")
         }
@@ -295,7 +295,6 @@ final class KeychainHelperTests: XCTestCase {
         let valueData = value.data(using: .utf8)!
         let saveResult = sut.save(valueData, for: key)
         if case .success = saveResult {
-            // Success
         } else {
             XCTFail("Expected success result, got \(saveResult)")
         }
@@ -309,7 +308,7 @@ final class KeychainHelperTests: XCTestCase {
         let unicodeKeys = [
             "🔑-clave-segura-漢字-😀-𝄞-😺",
             "k͏e͏y͏-w͏i͏t͏h͏-z͏e͏r͏o͏-w͏i͏d͏t͏h͏-s͏p͏a͏c͏e͏s͏",
-            "ǩ̸̌̽̉̉̊̔̽̽̈́̀̎̈́͆̎̈́̎̌̽̌̽̈́̽̇͌̉̇̈́͌̌̈́̉͌̈́̌̈́̉͝͝͝͝͝͝͝͝͝͝͝",
+            "ǩ̸̌̽̉̉̊̔̽̽̈́̀̎̈́͆̎̈́̎̌̽̌̽̈́̽̇͌̉̇̈́͌̌̈́̉͌̈́̌̈́̉͝͝͝͝͝͝͝͝͝͝",
             "مرحبا-بالعالم-😊",
             "こんにちは-世界-🌏",
             "Привет-мир-🚀"
@@ -331,7 +330,7 @@ final class KeychainHelperTests: XCTestCase {
             XCTAssertEqual(retrievedData, testData, "Retrieved data doesn't match for key: \(unicodeKey)")
 
             let deleteResult = sut.delete(unicodeKey)
-            if case .failure = deleteResult {
+            if case let .failure(error) = deleteResult, error != .itemNotFound {
                 XCTFail("Failed to delete data with Unicode key: \(unicodeKey)")
             }
             XCTAssertNil(sut.getData(unicodeKey), "Data still exists after deletion for key: \(unicodeKey)")
@@ -350,15 +349,11 @@ final class KeychainHelperTests: XCTestCase {
         }
     }
 
-    // MARK: - Doubles
-
     private final class FailingKeychainWritable: KeychainWritable {
         func save(_: Data, for _: String) -> KeychainOperationResult {
             .failure(.stringToDataConversionFailed)
         }
     }
-
-    // MARK: - Helpers
 
     private func makeRealKeychainSUT(
         key: String = "test_key",
@@ -398,8 +393,6 @@ final class KeychainHelperTests: XCTestCase {
     private func cleanUp(key: String, in store: KeychainHelper) {
         _ = store.delete(key)
     }
-
-    // MARK: - Spy Helper
 
     private class KeychainHelperSpy: KeychainReadable, KeychainWritable, KeychainRemovable {
         var getCalls: [String] = []

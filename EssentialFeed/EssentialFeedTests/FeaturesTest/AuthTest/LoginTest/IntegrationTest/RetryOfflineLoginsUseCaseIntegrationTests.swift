@@ -2,7 +2,7 @@ import EssentialFeed
 import XCTest
 
 final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
-    func test_execute_endToEnd_flow_retriesStoredCredentials_andCleansUpStore() async {
+    func test_execute_endToEnd_flow_retriesStoredCredentials_andCleansUpStore() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
 
         let credentials1 = LoginCredentials(email: "e2e_a@a.com", password: "pw1")
@@ -14,7 +14,7 @@ final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
             .failure(.invalidCredentials)
         ]
 
-        let results = await sut.execute()
+        let results = try await sut.execute()
 
         XCTAssertEqual(results.count, 2)
         if case .success = results[0] {} else { XCTFail("Expected success for first credentials") }

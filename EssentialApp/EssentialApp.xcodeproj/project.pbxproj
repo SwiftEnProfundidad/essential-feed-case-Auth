@@ -58,6 +58,17 @@
 		B46DAAB92DC22A780080160E /* LoginViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB82DC22A780080160E /* LoginViewTests.swift */; };
 		B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */; };
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
+		B47A6ADF2DF1CA99001D47CE /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */; };
+		B47A6AE02DF1CA99001D47CE /* UserLoginAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */; };
+		B47A6AE12DF1CA99001D47CE /* LoginFailureObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD62DF1CA99001D47CE /* LoginFailureObserverSpy.swift */; };
+		B47A6AE22DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD82DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift */; };
+		B47A6AE32DF1CA99001D47CE /* LoginFlowHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD72DF1CA99001D47CE /* LoginFlowHandlerSpy.swift */; };
+		B47A6AE42DF1CA99001D47CE /* LoginEventNotifierSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD52DF1CA99001D47CE /* LoginEventNotifierSpy.swift */; };
+		B47A6AE52DF1CA99001D47CE /* LoginPersistenceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD92DF1CA99001D47CE /* LoginPersistenceSpy.swift */; };
+		B47A6AE62DF1CA99001D47CE /* DefaultLoginSecurityServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD32DF1CA99001D47CE /* DefaultLoginSecurityServiceUseCase.swift */; };
+		B47A6AE72DF1CA99001D47CE /* OfflineLoginStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADB2DF1CA99001D47CE /* OfflineLoginStoreSpy.swift */; };
+		B47A6AE82DF1CA99001D47CE /* FailedLoginHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD42DF1CA99001D47CE /* FailedLoginHandlerSpy.swift */; };
+		B47A6AE92DF1CA99001D47CE /* LoginSuccessObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADA2DF1CA99001D47CE /* LoginSuccessObserverSpy.swift */; };
 		B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */; };
 		B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */; };
 		B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */; };
@@ -157,6 +168,17 @@
 		B46DAAB82DC22A780080160E /* LoginViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewTests.swift; sourceTree = "<group>"; };
 		B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModelTests.swift; sourceTree = "<group>"; };
+		B47A6AD32DF1CA99001D47CE /* DefaultLoginSecurityServiceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLoginSecurityServiceUseCase.swift; sourceTree = "<group>"; };
+		B47A6AD42DF1CA99001D47CE /* FailedLoginHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginHandlerSpy.swift; sourceTree = "<group>"; };
+		B47A6AD52DF1CA99001D47CE /* LoginEventNotifierSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEventNotifierSpy.swift; sourceTree = "<group>"; };
+		B47A6AD62DF1CA99001D47CE /* LoginFailureObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFailureObserverSpy.swift; sourceTree = "<group>"; };
+		B47A6AD72DF1CA99001D47CE /* LoginFlowHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowHandlerSpy.swift; sourceTree = "<group>"; };
+		B47A6AD82DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockStatusProviderSpy.swift; sourceTree = "<group>"; };
+		B47A6AD92DF1CA99001D47CE /* LoginPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPersistenceSpy.swift; sourceTree = "<group>"; };
+		B47A6ADA2DF1CA99001D47CE /* LoginSuccessObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSuccessObserverSpy.swift; sourceTree = "<group>"; };
+		B47A6ADB2DF1CA99001D47CE /* OfflineLoginStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStoreSpy.swift; sourceTree = "<group>"; };
+		B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
+		B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginAPISpy.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
 		B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
@@ -328,6 +350,24 @@
 			path = Routing;
 			sourceTree = "<group>";
 		};
+		B47A6ADE2DF1CA99001D47CE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B47A6AD32DF1CA99001D47CE /* DefaultLoginSecurityServiceUseCase.swift */,
+				B47A6AD42DF1CA99001D47CE /* FailedLoginHandlerSpy.swift */,
+				B47A6AD52DF1CA99001D47CE /* LoginEventNotifierSpy.swift */,
+				B47A6AD62DF1CA99001D47CE /* LoginFailureObserverSpy.swift */,
+				B47A6AD72DF1CA99001D47CE /* LoginFlowHandlerSpy.swift */,
+				B47A6AD82DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift */,
+				B47A6AD92DF1CA99001D47CE /* LoginPersistenceSpy.swift */,
+				B47A6ADA2DF1CA99001D47CE /* LoginSuccessObserverSpy.swift */,
+				B47A6ADB2DF1CA99001D47CE /* OfflineLoginStoreSpy.swift */,
+				B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */,
+				B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		B48EEA652DDE9D880013D0A9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -408,6 +448,7 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B47A6ADE2DF1CA99001D47CE /* Helpers */,
 				B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */,
 				B4D0FE632DBEEEE000033FF3 /* snapshots */,
 				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
@@ -613,6 +654,17 @@
 				08073B53238D2E1000A75DC6 /* UIButton+TestHelpers.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
+				B47A6ADF2DF1CA99001D47CE /* TokenStorageSpy.swift in Sources */,
+				B47A6AE02DF1CA99001D47CE /* UserLoginAPISpy.swift in Sources */,
+				B47A6AE12DF1CA99001D47CE /* LoginFailureObserverSpy.swift in Sources */,
+				B47A6AE22DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift in Sources */,
+				B47A6AE32DF1CA99001D47CE /* LoginFlowHandlerSpy.swift in Sources */,
+				B47A6AE42DF1CA99001D47CE /* LoginEventNotifierSpy.swift in Sources */,
+				B47A6AE52DF1CA99001D47CE /* LoginPersistenceSpy.swift in Sources */,
+				B47A6AE62DF1CA99001D47CE /* DefaultLoginSecurityServiceUseCase.swift in Sources */,
+				B47A6AE72DF1CA99001D47CE /* OfflineLoginStoreSpy.swift in Sources */,
+				B47A6AE82DF1CA99001D47CE /* FailedLoginHandlerSpy.swift in Sources */,
+				B47A6AE92DF1CA99001D47CE /* LoginSuccessObserverSpy.swift in Sources */,
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */,
 				B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */,

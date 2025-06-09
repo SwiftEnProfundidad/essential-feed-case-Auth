@@ -64,6 +64,21 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         )
     }
 
+    func test_loginWithValidCredentials_integratesFullChain_andNotifiesSuccessObserver() async {
+        let (sut, successObserver, apiSpy) = makeIntegrationSUT()
+
+        // Setup API spy para devolver success
+        apiSpy.stubbedResult = Result<LoginResponse, LoginError>.success(LoginResponse(token: "expected_token"))
+
+        sut.simulateUserEntering(username: "valid@email.com", password: "validpass123")
+        await sut.simulateTapOnLoginButton()
+
+        // Verify real integration chain worked
+        XCTAssertEqual(successObserver.notificationCount, 1, "Should notify success observer")
+        XCTAssertNotNil(successObserver.lastResponse, "Should receive login response")
+        XCTAssertEqual(successObserver.lastResponse?.token, "expected_token", "Should receive correct token")
+    }
+
     // MARK: - Helpers
 
     private func verifySnapshot(
@@ -78,15 +93,8 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let lightSnapshot = sut.snapshot(for: .iPhone13(style: .light))
         let darkSnapshot = sut.snapshot(for: .iPhone13(style: .dark))
 
-        // Verificamos primero con assert
-        // Si las snapshots no existen, assert fallará silenciosamente
-        // Si existen pero no coinciden, assert fallará con un mensaje
         assert(snapshot: lightSnapshot, named: "\(name)_light", file: file, line: line)
         assert(snapshot: darkSnapshot, named: "\(name)_dark", file: file, line: line)
-
-        // Si llegamos aquí, las snapshots existen y coinciden
-        // Si necesitamos grabar nuevas snapshots, usamos record() manualmente
-        // Nota: record() fallará intencionalmente después de guardar
     }
 
     private func makeSUT(
@@ -97,6 +105,74 @@ final class LoginIntegrationSnapshotTests: XCTestCase {
         let sut = LoginTestHarness(authenticate: authenticate)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func makeIntegrationSUT() -> (LoginTestHarness, LoginSuccessObserverSpy, UserLoginAPISpy) {
+        let validator = LoginCredentialsValidator()
+
+        let failedLoginStore = InMemoryFailedLoginAttemptsStore()
+        let securityUseCase = LoginSecurityUseCase(
+            store: failedLoginStore,
+            maxAttempts: 3,
+            blockDuration: 300
+        )
+
+        let api = UserLoginAPISpy()
+        let tokenStorage = TokenStorageSpy()
+        let offlineStore = OfflineLoginStoreSpy()
+        let config = UserLoginConfiguration(maxFailedAttempts: 3, lockoutDuration: 300, tokenDuration: 3600)
+
+        let persistence = LoginPersistenceSpy(tokenStorage: tokenStorage, offlineStore: offlineStore, config: config)
+
+        let loginService = DefaultLoginService(
+            validator: validator,
+            securityUseCase: securityUseCase,
+            api: api,
+            persistence: persistence,
+            config: config
+        )
+
+        let useCase = UserLoginUseCase(loginService: loginService)
+        let successObserver = LoginSuccessObserverSpy()
+        let failureObserver = LoginFailureObserverSpy()
+
+        let notifier = LoginEventNotifierSpy(successObserver: successObserver, failureObserver: failureObserver)
+        let flowHandler = LoginFlowHandlerSpy()
+
+        let presenter = LoginPresenter(
+            useCase: useCase,
+            notifier: notifier,
+            flowHandler: flowHandler
+        )
+
+        let sut = LoginTestHarness(presenter: presenter)
+
+        return (sut, successObserver, api)
+    }
+}
+
+// MARK: - In Memory Failed Login Store for Tests
+
+private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
+    private var attempts: [String: Int] = [:]
+    private var lastAttemptTimes: [String: Date] = [:]
+
+    func getAttempts(for username: String) -> Int {
+        attempts[username] ?? 0
+    }
+
+    func incrementAttempts(for username: String) async {
+        attempts[username] = getAttempts(for: username) + 1
+        lastAttemptTimes[username] = Date()
+    }
+
+    func resetAttempts(for username: String) async {
+        attempts[username] = 0
+        lastAttemptTimes[username] = nil
+    }
+
+    func lastAttemptTime(for username: String) -> Date? {
+        lastAttemptTimes[username]
     }
 }
 
@@ -118,6 +194,16 @@ final class LoginTestHarness {
             self.controller = UIHostingController(rootView: LoginView(viewModel: viewModel))
             controller.loadViewIfNeeded()
         }
+    }
+
+    convenience init(presenter: LoginPresenter) {
+        let authenticateWrapper: (String, String) async -> Result<LoginResponse, LoginError> = { username, password in
+            let credentials = LoginCredentials(email: username, password: password)
+            await presenter.login(with: credentials)
+            return .success(LoginResponse(token: "integration_token"))
+        }
+
+        self.init(authenticate: authenticateWrapper)
     }
 
     func simulateUserEntering(username: String, password: String) {
