@@ -6,27 +6,35 @@ public protocol UserRegistrationPersistenceHandling {
 }
 
 public actor UserRegistrationPersistenceHandler: UserRegistrationPersistenceHandling {
-    private let persistenceService: UserRegistrationPersistenceService
+    private let persistenceService: RegistrationPersistenceService
+    private let offlineHandler: OfflineRegistrationHandler
     private let notifier: UserRegistrationNotifier?
 
-    public init(persistenceService: UserRegistrationPersistenceService, notifier: UserRegistrationNotifier? = nil) {
+    public init(
+        persistenceService: RegistrationPersistenceService,
+        offlineHandler: OfflineRegistrationHandler,
+        notifier: UserRegistrationNotifier? = nil
+    ) {
         self.persistenceService = persistenceService
+        self.offlineHandler = offlineHandler
         self.notifier = notifier
     }
 
     public func saveUserData(token: Token, userData: UserRegistrationData) async throws -> User {
-        try await persistenceService.save(tokenBundle: token)
-
-        let saveResult = persistenceService.saveCredentials(passwordData: userData.password.data(using: .utf8)!, forEmail: userData.email)
-
-        if saveResult != .success {
-            throw UserRegistrationError.tokenStorageFailed
+        do {
+            return try await persistenceService.persistUserRegistration(token: token, userData: userData)
+        } catch {
+            notifier?.notifyRegistrationFailed(with: error)
+            throw error
         }
-
-        return User(name: userData.name, email: userData.email)
     }
 
     public func saveForOfflineProcessing(userData: UserRegistrationData) async throws {
-        try await persistenceService.saveForOfflineProcessing(registrationData: userData)
+        do {
+            try await offlineHandler.handleOfflineRegistration(userData)
+        } catch {
+            notifier?.notifyRegistrationFailed(with: error)
+            throw error
+        }
     }
 }

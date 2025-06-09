@@ -481,10 +481,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 #### Still missing / To improve
 
-- [🔜] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
-- [❌] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
-- [❌] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
-- [🚧] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
+- [✅] **Replay attack protection** (nonce/timestamp or equivalent mechanism)
+- [🚧] **Integration of LoginSecurityUseCase directly into the login flow and/or UI lock after failed attempts (if not already in place)**
+- [🔜] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
+- [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
 - [❌] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
 
 > **Technical note:**
