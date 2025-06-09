@@ -33,7 +33,8 @@ final class LoginUISnapshotTests: XCTestCase {
             await recordSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, maxAttempts: 1)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
@@ -75,7 +76,8 @@ final class LoginUISnapshotTests: XCTestCase {
             assertSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, maxAttempts: 1)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
