@@ -23,21 +23,45 @@ final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
         }
     }
 
+    func test_performGlobalLogout_clearsOfflineRegistrationStore() async throws {
+        let (sut, spies) = makeSUT()
+
+        try await sut.performGlobalLogout()
+
+        XCTAssertEqual(spies.offlineRegistrationStore.messages.contains(.clearAll), true, "Should clear offline registration store")
+    }
+
+    func test_performGlobalLogout_whenOfflineRegistrationStoreFails_propagatesError() async {
+        let (sut, spies) = makeSUT()
+        let expectedError = NSError(domain: "test", code: 2)
+        spies.offlineRegistrationStore.clearAllError = expectedError
+
+        do {
+            try await sut.performGlobalLogout()
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertEqual(error as NSError, expectedError, "Should propagate offline registration store error")
+        }
+    }
+
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: GlobalLogoutManager, spies: (tokenStorage: TokenStorageSpy, offlineLoginStore: OfflineLoginStoreSpy)) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: GlobalLogoutManager, spies: (tokenStorage: TokenStorageSpy, offlineLoginStore: OfflineLoginStoreSpy, offlineRegistrationStore: OfflineRegistrationStoreSpy)) {
         let tokenStorageSpy = TokenStorageSpy()
         let offlineLoginStoreSpy = OfflineLoginStoreSpy()
+        let offlineRegistrationStoreSpy = OfflineRegistrationStoreSpy()
         let sut = GlobalLogoutManager(
             tokenStorage: tokenStorageSpy,
-            offlineLoginStore: offlineLoginStoreSpy
+            offlineLoginStore: offlineLoginStoreSpy,
+            offlineRegistrationStore: offlineRegistrationStoreSpy
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(tokenStorageSpy, file: file, line: line)
         trackForMemoryLeaks(offlineLoginStoreSpy, file: file, line: line)
+        trackForMemoryLeaks(offlineRegistrationStoreSpy, file: file, line: line)
 
-        return (sut, (tokenStorageSpy, offlineLoginStoreSpy))
+        return (sut, (tokenStorageSpy, offlineLoginStoreSpy, offlineRegistrationStoreSpy))
     }
 }
 

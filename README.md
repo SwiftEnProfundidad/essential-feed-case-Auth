@@ -794,10 +794,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] Global logout implementation (`AuthRouter.navigateToLogin()`)
 - [🚧] Credentials cleanup
     - [✅] Clear TokenStorage (authentication tokens)
-    - [❌] Clear OfflineLoginStore (offline saved login credentials)
-    - [❌] Clear OfflineRegistrationStore (offline saved registration requests)
-    - [❌] Clear FailedLoginAttemptsStore (failed login attempt records)
-    - [❌] Clear any session-related UserDefaults
+    - [✅] Clear OfflineLoginStore (offline saved login credentials)
+    - [🚧] Clear OfflineRegistrationStore (offline saved registration requests)
+    - [🚧] Clear FailedLoginAttemptsStore (failed login attempt records)
+    - [🔜] Clear any session-related UserDefaults
 - [🔜] Integration tests
 
 #### 6. [❌] Log the expiration event for metrics
