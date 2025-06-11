@@ -1,224 +1,58 @@
-<div align="center">
-  <h1>Essential App Case Study</h1>
-  <h3>A reference iOS application with advanced security features</h3>
-  
-  [![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml)
-  [![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml)
-  [![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/main/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
-  [![Swift](https://img.shields.io/badge/Swift-5.5+-orange.svg)](https://swift.org/)
-  [![Platform](https://img.shields.io/badge/Platforms-iOS%20|%20macOS-lightgray.svg)](https://developer.apple.com/)
-</div>
+[![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialapp-ci.yml)
+[![Build Status](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml/badge.svg?branch=main)](https://github.com/SwiftEnProfundidad/essential-feed-case-Auth/actions/workflows/essentialfeed-ci.yml)
+[![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/main/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
+[![codecov](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth/branch/feature/AuthModule/graph/badge.svg)](https://codecov.io/gh/SwiftEnProfundidad/essential-feed-case-Auth)
 
-## 📋 Table of Contents
-
-- [🚀 Quick Start](#-quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Project Structure](#-project-structure)
-- [🏗️ Architecture](#️-architecture)
-  - [Architecture Diagram](#architecture-diagram)
-  - [Design Decisions](#design-decisions)
-- [🔐 Security Features](#-security-features)
-  - [Secure Storage](#secure-storage)
-  - [Authentication](#authentication)
-- [🧪 Testing](#-testing)
-- [📚 Additional Documentation](#-additional-documentation)
-- [🤝 How to Contribute](#-how-to-contribute)
-- [📄 License](#-license)
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Xcode 13.0+
-- iOS 15.0+ / macOS 12.0+
-- Swift 5.5+
-- [CocoaPods](https://cocoapods.org/) or [Swift Package Manager](https://swift.org/package-manager/)
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/SwiftEnProfundidad/essential-feed-case-Auth.git
-   cd essential-feed-case-Auth
-   ```
-
-2. Install dependencies:
-   ```bash
-   pod install
-   ```
-   or if you prefer to use SPM, open the project in Xcode and let it manage the dependencies.
-
-3. Open the workspace in Xcode:
-   ```bash
-   open EssentialApp.xcworkspace
-   ```
-
-4. Run the tests:
-   ```bash
-   xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES
-   ```
-
-### Project Structure
-
-```
-essential-feed-case-Auth/
-├── EssentialApp/                 # Main application
-│   ├── EssentialApp/             # Source code
-│   ├── EssentialAppTests/        # Unit tests
-│   └── EssentialApp.xcodeproj/   # Xcode project
-│
-├── EssentialFeed/               # Main framework
-│   ├── EssentialFeed/           # Source code
-│   ├── EssentialFeedTests/       # Unit tests
-│   └── EssentialFeed.xcodeproj/  # Xcode project
-│
-├── coverage-reports/            # Coverage reports
-├── docs/                        # Documentation
-└── scripts/                     # Automation scripts
-```
-
-## 🏗️ Architecture
-
-### Architecture Diagram
+# Essential App Case Study with Security Features
+## App Architecture Diagram
 
 ![App Architecture Diagram](https://raw.githubusercontent.com/SwiftEnProfundidad/essential-feed-case-Auth/main/docs/images/AchitectureEssentialApp.png)
 
-### Design Decisions
+## Architectural Decision: Composer vs Coordinator
 
-#### Composer vs Coordinator
+**Note:** This proof-of-concept project centralizes navigation in the Composer to keep things simple and to focus on practicing Clean Architecture, modularization, and TDD.
 
-**Note:** This proof of concept centralizes navigation in the Composer to keep things simple and focus on practicing Clean Architecture, modularization, and TDD.
-
-- **Advantage:** Allows experimentation and learning without over-engineering.
-- **Limitation:** If the application grows significantly, the Composer can become a "God Object," making scalability and maintenance difficult.
+- **Advantage:** Allows for experimentation and learning without overengineering.
+- **Limitation:** If the app grows significantly, the Composer can become a "God Object," making scalability and maintenance more difficult.
 
 **Professional recommendation:**
-- For real, scalable projects, migrate to a Coordinator pattern, with one Coordinator per feature or flow, to achieve loose coupling, high cohesion, and true modularization.
+- For real and scalable projects, migrate to a Coordinator pattern, with one Coordinator per feature or flow, to achieve loose coupling, high cohesion, and true modularization.
 - Document this decision and apply the Coordinator pattern from the start in ambitious projects.
 
-## 🔐 Security Features
+---
 
-### Secure Storage
+If you have questions about migrating to Coordinators or want a reference demo, check the internal documentation or contact the architecture team.
 
-Secure storage is implemented using the iOS Keychain to save sensitive information such as access tokens, credentials, and other sensitive data.
+---
 
-```swift
-let keychain = KeychainHelper(service: "com.yourapp.auth")
-let sensitiveData = "sensitive_data".data(using: .utf8)!
+## Current State
+- Navigation is centralized in the Composer.
+- Features are decoupled and testable.
+- Modularization and Clean Code are applied in every feature.
 
-do {
-    try keychain.save(data: sensitiveData, forKey: "user_token")
-    let token = try keychain.load(forKey: "user_token")
-    print("Retrieved token: \(token)")
-} catch {
-    print("Error accessing Keychain: \(error)")
-}
-```
+---
 
-### Authentication
+## Authentication Flow: Registration & Login
 
-The authentication flow includes:
+### Overview
 
-- **User registration**
-- **Login**
-- **Password recovery**
-- **Session management**
+The authentication flow consists of two independent use cases: **User Registration** and **User Login**. Each use case is fully decoupled and follows Clean Architecture principles, with its own technical checklist and acceptance criteria.
 
-#### Navigation Flow:
+- **Registration**: Allows a new user to create an account and securely store credentials.
+- **Login**: Allows a registered user to authenticate and access the app.
 
-```mermaid
-flowchart TD
-    A[Home Screen] -->|New User| B[Registration]
-    A -->|Existing User| C[Login]
-    B -->|Registration Successful| C
-    C -->|Forgot Password| D[Password Recovery]
-    C -->|Login Successful| E[Dashboard]
-```
+### Navigation Flow (UI Layer)
 
-## 🧪 Testing
+The navigation between Registration and Login is orchestrated by the Composer (or Coordinator, in scalable projects). This orchestration is not a business use case, but a UI responsibility. The flow is as follows:
 
-The project follows a comprehensive testing strategy that includes:
-
-- **Unit tests** for business logic
-- **Integration tests** for coupled modules
-- **UI tests** for user flows
-
-To run the tests:
-
-```bash
-# All tests
-xcodebuild test -scheme EssentialFeed -destination "platform=macOS" -enableCodeCoverage YES
-
-# Specific tests
-xcodebuild test -scheme EssentialFeed -only-testing:EssentialFeedTests/KeychainManagerTests
-```
-
-## 📚 Additional Documentation
-
-- [Architecture Documentation](/docs/ARCHITECTURE.md)
-- [Code Style Guide](/docs/CODING_STYLE.md)
-- [BDD and Acceptance Criteria](/docs/BDD.md)
-
-## 🤝 How to Contribute
-
-Contributions are welcome! Please read our [contribution guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## 🧩 BDD and Acceptance Criteria
-
-The project follows a BDD (Behavior-Driven Development) methodology with detailed documentation of acceptance criteria for each functionality.
-
-### Detailed Documentation
-
-You can find the complete BDD documentation at [docs/BDD-Security-Features.md](docs/BDD-Security-Features.md), which includes:
-
-- Authentication flows (registration, login, password recovery)
-- Session management
-- Security and storage
-- Detailed acceptance criteria
-- Implementation status
-- Security checklists
-
-### Status Summary
-
-| Feature | Status | Coverage |
-|---------|--------|-----------|
-| Authentication | ✅ | 95% |
-| Secure Storage | ✅ | 98% |
-| Session Management | 🚧 | 85% |
-| Password Recovery | 🔜 | 0% |
-
-### Status Symbols
-
-| Symbol | Meaning |
-|--------|---------|
-| ✅ | Completed |
-| 🚧 | In Progress |
-| 🔜 | Pending |
-| ❌ | Not Implemented |
-| ⚠️ | Needs Review |
-
-## 🏷️ Project Status
-
-### Next Steps
-
-1. Complete session management implementation
-2. Implement password recovery flow
-3. Increase test coverage
-4. Optimize secure storage performance
-
-For more details about the project status, check the [technical documentation](docs/README.md).
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+1. **Initial State**: The user is presented with either the Login or Registration screen (depending on app requirements).
+2. **From Registration to Login**:
+   - After a successful registration, the user is navigated to the Login screen to authenticate with their new credentials.
 3. **From Login to Registration**:
    - If the user does not have an account, they can navigate from the Login screen to the Registration screen.
 4. **Error Handling**:
    - Specific error messages are shown for invalid credentials, email already in use, connectivity issues, etc., as defined in each use case checklist.
 
-{{ ... }}
 ### Technical Notes
 
 - **Composer Responsibility**: The Composer handles the presentation and navigation between Registration and Login, ensuring loose coupling and modularity.
