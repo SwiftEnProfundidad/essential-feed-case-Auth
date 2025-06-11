@@ -1,6 +1,5 @@
+import EssentialFeed
 import XCTest
-
-@testable import EssentialFeed
 
 final class ExponentialBackoffPolicyTests: XCTestCase {
     func test_backoffDuration_whenNoFailedAttempts_shouldBeZero() {
