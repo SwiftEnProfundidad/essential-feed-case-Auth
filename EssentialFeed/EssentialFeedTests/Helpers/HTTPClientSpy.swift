@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 import XCTest
@@ -40,6 +39,7 @@ final class HTTPClientSpy: HTTPClient, @unchecked Sendable {
         label: "com.essentialdeveloper.HTTPClientSpy.queue",
         attributes: .concurrent
     )
+    private var stubbedResults: [(request: URLRequest, result: Result<(Data, HTTPURLResponse), Error>)] = []
 
     enum Message: Equatable {
         case failure(String)
@@ -174,5 +174,15 @@ extension HTTPClientSpy {
         for index in indices {
             complete(with: error, at: index)
         }
+    }
+}
+
+extension HTTPClientSpy {
+    func stubError(_ error: Error, for request: URLRequest) {
+        stubbedResults.append((request, .failure(error)))
+    }
+
+    func stubSuccess(_ result: (Data, HTTPURLResponse), for request: URLRequest) {
+        stubbedResults.append((request, .success(result)))
     }
 }

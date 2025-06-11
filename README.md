@@ -790,7 +790,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🚧] Redirect to login if renewal is not possible
+#### 5. [✅] Redirect to login if renewal is not possible
 - [✅] Global logout implementation (`AuthRouter.navigateToLogin()`)
 - [✅] Credentials cleanup
     - [✅] Clear TokenStorage (authentication tokens)
@@ -798,9 +798,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Clear OfflineRegistrationStore (offline saved registration requests)
     - [✅] Clear FailedLoginAttemptsStore (failed login attempt records)
     - [✅] Clear any session-related UserDefaults
-- [🚧] Integration tests
+- [✅] Integration tests
 
-#### 6. [❌] Log the expiration event for metrics
+#### 6. [🚧] Log the expiration event for metrics
 - [❌] Unified events:
   - [❌] `TokenExpired`
   - [❌] `RefreshFailed`
