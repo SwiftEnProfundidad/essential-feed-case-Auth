@@ -326,6 +326,10 @@
 		B4BBD4892DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */; };
 		B4BBD48B2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */; };
 		B4BBD48D2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */; };
+		B4BBD48F2DF923D7001E1965 /* SessionUserDefaultsCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD48E2DF923D6001E1965 /* SessionUserDefaultsCleaning.swift */; };
+		B4BBD4912DF923F7001E1965 /* SessionUserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4902DF923F7001E1965 /* SessionUserDefaultsManager.swift */; };
+		B4BBD4962DF92430001E1965 /* SessionUserDefaultsSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4932DF92430001E1965 /* SessionUserDefaultsSpy.swift */; };
+		B4BBD4992DF92473001E1965 /* SessionUserDefaultsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */; };
 		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
 		B4CE054A2DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */; };
 		B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */; };
@@ -739,6 +743,10 @@
 		B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutManagerCredentialsCleanupTests.swift; sourceTree = "<group>"; };
 		B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreCleaning.swift; sourceTree = "<group>"; };
 		B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreCleaning.swift; sourceTree = "<group>"; };
+		B4BBD48E2DF923D6001E1965 /* SessionUserDefaultsCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsCleaning.swift; sourceTree = "<group>"; };
+		B4BBD4902DF923F7001E1965 /* SessionUserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsManager.swift; sourceTree = "<group>"; };
+		B4BBD4932DF92430001E1965 /* SessionUserDefaultsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsSpy.swift; sourceTree = "<group>"; };
+		B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsManagerTests.swift; sourceTree = "<group>"; };
 		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
 		B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryOfflineRegistrationsUseCaseTests.swift; path = EssentialFeedTests/FeaturesTest/AuthTest/RegistrationTest/DomainTest/UseCases/RetryOfflineRegistrationsUseCaseTests.swift; sourceTree = SOURCE_ROOT; };
 		B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainErrorHandling.swift; sourceTree = "<group>"; };
@@ -1487,6 +1495,7 @@
 		B4047DC42DDA70F300A0C34C /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD4902DF923F7001E1965 /* SessionUserDefaultsManager.swift */,
 				B4D2DC662DEE568900606891 /* KeychainMigrationManager.swift */,
 				B4D2DC642DEE567800606891 /* KeychainManager.swift */,
 				B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */,
@@ -1498,6 +1507,7 @@
 		B4047DC52DDA71A600A0C34C /* Storage */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD48E2DF923D6001E1965 /* SessionUserDefaultsCleaning.swift */,
 				B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */,
 			);
 			path = Storage;
@@ -1526,6 +1536,7 @@
 		B417AE3A2DCE09660096D12B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD4932DF92430001E1965 /* SessionUserDefaultsSpy.swift */,
 				B4A746862DDD25150087C33C /* KeychainEncryptorSpy.swift */,
 				B4A746842DDD24F00087C33C /* KeychainWriterSpy.swift */,
 				B4A746802DDD245D0087C33C /* KeychainReaderSpy.swift */,
@@ -1937,6 +1948,7 @@
 		B4A7467D2DDD24060087C33C /* StorageTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */,
 				B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */,
 			);
 			path = StorageTest;
@@ -2562,6 +2574,7 @@
 				08604505233E316F005ECD22 /* CoreDataFeedStore+FeedStore.swift in Sources */,
 				08EF9D2F250BC9A5004539C2 /* ImageCommentsPresenter.swift in Sources */,
 				0886893A221DAA34007BC3E7 /* LocalFeedImage.swift in Sources */,
+				B4BBD48F2DF923D7001E1965 /* SessionUserDefaultsCleaning.swift in Sources */,
 				B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */,
 				B4BBD4852DF91D5C001E1965 /* OfflineLoginStoreCleaning.swift in Sources */,
 				B4B5F40D2DDD763000C8B9D4 /* UserRegistrationUseCase.swift in Sources */,
@@ -2700,6 +2713,7 @@
 				B48991482DD3E85700A94850 /* (null) in Sources */,
 				B4BBD48B2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift in Sources */,
 				B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */,
+				B4BBD4912DF923F7001E1965 /* SessionUserDefaultsManager.swift in Sources */,
 				087148BB232BEC1200D6BE1A /* ResourceLoadingViewModel.swift in Sources */,
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
@@ -2729,6 +2743,7 @@
 				B417AE422DCE0B440096D12B /* LoginViewModelTests.swift in Sources */,
 				08805A19233A9F8600509F19 /* URLProtocolStub.swift in Sources */,
 				B4EB10112DC9698000A4DA55 /* HTTPClientSpy.swift in Sources */,
+				B4BBD4992DF92473001E1965 /* SessionUserDefaultsManagerTests.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				B48407C12DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
@@ -2780,6 +2795,7 @@
 				08346CEB24F93B0A00A9F17C /* ImageCommentsMapperTests.swift in Sources */,
 				B4725B052DD5397800E99BEC /* LoginTestSpies.swift in Sources */,
 				B429396B2DDB8D9800811CBC /* TokenValidatorTests.swift in Sources */,
+				B4BBD4962DF92430001E1965 /* SessionUserDefaultsSpy.swift in Sources */,
 				086BE4842232725E004CDC26 /* FeedStoreSpy.swift in Sources */,
 				081C0DB322491EEF00AC754E /* SharedTestHelpers.swift in Sources */,
 				089C40D42216C37400DE552E /* CacheFeedUseCaseTests.swift in Sources */,
