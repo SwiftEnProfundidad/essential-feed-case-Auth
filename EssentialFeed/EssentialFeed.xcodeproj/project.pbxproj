@@ -325,6 +325,7 @@
 		B4BBD4852DF91D5C001E1965 /* OfflineLoginStoreCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4832DF91D5C001E1965 /* OfflineLoginStoreCleaning.swift */; };
 		B4BBD4892DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */; };
 		B4BBD48B2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */; };
+		B4BBD48D2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */; };
 		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
 		B4CE054A2DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */; };
 		B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */; };
@@ -737,6 +738,7 @@
 		B4BBD4832DF91D5C001E1965 /* OfflineLoginStoreCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStoreCleaning.swift; sourceTree = "<group>"; };
 		B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutManagerCredentialsCleanupTests.swift; sourceTree = "<group>"; };
 		B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineRegistrationStoreCleaning.swift; sourceTree = "<group>"; };
+		B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreCleaning.swift; sourceTree = "<group>"; };
 		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
 		B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryOfflineRegistrationsUseCaseTests.swift; path = EssentialFeedTests/FeaturesTest/AuthTest/RegistrationTest/DomainTest/UseCases/RetryOfflineRegistrationsUseCaseTests.swift; sourceTree = SOURCE_ROOT; };
 		B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainErrorHandling.swift; sourceTree = "<group>"; };
@@ -1647,6 +1649,7 @@
 		B45C36A32DDA92EE00184F55 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */,
 				B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */,
 				B4AF1BB12DDB549900FD2ED2 /* FailedLoginAttemptsStore.swift */,
 				B4AF1BA92DDB51B700FD2ED2 /* FailedLoginHandlerProtocol.swift */,
@@ -2566,6 +2569,7 @@
 				B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */,
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
 				B49DC5652DF745C800C5ADE6 /* ReplayAttackProtection.swift in Sources */,
+				B4BBD48D2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift in Sources */,
 				B4A746792DDD22C90087C33C /* SilentKeychainErrorHandler.swift in Sources */,
 				B47A6ACE2DF1BD32001D47CE /* LoginService.swift in Sources */,
 				B47A6ACF2DF1BD32001D47CE /* LoginServiceProtocol.swift in Sources */,
