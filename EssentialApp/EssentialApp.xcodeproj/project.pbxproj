@@ -75,6 +75,15 @@
 		B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */; };
 		B49DC5902DF76D0D00C5ADE6 /* LoginIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */; };
 		B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */; };
+		B4BBD4742DF9131D001E1965 /* KeychainDependencyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD46E2DF9131D001E1965 /* KeychainDependencyFactory.swift */; };
+		B4BBD4752DF9131D001E1965 /* KeychainAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD46B2DF9131D001E1965 /* KeychainAdapters.swift */; };
+		B4BBD4762DF9131D001E1965 /* NetworkDependencyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4702DF9131D001E1965 /* NetworkDependencyFactory.swift */; };
+		B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD46F2DF9131D001E1965 /* LoginServiceFactory.swift */; };
+		B4BBD4782DF9131D001E1965 /* ConfigurationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD46D2DF9131D001E1965 /* ConfigurationFactory.swift */; };
+		B4BBD47E2DF91563001E1965 /* LoggingKeychainErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD47C2DF91563001E1965 /* LoggingKeychainErrorHandler.swift */; };
+		B4BBD47F2DF91563001E1965 /* SimpleEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD47D2DF91563001E1965 /* SimpleEncryptor.swift */; };
+		B4BBD4802DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD47A2DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift */; };
+		B4BBD4812DF91563001E1965 /* InMemoryOfflineLoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD47B2DF91563001E1965 /* InMemoryOfflineLoginStore.swift */; };
 		B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */; };
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */; };
@@ -185,6 +194,15 @@
 		B48EEA672DDE9DCF0013D0A9 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginIntegrationTests.swift; sourceTree = "<group>"; };
 		B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeRefreshControl.swift; sourceTree = "<group>"; };
+		B4BBD46B2DF9131D001E1965 /* KeychainAdapters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAdapters.swift; sourceTree = "<group>"; };
+		B4BBD46D2DF9131D001E1965 /* ConfigurationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationFactory.swift; sourceTree = "<group>"; };
+		B4BBD46E2DF9131D001E1965 /* KeychainDependencyFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainDependencyFactory.swift; sourceTree = "<group>"; };
+		B4BBD46F2DF9131D001E1965 /* LoginServiceFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginServiceFactory.swift; sourceTree = "<group>"; };
+		B4BBD4702DF9131D001E1965 /* NetworkDependencyFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDependencyFactory.swift; sourceTree = "<group>"; };
+		B4BBD47A2DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
+		B4BBD47B2DF91563001E1965 /* InMemoryOfflineLoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineLoginStore.swift; sourceTree = "<group>"; };
+		B4BBD47C2DF91563001E1965 /* LoggingKeychainErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingKeychainErrorHandler.swift; sourceTree = "<group>"; };
+		B4BBD47D2DF91563001E1965 /* SimpleEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleEncryptor.swift; sourceTree = "<group>"; };
 		B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Snapshot.swift"; sourceTree = "<group>"; };
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNotificationSnapshotTests.swift; sourceTree = "<group>"; };
@@ -386,6 +404,36 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		B4BBD46C2DF9131D001E1965 /* Adapters */ = {
+			isa = PBXGroup;
+			children = (
+				B4BBD46B2DF9131D001E1965 /* KeychainAdapters.swift */,
+			);
+			path = Adapters;
+			sourceTree = "<group>";
+		};
+		B4BBD4712DF9131D001E1965 /* Factories */ = {
+			isa = PBXGroup;
+			children = (
+				B4BBD46D2DF9131D001E1965 /* ConfigurationFactory.swift */,
+				B4BBD46E2DF9131D001E1965 /* KeychainDependencyFactory.swift */,
+				B4BBD46F2DF9131D001E1965 /* LoginServiceFactory.swift */,
+				B4BBD4702DF9131D001E1965 /* NetworkDependencyFactory.swift */,
+			);
+			path = Factories;
+			sourceTree = "<group>";
+		};
+		B4BBD4732DF9131D001E1965 /* Implementations */ = {
+			isa = PBXGroup;
+			children = (
+				B4BBD47A2DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift */,
+				B4BBD47B2DF91563001E1965 /* InMemoryOfflineLoginStore.swift */,
+				B4BBD47C2DF91563001E1965 /* LoggingKeychainErrorHandler.swift */,
+				B4BBD47D2DF91563001E1965 /* SimpleEncryptor.swift */,
+			);
+			path = Implementations;
+			sourceTree = "<group>";
+		};
 		B4D0FE632DBEEEE000033FF3 /* snapshots */ = {
 			isa = PBXGroup;
 			children = (
@@ -396,6 +444,9 @@
 		B4D6B2572DC8D07900F5A3FE /* Composition */ = {
 			isa = PBXGroup;
 			children = (
+				B4BBD46C2DF9131D001E1965 /* Adapters */,
+				B4BBD4712DF9131D001E1965 /* Factories */,
+				B4BBD4732DF9131D001E1965 /* Implementations */,
 				B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */,
 				B449F2022DBD6ABC0078F27B /* AuthComposer.swift */,
 				B449F2032DBD6ABC0078F27B /* LoginComposer.swift */,
@@ -613,6 +664,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4BBD4742DF9131D001E1965 /* KeychainDependencyFactory.swift in Sources */,
+				B4BBD4752DF9131D001E1965 /* KeychainAdapters.swift in Sources */,
+				B4BBD47E2DF91563001E1965 /* LoggingKeychainErrorHandler.swift in Sources */,
+				B4BBD47F2DF91563001E1965 /* SimpleEncryptor.swift in Sources */,
+				B4BBD4802DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
+				B4BBD4812DF91563001E1965 /* InMemoryOfflineLoginStore.swift in Sources */,
+				B4BBD4762DF9131D001E1965 /* NetworkDependencyFactory.swift in Sources */,
+				B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */,
+				B4BBD4782DF9131D001E1965 /* ConfigurationFactory.swift in Sources */,
 				B46C63AA2DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift in Sources */,
 				B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */,
 				B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */,
