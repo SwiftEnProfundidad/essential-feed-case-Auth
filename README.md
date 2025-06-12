@@ -218,7 +218,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 4. **Error Handling**:
    - Specific error messages are shown for invalid credentials, email already in use, connectivity issues, etc., as defined in each use case checklist.
 
-{{ ... }}
 ### Technical Notes
 
 - **Composer Responsibility**: The Composer handles the presentation and navigation between Registration and Login, ensuring loose coupling and modularity.

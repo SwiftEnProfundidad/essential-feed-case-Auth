@@ -68,13 +68,17 @@ final class AuthenticatedHTTPClientSingleRequestConcurrencyTests: XCTestCase {
         let refreshUseCase = RefreshTokenUseCaseSpy()
         let logoutManager = SessionLogoutManagerSpy()
 
-        let sut = AuthenticatedHTTPClientDecorator(
-            client: client,
+        let authHandler = HTTPClientAuthenticationHandlerFactory.make(
             tokenStorage: tokenStorage,
             refreshTokenUseCase: refreshUseCase,
             logoutManager: logoutManager,
             validationStrategy: ExpiryTokenValidationStrategy(),
             routePolicy: PathBasedRoutePolicy()
+        )
+
+        let sut = AuthenticatedHTTPClientDecorator(
+            client: client,
+            authHandler: authHandler
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
