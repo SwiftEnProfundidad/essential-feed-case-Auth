@@ -1,8 +1,8 @@
 import EssentialFeed
 import Foundation
 
-final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, FailedLoginAttemptsStoreCleaning {
-    enum Message: Equatable {
+public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, FailedLoginAttemptsStoreCleaning {
+    public enum Message: Equatable {
         case getAttempts(String)
         case incrementAttempts(String)
         case resetAttempts(String)
@@ -10,33 +10,42 @@ final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, FailedLoginAt
         case clearAll
     }
 
-    private(set) var messages = [Message]()
-    var attemptsToReturn = 0
-    var lastAttemptTimeToReturn: Date? = nil
-    var clearAllError: Error?
+    public private(set) var messages = [Message]()
+    public var attemptsToReturn = 0
+    public var lastAttemptTimeToReturn: Date? = nil
+    public var clearAllError: Error?
 
-    func getAttempts(for username: String) -> Int {
+    public init() {} // Asegurar que sea público
+
+    public func getAttempts(for username: String) -> Int {
         messages.append(.getAttempts(username))
         return attemptsToReturn
     }
 
-    func incrementAttempts(for username: String) async {
+    public func incrementAttempts(for username: String) async {
         messages.append(.incrementAttempts(username))
+        // Normalmente aquí se modificaría attemptsToReturn, pero el spy no lo hace.
+        // Si se espera que lo haga, se debe añadir esa lógica.
     }
 
-    func resetAttempts(for username: String) async {
+    public func resetAttempts(for username: String) async {
         messages.append(.resetAttempts(username))
+        // Normalmente aquí se modificaría attemptsToReturn para ese username,
+        // pero este spy tiene un attemptsToReturn global.
     }
 
-    func lastAttemptTime(for username: String) -> Date? {
+    public func lastAttemptTime(for username: String) -> Date? {
         messages.append(.lastAttemptTime(username))
         return lastAttemptTimeToReturn
     }
 
-    func clearAll() async throws {
+    public func clearAll() async throws {
         messages.append(.clearAll)
         if let error = clearAllError {
             throw error
         }
+        // ADDED: Reset internal state
+        attemptsToReturn = 0
+        lastAttemptTimeToReturn = nil
     }
 }

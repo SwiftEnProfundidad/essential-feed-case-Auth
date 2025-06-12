@@ -1,40 +1,79 @@
-// ADD: conformar a los nuevos protocolos
-final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegistrationLoader, OfflineRegistrationDeleter {
-    // EXISTENTE ----------------------------------------------------------------
-    enum Message: Equatable {
+import EssentialFeed
+import Foundation
+
+public final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegistrationLoader, OfflineRegistrationDeleter, OfflineRegistrationStoreCleaning {
+    // MARK: - Message tracking
+
+    public enum Message: Equatable {
         case save(UserRegistrationData)
-        case loadAll // ADD
-        case delete(UserRegistrationData) // ADD
+        case loadAll
+        case delete(UserRegistrationData)
+        case clearAll
     }
 
-    private(set) var messages = [Message]()
-    private var stored = [UserRegistrationData]()
+    public private(set) var messages: [Message] = []
 
-    // MARK: - OfflineRegistrationStore
+    // MARK: - Stubbed results / errors
 
-    func save(_ data: UserRegistrationData) async throws {
+    public var saveError: Swift.Error?
+    private var loadAllResult: Result<[UserRegistrationData], Swift.Error> = .success([])
+    public var deleteError: Swift.Error?
+    public var clearAllError: Swift.Error?
+
+    public init() {} // Asegurar que sea público
+
+    // MARK: - API
+
+    public func save(_ data: UserRegistrationData) async throws {
         messages.append(.save(data))
-        stored.append(data)
+        if let error = saveError { throw error }
     }
 
-    // MARK: - OfflineRegistrationLoader
-
-    func loadAll() async throws -> [UserRegistrationData] {
+    public func loadAll() async throws -> [UserRegistrationData] {
         messages.append(.loadAll)
-        return stored
+        switch loadAllResult {
+        case let .success(registrations):
+            return registrations
+        case let .failure(error):
+            throw error
+        }
     }
 
-    // MARK: - OfflineRegistrationDeleter
-
-    func delete(_ data: UserRegistrationData) async throws {
+    public func delete(_ data: UserRegistrationData) async throws {
         messages.append(.delete(data))
-        stored.removeAll { $0 == data }
+        if let error = deleteError { throw error }
     }
 
-    // Helpers para tests -------------------------------------------------------
-    func completeLoadAll(with data: [UserRegistrationData]) {
-        stored = data
+    public func clearAll() async throws {
+        messages.append(.clearAll)
+        if let error = clearAllError { throw error }
+        // ADDED: Reset internal state
+        loadAllResult = .success([])
     }
 
-    func completeDeletionSuccessfully() { /* no-op, ya borra por defecto */ }
+    // MARK: - Helpers for tests
+
+    public func completeLoadAll(with registrations: [UserRegistrationData]) {
+        loadAllResult = .success(registrations)
+    }
+
+    public func completeLoadAll(with error: Swift.Error) {
+        loadAllResult = .failure(error)
+    }
+
+    public func completeDeletionSuccessfully() {
+        deleteError = nil
+    }
+
+    public func completeDeletion(with error: Swift.Error) {
+        deleteError = error
+    }
+
+    public func completeClearAllSuccessfully() {
+        clearAllError = nil
+    }
+
+    public func completeClearAll(with error: Swift.Error) {
+        clearAllError = error
+    }
 }

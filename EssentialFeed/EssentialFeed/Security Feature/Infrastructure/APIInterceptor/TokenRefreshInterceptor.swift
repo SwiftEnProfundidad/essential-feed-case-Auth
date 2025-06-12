@@ -1,12 +1,13 @@
 import Foundation
 
 public final class TokenRefreshInterceptor: HTTPClientInterceptor {
-    private let refreshTokenUseCase: RefreshTokenUseCase
-    private let tokenStorage: TokenWriter
+    private let tokenRefreshHandler: TokenRefreshHandler
 
     public init(refreshTokenUseCase: RefreshTokenUseCase, tokenStorage: TokenWriter) {
-        self.refreshTokenUseCase = refreshTokenUseCase
-        self.tokenStorage = tokenStorage
+        self.tokenRefreshHandler = TokenRefreshHandler(
+            refreshTokenUseCase: refreshTokenUseCase,
+            tokenStorage: tokenStorage
+        )
     }
 
     public func intercept(_ request: URLRequest, next: HTTPClient) async throws -> (Data, HTTPURLResponse) {
@@ -16,14 +17,12 @@ public final class TokenRefreshInterceptor: HTTPClientInterceptor {
             guard isUnauthorizedError(error) else {
                 throw error
             }
-
             return try await handleTokenRefreshAndRetry(for: request, next: next)
         }
     }
 
     private func handleTokenRefreshAndRetry(for request: URLRequest, next: HTTPClient) async throws -> (Data, HTTPURLResponse) {
-        let refreshedToken = try await refreshTokenUseCase.execute()
-        try await tokenStorage.save(tokenBundle: refreshedToken)
+        let refreshedToken = try await tokenRefreshHandler.getRefreshedToken()
 
         var authenticatedRequest = request
         authenticatedRequest.setValue("Bearer \(refreshedToken.accessToken)", forHTTPHeaderField: "Authorization")

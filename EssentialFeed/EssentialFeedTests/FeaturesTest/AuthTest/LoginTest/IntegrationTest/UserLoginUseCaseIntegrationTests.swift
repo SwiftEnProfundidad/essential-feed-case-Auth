@@ -49,18 +49,4 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
 
         return (sut, loginService)
     }
-
-    // MARK: - Test Doubles
-
-    private final class LoginServiceSpy: LoginService {
-        private(set) var executeCallCount = 0
-        private(set) var lastCredentials: LoginCredentials?
-        var stubbedResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
-
-        func execute(credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
-            executeCallCount += 1
-            lastCredentials = credentials
-            return stubbedResult
-        }
-    }
 }

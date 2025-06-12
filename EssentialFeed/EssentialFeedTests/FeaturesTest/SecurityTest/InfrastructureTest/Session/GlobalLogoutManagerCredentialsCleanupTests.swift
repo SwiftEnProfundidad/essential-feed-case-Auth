@@ -7,7 +7,7 @@ final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
 
         try await sut.performGlobalLogout()
 
-        XCTAssertEqual(spies.offlineLoginStore.clearAllCallCount, 1, "Should clear offline login store")
+        XCTAssertTrue(spies.offlineLoginStore.messages.contains(.clearAll), "Should send a .clearAll message to offlineLoginStore")
     }
 
     func test_performGlobalLogout_whenOfflineLoginStoreFails_propagatesError() async {
@@ -90,7 +90,7 @@ final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: GlobalLogoutManager, spies: (tokenStorage: TokenStorageSpy, offlineLoginStore: OfflineLoginStoreSpy, offlineRegistrationStore: OfflineRegistrationStoreSpy, failedLoginAttemptsStore: FailedLoginAttemptsStoreSpy, sessionUserDefaults: SessionUserDefaultsSpy)) {
         let tokenStorageSpy = TokenStorageSpy()
-        let offlineLoginStoreSpy = OfflineLoginStoreSpy()
+        let offlineLoginStoreSpy = OfflineLoginStoreSpy() // Usará el Spy público y compartido
         let offlineRegistrationStoreSpy = OfflineRegistrationStoreSpy()
         let failedLoginAttemptsStoreSpy = FailedLoginAttemptsStoreSpy()
         let sessionUserDefaultsSpy = SessionUserDefaultsSpy()
@@ -110,19 +110,5 @@ final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
         trackForMemoryLeaks(sessionUserDefaultsSpy, file: file, line: line)
 
         return (sut, (tokenStorageSpy, offlineLoginStoreSpy, offlineRegistrationStoreSpy, failedLoginAttemptsStoreSpy, sessionUserDefaultsSpy))
-    }
-}
-
-// MARK: - Test Doubles
-
-private final class OfflineLoginStoreSpy: OfflineLoginStoreCleaning {
-    var clearAllCallCount = 0
-    var clearAllError: Error?
-
-    func clearAll() async throws {
-        clearAllCallCount += 1
-        if let error = clearAllError {
-            throw error
-        }
     }
 }

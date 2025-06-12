@@ -9,9 +9,12 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         let results = await sut.execute()
 
         XCTAssertTrue(results.isEmpty, "Expected no results when no offline registrations")
-        XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Expected only one call to loadAll")
-        XCTAssertTrue(spies.authAPI.registrationRequests.isEmpty, "Expected no API registration calls")
-        XCTAssertTrue(spies.tokenStorage.messages.isEmpty, "Expected no token storage calls")
+        let offlineMessages = spies.offlineStore.messages
+        XCTAssertEqual(offlineMessages, [.loadAll], "Expected only one call to loadAll")
+        let authRequests = spies.authAPI.registrationRequests
+        XCTAssertTrue(authRequests.isEmpty, "Expected no API registration calls")
+        let tokenMessages = await spies.tokenStorage.messages
+        XCTAssertTrue(tokenMessages.isEmpty, "Expected no token storage calls")
     }
 
     func test_execute_whenOneOfflineRegistrationExists_AndApiCallSucceeds_savesTokenAndDeletesFromOfflineStore() async {
@@ -22,7 +25,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 
         let expectedApiResponse = UserRegistrationResponse(userID: "user-123", token: "new-auth-token", refreshToken: "new-refresh-token")
         spies.authAPI.completeRegistrationSuccessfully(with: expectedApiResponse)
-        spies.tokenStorage.completeSaveTokenBundleSuccessfully()
+        await spies.tokenStorage.completeSaveTokenBundleSuccessfully()
         spies.offlineStore.completeDeletionSuccessfully()
 
         let results = await sut.execute()
@@ -41,12 +44,15 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(spies.offlineStore.messages, [.loadAll, .delete(offlineData)], "Expected loadAll then delete from offlineStore")
-        XCTAssertEqual(spies.authAPI.registrationRequests.count, 1, "Expected one call to authAPI.register")
-        XCTAssertEqual(spies.authAPI.registrationRequests.first, offlineData, "AuthAPI was called with correct data")
-        XCTAssertEqual(spies.tokenStorage.messages.count, 1, "Expected one call to tokenStorage.save")
+        let offlineMessages = spies.offlineStore.messages
+        XCTAssertEqual(offlineMessages, [.loadAll, .delete(offlineData)], "Expected loadAll then delete from offlineStore")
+        let authRequests = spies.authAPI.registrationRequests
+        XCTAssertEqual(authRequests.count, 1, "Expected one call to authAPI.register")
+        XCTAssertEqual(authRequests.first, offlineData, "AuthAPI was called with correct data")
+        let tokenMessages = await spies.tokenStorage.messages
+        XCTAssertEqual(tokenMessages.count, 1, "Expected one call to tokenStorage.save")
 
-        if let firstTokenMessage = spies.tokenStorage.messages.first {
+        if let firstTokenMessage = tokenMessages.first {
             if case let .save(tokenBundle: savedToken) = firstTokenMessage {
                 XCTAssertEqual(savedToken.accessToken, expectedApiResponse.token, "Saved token access token mismatch")
                 XCTAssertEqual(savedToken.refreshToken, expectedApiResponse.refreshToken, "Saved token refresh token mismatch")
@@ -74,9 +80,12 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
             XCTFail("Expected .registrationFailed error")
         }
 
-        XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Should call loadAll only, without delete")
-        XCTAssertEqual(spies.tokenStorage.messages.count, 0, "Should not attempt to save token")
-        XCTAssertEqual(spies.authAPI.registrationRequests, [offlineData], "API should receive the registration")
+        let offlineMessages = spies.offlineStore.messages
+        XCTAssertEqual(offlineMessages, [.loadAll], "Should call loadAll only, without delete")
+        let tokenMessages = await spies.tokenStorage.messages
+        XCTAssertEqual(tokenMessages.count, 0, "Should not attempt to save token")
+        let authRequests = spies.authAPI.registrationRequests
+        XCTAssertEqual(authRequests, [offlineData], "API should receive the registration")
     }
 
     func test_execute_whenTokenStorageFails_keepsDataAndReturnsTokenStorageFailed() async {
@@ -89,7 +98,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
         spies.authAPI.completeRegistrationSuccessfully(with: apiResponse)
 
         struct DummyError: Swift.Error {}
-        spies.tokenStorage.completeSaveTokenBundle(withError: DummyError())
+        await spies.tokenStorage.completeSaveTokenBundle(withError: DummyError())
 
         let results = await sut.execute()
 
@@ -100,7 +109,8 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
             XCTFail("Expected .tokenStorageFailed with DummyError")
         }
 
-        XCTAssertEqual(spies.offlineStore.messages, [.loadAll], "Solo loadAll, sin delete")
+        let offlineMessages = spies.offlineStore.messages
+        XCTAssertEqual(offlineMessages, [.loadAll], "Solo loadAll, sin delete")
     }
 
     func test_execute_whenDeleteFails_keepsDataAndReturnsOfflineStoreDeleteFailed() async {
@@ -111,7 +121,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
 
         let apiResponse = UserRegistrationResponse(userID: "user-eve", token: "token-eve", refreshToken: "refresh-eve")
         spies.authAPI.completeRegistrationSuccessfully(with: apiResponse)
-        spies.tokenStorage.completeSaveTokenBundleSuccessfully()
+        await spies.tokenStorage.completeSaveTokenBundleSuccessfully()
 
         struct DummyError: Swift.Error {}
         spies.offlineStore.completeDeletion(with: DummyError())
@@ -126,11 +136,11 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
             XCTFail("Expected .offlineStoreDeleteFailed")
         }
 
-        XCTAssertEqual(spies.offlineStore.messages, [.loadAll, .delete(offlineData)])
-        XCTAssertEqual(spies.tokenStorage.messages.count, 1)
+        let offlineMessages = spies.offlineStore.messages
+        XCTAssertEqual(offlineMessages, [.loadAll, .delete(offlineData)])
+        let tokenMessages = await spies.tokenStorage.messages
+        XCTAssertEqual(tokenMessages.count, 1)
     }
-
-    // MARK: Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RetryOfflineRegistrationsUseCase, spies: Spies) {
         let offlineStoreSpy = OfflineRegistrationStoreSpy()
@@ -153,7 +163,7 @@ final class RetryOfflineRegistrationsUseCaseTests: XCTestCase {
     }
 
     private struct Spies {
-        let offlineStore: OfflineRegistrationStoreSpy // Este será el spy compartido
+        let offlineStore: OfflineRegistrationStoreSpy
         let authAPI: AuthAPISpy
         let tokenStorage: TokenStorageSpy
     }

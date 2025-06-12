@@ -4,7 +4,7 @@ import XCTest
 final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     func test_execute_whenNoPendingRequests_returnsEmptyArray() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
-        offlineStore.stub_loadAll = []
+        offlineStore.stubLoadAll(with: [])
 
         let results = try await sut.execute()
 
@@ -16,7 +16,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials1 = LoginCredentials(email: "user1@test.com", password: "password1")
         let credentials2 = LoginCredentials(email: "user2@test.com", password: "password2")
-        offlineStore.stub_loadAll = [credentials1, credentials2]
+        offlineStore.stubLoadAll(with: [credentials1, credentials2])
 
         loginAPI.stubbedResults = [
             .success(LoginResponse(token: "token1")),
@@ -34,7 +34,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     func test_execute_whenLoginSucceeds_resultContainsSuccessfulLoginResponse() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials = LoginCredentials(email: "user@test.com", password: "password")
-        offlineStore.stub_loadAll = [credentials]
+        offlineStore.stubLoadAll(with: [credentials])
         let expectedResponse = LoginResponse(token: "success-token")
         loginAPI.stubbedResults = [.success(expectedResponse)]
 
@@ -53,7 +53,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     func test_execute_whenLoginFails_resultContainsFailureError() async throws {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials = LoginCredentials(email: "user@test.com", password: "wrong-password")
-        offlineStore.stub_loadAll = [credentials]
+        offlineStore.stubLoadAll(with: [credentials])
         loginAPI.stubbedResults = [.failure(.invalidCredentials)]
 
         let results = try await sut.execute()
@@ -74,7 +74,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         let credentials2 = LoginCredentials(email: "fail@test.com", password: "password")
         let credentials3 = LoginCredentials(email: "success2@test.com", password: "password")
 
-        offlineStore.stub_loadAll = [credentials1, credentials2, credentials3]
+        offlineStore.stubLoadAll(with: [credentials1, credentials2, credentials3])
         loginAPI.stubbedResults = [
             .success(LoginResponse(token: "token1")),
             .failure(.network),
@@ -102,18 +102,13 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     ) {
         let offlineStore = OfflineLoginStoreSpy()
         let loginAPI = LoginAPISpy()
-        let sut = RetryOfflineLoginsUseCase(offlineStore: offlineStore, loginAPI: loginAPI)
+        let sut = RetryOfflineLoginsUseCase(offlineStore: offlineStore, loginAPI: loginAPI) // offlineStore será el Spy compartido de EssentialFeedTests
 
         trackForMemoryLeaks(offlineStore, file: file, line: line)
         trackForMemoryLeaks(loginAPI, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
 
         return (sut, offlineStore, loginAPI)
-    }
-
-    final class OfflineLoginStoreSpy: OfflineLoginLoading {
-        var stub_loadAll: [LoginCredentials] = []
-        func loadAll() async -> [LoginCredentials] { stub_loadAll }
     }
 
     final class LoginAPISpy: UserLoginAPI {

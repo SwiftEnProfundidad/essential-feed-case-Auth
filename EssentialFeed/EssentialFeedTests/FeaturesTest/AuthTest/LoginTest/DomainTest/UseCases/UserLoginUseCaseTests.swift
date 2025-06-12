@@ -124,22 +124,9 @@ final class UserLoginUseCaseTests: XCTestCase {
     ) -> (UserLoginUseCase, LoginServiceSpy) {
         let loginServiceSpy = LoginServiceSpy()
         let sut = UserLoginUseCase(loginService: loginServiceSpy)
-        trackForMemoryLeaks(loginServiceSpy, file: file, line: line)
+
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(loginServiceSpy, file: file, line: line)
         return (sut, loginServiceSpy)
-    }
-}
-
-// MARK: - LoginServiceSpy
-
-private class LoginServiceSpy: LoginService {
-    private(set) var executeCallCount = 0
-    private(set) var lastCredentials: LoginCredentials?
-    var stubbedResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
-
-    func execute(credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
-        executeCallCount += 1
-        lastCredentials = credentials
-        return stubbedResult
     }
 }
