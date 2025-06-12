@@ -361,6 +361,9 @@
 		B4F52FE22DFB232900CC9322 /* TokenRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */; };
 		B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */; };
 		B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */; };
+		B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */; };
+		B4F52FED2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */; };
+		B4F52FEE2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -791,6 +794,9 @@
 		B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshCoordinator.swift; sourceTree = "<group>"; };
 		B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticationService.swift; sourceTree = "<group>"; };
 		B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshCoordinator.swift; sourceTree = "<group>"; };
+		B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
+		B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
+		B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandlerFactory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1426,6 +1432,7 @@
 		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */,
 				B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */,
 				B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */,
 				B49DC5642DF745C800C5ADE6 /* ReplayAttackProtection.swift */,
@@ -2246,6 +2253,8 @@
 		B4F52FE42DFB234E00CC9322 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */,
+				B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */,
 				B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */,
 			);
 			path = Authentication;
@@ -2644,6 +2653,8 @@
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
 				B49DC5652DF745C800C5ADE6 /* ReplayAttackProtection.swift in Sources */,
 				B4BBD48D2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift in Sources */,
+				B4F52FED2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift in Sources */,
+				B4F52FEE2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift in Sources */,
 				B4A746792DDD22C90087C33C /* SilentKeychainErrorHandler.swift in Sources */,
 				B47A6ACE2DF1BD32001D47CE /* LoginService.swift in Sources */,
 				B47A6ACF2DF1BD32001D47CE /* LoginServiceProtocol.swift in Sources */,
@@ -2682,6 +2693,7 @@
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */,
 				B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */,
+				B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */,
 				B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */,
 				B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */,
