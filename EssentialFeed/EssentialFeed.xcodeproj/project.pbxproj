@@ -372,6 +372,11 @@
 		B4F64DC42DFB856D00EB362C /* PassthroughEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */; };
 		B4F64DC52DFB856D00EB362C /* SystemKeychainAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */; };
 		B4F64DC62DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */; };
+		B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */; };
+		B4F64DCE2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */; };
+		B4F64DCF2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */; };
+		B4F64DD02DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */; };
+		B4F64DD12DFB886700EB362C /* StorageDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -813,6 +818,11 @@
 		B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassthroughEncryptor.swift; sourceTree = "<group>"; };
 		B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentKeychainErrorHandlerAdapter.swift; sourceTree = "<group>"; };
 		B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainAdapter.swift; sourceTree = "<group>"; };
+		B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutEndToEndTests.swift; sourceTree = "<group>"; };
+		B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStoreAdapter.swift; sourceTree = "<group>"; };
+		B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineLoginStoreAdapter.swift; sourceTree = "<group>"; };
+		B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
+		B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDependencies.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2101,6 +2111,8 @@
 		B4BBD4882DF91EA1001E1965 /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				B4F64DCD2DFB886700EB362C /* Helpers */,
+				B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */,
 				B4BBD49F2DF92B0D001E1965 /* GlobalLogoutIntegrationTests.swift */,
 				B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */,
 			);
@@ -2296,6 +2308,17 @@
 				B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */,
 				B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */,
 				B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B4F64DCD2DFB886700EB362C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */,
+				B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */,
+				B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */,
+				B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2881,6 +2904,7 @@
 				08DDC13A21BEA99E00F490ED /* FeedItemsMapperTests.swift in Sources */,
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
+				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
 				B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */,
 				B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */,
 				B4F64DC42DFB856D00EB362C /* PassthroughEncryptor.swift in Sources */,
@@ -2897,6 +2921,10 @@
 				B41D5DF32DE034370020B37B /* InMemoryPendingRequestStore.swift in Sources */,
 				B4E5AC99B2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift in Sources */,
 				B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */,
+				B4F64DCE2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift in Sources */,
+				B4F64DCF2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift in Sources */,
+				B4F64DD02DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift in Sources */,
+				B4F64DD12DFB886700EB362C /* StorageDependencies.swift in Sources */,
 				B49D2E8E2DB8E98400D36E0D /* SystemSessionManagerTests.swift in Sources */,
 				B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */,
 				B4BBD4AE2DF92CF3001E1965 /* HTTPClientInterceptorTests.swift in Sources */,
