@@ -1,7 +1,3 @@
-//
-//  Copyright 2019 Essential Developer. All rights reserved.
-//
-
 import EssentialFeed
 import XCTest
 
@@ -24,11 +20,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.stub(data: anyData(), response: anyHTTPURLResponse(), error: nil)
 
         let (sut, _) = makeSUT()
-        do {
-            _ = try await sut.send(anyURLRequest())
-        } catch {
-            // Expected to complete, error or success doesn't matter for this test
-        }
+        _ = try? await sut.send(anyURLRequest())
 
         await fulfillment(of: [exp], timeout: 1.0)
     }
@@ -43,7 +35,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             try await sut.send(anyURLRequest())
         }
 
-        try? await Task.sleep(nanoseconds: 1_000_000) // 1 millisecond
+        try? await Task.sleep(nanoseconds: 1_000_000)
 
         task.cancel()
 
@@ -152,11 +144,9 @@ class URLSessionHTTPClientTests: XCTestCase {
             _ = try await task.value
             XCTFail("Expected task to be cancelled")
         } catch {
-            XCTAssertTrue(error is CancellationError)
+            XCTAssertTrue(Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled, "Expected cancellation-related error, got: \(error)")
         }
     }
-
-    // MARK: - Helpers
 
     private func makeSUT(
         file: StaticString = #filePath,

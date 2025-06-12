@@ -20,6 +20,9 @@ public final class GlobalLogoutInterceptor: HTTPClientInterceptor {
     }
 
     private func isTokenRefreshError(_ error: Error) -> Bool {
-        error is SessionError
+        if let sessionError = error as? SessionError {
+            return sessionError == .tokenRefreshFailed
+        }
+        return false
     }
 }

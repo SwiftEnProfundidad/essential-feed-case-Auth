@@ -1,10 +1,11 @@
 import Foundation
 
-public actor TokenRefreshHandler {
+public final class TokenRefreshHandler: @unchecked Sendable {
     private let refreshTokenUseCase: RefreshTokenUseCase
     private let tokenStorage: TokenWriter
 
     private var refreshTask: Task<Token, Error>?
+    private let accessQueue = DispatchQueue(label: "TokenRefreshHandler.access", attributes: .concurrent)
 
     public init(refreshTokenUseCase: RefreshTokenUseCase, tokenStorage: TokenWriter) {
         self.refreshTokenUseCase = refreshTokenUseCase
@@ -12,20 +13,31 @@ public actor TokenRefreshHandler {
     }
 
     func getRefreshedToken() async throws -> Token {
-        if let existingTask = refreshTask {
-            return try await existingTask.value
-        }
-
-        let newTask = Task { () -> Token in
-            defer {
-                self.refreshTask = nil
+        let task: Task<Token, Error> = accessQueue.sync {
+            if let existingTask = refreshTask {
+                return existingTask
             }
-            let token = try await refreshTokenUseCase.execute()
-            try await tokenStorage.save(tokenBundle: token)
-            return token
+
+            let newTask = Task<Token, Error> {
+                defer {
+                    self.accessQueue.async(flags: .barrier) {
+                        self.refreshTask = nil
+                    }
+                }
+
+                do {
+                    let token = try await self.refreshTokenUseCase.execute()
+                    try await self.tokenStorage.save(tokenBundle: token)
+                    return token
+                } catch {
+                    throw SessionError.tokenRefreshFailed
+                }
+            }
+
+            refreshTask = newTask
+            return newTask
         }
 
-        self.refreshTask = newTask
-        return try await newTask.value
+        return try await task.value
     }
 }
