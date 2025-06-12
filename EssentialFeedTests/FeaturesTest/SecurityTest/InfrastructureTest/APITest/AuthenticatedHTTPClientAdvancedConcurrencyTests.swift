@@ -199,19 +199,4 @@ final class AuthenticatedHTTPClientAdvancedConcurrencyTests: XCTestCase {
             return !path.hasPrefix("/public/")
         }
     }
-
-    private final class RefreshTokenUseCaseSpy: RefreshTokenUseCase {
-        private(set) var executeCallCount = 0
-        var stubResult: Result<Token, Error> = .failure(SessionError.tokenRefreshFailed)
-
-        func execute() async throws -> Token {
-            executeCallCount += 1
-            switch stubResult {
-            case let .success(token):
-                return token
-            case let .failure(error):
-                throw error
-            }
-        }
-    }
 }
