@@ -166,6 +166,7 @@
 		B42939712DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */; };
 		B42B78012DE64D220096DD34 /* LoginLockStatusProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */; };
 		B42B78032DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */; };
+		B43D973A2DFB719400583077 /* SessionUserDefaultsManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
@@ -605,6 +606,7 @@
 		B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTokenRefreshServiceTests.swift; sourceTree = "<group>"; };
 		B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockStatusProviderSpy.swift; sourceTree = "<group>"; };
 		B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginHandlerSpy.swift; sourceTree = "<group>"; };
+		B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2005,6 +2007,7 @@
 		B4A7467D2DDD24060087C33C /* StorageTest */ = {
 			isa = PBXGroup;
 			children = (
+				B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */,
 				B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */,
 				B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */,
 			);
@@ -2872,6 +2875,7 @@
 				B4BBD4AE2DF92CF3001E1965 /* HTTPClientInterceptorTests.swift in Sources */,
 				B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */,
 				B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */,
+				B43D973A2DFB719400583077 /* SessionUserDefaultsManagerIntegrationTests.swift in Sources */,
 				B46CA1572DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift in Sources */,
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				B48407BF2DDC5EAC00834C15 /* KeychainFullSpy.swift in Sources */,
