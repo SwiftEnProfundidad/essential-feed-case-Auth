@@ -57,12 +57,12 @@ final class AuthenticatedHTTPClientAdvancedConcurrencyTests: XCTestCase {
             if case .save = $0 { return true }
             return false
         }.count
-        XCTAssertEqual(saveCount, numberOfRequests, "Should save token for each concurrent refresh")
+        XCTAssertEqual(saveCount, 1, "Should save token only once despite concurrent requests")
 
         XCTAssertEqual(successCount, numberOfRequests, "All requests should succeed after refresh")
 
         let refreshCount = refreshUseCase.executeCallCount
-        XCTAssertGreaterThan(refreshCount, 0, "Should execute refresh at least once")
+        XCTAssertEqual(refreshCount, 1, "Should execute refresh exactly once for concurrent requests")
     }
 
     func test_refreshFailure_triggersGlobalLogout() async throws {

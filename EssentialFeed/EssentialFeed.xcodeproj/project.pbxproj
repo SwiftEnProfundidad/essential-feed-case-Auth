@@ -356,6 +356,11 @@
 		B4F52FD62DFAF2E100CC9322 /* TokenRefreshHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FD52DFAF2E100CC9322 /* TokenRefreshHandler.swift */; };
 		B4F52FDA2DFAF85200CC9322 /* SessionLogoutManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FD72DFAF85200CC9322 /* SessionLogoutManagerSpy.swift */; };
 		B4F52FDC2DFB001F00CC9322 /* AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FDB2DFB001F00CC9322 /* AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift */; };
+		B4F52FDE2DFB231400CC9322 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FDD2DFB231400CC9322 /* SessionError.swift */; };
+		B4F52FE12DFB232900CC9322 /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */; };
+		B4F52FE22DFB232900CC9322 /* TokenRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */; };
+		B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */; };
+		B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -781,6 +786,11 @@
 		B4F52FD52DFAF2E100CC9322 /* TokenRefreshHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshHandler.swift; sourceTree = "<group>"; };
 		B4F52FD72DFAF85200CC9322 /* SessionLogoutManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLogoutManagerSpy.swift; sourceTree = "<group>"; };
 		B4F52FDB2DFB001F00CC9322 /* AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift; sourceTree = "<group>"; };
+		B4F52FDD2DFB231400CC9322 /* SessionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
+		B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshCoordinator.swift; sourceTree = "<group>"; };
+		B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticationService.swift; sourceTree = "<group>"; };
+		B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1416,6 +1426,8 @@
 		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */,
+				B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */,
 				B49DC5642DF745C800C5ADE6 /* ReplayAttackProtection.swift */,
 				B47A6AAA2DF06C08001D47CE /* Session */,
 				B47A6AA12DF04AD3001D47CE /* AuthenticationStrategies.swift */,
@@ -1477,6 +1489,8 @@
 		B4047DB32DDA6EA300A0C34C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FE42DFB234E00CC9322 /* Authentication */,
+				B4F52FE62DFB234E00CC9322 /* TokenRefresh */,
 				B49DC56A2DF745EB00C5ADE6 /* ReplayProtection */,
 				B48914212DDDFB7900C6EF73 /* Encryption */,
 				B4A746762DDD22780087C33C /* ErrorHandling */,
@@ -1960,6 +1974,7 @@
 		B4A746712DDD1FF70087C33C /* Errors */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FDD2DFB231400CC9322 /* SessionError.swift */,
 				B4A746702DDD1FF70087C33C /* KeychainError.swift */,
 			);
 			path = Errors;
@@ -2226,6 +2241,22 @@
 				B4E5AC912DB5785C007B8F34 /* Helpers */,
 			);
 			path = KeychainTest;
+			sourceTree = "<group>";
+		};
+		B4F52FE42DFB234E00CC9322 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		B4F52FE62DFB234E00CC9322 /* TokenRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */,
+			);
+			path = TokenRefresh;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2699,12 +2730,16 @@
 				B4A746902DDD3BB10087C33C /* UserRegistrationData.swift in Sources */,
 				B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */,
 				B45D92702DE6308200B3CD1E /* ExponentialBackoffPolicy.swift in Sources */,
+				B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */,
+				B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */,
 				B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */,
 				B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */,
 				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
 				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
 				B45C36E52DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
 				B45C36E62DDA92EE00184F55 /* AccountLockedError.swift in Sources */,
+				B4F52FE12DFB232900CC9322 /* AuthenticationService.swift in Sources */,
+				B4F52FE22DFB232900CC9322 /* TokenRefreshCoordinator.swift in Sources */,
 				B4A746772DDD22780087C33C /* LoggingKeychainErrorHandler.swift in Sources */,
 				B45C36E72DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift in Sources */,
 				B45C36E82DDA92EE00184F55 /* TokenParserProtocol.swift in Sources */,
@@ -2742,6 +2777,7 @@
 				087148BD232BEC6700D6BE1A /* ResourceErrorViewModel.swift in Sources */,
 				08897BE623390F4E0029F5E4 /* FeedImageDataLoader.swift in Sources */,
 				B48991482DD3E85700A94850 /* (null) in Sources */,
+				B4F52FDE2DFB231400CC9322 /* SessionError.swift in Sources */,
 				B4BBD48B2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift in Sources */,
 				B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */,
 				B4BBD4912DF923F7001E1965 /* SessionUserDefaultsManager.swift in Sources */,

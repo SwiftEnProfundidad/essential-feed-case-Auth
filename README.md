@@ -811,12 +811,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
 - [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
-- [🚧] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
-- [🔜] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
-- [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+- [✅] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [🚧] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+- [🔜] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
 ---
-
+🚧
 ### Technical Flows (happy/sad path)
 
 **Happy path:**
