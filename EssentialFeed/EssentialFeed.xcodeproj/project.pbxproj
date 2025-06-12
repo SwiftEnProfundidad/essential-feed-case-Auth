@@ -361,9 +361,11 @@
 		B4F52FE22DFB232900CC9322 /* TokenRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */; };
 		B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */; };
 		B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */; };
-		B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */; };
 		B4F52FED2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */; };
 		B4F52FEE2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */; };
+		B4F52FF22DFB410100CC9322 /* KeychainTokenStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */; };
+		B4F52FF42DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */; };
+		B4F52FF82DFB419B00CC9322 /* KeychainManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -794,9 +796,11 @@
 		B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshCoordinator.swift; sourceTree = "<group>"; };
 		B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticationService.swift; sourceTree = "<group>"; };
 		B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshCoordinator.swift; sourceTree = "<group>"; };
-		B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
 		B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
 		B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandlerFactory.swift; sourceTree = "<group>"; };
+		B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStoreTests.swift; sourceTree = "<group>"; };
+		B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
+		B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManaging.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1432,7 +1436,8 @@
 		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */,
+				B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */,
+				B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */,
 				B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */,
 				B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */,
 				B49DC5642DF745C800C5ADE6 /* ReplayAttackProtection.swift */,
@@ -1839,6 +1844,7 @@
 		B470A0072DD4714C001661C6 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */,
 				B4AF1B9A2DDB477B00FD2ED2 /* Keychain */,
 				B470A0102DD47347001661C6 /* InMemoryFailedLoginAttemptsStoreTests.swift */,
 				B470A0082DD47205001661C6 /* AnyFailedLoginAttemptStoreTests.swift */,
@@ -2693,7 +2699,6 @@
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */,
 				B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */,
-				B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */,
 				B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */,
 				B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */,
@@ -2704,6 +2709,7 @@
 				B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */,
 				B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */,
 				B4F52FD62DFAF2E100CC9322 /* TokenRefreshHandler.swift in Sources */,
+				B4F52FF42DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */,
 				B49DC5892DF74A0700C5ADE6 /* RegistrationError.swift in Sources */,
 				B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */,
@@ -2748,6 +2754,7 @@
 				B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */,
 				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
 				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
+				B4F52FF82DFB419B00CC9322 /* KeychainManaging.swift in Sources */,
 				B45C36E52DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
 				B45C36E62DDA92EE00184F55 /* AccountLockedError.swift in Sources */,
 				B4F52FE12DFB232900CC9322 /* AuthenticationService.swift in Sources */,
@@ -2868,6 +2875,7 @@
 				B46CA1572DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift in Sources */,
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				B48407BF2DDC5EAC00834C15 /* KeychainFullSpy.swift in Sources */,
+				B4F52FF22DFB410100CC9322 /* KeychainTokenStoreTests.swift in Sources */,
 				08EF9D2C250BC95A004539C2 /* ImageCommentsPresenterTests.swift in Sources */,
 				086044FE233E1A90005ECD22 /* CacheFeedImageDataUseCaseTests.swift in Sources */,
 				087148BE232BEDFD00D6BE1A /* FeedLocalizationTests.swift in Sources */,
