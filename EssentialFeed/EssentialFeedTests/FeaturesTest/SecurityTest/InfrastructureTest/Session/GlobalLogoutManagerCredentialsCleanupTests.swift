@@ -2,6 +2,28 @@ import EssentialFeed
 import XCTest
 
 final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
+    func test_performGlobalLogout_deletesTokenBundle() async throws {
+        let (sut, spies) = makeSUT()
+
+        try await sut.performGlobalLogout()
+
+        let tokenStorageMessages = await spies.tokenStorage.messages
+        XCTAssertTrue(tokenStorageMessages.contains(.deleteTokenBundle), "Should delete token bundle from secure storage")
+    }
+
+    func test_performGlobalLogout_whenTokenStorageFails_propagatesError() async {
+        let (sut, spies) = makeSUT()
+        let expectedError = NSError(domain: "test", code: 0)
+        await spies.tokenStorage.completeDeleteTokenBundle(withError: expectedError)
+
+        do {
+            try await sut.performGlobalLogout()
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertEqual(error as NSError, expectedError, "Should propagate token storage error")
+        }
+    }
+
     func test_performGlobalLogout_clearsOfflineLoginStore() async throws {
         let (sut, spies) = makeSUT()
 
@@ -84,6 +106,19 @@ final class GlobalLogoutManagerCredentialsCleanupTests: XCTestCase {
         } catch {
             XCTAssertEqual(error as NSError, expectedError, "Should propagate session UserDefaults error")
         }
+    }
+
+    func test_performGlobalLogout_clearsAllStoresInCorrectOrder() async throws {
+        let (sut, spies) = makeSUT()
+
+        try await sut.performGlobalLogout()
+
+        let tokenStorageMessages = await spies.tokenStorage.messages
+        XCTAssertTrue(tokenStorageMessages.contains(.deleteTokenBundle), "Should delete token bundle")
+        XCTAssertTrue(spies.offlineLoginStore.messages.contains(.clearAll), "Should clear offline login store")
+        XCTAssertTrue(spies.offlineRegistrationStore.messages.contains(.clearAll), "Should clear offline registration store")
+        XCTAssertTrue(spies.failedLoginAttemptsStore.messages.contains(.clearAll), "Should clear failed login attempts store")
+        XCTAssertTrue(spies.sessionUserDefaults.messages.contains(.clearSessionData), "Should clear session UserDefaults")
     }
 
     // MARK: - Helpers
