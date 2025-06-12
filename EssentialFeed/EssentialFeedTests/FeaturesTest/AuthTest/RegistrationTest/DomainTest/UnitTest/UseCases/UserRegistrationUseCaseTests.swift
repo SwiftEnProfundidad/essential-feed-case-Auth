@@ -27,7 +27,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(with: serverResponseData, response: response201)
+        await httpClientSpy.complete(with: serverResponseData, response: response201)
         let result = await registerTask.value
 
         XCTAssertEqual(replayProtectorSpy.protectRequestCallCount, 1, "Should protect request against replay attacks")
@@ -79,9 +79,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func test_registerUser_withInvalidEmail_returnsValidationError_andDoesNotCallHTTPOrKeychain()
-        async
-    {
+    func test_registerUser_withInvalidEmail_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
         let validatorStub = RegistrationValidatorTestStub()
         let (sut, persistenceSpy, _, httpClientSpy, _, replayProtectorSpy) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
@@ -97,9 +95,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain()
-        async
-    {
+    func test_registerUser_withWeakPassword_returnsValidationError_andDoesNotCallHTTPOrKeychain() async {
         let validatorStub = RegistrationValidatorTestStub()
         let (sut, persistenceSpy, _, httpClientSpy, _, replayProtectorSpy) = makeSUT(validator: validatorStub)
         await assertRegistrationValidation(
@@ -115,10 +111,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func
-        test_registerUser_withValidData_whenTokenStorageFails_returnsErrorAndDoesNotStoreCredentials()
-        async throws
-    {
+    func test_registerUser_withValidData_whenTokenStorageFails_returnsErrorAndDoesNotStoreCredentials() async throws {
         let (sut, persistenceSpy, _, httpClientSpy, _, _) = makeSUT()
 
         let tokenFromServer = makeToken()
@@ -137,7 +130,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(
+        await httpClientSpy.complete(
             with: serverResponseData,
             response: HTTPURLResponse(
                 url: URL(string: "https://test-register-endpoint.com")!,
@@ -173,9 +166,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
     }
 
-    func test_registerUser_withValidData_whenServerResponseIsMissingOrMalformedToken_returnsError()
-        async throws
-    {
+    func test_registerUser_withValidData_whenServerResponseIsMissingOrMalformedToken_returnsError() async throws {
         let (sut, persistenceSpy, _, httpClientSpy, _, _) = makeSUT()
 
         let malformedResponseData = Data(
@@ -186,7 +177,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(
+        await httpClientSpy.complete(
             with: malformedResponseData,
             response: HTTPURLResponse(
                 url: URL(string: "https://test-register-endpoint.com")!,
@@ -223,10 +214,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         )
     }
 
-    func
-        test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError_andDoesNotStoreCredentials()
-        async
-    {
+    func test_registerUser_withAlreadyRegisteredEmail_returnsEmailAlreadyInUseError_andDoesNotStoreCredentials() async {
         let (sut, persistenceSpy, _, httpClientSpy, _, _) = makeSUT()
 
         let task = Task {
@@ -239,7 +227,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             url: anyURL(), statusCode: 409, httpVersion: nil, headerFields: nil
         )!
 
-        httpClientSpy.complete(with: Data(), response: response409)
+        await httpClientSpy.complete(with: Data(), response: response409)
 
         let result = await task.value
 
@@ -266,7 +254,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(with: Data(), response: response409)
+        await httpClientSpy.complete(with: Data(), response: response409)
 
         let result = await Task {
             _ = await task.value
@@ -311,7 +299,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let serverResponseData = try! makeRegistrationServerResponseData(
             name: "Test", email: email, token: makeToken()
         )
-        httpClientSpy.complete(with: serverResponseData, response: response201)
+        await httpClientSpy.complete(with: serverResponseData, response: response201)
 
         _ = await registerTask.value
         await persistenceSpy.setKeychainLoadDataToReturn(passwordData)
@@ -336,7 +324,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(
+        await httpClientSpy.complete(
             with: NSError(domain: NSURLErrorDomain, code: URLError.notConnectedToInternet.rawValue))
 
         let result = await registerTask.value
@@ -394,7 +382,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let response201 = HTTPURLResponse(
             url: anyURL(), statusCode: 201, httpVersion: nil, headerFields: nil
         )!
-        httpClientSpy.complete(with: serverResponseData, response: response201)
+        await httpClientSpy.complete(with: serverResponseData, response: response201)
 
         let result = await registerTask.value
 
@@ -426,7 +414,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             await sut.register(name: "Test", email: email, password: password)
         }
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(with: serverResponseData, response: response201)
+        await httpClientSpy.complete(with: serverResponseData, response: response201)
         _ = await registerTask.value
 
         await persistenceSpy.setKeychainLoadDataToReturn(token.accessToken.data(using: .utf8))
@@ -451,7 +439,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let response409 = HTTPURLResponse(
             url: anyURL(), statusCode: 409, httpVersion: nil, headerFields: nil
         )!
-        httpClientSpy.complete(
+        await httpClientSpy.complete(
             with: Data("{\"error\":\"replay_attack_detected\"}".utf8), response: response409
         )
 
@@ -483,7 +471,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let response429 = HTTPURLResponse(
             url: anyURL(), statusCode: 429, httpVersion: nil, headerFields: nil
         )!
-        httpClientSpy.complete(with: Data("{\"error\":\"abuse_detected\"}".utf8), response: response429)
+        await httpClientSpy.complete(with: Data("{\"error\":\"abuse_detected\"}".utf8), response: response429)
 
         let result = await registerTask.value
 
@@ -508,12 +496,13 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         }
 
         await expectHTTPRequest(from: httpClientSpy)
-        httpClientSpy.complete(with: Data(), response: HTTPURLResponse(url: anyURL(), statusCode: 500, httpVersion: nil, headerFields: nil)!)
+        await httpClientSpy.complete(with: Data(), response: HTTPURLResponse(url: anyURL(), statusCode: 500, httpVersion: nil, headerFields: nil)!)
         _ = await registerTask.value
 
         XCTAssertEqual(replayProtectorSpy.protectRequestCallCount, 1, "Should call replay protector once")
         XCTAssertNotNil(replayProtectorSpy.receivedRequest, "Should pass request to replay protector")
-        XCTAssertEqual(httpClientSpy.requests.first, protectedRequest, "Should send protected request via HTTP client")
+        let httpClientRequests = await httpClientSpy.requests
+        XCTAssertEqual(httpClientRequests.first, protectedRequest, "Should send protected request via HTTP client")
     }
 
     func test_registerUser_whenReplayProtectionFails_returnsError() async throws {
@@ -530,7 +519,8 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             XCTFail("Expected failure when replay protection fails")
         }
 
-        XCTAssertTrue(httpClientSpy.requests.isEmpty, "Should not make HTTP request when replay protection fails")
+        let httpClientRequests = await httpClientSpy.requests
+        XCTAssertTrue(httpClientRequests.isEmpty, "Should not make HTTP request when replay protection fails")
     }
 
     private func makeSUT(
@@ -686,7 +676,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         validatorStub.errorToReturn = expectedError
 
         let result = await sut.register(name: name, email: email, password: password)
-        let requestCount = httpClientSpy.requests.count
+        let requestCount = await httpClientSpy.requests.count
 
         XCTAssertEqual(
             requestCount, 0, "No HTTP request should be made if validation fails", file: file, line: line
@@ -716,7 +706,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Wait for HTTP request from \(file):\(line)")
         let task = Task {
             for _ in 0 ..< 100 {
-                let requests = httpClient.requests
+                let requests = await httpClient.requests
                 if !requests.isEmpty {
                     expectation.fulfill()
                     return
@@ -726,7 +716,7 @@ final class UserRegistrationUseCaseTests: XCTestCase {
             XCTFail("Timed out waiting for HTTP request", file: file, line: line)
         }
 
-        let requests = httpClient.requests
+        let requests = await httpClient.requests
         if requests.isEmpty {
             await fulfillment(of: [expectation], timeout: timeout)
         }

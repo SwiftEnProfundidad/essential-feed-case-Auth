@@ -790,16 +790,15 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Spanish/English
   - [❌] Screenshot tests
 
-#### 5. [🚧] Redirect to login if renewal is not possible
-- [🚧] Implementation is planned but not yet started.] `AuthRouter.navigateToLogin()`
-- [🔜] Credentials cleanup
-- [❌] Integration tests
-
-#### 6. [❌] Log the expiration event for metrics
-- [❌] Unified events:
-  - [❌] `TokenExpired`
-  - [❌] `RefreshFailed`
-- [❌] Integration with Firebase/Sentry
+#### 5. [✅] Redirect to login if renewal is not possible
+- [✅] Global logout implementation (`AuthRouter.navigateToLogin()`)
+- [✅] Credentials cleanup
+    - [✅] Clear TokenStorage (authentication tokens)
+    - [✅] Clear OfflineLoginStore (offline saved login credentials)
+    - [✅] Clear OfflineRegistrationStore (offline saved registration requests)
+    - [✅] Clear FailedLoginAttemptsStore (failed login attempt records)
+    - [✅] Clear any session-related UserDefaults
+- [✅] Integration tests
 
 ---
 
@@ -812,12 +811,12 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
 - [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
-- [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
-- [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
-- [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+- [✅] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [🚧] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+- [🔜] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
 ---
-
+🚧
 ### Technical Flows (happy/sad path)
 
 **Happy path:**
@@ -1564,6 +1563,11 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [❌] Store events securely and traceably
 - [❌] Apply automatic actions for suspicious patterns
 - [❌] Allow visualization and querying of metrics
+- [❌] Log the expiration event for metrics
+- [❌] Implement structured event logging for token lifecycle:
+  - [❌] `TokenExpired` events for analytics and monitoring
+  - [❌] `RefreshFailed` events for failure pattern detection
+- [❌] Integration with Firebase/Sentry
 
 > Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 

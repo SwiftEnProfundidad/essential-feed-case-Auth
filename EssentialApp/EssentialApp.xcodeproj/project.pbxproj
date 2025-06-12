@@ -58,7 +58,6 @@
 		B46DAAB92DC22A780080160E /* LoginViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DAAB82DC22A780080160E /* LoginViewTests.swift */; };
 		B46DEFC92DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46DEFC82DC7F85300102B5A /* ThreadSafeFailedLoginAttemptsStoreSpy.swift */; };
 		B4702E3A2DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4702E392DC158F90055B3D9 /* PasswordRecoverySwiftUIViewModelTests.swift */; };
-		B47A6ADF2DF1CA99001D47CE /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */; };
 		B47A6AE02DF1CA99001D47CE /* UserLoginAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */; };
 		B47A6AE12DF1CA99001D47CE /* LoginFailureObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD62DF1CA99001D47CE /* LoginFailureObserverSpy.swift */; };
 		B47A6AE22DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47A6AD82DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift */; };
@@ -187,7 +186,6 @@
 		B47A6AD92DF1CA99001D47CE /* LoginPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPersistenceSpy.swift; sourceTree = "<group>"; };
 		B47A6ADA2DF1CA99001D47CE /* LoginSuccessObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSuccessObserverSpy.swift; sourceTree = "<group>"; };
 		B47A6ADB2DF1CA99001D47CE /* OfflineLoginStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineLoginStoreSpy.swift; sourceTree = "<group>"; };
-		B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
 		B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginAPISpy.swift; sourceTree = "<group>"; };
 		B482DFDE2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B482DFE02DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
@@ -382,7 +380,6 @@
 				B47A6AD92DF1CA99001D47CE /* LoginPersistenceSpy.swift */,
 				B47A6ADA2DF1CA99001D47CE /* LoginSuccessObserverSpy.swift */,
 				B47A6ADB2DF1CA99001D47CE /* OfflineLoginStoreSpy.swift */,
-				B47A6ADC2DF1CA99001D47CE /* TokenStorageSpy.swift */,
 				B47A6ADD2DF1CA99001D47CE /* UserLoginAPISpy.swift */,
 			);
 			path = Helpers;
@@ -718,7 +715,6 @@
 				B49DC5902DF76D0D00C5ADE6 /* LoginIntegrationTests.swift in Sources */,
 				0851CDAE239AB19000C19B1D /* InMemoryFeedStore.swift in Sources */,
 				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
-				B47A6ADF2DF1CA99001D47CE /* TokenStorageSpy.swift in Sources */,
 				B47A6AE02DF1CA99001D47CE /* UserLoginAPISpy.swift in Sources */,
 				B47A6AE12DF1CA99001D47CE /* LoginFailureObserverSpy.swift in Sources */,
 				B47A6AE22DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift in Sources */,

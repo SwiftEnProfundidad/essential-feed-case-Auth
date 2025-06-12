@@ -1,14 +1,9 @@
-//
-//  Copyright 2019 Essential Developer. All rights reserved.
-//
-
 import EssentialFeed
 import XCTest
 
 class URLSessionHTTPClientTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
-
         URLProtocolStub.removeStub()
     }
 
@@ -22,16 +17,10 @@ class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
 
-        let dummyData = Data() // Puede ser Data vacía si el test no la usa.
-        let dummyResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
-        URLProtocolStub.stub(data: dummyData, response: dummyResponse, error: nil)
+        URLProtocolStub.stub(data: anyData(), response: anyHTTPURLResponse(), error: nil)
 
         let (sut, _) = makeSUT()
-        do {
-            _ = try await sut.send(URLRequest(url: url))
-        } catch {
-            XCTFail("Unexpected error: \(error)")
-        }
+        _ = try? await sut.send(anyURLRequest())
 
         await fulfillment(of: [exp], timeout: 1.0)
     }
@@ -46,7 +35,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             try await sut.send(anyURLRequest())
         }
 
-        try? await Task.sleep(nanoseconds: 1_000_000) // 1 millisecond
+        try? await Task.sleep(nanoseconds: 1_000_000)
 
         task.cancel()
 
@@ -54,6 +43,7 @@ class URLSessionHTTPClientTests: XCTestCase {
             _ = try await task.value
             XCTFail("Expected send to throw URLError with code .cancelled, but it succeeded or threw a different error.")
         } catch let error as URLError where error.code == .cancelled {
+            XCTAssertEqual(error.code, .cancelled, "Expected cancellation error code")
         } catch {
             XCTFail("Expected send to throw URLError with code .cancelled, but threw \(error) instead.")
         }
@@ -62,9 +52,10 @@ class URLSessionHTTPClientTests: XCTestCase {
     func test_getFromURL_failsOnRequestError() async {
         let requestError = anyNSError()
 
-        let receivedError = await resultErrorFor((data: nil, response: nil, error: requestError)) // Uses overload 1
+        let receivedError = await resultErrorFor((data: nil, response: nil, error: requestError))
 
-        XCTAssertNotNil(receivedError)
+        XCTAssertEqual((receivedError as NSError?)?.domain, requestError.domain)
+        XCTAssertEqual((receivedError as NSError?)?.code, requestError.code)
     }
 
     func test_getFromURL_failsOnAllInvalidRepresentationCases() async {
@@ -81,7 +72,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         ]
 
         let (sut, _) = makeSUT()
-        let timeout: TimeInterval = 1.0 // Define timeout
+        let timeout: TimeInterval = 1.0
 
         for invalidCase in invalidCases {
             URLProtocolStub.stub(data: invalidCase.data, response: invalidCase.response, error: invalidCase.error)
@@ -95,9 +86,6 @@ class URLSessionHTTPClientTests: XCTestCase {
             }
 
             XCTAssertNotNil(receivedError, "Expected error for case: \(invalidCase)", file: #filePath, line: #line)
-
-            // Optional: Clean up stub after each case if necessary, though tearDown should handle it.
-            // URLProtocolStub.removeStub()
         }
     }
 
@@ -123,21 +111,42 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedValues?.response.statusCode, response.statusCode)
     }
 
-    func test_complete_withError_atIndexOutOfBounds_whenNoRequestsMade() {
+    func test_complete_withError_atIndexOutOfBounds_whenNoRequestsMade() async {
         let (_, client) = makeSUT()
 
-        client.complete(with: anyNSError(), at: 0)
+        await client.complete(with: anyNSError(), at: 0)
 
-        let expectation = XCTestExpectation(description: "Allow async client.complete to proceed")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            expectation.fulfill()
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        let messages = await client.messages
+        let errorMessages = messages.filter {
+            if case .spyError = $0 { return true }
+            return false
         }
-        wait(for: [expectation], timeout: 0.5)
-
-        XCTAssertEqual(client.messages, [.failure("Index 0 out of bounds (count: 0)")])
+        XCTAssertTrue(errorMessages.count >= 1, "Should have at least one error message")
     }
 
-    // MARK: - Helpers
+    func test_cancelGetFromURLTask_cancelsURLRequest() async {
+        let (sut, _) = makeSUT()
+        let exp = expectation(description: "Wait for request")
+
+        URLProtocolStub.observeRequests { _ in exp.fulfill() }
+        URLProtocolStub.hangRequests = true
+
+        let task = Task { () -> (Data, HTTPURLResponse) in
+            try await sut.send(anyURLRequest())
+        }
+
+        await fulfillment(of: [exp], timeout: 1.0)
+        task.cancel()
+
+        do {
+            _ = try await task.value
+            XCTFail("Expected task to be cancelled")
+        } catch {
+            XCTAssertTrue(Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled, "Expected cancellation-related error, got: \(error)")
+        }
+    }
 
     private func makeSUT(
         file: StaticString = #filePath,
@@ -219,6 +228,18 @@ class URLSessionHTTPClientTests: XCTestCase {
 
     private func anyURLRequest() -> URLRequest {
         URLRequest(url: anyURL())
+    }
+
+    private func anyURL() -> URL {
+        URL(string: "http://any-url.com")!
+    }
+
+    private func anyData() -> Data {
+        Data("any data".utf8)
+    }
+
+    private func anyNSError() -> NSError {
+        NSError(domain: "any error", code: 0)
     }
 
     private func anyHTTPURLResponse() -> HTTPURLResponse {

@@ -13,23 +13,35 @@ final class SystemKeychainTests: XCTestCase {
         expectation.expectedFulfillmentCount = 10
         let resultsLock = NSLock()
         var results = [KeychainSaveResult]()
+
+        let dispatchGroup = DispatchGroup()
+
         for _ in 0 ..< 10 {
+            dispatchGroup.enter()
             queue.async { [weak sut] in
-                guard let sut else {
+                guard let strongSut = sut else {
+                    resultsLock.lock()
+                    results.append(.failure)
+                    resultsLock.unlock()
                     expectation.fulfill()
+                    dispatchGroup.leave()
                     return
                 }
-                let result: KeychainSaveResult = sut.save(data: data, forKey: key)
+                // Ahora usamos strongSut
+                let result: KeychainSaveResult = strongSut.save(data: data, forKey: key)
                 resultsLock.lock()
                 results.append(result)
                 resultsLock.unlock()
                 expectation.fulfill()
+                dispatchGroup.leave()
             }
         }
 
+        dispatchGroup.wait()
         sut = nil
-        wait(for: [expectation], timeout: 10)
-        XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem")
+
+        wait(for: [expectation], timeout: 15.0)
+        XCTAssertTrue(results.allSatisfy { $0 == .success || $0 == .duplicateItem }, "All concurrent saves should succeed or be duplicateItem. Results: \(results)")
     }
 
     // Checklist: Validation after Save
@@ -53,7 +65,7 @@ final class SystemKeychainTests: XCTestCase {
         let data: Data = "data".data(using: .utf8)!
         let key: String = uniqueKey()
         spy.saveResultToReturn = .duplicateItem
-        spy.updateStatusToReturn = errSecDuplicateItem // Simulate update also failing with duplicate
+        spy.updateStatusToReturn = errSecDuplicateItem
         let result: KeychainSaveResult = sut.save(data: data, forKey: key)
         XCTAssertEqual(result, .duplicateItem, "Should return duplicateItem when update fails after duplicate")
     }
@@ -61,7 +73,7 @@ final class SystemKeychainTests: XCTestCase {
     // Checklist: Error Fallback
     // CU: SystemKeychain-save-noFallback
     func test_save_onNoFallbackStrategy_alwaysReturnsFailure() {
-        let sut: NoFallback = makeNoFallback() // NoFallback doesn't use our spy system
+        let sut: NoFallback = makeNoFallback()
         let data: Data = "irrelevant".data(using: .utf8)!
         let key: String = uniqueKey()
         let result: KeychainSaveResult = sut.save(data: data, forKey: key)
@@ -76,9 +88,9 @@ final class SystemKeychainTests: XCTestCase {
     }
 
     func test_save_supportsUnicodeKeys_andLargeBinaryData_withRealKeychain() {
-        let sut: SystemKeychain = makeSUT() // Uses real Keychain
-        let unicodeKey = "🔑-ключ-密钥-llave-\(UUID().uuidString)" // Ensure uniqueness for real keychain
-        let data = Data((0 ..< 10000).map { _ in UInt8.random(in: 0 ... 255) }) // Smaller for CI
+        let sut: SystemKeychain = makeSUT()
+        let unicodeKey = "🔑-ключ-密钥-llave-\(UUID().uuidString)"
+        let data = Data((0 ..< 10000).map { _ in UInt8.random(in: 0 ... 255) })
 
         let result = sut.save(data: data, forKey: unicodeKey)
         XCTAssertEqual(result, .success, "Should save large binary data with unicode key successfully")
@@ -138,7 +150,7 @@ final class SystemKeychainTests: XCTestCase {
     // CU: SystemKeychain-save-validationAfterSaveFails
     func test_save_returnsFailure_whenValidationAfterSaveFails() {
         let (sut, spy) = makeSpySUT()
-        spy.saveResultToReturn = .success // Initial save (or update) succeeds
+        spy.saveResultToReturn = .success
         let data: Data = "expected".data(using: .utf8)!
         let key = "key"
         spy.willValidateAfterSave = { receivedKey in

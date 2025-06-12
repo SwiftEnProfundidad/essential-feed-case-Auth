@@ -1,13 +1,14 @@
 import EssentialFeed
 import Foundation
 
-final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegistrationLoader, OfflineRegistrationDeleter {
+final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegistrationLoader, OfflineRegistrationDeleter, OfflineRegistrationStoreCleaning {
     // MARK: - Message tracking
 
     enum Message: Equatable {
         case save(UserRegistrationData)
         case loadAll
         case delete(UserRegistrationData)
+        case clearAll
     }
 
     private(set) var messages: [Message] = []
@@ -17,6 +18,7 @@ final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegist
     var saveError: Swift.Error?
     private var loadAllResult: Result<[UserRegistrationData], Swift.Error> = .success([])
     var deleteError: Swift.Error?
+    var clearAllError: Swift.Error?
 
     // MARK: - API
 
@@ -40,6 +42,11 @@ final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegist
         if let error = deleteError { throw error }
     }
 
+    func clearAll() async throws {
+        messages.append(.clearAll)
+        if let error = clearAllError { throw error }
+    }
+
     // MARK: - Helpers for tests
 
     func completeLoadAll(with registrations: [UserRegistrationData]) {
@@ -56,5 +63,13 @@ final class OfflineRegistrationStoreSpy: OfflineRegistrationStore, OfflineRegist
 
     func completeDeletion(with error: Swift.Error) {
         deleteError = error
+    }
+
+    func completeClearAllSuccessfully() {
+        clearAllError = nil
+    }
+
+    func completeClearAll(with error: Swift.Error) {
+        clearAllError = error
     }
 }

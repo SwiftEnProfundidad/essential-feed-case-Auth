@@ -1,67 +1,87 @@
 import EssentialFeed
 import Foundation
 
-public final class TokenStorageSpy: TokenStorage {
+public actor TokenStorageSpy: TokenStorage {
     public enum Message: Equatable {
         case save(tokenBundle: Token)
         case loadTokenBundle
         case deleteTokenBundle
     }
 
-    public private(set) var messages = [Message]()
+    private var _messages = [Message]()
+    private var _saveTokenBundleError: Error?
+    private var _tokenBundleToReturn: Token?
+    private var _loadTokenBundleError: Error?
+    private var _deleteTokenBundleError: Error?
+    private var _loadTokenBundleResultsQueue: [Result<Token?, Error>] = []
 
-    public var saveTokenBundleError: Error?
+    public var messages: [Message] {
+        _messages
+    }
+
+    public init() {}
 
     public func save(tokenBundle: Token) async throws {
-        messages.append(.save(tokenBundle: tokenBundle))
-        if let error = saveTokenBundleError {
+        _messages.append(.save(tokenBundle: tokenBundle))
+        if let error = _saveTokenBundleError {
             throw error
         }
     }
 
     public func completeSaveTokenBundleSuccessfully() {
-        saveTokenBundleError = nil
+        _saveTokenBundleError = nil
     }
 
     public func completeSaveTokenBundle(withError error: Error) {
-        saveTokenBundleError = error
+        _saveTokenBundleError = error
     }
 
-    public var tokenBundleToReturn: Token?
-    public var loadTokenBundleError: Error?
+    public func stubNextLoadTokenBundle(result: Result<Token?, Error>) {
+        _loadTokenBundleResultsQueue.append(result)
+    }
 
     public func loadTokenBundle() async throws -> Token? {
-        messages.append(.loadTokenBundle)
-        if let error = loadTokenBundleError {
+        _messages.append(.loadTokenBundle)
+
+        if !_loadTokenBundleResultsQueue.isEmpty {
+            let result = _loadTokenBundleResultsQueue.removeFirst()
+            switch result {
+            case let .success(token):
+                return token
+            case let .failure(error):
+                throw error
+            }
+        }
+
+        if let error = _loadTokenBundleError {
             throw error
         }
-        return tokenBundleToReturn
+
+        return _tokenBundleToReturn
     }
 
     public func completeLoadTokenBundle(with tokenBundle: Token?) {
-        tokenBundleToReturn = tokenBundle
-        loadTokenBundleError = nil
+        _tokenBundleToReturn = tokenBundle
+        _loadTokenBundleError = nil
     }
 
     public func completeLoadTokenBundle(withError error: Error) {
-        loadTokenBundleError = error
-        tokenBundleToReturn = nil
+        _loadTokenBundleError = error
+        _tokenBundleToReturn = nil
     }
 
-    public var deleteTokenBundleError: Error?
-
     public func deleteTokenBundle() async throws {
-        messages.append(.deleteTokenBundle)
-        if let error = deleteTokenBundleError {
+        _messages.append(.deleteTokenBundle)
+        if let error = _deleteTokenBundleError {
             throw error
         }
     }
 
     public func completeDeleteTokenBundleSuccessfully() {
-        deleteTokenBundleError = nil
+        _deleteTokenBundleError = nil
     }
 
     public func completeDeleteTokenBundle(withError error: Error) {
-        deleteTokenBundleError = error
+        _deleteTokenBundleError = error
     }
 }

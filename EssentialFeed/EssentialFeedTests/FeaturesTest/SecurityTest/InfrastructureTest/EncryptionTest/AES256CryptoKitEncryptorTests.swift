@@ -17,10 +17,10 @@ final class AES256CryptoKitEncryptorTests: XCTestCase {
     func test_decrypt_withDifferentKey_throwsError() throws {
         let (sut, _) = makeSUT() // Original SUT with its key
         let originalData = "Another secret".data(using: .utf8)!
-        let encryptedData = try sut.encrypt(originalData) // Encrypt with original key
+        let encryptedData = try sut.encrypt(originalData)
 
-        let differentKey = SymmetricKey(size: .bits256) // Create a new, different key
-        let differentKeySUT = AES256CryptoKitEncryptor(symmetricKey: differentKey) // SUT with the different key
+        let differentKey = SymmetricKey(size: .bits256)
+        let differentKeySUT = AES256CryptoKitEncryptor(symmetricKey: differentKey)
 
         XCTAssertThrowsError(try differentKeySUT.decrypt(encryptedData)) { error in
             let expectedError = CryptoKitEncryptionError.decryptionFailed(CryptoKitError.authenticationFailure)

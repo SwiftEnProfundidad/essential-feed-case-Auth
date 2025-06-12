@@ -62,7 +62,7 @@ final class LoginPresenterTests: XCTestCase {
     }
 
     private func makeDependencies() -> (UserLoginUseCase, LoginEventNotifierSpy, LoginFlowHandlerSpy) {
-        let loginService = LoginServiceSpy()
+        let loginService = LoginServiceSpy() // Ahora usará el spy compartido
         let useCase = UserLoginUseCase(loginService: loginService)
         let notifier = LoginEventNotifierSpy()
         let flowHandler = LoginFlowHandlerSpy()
@@ -86,11 +86,5 @@ final class LoginPresenterTests: XCTestCase {
     private class ErrorClearingViewSpy: LoginErrorClearingPresentingView {
         private(set) var clearErrorMessagesCallCount = 0
         func clearErrorMessages() { clearErrorMessagesCallCount += 1 }
-    }
-
-    private class LoginServiceSpy: LoginService {
-        func execute(credentials _: LoginCredentials) async -> Result<LoginResponse, LoginError> {
-            .failure(.invalidCredentials)
-        }
     }
 }

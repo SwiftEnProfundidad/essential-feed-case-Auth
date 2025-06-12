@@ -1,8 +1,7 @@
+import EssentialApp
 import EssentialFeed
 import SwiftUI
 import XCTest
-
-@testable import EssentialApp
 
 final class EnhancedLoginSnapshotTests: XCTestCase {
     func testLoginViewInDifferentStates() async throws {
