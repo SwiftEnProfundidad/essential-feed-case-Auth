@@ -1,7 +1,6 @@
-
 # App Architecture Diagram
 
-![App Architecture Diagram](https://raw.githubusercontent.com/SwiftEnProfundidad/essential-feed-case-Auth/main/docs/images/AchitectureEssentialApp.png))
+![App Architecture Diagram](https://raw.githubusercontent.com/SwiftEnProfundidad/essential-feed-case-Auth/main/docs/images/AchitectureEssentialApp.png)
 
 
 # Carpeta de documentación y recursos
@@ -79,3 +78,15 @@ Por defecto usa:
 - Reporte interactivo: [coverage_html_latest/index.html](coverage_html_latest/index.html)
 
 > Mantén la cobertura >85% en módulos core y prioriza edge cases de helpers/factories para robustez máxima.
+
+- [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
+- [✅] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [🚧] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+     - [✅] Analyze current GlobalLogoutManager implementation and map all storage dependencies
+     - [✅] Create comprehensive unit tests for GlobalLogoutManager cleanup validation (for GlobalLogoutManager itself)
+     - [✅] Create/verify unit tests for KeychainTokenStore logic (interaction with KeychainManaging spy)
+     - [🚧] Create/verify integration tests for SessionUserDefaultsManager to ensure actual UserDefaults cleanup
+     - [🔜] Create/verify integration tests for KeychainManager/KeychainTokenStore to ensure *actual system* Keychain deletion
+     - [❌] Create end-to-end test simulating logout and validating no storage residues remain
+     - [✅] Add missing cleanup logic if any storage is not being cleared (GlobalLogoutManager calls all dependencies)
+- [🔜] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)

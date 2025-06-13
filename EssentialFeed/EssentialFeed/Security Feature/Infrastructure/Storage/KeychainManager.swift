@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-public final class KeychainManager: @unchecked Sendable {
+public final class KeychainManager: @unchecked Sendable, KeychainManaging {
     private let reader: KeychainReader
     private let writer: KeychainWriter
     private let encryptor: KeychainEncryptor
@@ -27,8 +27,6 @@ public final class KeychainManager: @unchecked Sendable {
             errorHandler: errorHandler
         )
     }
-
-    // MARK: - Private Methods
 
     private func loadRawData(forKey key: String) throws -> Data? {
         try queue.sync {
@@ -64,15 +62,11 @@ public final class KeychainManager: @unchecked Sendable {
             throw error
         }
     }
-}
 
-// MARK: - KeychainReader
-
-extension KeychainManager: KeychainReader {
     public func load(forKey key: String) throws -> Data? {
         try queue.sync {
             do {
-                guard let rawData = try loadRawData(forKey: key) else {
+                guard let rawData = try reader.load(forKey: key) else {
                     return nil
                 }
 
@@ -82,28 +76,26 @@ extension KeychainManager: KeychainReader {
                     return try migrationManager.attemptMigration(for: rawData, key: key)
                 }
             } catch let error as KeychainError {
-                errorHandler.handle(error: error, forKey: key, operation: "load (decrypt)")
+                errorHandler.handle(error: error, forKey: key, operation: "load")
                 throw error
             } catch {
-                errorHandler.handleUnexpectedError(forKey: key, operation: "load (decrypt)")
+                errorHandler.handleUnexpectedError(forKey: key, operation: "load")
                 throw error
             }
         }
     }
-}
 
-// MARK: - KeychainWriter
-
-extension KeychainManager: KeychainWriter {
     public func save(data: Data, forKey key: String) throws {
         try queue.sync(flags: .barrier) {
             try performKeychainOperation(
                 operation: "save",
                 forKey: key,
-                action: { try saveEncryptedData(data, forKey: key) },
-                errorHandler: { error in
-                    errorHandler.handle(error: error, forKey: key, operation: "save")
-                    throw error
+                action: {
+                    let encryptedData = try encryptor.encrypt(data)
+                    try writer.save(data: encryptedData, forKey: key)
+                },
+                errorHandler: { keychainError in
+                    errorHandler.handle(error: keychainError, forKey: key, operation: "save")
                 },
                 unexpectedErrorHandler: {
                     errorHandler.handleUnexpectedError(forKey: key, operation: "save")
@@ -117,51 +109,14 @@ extension KeychainManager: KeychainWriter {
             try performKeychainOperation(
                 operation: "delete",
                 forKey: key,
-                action: { try writer.delete(forKey: key) },
-                errorHandler: { error in
-                    errorHandler.handle(error: error, forKey: key, operation: "delete")
-                    throw error
+                action: {
+                    try writer.delete(forKey: key)
+                },
+                errorHandler: { keychainError in
+                    errorHandler.handle(error: keychainError, forKey: key, operation: "delete")
                 },
                 unexpectedErrorHandler: {
                     errorHandler.handleUnexpectedError(forKey: key, operation: "delete")
-                }
-            )
-        }
-    }
-}
-
-// MARK: - KeychainEncryptor
-
-extension KeychainManager: KeychainEncryptor {
-    public func encrypt(_ data: Data) throws -> Data {
-        try queue.sync {
-            try performKeychainOperation(
-                operation: "encrypt",
-                forKey: nil,
-                action: { try encryptor.encrypt(data) },
-                errorHandler: { error in
-                    errorHandler.handle(error: error, forKey: nil, operation: "encrypt")
-                    throw error
-                },
-                unexpectedErrorHandler: {
-                    errorHandler.handleUnexpectedError(forKey: nil, operation: "encrypt")
-                }
-            )
-        }
-    }
-
-    public func decrypt(_ data: Data) throws -> Data {
-        try queue.sync {
-            try performKeychainOperation(
-                operation: "decrypt",
-                forKey: nil,
-                action: { try encryptor.decrypt(data) },
-                errorHandler: { error in
-                    errorHandler.handle(error: error, forKey: nil, operation: "decrypt")
-                    throw error
-                },
-                unexpectedErrorHandler: {
-                    errorHandler.handleUnexpectedError(forKey: nil, operation: "decrypt")
                 }
             )
         }

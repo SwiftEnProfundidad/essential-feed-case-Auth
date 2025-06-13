@@ -166,6 +166,7 @@
 		B42939712DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */; };
 		B42B78012DE64D220096DD34 /* LoginLockStatusProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */; };
 		B42B78032DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */; };
+		B43D973A2DFB719400583077 /* SessionUserDefaultsManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
@@ -361,9 +362,21 @@
 		B4F52FE22DFB232900CC9322 /* TokenRefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */; };
 		B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */; };
 		B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */; };
-		B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */; };
 		B4F52FED2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */; };
 		B4F52FEE2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */; };
+		B4F52FF22DFB410100CC9322 /* KeychainTokenStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */; };
+		B4F52FF42DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */; };
+		B4F52FF82DFB419B00CC9322 /* KeychainManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */; };
+		B4F64DBD2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DBC2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift */; };
+		B4F64DBF2DFB831C00EB362C /* KeychainTokenStoreIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DBE2DFB831C00EB362C /* KeychainTokenStoreIntegrationTests.swift */; };
+		B4F64DC42DFB856D00EB362C /* PassthroughEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */; };
+		B4F64DC52DFB856D00EB362C /* SystemKeychainAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */; };
+		B4F64DC62DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */; };
+		B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */; };
+		B4F64DCE2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */; };
+		B4F64DCF2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */; };
+		B4F64DD02DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */; };
+		B4F64DD12DFB886700EB362C /* StorageDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -603,6 +616,7 @@
 		B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTokenRefreshServiceTests.swift; sourceTree = "<group>"; };
 		B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockStatusProviderSpy.swift; sourceTree = "<group>"; };
 		B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginHandlerSpy.swift; sourceTree = "<group>"; };
+		B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
 		B447C6342DBE284200E738D3 /* EssentialFeedLoginIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedLoginIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -794,9 +808,21 @@
 		B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshCoordinator.swift; sourceTree = "<group>"; };
 		B4F52FE32DFB234E00CC9322 /* DefaultAuthenticationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticationService.swift; sourceTree = "<group>"; };
 		B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshCoordinator.swift; sourceTree = "<group>"; };
-		B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
 		B4F52FEB2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
 		B4F52FEC2DFB266300CC9322 /* HTTPClientAuthenticationHandlerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandlerFactory.swift; sourceTree = "<group>"; };
+		B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStoreTests.swift; sourceTree = "<group>"; };
+		B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientAuthenticationHandler.swift; sourceTree = "<group>"; };
+		B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManaging.swift; sourceTree = "<group>"; };
+		B4F64DBC2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		B4F64DBE2DFB831C00EB362C /* KeychainTokenStoreIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTokenStoreIntegrationTests.swift; sourceTree = "<group>"; };
+		B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassthroughEncryptor.swift; sourceTree = "<group>"; };
+		B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentKeychainErrorHandlerAdapter.swift; sourceTree = "<group>"; };
+		B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainAdapter.swift; sourceTree = "<group>"; };
+		B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalLogoutEndToEndTests.swift; sourceTree = "<group>"; };
+		B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStoreAdapter.swift; sourceTree = "<group>"; };
+		B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineLoginStoreAdapter.swift; sourceTree = "<group>"; };
+		B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineRegistrationStoreSpy.swift; sourceTree = "<group>"; };
+		B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageDependencies.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1432,7 +1458,8 @@
 		B4047DA42DDA6EA300A0C34C /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				B4F52FE92DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift */,
+				B4F52FF72DFB419B00CC9322 /* KeychainManaging.swift */,
+				B4F52FF32DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift */,
 				B4F52FDF2DFB232900CC9322 /* AuthenticationService.swift */,
 				B4F52FE02DFB232900CC9322 /* TokenRefreshCoordinator.swift */,
 				B49DC5642DF745C800C5ADE6 /* ReplayAttackProtection.swift */,
@@ -1839,6 +1866,9 @@
 		B470A0072DD4714C001661C6 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B4F64DC32DFB856D00EB362C /* Helpers */,
+				B4F64DBE2DFB831C00EB362C /* KeychainTokenStoreIntegrationTests.swift */,
+				B4F52FF12DFB410100CC9322 /* KeychainTokenStoreTests.swift */,
 				B4AF1B9A2DDB477B00FD2ED2 /* Keychain */,
 				B470A0102DD47347001661C6 /* InMemoryFailedLoginAttemptsStoreTests.swift */,
 				B470A0082DD47205001661C6 /* AnyFailedLoginAttemptStoreTests.swift */,
@@ -1999,6 +2029,8 @@
 		B4A7467D2DDD24060087C33C /* StorageTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4F64DBC2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift */,
+				B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */,
 				B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */,
 				B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */,
 			);
@@ -2079,6 +2111,8 @@
 		B4BBD4882DF91EA1001E1965 /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				B4F64DCD2DFB886700EB362C /* Helpers */,
+				B4F64DC72DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift */,
 				B4BBD49F2DF92B0D001E1965 /* GlobalLogoutIntegrationTests.swift */,
 				B4BBD4872DF91EA1001E1965 /* GlobalLogoutManagerCredentialsCleanupTests.swift */,
 			);
@@ -2266,6 +2300,27 @@
 				B4F52FE52DFB234E00CC9322 /* RefreshCoordinator.swift */,
 			);
 			path = TokenRefresh;
+			sourceTree = "<group>";
+		};
+		B4F64DC32DFB856D00EB362C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B4F64DC02DFB856D00EB362C /* PassthroughEncryptor.swift */,
+				B4F64DC12DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift */,
+				B4F64DC22DFB856D00EB362C /* SystemKeychainAdapter.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		B4F64DCD2DFB886700EB362C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B4F64DC92DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift */,
+				B4F64DCA2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift */,
+				B4F64DCB2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift */,
+				B4F64DCC2DFB886700EB362C /* StorageDependencies.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2693,7 +2748,6 @@
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */,
 				B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */,
-				B4F52FEA2DFB263F00CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */,
 				B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */,
 				B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */,
@@ -2704,6 +2758,7 @@
 				B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */,
 				B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */,
 				B4F52FD62DFAF2E100CC9322 /* TokenRefreshHandler.swift in Sources */,
+				B4F52FF42DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */,
 				B49DC5892DF74A0700C5ADE6 /* RegistrationError.swift in Sources */,
 				B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */,
@@ -2748,6 +2803,7 @@
 				B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */,
 				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
 				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
+				B4F52FF82DFB419B00CC9322 /* KeychainManaging.swift in Sources */,
 				B45C36E52DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
 				B45C36E62DDA92EE00184F55 /* AccountLockedError.swift in Sources */,
 				B4F52FE12DFB232900CC9322 /* AuthenticationService.swift in Sources */,
@@ -2841,14 +2897,19 @@
 				B4F52FDC2DFB001F00CC9322 /* AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift in Sources */,
 				B48407BA2DDC407E00834C15 /* KeychainSpy.swift in Sources */,
 				B48407BB2DDC407E00834C15 /* TokenRefreshResult+toData.swift in Sources */,
+				B4F64DBF2DFB831C00EB362C /* KeychainTokenStoreIntegrationTests.swift in Sources */,
 				B4AF1B9C2DDB477B00FD2ED2 /* InMemoryKeychainStore.swift in Sources */,
 				B4AF1B9E2DDB477B00FD2ED2 /* RealSessionManagerTests.swift in Sources */,
 				B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */,
 				08DDC13A21BEA99E00F490ED /* FeedItemsMapperTests.swift in Sources */,
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
+				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
 				B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */,
 				B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */,
+				B4F64DC42DFB856D00EB362C /* PassthroughEncryptor.swift in Sources */,
+				B4F64DC52DFB856D00EB362C /* SystemKeychainAdapter.swift in Sources */,
+				B4F64DC62DFB856D00EB362C /* SilentKeychainErrorHandlerAdapter.swift in Sources */,
 				B4E5AC972DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift in Sources */,
 				B4E5AC982DB5785C007B8F34 /* SystemKeychainTests.swift in Sources */,
 				B42939712DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift in Sources */,
@@ -2860,14 +2921,20 @@
 				B41D5DF32DE034370020B37B /* InMemoryPendingRequestStore.swift in Sources */,
 				B4E5AC99B2DB5785C007B8F34 /* SystemKeychainIntegrationTests.swift in Sources */,
 				B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */,
+				B4F64DCE2DFB886700EB362C /* InMemoryOfflineLoginStoreAdapter.swift in Sources */,
+				B4F64DCF2DFB886700EB362C /* InMemoryOfflineRegistrationStoreSpy.swift in Sources */,
+				B4F64DD02DFB886700EB362C /* InMemoryFailedLoginAttemptsStoreAdapter.swift in Sources */,
+				B4F64DD12DFB886700EB362C /* StorageDependencies.swift in Sources */,
 				B49D2E8E2DB8E98400D36E0D /* SystemSessionManagerTests.swift in Sources */,
 				B46CA1452DBE8A5800CE9ADC /* PasswordRecoveryPresenterTests.swift in Sources */,
 				B4BBD4AE2DF92CF3001E1965 /* HTTPClientInterceptorTests.swift in Sources */,
 				B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */,
 				B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */,
+				B43D973A2DFB719400583077 /* SessionUserDefaultsManagerIntegrationTests.swift in Sources */,
 				B46CA1572DBE93AE00CE9ADC /* PasswordRecoveryModelsTests.swift in Sources */,
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				B48407BF2DDC5EAC00834C15 /* KeychainFullSpy.swift in Sources */,
+				B4F52FF22DFB410100CC9322 /* KeychainTokenStoreTests.swift in Sources */,
 				08EF9D2C250BC95A004539C2 /* ImageCommentsPresenterTests.swift in Sources */,
 				086044FE233E1A90005ECD22 /* CacheFeedImageDataUseCaseTests.swift in Sources */,
 				087148BE232BEDFD00D6BE1A /* FeedLocalizationTests.swift in Sources */,
@@ -2917,6 +2984,7 @@
 				080F9A3F2531DDFB00EAD475 /* FeedEndpointTests.swift in Sources */,
 				0875468C2272340500542C32 /* FeedStoreSpecs.swift in Sources */,
 				08EF9D17250BB0E4004539C2 /* LoadResourcePresenterTests.swift in Sources */,
+				B4F64DBD2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift in Sources */,
 				B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */,
 				B4BBD4A02DF92B0D001E1965 /* GlobalLogoutIntegrationTests.swift in Sources */,
 				B46CA15D2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift in Sources */,

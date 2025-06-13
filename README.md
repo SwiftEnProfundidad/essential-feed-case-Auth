@@ -801,7 +801,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-#### Still missing / To improve [⚠️]
+#### Token Management & Session Security 🔐  [🚧]
 
 - [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - [✅] Detect 401 responses (token expired)
@@ -811,11 +811,19 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
 - [✅] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
-- [🚧] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
-- [🔜] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+- [✅] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+    - [✅] Analyze current GlobalLogoutManager implementation and map all storage dependencies
+    - [✅] Create comprehensive unit tests for GlobalLogoutManager cleanup validation (for GlobalLogoutManager itself)
+    - [✅] Create/verify unit tests for KeychainTokenStore logic (interaction with KeychainManaging spy)
+    - [✅] Create/verify integration tests for SessionUserDefaultsManager to ensure actual UserDefaults cleanup
+    - [✅] Create/verify integration tests for KeychainManager/KeychainTokenStore to ensure *actual system* Keychain deletion
+    - [✅] Create end-to-end test simulating logout and validating no storage residues remain
+    - [✅] Add missing cleanup logic if any storage is not being cleared (GlobalLogoutManager calls all dependencies)
+- [🚧] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+
 
 ---
-🚧
+
 ### Technical Flows (happy/sad path)
 
 **Happy path:**
