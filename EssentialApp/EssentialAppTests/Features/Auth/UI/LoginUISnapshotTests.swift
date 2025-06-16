@@ -4,8 +4,6 @@ import SwiftUI
 import XCTest
 
 final class LoginUISnapshotTests: XCTestCase {
-    // MARK: - Snapshot Tests (Keep existing functionality)
-
     private func test_record_loginView_allStates() async {
         let localesToTest = [
             Locale(identifier: "en"),
@@ -150,21 +148,18 @@ final class LoginUISnapshotTests: XCTestCase {
 
     private func assertSnapshot(for view: some View, named name: String, locale: Locale, file: StaticString = #filePath, line: UInt = #line) {
         let styles: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
-        let snapshotsFolder = URL(fileURLWithPath: String(describing: file))
-            .deletingLastPathComponent()
-            .appendingPathComponent("snapshots")
-
-        try? FileManager.default.createDirectory(at: snapshotsFolder, withIntermediateDirectories: true)
 
         for (style, styleSuffix) in styles {
-            _ = view.environment(\.colorScheme, style == .dark ? .dark : .light)
+            let configuredView = view
+                .environment(\.locale, locale)
+                .environment(\.colorScheme, style == .dark ? .dark : .light)
 
-            let hostingController: UIHostingController<Text> =
+            let hostingController: UIHostingController<AnyView> =
                 if Thread.isMainThread {
-                    UIHostingController(rootView: Text("Test"))
+                    UIHostingController(rootView: AnyView(configuredView))
                 } else {
                     DispatchQueue.main.sync {
-                        UIHostingController(rootView: Text("Test"))
+                        UIHostingController(rootView: AnyView(configuredView))
                     }
                 }
 
@@ -173,13 +168,8 @@ final class LoginUISnapshotTests: XCTestCase {
 
             let snapshotNameWithLocale =
                 "\(name)_\(locale.identifier.replacingOccurrences(of: "-", with: "_"))_\(styleSuffix)"
-            let snapshotURL = snapshotsFolder.appendingPathComponent("\(snapshotNameWithLocale).png")
 
-            if !FileManager.default.fileExists(atPath: snapshotURL.path) {
-                record(snapshot: snapshot, named: snapshotNameWithLocale, file: file, line: line)
-            } else {
-                assert(snapshot: snapshot, named: snapshotNameWithLocale, file: file, line: line)
-            }
+            self.assert(snapshot: snapshot, named: snapshotNameWithLocale, file: file, line: line)
         }
     }
 }

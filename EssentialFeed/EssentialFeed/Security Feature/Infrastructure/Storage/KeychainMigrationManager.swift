@@ -3,12 +3,12 @@ import Foundation
 final class KeychainMigrationManager {
     private let encryptor: KeychainEncryptor
     private let writer: KeychainWriter
-    private let errorHandler: KeychainErrorHandling
+    private let errorHandler: KeychainErrorHandler
 
     init(
         encryptor: KeychainEncryptor,
         writer: KeychainWriter,
-        errorHandler: KeychainErrorHandling
+        errorHandler: KeychainErrorHandler
     ) {
         self.encryptor = encryptor
         self.writer = writer

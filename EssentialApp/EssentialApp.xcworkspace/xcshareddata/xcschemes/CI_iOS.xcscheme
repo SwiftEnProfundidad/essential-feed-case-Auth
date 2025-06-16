@@ -26,7 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldUseLaunchSchemeArgsEnv = "NO"
       codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "YES">
       <MacroExpansion>
@@ -38,6 +38,13 @@
             ReferencedContainer = "container:../EssentialFeed/EssentialFeed.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "RECORD_SNAPSHOTS"
+            value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -74,6 +81,153 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "GlobalLogoutEndToEndTests">
+               </Test>
+               <Test
+                  Identifier = "GlobalLogoutEndToEndTests/test_performGlobalLogout_clearsAllStorageResidues()">
+               </Test>
+               <Test
+                  Identifier = "GlobalLogoutEndToEndTests/test_performGlobalLogout_whenAllStoresEmpty_completesWithoutError()">
+               </Test>
+               <Test
+                  Identifier = "GlobalLogoutEndToEndTests/test_performGlobalLogout_whenSomeStoresEmpty_stillClearsOthersWithoutError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_deleteData_withUnicodeKey_shouldRemoveData()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_delete_delegatesToSpy()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_delete_nonexistentKey_doesNotFail()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_delete_propagatesErrorFromSpy()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_delete_removesValue()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_getData_forNonexistentUnicodeKey_shouldReturnNilOrError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_get_delegatesToSpy()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_get_returnsNilForNonexistentKey()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_handleUnicodeKeys_correctly()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_saveData_overwritesPreviousData_withDeleteBeforeAdd()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_saveData_validatesPostSaveRetrieval()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_saveData_withUnicodeKey_shouldRetrieveIdenticalData()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_saveLargeData_shouldRetrieveIdenticalData()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_save_delegatesToSpy()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_save_propagatesErrorFromSpy()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_save_propagatesStringToDataConversionFailedError_fromDependency()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_save_rejectsEmptyKeys()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_save_validatesPostSaveRetrieval()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_setAndGet_returnsSavedValue()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_set_overwritesPreviousValue()">
+               </Test>
+               <Test
+                  Identifier = "KeychainHelperTests/test_stringOperations_remainCompatibleAfterDataSupport()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests/test_delete_nonexistent_key_is_idempotent()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests/test_overwrite_replaces_existing_value()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests/test_save_empty_data_returns_failure()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests/test_save_empty_key_returns_failure()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerIntegrationTests/test_save_load_and_delete_flow()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_delete_whenGenericErrorOccurs_notifiesHandlerWithUnexpectedError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_delete_whenWriterSucceeds_doesNotNotifyHandler()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_delete_whenWriterThrowsError_notifiesHandlerAndRethrowsError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenDecryptionSucceedsAfterFirstFailure_returnsDecryptedData()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenMigrationManagerThrowsStringConversionError_propagatesError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenMigrationOccursButEncryptorFailsToEncrypt_failsWithMigrationError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenMigrationSucceeds_returnsOriginalData()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenReaderReturnsNil_returnsNilAndDoesNotNotifyHandler()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenReaderSucceeds_returnsDataAndDoesNotNotifyHandler()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenReaderThrowsError_notifiesHandlerAndRethrowsError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_load_whenReaderThrowsGenericError_notifiesHandlerWithUnhandledErrorAndRethrowsGenericError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_save_whenEncryptionAndWriteSucceed_doesNotNotifyHandler()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_save_whenEncryptionAndWritingSucceed_completesSuccessfully()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_save_whenEncryptorFails_notifiesHandlerAndRethrowsError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_save_whenGenericErrorOccurs_notifiesHandlerWithUnexpectedError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainManagerTests/test_save_whenWriterFails_notifiesHandlerAndRethrowsError()">
+               </Test>
+               <Test
                   Identifier = "KeychainSecureStorageTests">
                </Test>
                <Test
@@ -87,6 +241,54 @@
                </Test>
                <Test
                   Identifier = "KeychainSecureStorageTests/test_saveData_usesFallback_whenKeychainFails()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreIntegrationTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreIntegrationTests/test_deleteTokenBundle_nonexistent_is_idempotent()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreIntegrationTests/test_overwrite_tokenBundle_replaces_existing_value()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreIntegrationTests/test_save_invalidTokenData_doesNotCrashAndThrows()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreIntegrationTests/test_save_load_and_delete_tokenBundle_flow()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_deleteTokenBundle_removesTokenFromKeychain()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_deleteTokenBundle_whenNoTokenSaved_completesWithoutError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_loadTokenBundle_retrievesSavedTokenFromKeychain()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_loadTokenBundle_whenKeychainDataIsCorrupt_throwsDecodingError()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_loadTokenBundle_whenNoTokenSaved_returnsNil()">
+               </Test>
+               <Test
+                  Identifier = "KeychainTokenStoreTests/test_save_storesTokenEncryptedInKeychain()">
+               </Test>
+               <Test
+                  Identifier = "RealSessionManagerTests">
+               </Test>
+               <Test
+                  Identifier = "RealSessionManagerTests/test_isAuthenticated_queriesKeychainWithAuthTokenKey()">
+               </Test>
+               <Test
+                  Identifier = "RealSessionManagerTests/test_isAuthenticated_returnsFalseWhenKeychainHasNoToken()">
+               </Test>
+               <Test
+                  Identifier = "RealSessionManagerTests/test_isAuthenticated_returnsTrueWhenKeychainHasToken()">
                </Test>
                <Test
                   Identifier = "SystemKeychainIntegrationCoverageTests">
@@ -312,6 +514,18 @@
                </Test>
                <Test
                   Identifier = "SystemKeychainTests/test_update_onSystemKeychain_withValidAndInvalidInput()">
+               </Test>
+               <Test
+                  Identifier = "TokenRefreshEndToEndTests">
+               </Test>
+               <Test
+                  Identifier = "TokenRefreshEndToEndTests/test_endToEndMultipleRequests_singleRefresh()">
+               </Test>
+               <Test
+                  Identifier = "TokenRefreshEndToEndTests/test_endToEndTokenRefresh_failure()">
+               </Test>
+               <Test
+                  Identifier = "TokenRefreshEndToEndTests/test_endToEndTokenRefresh_success()">
                </Test>
             </SkippedTests>
             <LocationScenarioReference

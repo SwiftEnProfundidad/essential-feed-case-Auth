@@ -72,7 +72,8 @@ public final class LoginViewModel: ObservableObject {
     @MainActor
     public func login() async {
         await checkAccountUnlock(for: username)
-        guard !isLoginBlocked else {
+
+        if isLoginBlocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
             errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             return
@@ -141,21 +142,18 @@ public final class LoginViewModel: ObservableObject {
         await loginSecurity.resetAttempts(username: username)
     }
 
+    @MainActor
     private func handleFailedLogin(username: String, error: LoginError = .invalidCredentials) async {
         await loginSecurity.handleFailedLogin(username: username)
 
         let isLocked = await loginSecurity.isAccountLocked(username: username)
         if isLocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            await MainActor.run { [weak self] in
-                guard let self else { return }
-                self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
-                self.isLoginBlocked = true
-            }
+            self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            self.isLoginBlocked = true
         } else {
-            await MainActor.run { [weak self] in
-                self?.errorMessage = self?.blockMessageProvider.message(for: error)
-            }
+            self.errorMessage = self.blockMessageProvider.message(for: error)
+            self.isLoginBlocked = false
         }
     }
 
@@ -168,7 +166,9 @@ public final class LoginViewModel: ObservableObject {
             isLoginBlocked = true
         } else {
             isLoginBlocked = false
-            errorMessage = nil
+            if errorMessage?.contains("locked") == true {
+                errorMessage = nil
+            }
         }
     }
 
@@ -198,12 +198,9 @@ public final class LoginViewModel: ObservableObject {
     }
 
     public func userDidInitiateEditing() {
-        print("[LoginViewModel] userDidInitiateEditing called.") // DEBUG PRINT
-        print("[LoginViewModel] errorMessage before clearing: \(String(describing: errorMessage))") // DEBUG PRINT
         if errorMessage != nil {
             errorMessage = nil
         }
-        print("[LoginViewModel] errorMessage after clearing: \(String(describing: errorMessage))") // DEBUG PRINT
     }
 
     // MARK: - Navigation

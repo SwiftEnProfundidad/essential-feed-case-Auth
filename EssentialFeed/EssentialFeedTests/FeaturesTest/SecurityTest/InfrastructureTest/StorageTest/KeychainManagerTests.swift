@@ -15,7 +15,7 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow the exact error from KeychainReader")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "load")], "Should notify error handler with correct error details")
+        XCTAssertEqual(errorHandlerSpy.messages, [.handle(error: expectedError, key: testKey, operation: "load")], "Should notify error handler with correct error details")
         XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
     }
 
@@ -32,7 +32,7 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey), "Should not throw when reader and decryptor succeed")
 
         XCTAssertEqual(capturedData, plainData, "Should return decrypted plain data")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful operation")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful operation")
         XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Should decrypt the data from reader")
     }
@@ -50,15 +50,13 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertIdentical(capturedError as NSError?, genericError, "Should rethrow the original generic error")
-        let expectedKeychainError = KeychainError.unhandledError(-1)
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler exactly once")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, expectedKeychainError, "Should report unhandled error type to handler")
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Should notify error handler exactly once")
+        if let firstMessage = errorHandlerSpy.messages.first {
+            if case let .handleUnexpectedError(key: reportedKey, operation: reportedOperation) = firstMessage {
                 XCTAssertEqual(reportedKey, testKey, "Should report correct key to error handler")
-                XCTAssertEqual(reportedOperation, "load - unexpected error type", "Should indicate unexpected error type in operation description")
+                XCTAssertEqual(reportedOperation, "load", "Should indicate load operation")
             } else {
-                XCTFail("Error handler should receive handled message type")
+                XCTFail("Error handler should receive handleUnexpectedError message type")
             }
         } else {
             XCTFail("Error handler should be notified when generic error occurs")
@@ -82,7 +80,7 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow encryption error")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about encryption failure")
+        XCTAssertEqual(errorHandlerSpy.messages, [.handle(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about encryption failure")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: testData)], "Should attempt to encrypt provided data")
     }
 
@@ -102,7 +100,7 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow writer error")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about writer failure")
+        XCTAssertEqual(errorHandlerSpy.messages, [.handle(error: expectedError, key: testKey, operation: "save")], "Should notify error handler about writer failure")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt data before attempting to write")
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should attempt to save encrypted data")
     }
@@ -118,7 +116,7 @@ final class KeychainManagerTests: XCTestCase {
 
         XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Should not throw when encryption and writing succeed")
 
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful operation")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful operation")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt provided data")
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted data with correct key")
     }
@@ -138,7 +136,7 @@ final class KeychainManagerTests: XCTestCase {
         }
 
         XCTAssertEqual(capturedError as? KeychainError, expectedError, "Should rethrow deletion error")
-        XCTAssertEqual(errorHandlerSpy.receivedMessages, [.handled(error: expectedError, key: testKey, operation: "delete")], "Should notify error handler about deletion failure")
+        XCTAssertEqual(errorHandlerSpy.messages, [.handle(error: expectedError, key: testKey, operation: "delete")], "Should notify error handler about deletion failure")
         XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Should attempt to delete with correct key")
     }
 
@@ -150,7 +148,7 @@ final class KeychainManagerTests: XCTestCase {
 
         XCTAssertNoThrow(try sut.delete(forKey: testKey), "Should not throw when deletion succeeds")
 
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful deletion")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful deletion")
         XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Should delete with correct key")
     }
 
@@ -202,7 +200,7 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey), "Should not throw when reader returns nil")
 
         XCTAssertNil(capturedData, "Should return nil when reader returns nil")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler when reader returns nil")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler when reader returns nil")
         XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
     }
 
@@ -219,7 +217,7 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey), "Should not throw when decryption succeeds")
 
         XCTAssertEqual(capturedData, decryptedData, "Should return decrypted data")
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful decryption")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful decryption")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.decrypt(data: encryptedData)], "Should attempt to decrypt the data")
     }
 
@@ -249,7 +247,7 @@ final class KeychainManagerTests: XCTestCase {
 
         XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Should not throw when encryption and writing succeed")
 
-        XCTAssertTrue(errorHandlerSpy.receivedMessages.isEmpty, "Should not notify error handler on successful operation")
+        XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful operation")
         XCTAssertEqual(encryptorSpy.receivedMessages, [.encrypt(data: plainData)], "Should encrypt the provided data")
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted data with correct key")
     }
@@ -268,14 +266,13 @@ final class KeychainManagerTests: XCTestCase {
             XCTAssertIdentical(error as NSError?, genericError, "Should rethrow the original generic error")
         }
 
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler exactly once")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, KeychainError.unhandledError(-1), "Should report unhandled error type to handler")
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Should notify error handler exactly once")
+        if let firstMessage = errorHandlerSpy.messages.first {
+            if case let .handleUnexpectedError(key: reportedKey, operation: reportedOperation) = firstMessage {
                 XCTAssertEqual(reportedKey, testKey, "Should report correct key to error handler")
-                XCTAssertEqual(reportedOperation, "save - unexpected error type", "Should indicate unexpected error type in operation description")
+                XCTAssertEqual(reportedOperation, "save", "Should indicate save operation")
             } else {
-                XCTFail("Error handler should receive handled message type")
+                XCTFail("Error handler should receive handleUnexpectedError message type")
             }
         }
     }
@@ -291,14 +288,13 @@ final class KeychainManagerTests: XCTestCase {
             XCTAssertIdentical(error as NSError?, genericError, "Should rethrow the original generic error")
         }
 
-        XCTAssertEqual(errorHandlerSpy.receivedMessages.count, 1, "Should notify error handler exactly once")
-        if let firstMessage = errorHandlerSpy.receivedMessages.first {
-            if case let .handled(error: reportedError, key: reportedKey, operation: reportedOperation) = firstMessage {
-                XCTAssertEqual(reportedError, KeychainError.unhandledError(-1), "Should report unhandled error type to handler")
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Should notify error handler exactly once")
+        if let firstMessage = errorHandlerSpy.messages.first {
+            if case let .handleUnexpectedError(key: reportedKey, operation: reportedOperation) = firstMessage {
                 XCTAssertEqual(reportedKey, testKey, "Should report correct key to error handler")
-                XCTAssertEqual(reportedOperation, "delete - unexpected error type", "Should indicate unexpected error type in operation description")
+                XCTAssertEqual(reportedOperation, "delete", "Should indicate delete operation")
             } else {
-                XCTFail("Error handler should receive handled message type")
+                XCTFail("Error handler should receive handleUnexpectedError message type")
             }
         }
     }

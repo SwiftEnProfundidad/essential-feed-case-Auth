@@ -5,7 +5,7 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
     private let reader: KeychainReader
     private let writer: KeychainWriter
     private let encryptor: KeychainEncryptor
-    private let errorHandler: KeychainErrorHandling
+    private let errorHandler: KeychainErrorHandler
     private let migrationManager: KeychainMigrationManager
     private let queue = DispatchQueue(
         label: "com.essentialfeed.keychain.manager", attributes: .concurrent
@@ -15,7 +15,7 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
         reader: KeychainReader,
         writer: KeychainWriter,
         encryptor: KeychainEncryptor,
-        errorHandler: KeychainErrorHandling
+        errorHandler: KeychainErrorHandler
     ) {
         self.reader = reader
         self.writer = writer

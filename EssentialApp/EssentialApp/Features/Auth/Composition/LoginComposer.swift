@@ -12,7 +12,7 @@ public enum LoginComposer {
         let loginAPI = NetworkDependencyFactory.makeLoginAPI(httpClient: httpClient)
         let tokenStorage = KeychainDependencyFactory.makeTokenStorage()
 
-        let loginFlowHandler = makeLoginFlowHandler(onAuthenticated: onAuthenticated)
+        _ = makeLoginFlowHandler(onAuthenticated: onAuthenticated)
         let loginService = LoginServiceFactory.makeLoginService(
             config: config,
             loginAPI: loginAPI,

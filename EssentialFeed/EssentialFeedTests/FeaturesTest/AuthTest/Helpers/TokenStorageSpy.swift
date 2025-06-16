@@ -60,6 +60,17 @@ public actor TokenStorageSpy: TokenStorage {
         return _tokenBundleToReturn
     }
 
+    public func completeLoad(with result: Result<Token?, Error>) async {
+        switch result {
+        case let .success(token):
+            _tokenBundleToReturn = token
+            _loadTokenBundleError = nil
+        case let .failure(error):
+            _loadTokenBundleError = error
+            _tokenBundleToReturn = nil
+        }
+    }
+
     public func completeLoadTokenBundle(with tokenBundle: Token?) {
         _tokenBundleToReturn = tokenBundle
         _loadTokenBundleError = nil

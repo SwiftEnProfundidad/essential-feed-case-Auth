@@ -1,8 +1,7 @@
-
 import EssentialFeed
 import Foundation
 
-public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
+public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, @unchecked Sendable {
     private let queue = DispatchQueue(label: "ThreadSafeFailedLoginAttemptsStoreSpy.queue", attributes: .concurrent)
     private var _lastResetCount = 0
     private var _getAttemptsCallCount = 0
@@ -21,29 +20,34 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
 
     public func getAttempts(for username: String) -> Int {
         queue.sync(flags: .barrier) {
-            _ = _attempts[username, default: 0]
             _getAttemptsCallCount += 1
             _capturedUsernames.append(username)
             return _attempts[username, default: 0]
         }
     }
 
-    public func incrementAttempts(for username: String) {
-        queue.sync(flags: .barrier) {
-            _incrementAttemptsCallCount += 1
-            _capturedUsernames.append(username)
-            _attempts[username, default: 0] += 1
-            _lastAttemptTimes[username] = Date()
+    public func incrementAttempts(for username: String) async {
+        await withCheckedContinuation { continuation in
+            queue.async(flags: .barrier) {
+                self._incrementAttemptsCallCount += 1
+                self._capturedUsernames.append(username)
+                self._attempts[username, default: 0] += 1
+                self._lastAttemptTimes[username] = Date()
+                continuation.resume()
+            }
         }
     }
 
-    public func resetAttempts(for username: String) {
-        queue.sync(flags: .barrier) {
-            _lastResetCount = _incrementAttemptsCallCount
-            _resetAttemptsCallCount += 1
-            _capturedUsernames.append(username)
-            _attempts[username] = 0
-            _lastAttemptTimes[username] = nil
+    public func resetAttempts(for username: String) async {
+        await withCheckedContinuation { continuation in
+            queue.async(flags: .barrier) {
+                self._lastResetCount = self._incrementAttemptsCallCount
+                self._resetAttemptsCallCount += 1
+                self._capturedUsernames.append(username)
+                self._attempts[username] = 0
+                self._lastAttemptTimes[username] = nil
+                continuation.resume()
+            }
         }
     }
 

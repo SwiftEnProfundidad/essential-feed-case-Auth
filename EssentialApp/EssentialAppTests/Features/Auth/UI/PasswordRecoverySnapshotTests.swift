@@ -26,7 +26,6 @@ final class PasswordRecoverySnapshotTests: XCTestCase {
         let view = PasswordRecoveryScreen(viewModel: viewModel)
         let controller = UIHostingController(rootView: view)
         controller.loadViewIfNeeded()
-        // Simula la acción de recuperación
         viewModel.recoverPassword()
         return controller
     }
