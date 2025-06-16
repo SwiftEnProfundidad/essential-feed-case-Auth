@@ -777,11 +777,11 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 #### 3. [⚠️] Store the new token securely after renewal
 - [✅] KeychainManager:
   - [✅] AES-256 encryption
-  - [❌] Migration of existing tokens (advanced scenarios/mocking)
+  - [🚧] Migration of existing tokens (advanced scenarios/mocking)
   - [✅] Security tests (Keychain Spy):
     - [✅] Stores token in Keychain on successful refresh (happy path)
     - [✅] Tests that verify encryption (AES-256) on write
-    - [❌] Negative/error-path & advanced security tests
+    - [🔜] Negative/error-path & advanced security tests
 
 #### 4. [⚠️] Notify the user if renewal fails
 - [✅] Basic alerts (Snackbar)
@@ -801,7 +801,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-#### Token Management & Session Security 🔐  [🚧]
+#### Token Management & Session Security 🔐  [✅]
 
 - [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - [✅] Detect 401 responses (token expired)
@@ -819,8 +819,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Create/verify integration tests for KeychainManager/KeychainTokenStore to ensure *actual system* Keychain deletion
     - [✅] Create end-to-end test simulating logout and validating no storage residues remain
     - [✅] Add missing cleanup logic if any storage is not being cleared (GlobalLogoutManager calls all dependencies)
-- [🚧] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
-
+- [✅] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
 ---
 

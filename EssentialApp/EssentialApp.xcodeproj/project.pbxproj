@@ -40,6 +40,7 @@
 		0895DAAE234B3F7E0031BB2D /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0895DAAA234B3F7E0031BB2D /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CF92F52555A15B006B7E7D /* NullStore.swift */; };
 		B40563EA2DE5C2770063C09A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B40563E82DE5C2770063C09A /* Localizable.strings */; };
+		B40ADA972E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA962E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift */; };
 		B423AB8B2DDF733500373E8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0895DA8F234B3B970031BB2D /* Assets.xcassets */; };
 		B423AB8E2DDF76B400373E8A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AB8D2DDF76B400373E8A /* SwiftUI.framework */; };
 		B423AB902DDF76BC00373E8A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AB8F2DDF76BC00373E8A /* UIKit.framework */; };
@@ -159,6 +160,7 @@
 		B40563EC2DE5C2A00063C09A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B40563ED2DE5C3E10063C09A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		B40563EE2DE5C3E10063C09A /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B40ADA962E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshFailureNotificationSnapshotTests.swift; sourceTree = "<group>"; };
 		B423AB8D2DDF76B400373E8A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/iOSSupport/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		B423AB8F2DDF76BC00373E8A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.4.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		B44823382DD3A226009E59A5 /* LoginUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginUIComposer.swift; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADA962E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift */,
 				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
 				B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */,
 				B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */,
@@ -577,7 +580,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "Essential Developer";
 				TargetAttributes = {
 					0895DA82234B3B950031BB2D = {
@@ -652,7 +655,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
+			shellScript = "#!/bin/sh\n\n# Título: SwiftFormat para $TARGET_NAME (Intento con export explícito)\n\n# 1. Forzar desactivación del sandbox (MUY IMPORTANTE)\nexport DISABLE_XCODE_USER_SCRIPT_SANDBOXING=1\necho \"[SwiftFormat Script] Attempting to run with DISABLE_XCODE_USER_SCRIPT_SANDBOXING=1\"\n\n# 2. Detectar binario de SwiftFormat\nSWIFTFORMAT_PATH=\"\"\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT_PATH=\"/opt/homebrew/bin/swiftformat\"\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT_PATH=\"/usr/local/bin/swiftformat\"\nelif command -v swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT_PATH=$(command -v swiftformat)\nelse\n  echo \"warning: [SwiftFormat Script] SwiftFormat not found. Install via: brew install swiftformat. Skipping for $TARGET_NAME.\"\n  exit 0\nfi\necho \"[SwiftFormat Script] Using SwiftFormat at: $SWIFTFORMAT_PATH\"\n\n# 3. Configuración de rutas\nREPO_ROOT_GUESS=\"$SRCROOT/..\" # Asume que .swiftformat está un nivel arriba del dir del target\nCONFIG_FILE=\"$REPO_ROOT_GUESS/.swiftformat\"\nTARGET_DIR=\"$SRCROOT\" # El directorio del target actual\n\necho \"[SwiftFormat Script] Target directory (TARGET_DIR): $TARGET_DIR\"\necho \"[SwiftFormat Script] Assumed repository root (REPO_ROOT_GUESS): $REPO_ROOT_GUESS\"\necho \"[SwiftFormat Script] Expected config file path (CONFIG_FILE): $CONFIG_FILE\"\n\n# 4. \n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -700,6 +703,7 @@
 				B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */,
 				B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
+				B40ADA972E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift in Sources */,
 				082C00062359E4C6008927D3 /* SharedTestHelpers.swift in Sources */,
 				088B441925309AA300D75AAD /* CommentsUIIntegrationTests.swift in Sources */,
 				08073B57238D2E1000A75DC6 /* UIControl+TestHelpers.swift in Sources */,
@@ -816,8 +820,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -878,8 +884,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -905,7 +913,6 @@
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -927,7 +934,6 @@
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				INFOPLIST_FILE = EssentialApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -951,7 +957,6 @@
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -978,7 +983,6 @@
 				CODE_SIGNING_REQUIRED = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
 				INFOPLIST_FILE = EssentialAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (

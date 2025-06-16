@@ -1,11 +1,11 @@
 import Foundation
 
-final class KeychainMigrationManager {
+public final class KeychainMigrationManager {
     private let encryptor: KeychainEncryptor
     private let writer: KeychainWriter
     private let errorHandler: KeychainErrorHandler
 
-    init(
+    public init(
         encryptor: KeychainEncryptor,
         writer: KeychainWriter,
         errorHandler: KeychainErrorHandler
@@ -15,7 +15,7 @@ final class KeychainMigrationManager {
         self.errorHandler = errorHandler
     }
 
-    func attemptMigration(for rawData: Data, key: String) throws -> Data {
+    public func attemptMigration(for rawData: Data, key: String) throws -> Data {
         guard let plainTextTokenString = String(data: rawData, encoding: .utf8) else {
             errorHandler.handle(error: .migrationFailedBadFormat, forKey: key, operation: "load (migration attempt - bad format)")
             throw KeychainError.migrationFailedBadFormat
