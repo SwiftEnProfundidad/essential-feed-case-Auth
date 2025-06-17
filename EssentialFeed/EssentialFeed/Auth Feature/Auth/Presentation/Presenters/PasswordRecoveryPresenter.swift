@@ -1,28 +1,30 @@
 import Foundation
 
-public final class PasswordRecoveryPresenter {
-    private weak var view: PasswordRecoveryView?
-
-    public init(view: PasswordRecoveryView) {
-        self.view = view
-    }
-
-    public func didRecoverPassword(with result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) {
+public enum PasswordRecoveryPresenter {
+    public static func map(_ result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> PasswordRecoveryViewModel {
         switch result {
         case let .success(response):
-            view?.display(PasswordRecoveryViewModel(message: response.message, isSuccess: true))
+            PasswordRecoveryViewModel(message: response.message, isSuccess: true)
         case let .failure(error):
-            let message = switch error {
-            case .invalidEmailFormat:
-                "El email no tiene un formato válido."
-            case .emailNotFound:
-                "No existe ninguna cuenta asociada a ese email."
-            case .network:
-                "Error de conexión. Inténtalo de nuevo."
-            case .unknown:
-                "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde."
-            }
-            view?.display(PasswordRecoveryViewModel(message: message, isSuccess: false))
+            PasswordRecoveryViewModel(message: localized(error), isSuccess: false)
+        }
+    }
+
+    private static func localized(_ error: PasswordRecoveryError) -> String {
+        switch error {
+        case .invalidEmailFormat:
+            return "Email format is not valid."
+        case .emailNotFound:
+            return "No account associated with that email."
+        case .network:
+            return "Connection error. Please try again."
+        case let .rateLimitExceeded(retryAfterSeconds):
+            let minutes = retryAfterSeconds / 60
+            return minutes > 0
+                ? "Too many attempts. Please try again in \(minutes) minutes."
+                : "Too many attempts. Please try again in a few seconds."
+        case .unknown:
+            return "Unknown error. Please try again."
         }
     }
 }

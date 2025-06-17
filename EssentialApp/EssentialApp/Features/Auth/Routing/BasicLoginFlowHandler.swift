@@ -9,7 +9,7 @@ class BasicLoginFlowHandler: LoginFlowHandler {
         switch result {
         case .success:
             onAuthenticated?()
-        case let .failure(error):
+        case .failure:
             break
         }
     }
@@ -18,7 +18,7 @@ class BasicLoginFlowHandler: LoginFlowHandler {
         switch result {
         case .success:
             break
-        case let .failure(error):
+        case .failure:
             break
         }
     }

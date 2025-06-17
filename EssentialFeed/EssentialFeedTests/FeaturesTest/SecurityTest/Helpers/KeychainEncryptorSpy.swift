@@ -8,38 +8,40 @@ final class KeychainEncryptorSpy: KeychainEncryptor, @unchecked Sendable {
         case decrypt(data: Data)
     }
 
-    private let lock = OSAllocatedUnfairLock()
+    private let lock = NSLock()
     private var _receivedMessages = [Message]()
     private var _encryptResult: Result<Data, Error>?
     private var _decryptResult: Result<Data, Error>?
 
     var receivedMessages: [Message] {
-        lock.withLock { _receivedMessages }
+        lock.lock()
+        defer { lock.unlock() }
+        return _receivedMessages
     }
 
     var encryptCallCount: Int {
-        lock.withLock {
-            _receivedMessages.filter { if case .encrypt = $0 { true } else { false } }.count
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        return _receivedMessages.filter { if case .encrypt = $0 { true } else { false } }.count
     }
 
     var decryptCallCount: Int {
-        lock.withLock {
-            _receivedMessages.filter { if case .decrypt = $0 { true } else { false } }.count
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        return _receivedMessages.filter { if case .decrypt = $0 { true } else { false } }.count
     }
 
     var encryptedData: [Data] {
-        lock.withLock {
-            _receivedMessages.compactMap { if case let .encrypt(data) = $0 { data } else { nil } }
-        }
+        lock.lock()
+        defer { lock.unlock() }
+        return _receivedMessages.compactMap { if case let .encrypt(data) = $0 { data } else { nil } }
     }
 
     func encrypt(_ data: Data) throws -> Data {
-        let result = lock.withLock { () -> Result<Data, Error>? in
-            _receivedMessages.append(.encrypt(data: data))
-            return _encryptResult
-        }
+        lock.lock()
+        _receivedMessages.append(.encrypt(data: data))
+        let result = _encryptResult
+        lock.unlock()
 
         guard let result else {
             return data
@@ -54,10 +56,10 @@ final class KeychainEncryptorSpy: KeychainEncryptor, @unchecked Sendable {
     }
 
     func decrypt(_ data: Data) throws -> Data {
-        let result = lock.withLock { () -> Result<Data, Error>? in
-            _receivedMessages.append(.decrypt(data: data))
-            return _decryptResult
-        }
+        lock.lock()
+        _receivedMessages.append(.decrypt(data: data))
+        let result = _decryptResult
+        lock.unlock()
 
         guard let result else {
             return data
@@ -72,26 +74,26 @@ final class KeychainEncryptorSpy: KeychainEncryptor, @unchecked Sendable {
     }
 
     func completeEncrypt(with data: Data) {
-        lock.withLock {
-            _encryptResult = .success(data)
-        }
+        lock.lock()
+        _encryptResult = .success(data)
+        lock.unlock()
     }
 
     func completeEncrypt(with error: Error) {
-        lock.withLock {
-            _encryptResult = .failure(error)
-        }
+        lock.lock()
+        _encryptResult = .failure(error)
+        lock.unlock()
     }
 
     func completeDecrypt(with data: Data) {
-        lock.withLock {
-            _decryptResult = .success(data)
-        }
+        lock.lock()
+        _decryptResult = .success(data)
+        lock.unlock()
     }
 
     func completeDecrypt(with error: Error) {
-        lock.withLock {
-            _decryptResult = .failure(error)
-        }
+        lock.lock()
+        _decryptResult = .failure(error)
+        lock.unlock()
     }
 }

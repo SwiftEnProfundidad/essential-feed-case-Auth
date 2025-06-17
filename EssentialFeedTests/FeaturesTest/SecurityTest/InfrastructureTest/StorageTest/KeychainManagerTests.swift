@@ -1,6 +1,4 @@
 @testable import EssentialFeed
-
-// Existing imports
 import XCTest
 
 // // TODO: Create Spies for KeychainReader, KeychainWriter, KeychainEncryptor
@@ -85,11 +83,11 @@ final class KeychainManagerTests: XCTestCase {
             errorHandler: errorHandler
         )
 
-        // trackForMemoryLeaks(sut, file: file, line: line)
-        // trackForMemoryLeaks(readerSpy, file: file, line: line)
-        // trackForMemoryLeaks(writerSpy, file: file, line: line)
-        // trackForMemoryLeaks(encryptorSpy, file: file, line: line)
-        // trackForMemoryLeaks(errorHandler, file: file, line: line)
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(readerSpy)
+        trackForMemoryLeaks(writerSpy)
+        trackForMemoryLeaks(encryptorSpy)
+        trackForMemoryLeaks(errorHandler)
 
         return (sut, readerSpy, writerSpy, encryptorSpy, errorHandler)
     }

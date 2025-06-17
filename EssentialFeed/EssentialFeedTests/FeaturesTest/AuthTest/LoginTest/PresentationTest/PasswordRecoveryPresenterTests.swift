@@ -1,63 +1,48 @@
-
 import EssentialFeed
 import XCTest
 
 final class PasswordRecoveryPresenterTests: XCTestCase {
-    func test_presenter_deliversSuccessViewModel_onSuccessfulRecovery() {
-        let (sut, view) = makeSUT()
+    func test_map_deliversSuccessViewModel_onSuccessfulRecovery() {
         let response = PasswordRecoveryResponse(message: "Check your email")
 
-        sut.didRecoverPassword(with: .success(response))
+        let viewModel = PasswordRecoveryPresenter.map(.success(response))
 
-        XCTAssertEqual(view.messages, [
-            PasswordRecoveryViewModel(message: "Check your email", isSuccess: true)
-        ])
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Check your email", isSuccess: true))
     }
 
-    func test_presenter_deliversInvalidEmailErrorViewModel_onInvalidEmailError() {
-        let (sut, view) = makeSUT()
+    func test_map_deliversInvalidEmailErrorViewModel_onInvalidEmailError() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.invalidEmailFormat))
 
-        sut.didRecoverPassword(with: .failure(.invalidEmailFormat))
-
-        XCTAssertEqual(view.messages, [
-            PasswordRecoveryViewModel(message: "El email no tiene un formato válido.", isSuccess: false)
-        ])
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Email format is not valid.", isSuccess: false))
     }
 
-    func test_presenter_deliversEmailNotFoundErrorViewModel_onEmailNotFoundError() {
-        let (sut, view) = makeSUT()
+    func test_map_deliversEmailNotFoundErrorViewModel_onEmailNotFoundError() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.emailNotFound))
 
-        sut.didRecoverPassword(with: .failure(.emailNotFound))
-
-        XCTAssertEqual(view.messages, [
-            PasswordRecoveryViewModel(message: "No existe ninguna cuenta asociada a ese email.", isSuccess: false)
-        ])
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "No account associated with that email.", isSuccess: false))
     }
 
-    func test_presenter_deliversNetworkErrorViewModel_onNetworkError() {
-        let (sut, view) = makeSUT()
+    func test_map_deliversNetworkErrorViewModel_onNetworkError() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.network))
 
-        sut.didRecoverPassword(with: .failure(.network))
-
-        XCTAssertEqual(view.messages, [
-            PasswordRecoveryViewModel(message: "Error de conexión. Inténtalo de nuevo.", isSuccess: false)
-        ])
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Connection error. Please try again.", isSuccess: false))
     }
 
-    // MARK: - Helpers
+    func test_map_deliversRateLimitErrorViewModel_onRateLimitError() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.rateLimitExceeded(retryAfterSeconds: 300)))
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (PasswordRecoveryPresenter, ViewSpy) {
-        let view = ViewSpy()
-        let sut = PasswordRecoveryPresenter(view: view)
-        trackForMemoryLeaks(view, file: file, line: line)
-        trackForMemoryLeaks(sut, file: file, line: line)
-        return (sut, view)
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Too many attempts. Please try again in 5 minutes.", isSuccess: false))
     }
 
-    private class ViewSpy: PasswordRecoveryView {
-        private(set) var messages = [PasswordRecoveryViewModel]()
-        func display(_ viewModel: PasswordRecoveryViewModel) {
-            messages.append(viewModel)
-        }
+    func test_map_deliversRateLimitErrorViewModel_withSecondsOnly() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.rateLimitExceeded(retryAfterSeconds: 30)))
+
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Too many attempts. Please try again in a few seconds.", isSuccess: false))
+    }
+
+    func test_map_deliversUnknownErrorViewModel_onUnknownError() {
+        let viewModel = PasswordRecoveryPresenter.map(.failure(.unknown))
+
+        XCTAssertEqual(viewModel, PasswordRecoveryViewModel(message: "Unknown error. Please try again.", isSuccess: false))
     }
 }
