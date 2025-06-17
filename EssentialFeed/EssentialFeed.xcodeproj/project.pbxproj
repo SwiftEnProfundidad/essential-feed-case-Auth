@@ -146,6 +146,8 @@
 		B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */; };
 		B40ADA942E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */; };
 		B40ADA952E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */; };
+		B40ADA992E014FA100A39B40 /* KeychainManagerNegativeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA982E014FA100A39B40 /* KeychainManagerNegativeTests.swift */; };
+		B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA9A2E014FA800A39B40 /* KeychainManagerTests.swift */; };
 		B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */; };
 		B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
@@ -303,7 +305,6 @@
 		B4A746772DDD22780087C33C /* LoggingKeychainErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A746752DDD22780087C33C /* LoggingKeychainErrorHandler.swift */; };
 		B4A746792DDD22C90087C33C /* SilentKeychainErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A746782DDD22C90087C33C /* SilentKeychainErrorHandler.swift */; };
 		B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A7467A2DDD23680087C33C /* KeychainErrorHandlerSpy.swift */; };
-		B4A7467F2DDD24060087C33C /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */; };
 		B4A746812DDD245D0087C33C /* KeychainReaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A746802DDD245D0087C33C /* KeychainReaderSpy.swift */; };
 		B4A746852DDD24F00087C33C /* KeychainWriterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A746842DDD24F00087C33C /* KeychainWriterSpy.swift */; };
 		B4A746872DDD25150087C33C /* KeychainEncryptorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A746862DDD25150087C33C /* KeychainEncryptorSpy.swift */; };
@@ -593,6 +594,8 @@
 		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerAdvancedSecurityTests.swift; sourceTree = "<group>"; };
 		B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainMigrationManagerAdvancedTests.swift; sourceTree = "<group>"; };
+		B40ADA982E014FA100A39B40 /* KeychainManagerNegativeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerNegativeTests.swift; sourceTree = "<group>"; };
+		B40ADA9A2E014FA800A39B40 /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 		B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationHTTPClientSpy.swift; sourceTree = "<group>"; };
 		B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPersistenceSpy.swift; sourceTree = "<group>"; };
 		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
@@ -753,7 +756,6 @@
 		B4A746752DDD22780087C33C /* LoggingKeychainErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingKeychainErrorHandler.swift; sourceTree = "<group>"; };
 		B4A746782DDD22C90087C33C /* SilentKeychainErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentKeychainErrorHandler.swift; sourceTree = "<group>"; };
 		B4A7467A2DDD23680087C33C /* KeychainErrorHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainErrorHandlerSpy.swift; sourceTree = "<group>"; };
-		B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
 		B4A746802DDD245D0087C33C /* KeychainReaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainReaderSpy.swift; sourceTree = "<group>"; };
 		B4A746842DDD24F00087C33C /* KeychainWriterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainWriterSpy.swift; sourceTree = "<group>"; };
 		B4A746862DDD25150087C33C /* KeychainEncryptorSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainEncryptorSpy.swift; sourceTree = "<group>"; };
@@ -2028,12 +2030,13 @@
 		B4A7467D2DDD24060087C33C /* StorageTest */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADA9A2E014FA800A39B40 /* KeychainManagerTests.swift */,
+				B40ADA982E014FA100A39B40 /* KeychainManagerNegativeTests.swift */,
 				B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */,
 				B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */,
 				B4F64DBC2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift */,
 				B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */,
 				B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */,
-				B4A7467C2DDD24060087C33C /* KeychainManagerTests.swift */,
 			);
 			path = StorageTest;
 			sourceTree = "<group>";
@@ -2894,6 +2897,7 @@
 				B48407B82DDC407E00834C15 /* KeychainHelperSpy.swift in Sources */,
 				B48407B92DDC407E00834C15 /* TokenRefreshServiceStub.swift in Sources */,
 				B42B78012DE64D220096DD34 /* LoginLockStatusProviderSpy.swift in Sources */,
+				B40ADA992E014FA100A39B40 /* KeychainManagerNegativeTests.swift in Sources */,
 				B4F52FDC2DFB001F00CC9322 /* AuthenticatedHTTPClientSingleRequestConcurrencyTests.swift in Sources */,
 				B48407BA2DDC407E00834C15 /* KeychainSpy.swift in Sources */,
 				B48407BB2DDC407E00834C15 /* TokenRefreshResult+toData.swift in Sources */,
@@ -2905,6 +2909,7 @@
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
 				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
+				B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */,
 				B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */,
 				B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */,
 				B4F64DC42DFB856D00EB362C /* PassthroughEncryptor.swift in Sources */,
@@ -2940,7 +2945,6 @@
 				087148BE232BEDFD00D6BE1A /* FeedLocalizationTests.swift in Sources */,
 				B45C37052DDAD54D00184F55 /* AuthUseCaseTests.swift in Sources */,
 				B4A746872DDD25150087C33C /* KeychainEncryptorSpy.swift in Sources */,
-				B4A7467F2DDD24060087C33C /* KeychainManagerTests.swift in Sources */,
 				082DB86421F763F900A71F69 /* URLSessionHTTPClientTests.swift in Sources */,
 				B40ADA942E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift in Sources */,
 				B40ADA952E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift in Sources */,
