@@ -148,6 +148,10 @@
 		B40ADA952E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */; };
 		B40ADA992E014FA100A39B40 /* KeychainManagerNegativeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA982E014FA100A39B40 /* KeychainManagerNegativeTests.swift */; };
 		B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA9A2E014FA800A39B40 /* KeychainManagerTests.swift */; };
+		B40ADA9D2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA9C2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift */; };
+		B40ADA9F2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */; };
+		B40ADAA12E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */; };
+		B40ADAA32E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */; };
 		B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */; };
 		B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
@@ -596,6 +600,10 @@
 		B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainMigrationManagerAdvancedTests.swift; sourceTree = "<group>"; };
 		B40ADA982E014FA100A39B40 /* KeychainManagerNegativeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerNegativeTests.swift; sourceTree = "<group>"; };
 		B40ADA9A2E014FA800A39B40 /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
+		B40ADA9C2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryRateLimitStore.swift; sourceTree = "<group>"; };
+		B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPasswordRecoveryRateLimiter.swift; sourceTree = "<group>"; };
+		B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryPasswordRecoveryRateLimitStore.swift; sourceTree = "<group>"; };
+		B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryRateLimiterTests.swift; sourceTree = "<group>"; };
 		B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationHTTPClientSpy.swift; sourceTree = "<group>"; };
 		B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPersistenceSpy.swift; sourceTree = "<group>"; };
 		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
@@ -1587,6 +1595,7 @@
 		B417AE2F2DCE00090096D12B /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */,
 				B4AF1BB62DDB770E00FD2ED2 /* RetryOfflineLoginsUseCaseTests.swift */,
 				B45C37042DDAD54D00184F55 /* AuthUseCaseTests.swift */,
 				B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */,
@@ -1731,6 +1740,7 @@
 		B45C36A32DDA92EE00184F55 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADA9C2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift */,
 				B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */,
 				B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */,
 				B4AF1BB12DDB549900FD2ED2 /* FailedLoginAttemptsStore.swift */,
@@ -1907,6 +1917,7 @@
 		B47A6AC12DF1B471001D47CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */,
 				B49DC5732DF7490000C5ADE6 /* RegistrationCommandChain.swift */,
 				B49DC56F2DF747C400C5ADE6 /* RegistrationPersistenceService.swift */,
 				B47A6ACB2DF1BD31001D47CE /* LoginCredentialsValidator.swift */,
@@ -2055,6 +2066,7 @@
 		B4A746892DDD2D950087C33C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */,
 				B47A6AB02DF06C6E001D47CE /* Security */,
 				B4A746882DDD2D950087C33C /* KeychainTokenStore.swift */,
 			);
@@ -2693,6 +2705,7 @@
 				B49DC5812DF749D600C5ADE6 /* ValidationCommand.swift in Sources */,
 				B49DC5822DF749D600C5ADE6 /* HTTPRequestCommand.swift in Sources */,
 				B49DC5832DF749D600C5ADE6 /* ReplayProtectionCommand.swift in Sources */,
+				B40ADA9F2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift in Sources */,
 				B49DC5842DF749D600C5ADE6 /* ResponseMappingCommand.swift in Sources */,
 				B49DC5852DF749D600C5ADE6 /* RequestCreationCommand.swift in Sources */,
 				B49DC5862DF749D600C5ADE6 /* RegistrationCommand.swift in Sources */,
@@ -2718,6 +2731,7 @@
 				B47A6ACE2DF1BD32001D47CE /* LoginService.swift in Sources */,
 				B47A6ACF2DF1BD32001D47CE /* LoginServiceProtocol.swift in Sources */,
 				B47A6AD02DF1BD32001D47CE /* LoginCredentialsValidator.swift in Sources */,
+				B40ADA9D2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift in Sources */,
 				089C40DC22170EC500DE552E /* LocalFeedLoader.swift in Sources */,
 				B4A746962DDD3C740087C33C /* TokenParsingError.swift in Sources */,
 				B47A6AD22DF1BFB8001D47CE /* UserLoginConfiguration.swift in Sources */,
@@ -2725,6 +2739,7 @@
 				08EF9D1A250BB15C004539C2 /* LoadResourcePresenter.swift in Sources */,
 				B429396E2DDB927800811CBC /* TokenRefreshService.swift in Sources */,
 				B429396F2DDB927800811CBC /* DefaultTokenRefreshService.swift in Sources */,
+				B40ADAA12E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift in Sources */,
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* (null) in Sources */,
 				B47A6AAB2DF06C08001D47CE /* SessionLogoutManager.swift in Sources */,
@@ -2909,6 +2924,7 @@
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
 				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
+				B40ADAA32E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift in Sources */,
 				B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */,
 				B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */,
 				B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */,
