@@ -9,8 +9,11 @@ public struct PasswordRecoveryRequest {
 
 public struct PasswordRecoveryResponse: Equatable {
     public let message: String
-    public init(message: String) {
+    public let resetToken: String?
+
+    public init(message: String, resetToken: String? = nil) {
         self.message = message
+        self.resetToken = resetToken
     }
 }
 
@@ -19,6 +22,7 @@ public enum PasswordRecoveryError: Error, Equatable {
     case emailNotFound
     case network
     case rateLimitExceeded(retryAfterSeconds: Int)
+    case tokenGenerationFailed
     case unknown
 }
 
