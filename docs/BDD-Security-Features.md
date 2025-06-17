@@ -218,7 +218,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 4. **Error Handling**:
    - Specific error messages are shown for invalid credentials, email already in use, connectivity issues, etc., as defined in each use case checklist.
 
-{{ ... }}
 ### Technical Notes
 
 - **Composer Responsibility**: The Composer handles the presentation and navigation between Registration and Login, ensuring loose coupling and modularity.
@@ -778,11 +777,11 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 #### 3. [⚠️] Store the new token securely after renewal
 - [✅] KeychainManager:
   - [✅] AES-256 encryption
-  - [❌] Migration of existing tokens (advanced scenarios/mocking)
+  - [🚧] Migration of existing tokens (advanced scenarios/mocking)
   - [✅] Security tests (Keychain Spy):
     - [✅] Stores token in Keychain on successful refresh (happy path)
     - [✅] Tests that verify encryption (AES-256) on write
-    - [❌] Negative/error-path & advanced security tests
+    - [🔜] Negative/error-path & advanced security tests
 
 #### 4. [⚠️] Notify the user if renewal fails
 - [✅] Basic alerts (Snackbar)
@@ -800,15 +799,9 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Clear any session-related UserDefaults
 - [✅] Integration tests
 
-#### 6. [🚧] Log the expiration event for metrics
-- [❌] Unified events:
-  - [❌] `TokenExpired`
-  - [❌] `RefreshFailed`
-- [❌] Integration with Firebase/Sentry
-
 ---
 
-#### Still missing / To improve [⚠️]
+#### Token Management & Session Security 🔐  [✅]
 
 - [✅] Implement an `AuthenticatedHTTPClientDecorator` or equivalent ("token-aware API client") to automatically:
     - [✅] Detect 401 responses (token expired)
@@ -817,9 +810,16 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅]Deduplicate concurrent refreshes (single refresh in-flight)
 - [✅] Force global logout and route to login UI if refresh fully fails (invalid/expired refresh token or server rejection)
 - [✅] Ensure post-refresh token save is atomic and verified (failover: no use of invalid new tokens)
-- [❌] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
-- [❌] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
-- [❌] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
+- [✅] Add/expand end-to-end and concurrency tests (simultaneous refresh, repeated failures, edge network loss)
+- [✅] Validate that session cleanup deletes *all* related tokens/credentials from secure storage
+    - [✅] Analyze current GlobalLogoutManager implementation and map all storage dependencies
+    - [✅] Create comprehensive unit tests for GlobalLogoutManager cleanup validation (for GlobalLogoutManager itself)
+    - [✅] Create/verify unit tests for KeychainTokenStore logic (interaction with KeychainManaging spy)
+    - [✅] Create/verify integration tests for SessionUserDefaultsManager to ensure actual UserDefaults cleanup
+    - [✅] Create/verify integration tests for KeychainManager/KeychainTokenStore to ensure *actual system* Keychain deletion
+    - [✅] Create end-to-end test simulating logout and validating no storage residues remain
+    - [✅] Add missing cleanup logic if any storage is not being cleared (GlobalLogoutManager calls all dependencies)
+- [✅] Full UI/UX test for lockout/logout after repeated refresh failures (covering various flows)
 
 ---
 
@@ -1569,6 +1569,11 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 - [❌] Store events securely and traceably
 - [❌] Apply automatic actions for suspicious patterns
 - [❌] Allow visualization and querying of metrics
+- [❌] Log the expiration event for metrics
+- [❌] Implement structured event logging for token lifecycle:
+  - [❌] `TokenExpired` events for analytics and monitoring
+  - [❌] `RefreshFailed` events for failure pattern detection
+- [❌] Integration with Firebase/Sentry
 
 > Only items with real automated tests will be marked as completed. The rest must be implemented and tested before being marked as done.
 

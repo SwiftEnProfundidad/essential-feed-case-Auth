@@ -1,23 +1,31 @@
 import EssentialFeed
 import Foundation
+import os
 
 final class KeychainReaderSpy: KeychainReader, @unchecked Sendable {
     enum Message: Equatable {
         case load(key: String)
     }
 
-    private(set) var receivedMessages = [Message]()
+    private let lock = OSAllocatedUnfairLock()
+    private var _receivedMessages = [Message]()
+    private var _loadResults: [String: Result<Data?, Error>] = [:]
 
-    private var loadResult: Result<Data?, Error>?
+    var receivedMessages: [Message] {
+        lock.withLock { _receivedMessages }
+    }
 
     func load(forKey key: String) throws -> Data? {
-        receivedMessages.append(.load(key: key))
+        let result = lock.withLock { () -> Result<Data?, Error>? in
+            _receivedMessages.append(.load(key: key))
+            return _loadResults[key]
+        }
 
-        guard let loadResult else {
+        guard let result else {
             return nil
         }
 
-        switch loadResult {
+        switch result {
         case let .success(data):
             return data
         case let .failure(error):
@@ -25,11 +33,15 @@ final class KeychainReaderSpy: KeychainReader, @unchecked Sendable {
         }
     }
 
-    func completeLoad(with data: Data?) {
-        loadResult = .success(data)
+    func completeLoad(with data: Data?, forKey key: String) {
+        lock.withLock {
+            _loadResults[key] = .success(data)
+        }
     }
 
-    func completeLoad(with error: Error) {
-        loadResult = .failure(error)
+    func completeLoad(with error: Error, forKey key: String) {
+        lock.withLock {
+            _loadResults[key] = .failure(error)
+        }
     }
 }

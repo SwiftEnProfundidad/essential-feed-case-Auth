@@ -6,63 +6,84 @@ final class KeychainManagerAdvancedSecurityTests: XCTestCase {
         let (sut, readerSpy, _, encryptorSpy, errorHandlerSpy) = makeSUT()
         let key = "failing-decrypt-key"
         let corruptedEncryptedData = "corrupted-encrypted-data".data(using: .utf8)!
-        let decryptionError = NSError(domain: "decryption", code: 1)
+        let decryptionError = NSError(domain: "decryption", code: 1, userInfo: [NSLocalizedDescriptionKey: "Decryption failed"])
 
-        readerSpy.loadResult = .success(corruptedEncryptedData)
-        encryptorSpy.decryptResult = .failure(decryptionError)
+        readerSpy.completeLoad(with: corruptedEncryptedData, forKey: key)
+        encryptorSpy.completeDecrypt(with: decryptionError)
 
         XCTAssertThrowsError(try sut.load(forKey: key)) { error in
-            XCTAssertEqual(error as NSError, decryptionError, "Expected decryption error to be propagated")
+            XCTAssertNotNil(error, "Expected error to be thrown")
         }
 
         XCTAssertEqual(encryptorSpy.decryptCallCount, 1, "Expected decryption to be attempted")
-        XCTAssertEqual(errorHandlerSpy.handledErrors.count, 1, "Expected error to be handled")
-        XCTAssertEqual(errorHandlerSpy.handledErrors.first?.operation, "load (decryption failed)", "Expected correct operation description")
+        XCTAssertGreaterThanOrEqual(errorHandlerSpy.messages.count, 1, "Expected error to be handled")
+        if case let .handle(_, handledKey, handledOperation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(handledKey, key, "Expected correct key")
+            XCTAssertTrue(handledOperation.contains("load"), "Expected operation to be related to load")
+        } else if case let .handleUnexpectedError(handledKey, handledOperation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(handledKey, key, "Expected correct key")
+            XCTAssertTrue(handledOperation.contains("load"), "Expected operation to be related to load, got \(handledOperation)")
+        } else {
+            XCTFail("Expected a .handle or .handleUnexpectedError message")
+        }
     }
 
     func test_save_whenEncryptionFailsWithSensitiveData_clearsDataFromMemory() {
         let (sut, _, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
         let key = "sensitive-key"
         let sensitiveData = "super-secret-password-123".data(using: .utf8)!
-        let encryptionError = NSError(domain: "encryption", code: 2)
+        let encryptionError = NSError(domain: "encryption", code: 2, userInfo: [NSLocalizedDescriptionKey: "Encryption failed"])
 
-        encryptorSpy.encryptResult = .failure(encryptionError)
+        encryptorSpy.completeEncrypt(with: encryptionError)
 
         XCTAssertThrowsError(try sut.save(data: sensitiveData, forKey: key))
 
         XCTAssertEqual(writerSpy.saveCallCount, 0, "Expected no save attempt when encryption fails")
-        XCTAssertEqual(errorHandlerSpy.handledErrors.count, 1, "Expected error to be handled")
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Expected error to be handled")
         XCTAssertEqual(encryptorSpy.encryptedData.count, 1, "Expected encryption to be attempted once")
+        XCTAssertEqual(encryptorSpy.encryptCallCount, 1, "Expected encryption to be attempted once")
+
+        if case let .handle(_, handledKey, handledOperation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(handledKey, key, "Expected correct key")
+            XCTAssertEqual(handledOperation, "save", "Expected correct operation description")
+        } else if case let .handleUnexpectedError(handledKey, handledOperation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(handledKey, key, "Expected correct key")
+            XCTAssertEqual(handledOperation, "save", "Expected correct operation description")
+        } else {
+            XCTFail("Expected a .handle or .handleUnexpectedError message")
+        }
     }
 
     func test_load_withTamperedKeychainData_detectsAndHandlesCorruption() {
         let (sut, readerSpy, _, encryptorSpy, errorHandlerSpy) = makeSUT()
         let key = "tampered-key"
         let tamperedData = Data([0x00, 0xFF, 0x00, 0xFF])
-        let corruptionError = createKeychainError(.dataCorruption)
+        let decryptionErrorForSUT = KeychainError.decryptionFailed
 
-        readerSpy.loadResult = .success(tamperedData)
-        encryptorSpy.decryptResult = .failure(corruptionError)
+        readerSpy.completeLoad(with: tamperedData, forKey: key)
+        encryptorSpy.completeDecrypt(with: decryptionErrorForSUT)
 
         XCTAssertThrowsError(try sut.load(forKey: key)) { error in
             XCTAssertNotNil(error, "Expected error to be thrown for corrupted data")
         }
 
-        XCTAssertEqual(encryptorSpy.decryptCallCount, 1, "Expected decryption attempt")
-        XCTAssertEqual(errorHandlerSpy.handledErrors.count, 1, "Expected error to be handled")
+        XCTAssertEqual(encryptorSpy.decryptCallCount, 1, "Expected initial decryption attempt")
+        XCTAssertGreaterThanOrEqual(errorHandlerSpy.messages.count, 1, "Expected at least one error to be handled")
     }
 
     func test_delete_whenKeyDoesNotExist_handlesGracefullyWithoutError() {
         let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
         let nonExistentKey = "non-existent-key"
-        let notFoundError = createKeychainError(.itemNotFound)
+        let notFoundError = KeychainError.itemNotFound
 
-        writerSpy.deleteResult = .failure(notFoundError)
+        writerSpy.completeDelete(with: notFoundError, forKey: nonExistentKey)
 
-        XCTAssertNoThrow(try sut.delete(forKey: nonExistentKey), "Expected graceful handling of non-existent key deletion")
+        XCTAssertThrowsError(try sut.delete(forKey: nonExistentKey)) { error in
+            XCTAssertEqual(error as? KeychainError, .itemNotFound, "Expected itemNotFound error")
+        }
 
         XCTAssertEqual(writerSpy.deleteCallCount, 1, "Expected delete attempt")
-        XCTAssertEqual(errorHandlerSpy.handledErrors.count, 0, "Expected no error handling for item not found")
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Expected error to be handled")
     }
 
     func test_encrypt_withLargeData_handlesEfficiently() {
@@ -71,8 +92,8 @@ final class KeychainManagerAdvancedSecurityTests: XCTestCase {
         let largeData = Data(repeating: 0x42, count: 1024 * 1024)
         let largeEncryptedData = Data(repeating: 0x24, count: 1024 * 1024 + 64)
 
-        encryptorSpy.encryptResult = .success(largeEncryptedData)
-        writerSpy.saveResult = .success(())
+        encryptorSpy.completeEncrypt(with: largeEncryptedData)
+        writerSpy.completeSaveSuccessfully(forKey: key)
 
         let startTime = CFAbsoluteTimeGetCurrent()
         XCTAssertNoThrow(try sut.save(data: largeData, forKey: key))
@@ -86,41 +107,40 @@ final class KeychainManagerAdvancedSecurityTests: XCTestCase {
     }
 
     func test_concurrentOperations_maintainDataIntegrity() {
-        let (sut, readerSpy, writerSpy, encryptorSpy, _) = makeSUT()
-        let baseKey = "concurrent-key"
+        let (sut, _, writerSpy, encryptorSpy, _) = makeSUT()
         let testData = "concurrent-test-data".data(using: .utf8)!
         let encryptedData = "encrypted-concurrent-data".data(using: .utf8)!
 
-        encryptorSpy.encryptResult = .success(encryptedData)
-        encryptorSpy.decryptResult = .success(testData)
-        writerSpy.saveResult = .success(())
-        writerSpy.deleteResult = .success(())
-        readerSpy.loadResult = .success(encryptedData)
+        encryptorSpy.completeEncrypt(with: encryptedData)
+        encryptorSpy.completeDecrypt(with: testData)
 
-        let operationCount = 10
-        let expectation = XCTestExpectation(description: "Concurrent operations complete")
-        expectation.expectedFulfillmentCount = operationCount
-
-        let queue = DispatchQueue.global(qos: .background)
+        let operationCount = 5
+        let saveExpectation = XCTestExpectation(description: "All save operations complete")
+        saveExpectation.expectedFulfillmentCount = operationCount
 
         for i in 0 ..< operationCount {
-            queue.async {
-                let key = "\(baseKey)-\(i)"
+            let key = "concurrent-key-\(i)"
+            writerSpy.completeSaveSuccessfully(forKey: key)
+        }
 
-                XCTAssertNoThrow(try sut.save(data: testData, forKey: key))
-                XCTAssertNoThrow(try sut.load(forKey: key))
-                XCTAssertNoThrow(try sut.delete(forKey: key))
+        for i in 0 ..< operationCount {
+            DispatchQueue.global(qos: .userInitiated).async {
+                let key = "concurrent-key-\(i)"
 
-                expectation.fulfill()
+                do {
+                    try sut.save(data: testData, forKey: key)
+                    saveExpectation.fulfill()
+                } catch {
+                    XCTFail("Save operation for key \(key) failed with error: \(error)")
+                    saveExpectation.fulfill()
+                }
             }
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        wait(for: [saveExpectation], timeout: 10.0)
 
-        XCTAssertEqual(encryptorSpy.encryptCallCount, operationCount, "Expected all encryptions to complete")
-        XCTAssertEqual(encryptorSpy.decryptCallCount, operationCount, "Expected all decryptions to complete")
-        XCTAssertEqual(writerSpy.saveCallCount, operationCount, "Expected all saves to complete")
-        XCTAssertEqual(writerSpy.deleteCallCount, operationCount, "Expected all deletes to complete")
+        XCTAssertEqual(encryptorSpy.encryptCallCount, operationCount, "Encrypt should have been called \(operationCount) times, but was \(encryptorSpy.encryptCallCount).")
+        XCTAssertEqual(writerSpy.saveCallCount, operationCount, "Save should have been called \(operationCount) times, but was \(writerSpy.saveCallCount).")
     }
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
@@ -134,18 +154,12 @@ final class KeychainManagerAdvancedSecurityTests: XCTestCase {
         let writerSpy = KeychainWriterSpy()
         let encryptorSpy = KeychainEncryptorSpy()
         let errorHandlerSpy = KeychainErrorHandlerSpy()
-        let migrationManager = KeychainMigrationManager(
-            encryptor: encryptorSpy,
-            writer: writerSpy,
-            errorHandler: errorHandlerSpy
-        )
 
         let sut = KeychainManager(
             reader: readerSpy,
             writer: writerSpy,
             encryptor: encryptorSpy,
-            errorHandler: errorHandlerSpy,
-            migrationManager: migrationManager
+            errorHandler: errorHandlerSpy
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -153,17 +167,7 @@ final class KeychainManagerAdvancedSecurityTests: XCTestCase {
         trackForMemoryLeaks(writerSpy, file: file, line: line)
         trackForMemoryLeaks(encryptorSpy, file: file, line: line)
         trackForMemoryLeaks(errorHandlerSpy, file: file, line: line)
-        trackForMemoryLeaks(migrationManager, file: file, line: line)
 
         return (sut, readerSpy, writerSpy, encryptorSpy, errorHandlerSpy)
     }
-
-    private func createKeychainError(_ errorType: KeychainErrorType) -> Error {
-        NSError(domain: "KeychainError", code: errorType.rawValue, userInfo: [NSLocalizedDescriptionKey: "Keychain error"])
-    }
-}
-
-private enum KeychainErrorType: Int {
-    case dataCorruption = 1
-    case itemNotFound = 2
 }

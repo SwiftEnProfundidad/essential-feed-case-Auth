@@ -18,8 +18,6 @@ extension XCTestCase {
                 )
 
                 try snapshotData?.write(to: snapshotURL)
-                // For now, let's inform and not fail, assuming the user knows they are recording.
-                print("Snapshot recorded: \(snapshotURL)")
             } catch {
                 XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
             }

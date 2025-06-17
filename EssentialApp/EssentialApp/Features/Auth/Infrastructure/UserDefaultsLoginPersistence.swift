@@ -13,7 +13,6 @@ class UserDefaultsLoginPersistence: LoginPersistence {
     }
 
     func saveToken(_ token: Token) async throws {
-        print("Persistence: Saving token \(token.accessToken) and refresh token \(token.refreshToken ?? "nil") and expiry \(token.expiry)")
         userDefaults.set(token.accessToken, forKey: tokenKey)
         userDefaults.set(token.refreshToken, forKey: refreshTokenKey)
         userDefaults.set(token.expiry.timeIntervalSince1970, forKey: tokenExpiryKey)
@@ -36,12 +35,10 @@ class UserDefaultsLoginPersistence: LoginPersistence {
         let refreshToken = userDefaults.string(forKey: refreshTokenKey)
         let expiryDate = Date(timeIntervalSince1970: expiryTimestamp)
 
-        print("Persistence: Retrieving token \(accessToken), refresh token \(refreshToken ?? "nil"), and expiry \(expiryDate)")
         return Token(accessToken: accessToken, expiry: expiryDate, refreshToken: refreshToken)
     }
 
     func clearToken() {
-        print("Persistence: Clearing token")
         userDefaults.removeObject(forKey: tokenKey)
         userDefaults.removeObject(forKey: refreshTokenKey)
         userDefaults.removeObject(forKey: tokenExpiryKey)
@@ -53,12 +50,10 @@ class UserDefaultsLoginPersistence: LoginPersistence {
         else {
             return nil
         }
-        print("Persistence: Retrieving offline credentials for \(decoded.email)")
         return decoded
     }
 
     func clearOfflineCredentials() {
-        print("Persistence: Clearing offline credentials")
         userDefaults.removeObject(forKey: offlineCredentialsKey)
     }
 }

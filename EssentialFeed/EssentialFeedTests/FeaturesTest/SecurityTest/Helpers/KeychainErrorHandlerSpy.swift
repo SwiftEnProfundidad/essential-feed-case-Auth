@@ -1,5 +1,6 @@
 import EssentialFeed
 import Foundation
+import os
 
 public final class KeychainErrorHandlerSpy: KeychainErrorHandler {
     public enum Message: Equatable {
@@ -7,19 +8,34 @@ public final class KeychainErrorHandlerSpy: KeychainErrorHandler {
         case handleUnexpectedError(key: String?, operation: String)
     }
 
-    public private(set) var messages = [Message]()
+    private let lock = OSAllocatedUnfairLock()
+    private var _messages = [Message]()
+
+    public var messages: [Message] {
+        lock.withLock { _messages }
+    }
+
+    public var handledErrors: [Message] {
+        lock.withLock { _messages }
+    }
 
     public init() {}
 
     public func handle(error: KeychainError, forKey key: String?, operation: String) {
-        messages.append(.handle(error: error, key: key, operation: operation))
+        lock.withLock {
+            _messages.append(.handle(error: error, key: key, operation: operation))
+        }
     }
 
     public func clearMessages() {
-        messages.removeAll()
+        lock.withLock {
+            _messages.removeAll()
+        }
     }
 
     public func handleUnexpectedError(forKey key: String?, operation: String) {
-        messages.append(.handleUnexpectedError(key: key, operation: operation))
+        lock.withLock {
+            _messages.append(.handleUnexpectedError(key: key, operation: operation))
+        }
     }
 }

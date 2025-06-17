@@ -18,6 +18,7 @@ public enum KeychainError: KeychainErrorProtocol {
     case decryptionFailed
     case migrationFailedBadFormat
     case migrationFailedSaveError(Error)
+    case general(OSStatus)
 
     public var errorDescription: String {
         switch self {
@@ -28,12 +29,12 @@ public enum KeychainError: KeychainErrorProtocol {
         case let .unhandledError(status): "Unhandled error: \(status)"
         case .dataConversionFailed: "Data conversion failed"
         case .stringToDataConversionFailed: "Failed to convert string to data using UTF-8 encoding"
-        case let .dataTooLarge(size, max):
-            "Data too large: \(size) bytes (max: \(max))"
+        case let .dataTooLarge(size, max): "Data too large: \(size) bytes (max: \(max))"
         case .invalidKeyFormat: "Invalid key format"
         case .decryptionFailed: "Decryption failed"
         case .migrationFailedBadFormat: "Migration failed: bad format"
         case let .migrationFailedSaveError(error): "Migration failed to save: \(error.localizedDescription)"
+        case .general: "General error"
         }
     }
 
@@ -43,17 +44,14 @@ public enum KeychainError: KeychainErrorProtocol {
         case (.duplicateItem, .duplicateItem): true
         case (.invalidItemFormat, .invalidItemFormat): true
         case (.interactionNotAllowed, .interactionNotAllowed): true
-        case let (.unhandledError(lhsStatus), .unhandledError(rhsStatus)):
-            lhsStatus == rhsStatus
+        case let (.unhandledError(lhsStatus), .unhandledError(rhsStatus)): lhsStatus == rhsStatus
         case (.dataConversionFailed, .dataConversionFailed): true
         case (.stringToDataConversionFailed, .stringToDataConversionFailed): true
-        case let (.dataTooLarge(lhsSize, lhsMax), .dataTooLarge(rhsSize, rhsMax)):
-            lhsSize == rhsSize && lhsMax == rhsMax
+        case let (.dataTooLarge(lhsSize, lhsMax), .dataTooLarge(rhsSize, rhsMax)): lhsSize == rhsSize && lhsMax == rhsMax
         case (.invalidKeyFormat, .invalidKeyFormat): true
         case (.decryptionFailed, .decryptionFailed): true
         case (.migrationFailedBadFormat, .migrationFailedBadFormat): true
-        case let (.migrationFailedSaveError(lhsError), .migrationFailedSaveError(rhsError)):
-            (lhsError as NSError).isEqual(rhsError as NSError)
+        case let (.migrationFailedSaveError(lhsError), .migrationFailedSaveError(rhsError)): (lhsError as NSError).isEqual(rhsError as NSError)
         default: false
         }
     }

@@ -16,6 +16,11 @@ public final class KeychainMigrationManager {
     }
 
     public func attemptMigration(for rawData: Data, key: String) throws -> Data {
+        guard !key.isEmpty else {
+            errorHandler.handle(error: .invalidKeyFormat, forKey: key, operation: "load (migration attempt - empty key)")
+            throw KeychainError.invalidKeyFormat
+        }
+
         guard let plainTextTokenString = String(data: rawData, encoding: .utf8) else {
             errorHandler.handle(error: .migrationFailedBadFormat, forKey: key, operation: "load (migration attempt - bad format)")
             throw KeychainError.migrationFailedBadFormat

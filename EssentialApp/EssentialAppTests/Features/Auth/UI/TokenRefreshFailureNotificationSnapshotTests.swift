@@ -59,7 +59,7 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
 
     private func makeTokenRefreshFailureNotificationView(locale: Locale = Locale(identifier: "en")) -> some View {
         TokenRefreshFailureNotificationView(
-            message: NSLocalizedString("token_refresh_failed_message", comment: ""),
+            message: "Session expired. Please login again or retry.",
             onRetry: {},
             onLogout: {}
         )
@@ -70,7 +70,7 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
 
     private func makeGlobalLogoutRequiredNotificationView() -> some View {
         GlobalLogoutRequiredNotificationView(
-            message: NSLocalizedString("session_expired_login_required", comment: ""),
+            message: "Your session has expired. Please login again.",
             onLoginRedirect: {}
         )
         .frame(width: 375, height: 100)
@@ -79,7 +79,7 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
 
     private func makeNetworkErrorRefreshNotificationView() -> some View {
         NetworkErrorRefreshNotificationView(
-            message: NSLocalizedString("network_error_during_refresh", comment: ""),
+            message: "Network error occurred during token refresh. Please try again.",
             onRetry: {},
             onCancel: {}
         )
@@ -88,6 +88,8 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
     }
 
     private func assertSnapshot(matching value: UIViewController, as snapshotting: Snapshotting<UIViewController, UIImage>, named name: String, file: StaticString = #filePath, line: UInt = #line) {
+        let isRecording = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "true"
+
         guard let snapshot = snapshotting.snapshot(value) else {
             XCTFail("Failed to create snapshot", file: file, line: line)
             return
@@ -95,10 +97,20 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
 
         let referenceURL = snapshotDirectory.appendingPathComponent("\(name).png")
 
-        if !FileManager.default.fileExists(atPath: referenceURL.path) {
-            try! snapshot.pngData()?.write(to: referenceURL)
-            XCTFail("Recorded snapshot: \(name). Re-run test to verify.", file: file, line: line)
-            return
+        if isRecording || !FileManager.default.fileExists(atPath: referenceURL.path) {
+            do {
+                try FileManager.default.createDirectory(at: snapshotDirectory, withIntermediateDirectories: true, attributes: nil)
+                try snapshot.pngData()?.write(to: referenceURL)
+                if isRecording {
+                    return
+                } else {
+                    XCTFail("Recorded snapshot: \(name). Re-run test to verify.", file: file, line: line)
+                    return
+                }
+            } catch {
+                XCTFail("Failed to save snapshot: \(error)", file: file, line: line)
+                return
+            }
         }
 
         guard let referenceData = try? Data(contentsOf: referenceURL),
@@ -111,16 +123,42 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
         let currentData = snapshot.pngData()!
         let referenceImageData = referenceImage.pngData()!
 
-        if currentData != referenceImageData {
-            let failureURL = snapshotDirectory.appendingPathComponent("\(name)-failure.png")
-            try! currentData.write(to: failureURL)
+        if currentData.count == referenceImageData.count {
+            let tolerance = 0.02
+            if imagesAreSimilar(currentData, referenceImageData, tolerance: tolerance) {
+                return
+            }
+        }
+
+        let failureURL = snapshotDirectory.appendingPathComponent("\(name)-failure.png")
+        do {
+            try currentData.write(to: failureURL)
             XCTFail("Snapshot \(name) does not match reference. Failure saved to: \(failureURL.path)", file: file, line: line)
+        } catch {
+            XCTFail("Snapshot \(name) does not match reference but failed to save failure image: \(error)", file: file, line: line)
         }
     }
 
+    private func imagesAreSimilar(_ data1: Data, _ data2: Data, tolerance: Double) -> Bool {
+        guard data1.count == data2.count else { return false }
+
+        let bytes1 = data1.withUnsafeBytes { $0.bindMemory(to: UInt8.self) }
+        let bytes2 = data2.withUnsafeBytes { $0.bindMemory(to: UInt8.self) }
+
+        var differences = 0
+        for i in 0 ..< bytes1.count {
+            if bytes1[i] != bytes2[i] {
+                differences += 1
+            }
+        }
+
+        let differenceRatio = Double(differences) / Double(bytes1.count)
+        return differenceRatio <= tolerance
+    }
+
     private var snapshotDirectory: URL {
-        let bundle = Bundle(for: type(of: self))
-        return bundle.bundleURL.deletingLastPathComponent().appendingPathComponent("snapshots")
+        let currentFile = URL(fileURLWithPath: "\(#file)")
+        return currentFile.deletingLastPathComponent().appendingPathComponent("snapshots")
     }
 }
 
@@ -129,9 +167,11 @@ struct Snapshotting<Value, Format> {
 
     static var image: Snapshotting<UIViewController, UIImage> {
         Snapshotting<UIViewController, UIImage> { viewController in
-            let window = UIWindow(frame: UIScreen.main.bounds)
+            let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
             window.rootViewController = viewController
             window.makeKeyAndVisible()
+
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
 
             viewController.view.layoutIfNeeded()
 

@@ -7,7 +7,7 @@ final class KeychainManagerTests: XCTestCase {
         let expectedError = KeychainError.itemNotFound
         let testKey = "anyKeyLoadError"
 
-        readerSpy.completeLoad(with: expectedError)
+        readerSpy.completeLoad(with: expectedError, forKey: testKey)
 
         var capturedError: Error?
         XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
@@ -25,7 +25,7 @@ final class KeychainManagerTests: XCTestCase {
         let encryptedData = Data("encrypted data load success".utf8)
         let testKey = "anyKeyLoadSuccess"
 
-        readerSpy.completeLoad(with: encryptedData)
+        readerSpy.completeLoad(with: encryptedData, forKey: testKey)
         encryptorSpy.completeDecrypt(with: plainData)
 
         var capturedData: Data?
@@ -42,7 +42,7 @@ final class KeychainManagerTests: XCTestCase {
         let testKey = "anyKeyLoadGenericError"
         let genericError = NSError(domain: "LoadGenericErrorDomain", code: 123, userInfo: nil)
 
-        readerSpy.completeLoad(with: genericError)
+        readerSpy.completeLoad(with: genericError, forKey: testKey)
 
         var capturedError: Error?
         XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
@@ -63,8 +63,6 @@ final class KeychainManagerTests: XCTestCase {
         }
         XCTAssertEqual(readerSpy.receivedMessages, [.load(key: testKey)], "Should call reader with correct key")
     }
-
-    // MARK: - Save Tests
 
     func test_save_whenEncryptorFails_notifiesHandlerAndRethrowsError() {
         let (sut, _, _, encryptorSpy, errorHandlerSpy) = makeSUT()
@@ -92,7 +90,7 @@ final class KeychainManagerTests: XCTestCase {
         let expectedError = KeychainError.duplicateItem
 
         encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSave(with: expectedError)
+        writerSpy.completeSave(with: expectedError, forKey: testKey)
 
         var capturedError: Error?
         XCTAssertThrowsError(try sut.save(data: plainData, forKey: testKey)) { error in
@@ -112,7 +110,7 @@ final class KeychainManagerTests: XCTestCase {
         let testKey = "anyKeySaveSuccess"
 
         encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSaveSuccessfully()
+        writerSpy.completeSaveSuccessfully(forKey: testKey)
 
         XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Should not throw when encryption and writing succeed")
 
@@ -121,14 +119,12 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted data with correct key")
     }
 
-    // MARK: - Delete Tests
-
     func test_delete_whenWriterThrowsError_notifiesHandlerAndRethrowsError() {
         let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
         let testKey = "anyKeyDeleteError"
         let expectedError = KeychainError.itemNotFound
 
-        writerSpy.completeDelete(with: expectedError)
+        writerSpy.completeDelete(with: expectedError, forKey: testKey)
 
         var capturedError: Error?
         XCTAssertThrowsError(try sut.delete(forKey: testKey)) { error in
@@ -144,12 +140,71 @@ final class KeychainManagerTests: XCTestCase {
         let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
         let testKey = "anyKeyDeleteSuccess"
 
-        writerSpy.completeDeleteSuccessfully()
+        writerSpy.completeDeleteSuccessfully(forKey: testKey)
 
         XCTAssertNoThrow(try sut.delete(forKey: testKey), "Should not throw when deletion succeeds")
 
         XCTAssertTrue(errorHandlerSpy.messages.isEmpty, "Should not notify error handler on successful deletion")
         XCTAssertEqual(writerSpy.receivedMessages, [.delete(key: testKey)], "Should delete with correct key")
+    }
+
+    func test_load_whenKeyIsEmpty_throwsInvalidKeyFormatErrorAndNotifiesHandler() {
+        let (sut, readerSpy, _, _, errorHandlerSpy) = makeSUT()
+        let emptyKey = ""
+
+        XCTAssertThrowsError(try sut.load(forKey: emptyKey)) { error in
+            XCTAssertEqual(error as? KeychainError, .invalidKeyFormat, "Should throw invalidKeyFormat for empty key")
+        }
+
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Error handler should be notified once")
+        if case let .handle(error, key, operation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(error, .invalidKeyFormat, "Error handler should be notified of invalidKeyFormat")
+            XCTAssertEqual(key, emptyKey, "Error handler should receive the empty key")
+            XCTAssertTrue(operation.contains("load (empty key)"), "Operation description should indicate load with empty key")
+        } else {
+            XCTFail("Error handler message not in expected format. Got: \(String(describing: errorHandlerSpy.messages.first))")
+        }
+        XCTAssertTrue(readerSpy.receivedMessages.isEmpty, "Reader should not be called when key is empty")
+    }
+
+    func test_save_whenKeyIsEmpty_throwsInvalidKeyFormatErrorAndNotifiesHandler() {
+        let (sut, _, writerSpy, encryptorSpy, errorHandlerSpy) = makeSUT()
+        let emptyKey = ""
+        let testData = Data("anyData".utf8)
+
+        XCTAssertThrowsError(try sut.save(data: testData, forKey: emptyKey)) { error in
+            XCTAssertEqual(error as? KeychainError, .invalidKeyFormat, "Should throw invalidKeyFormat for empty key")
+        }
+
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Error handler should be notified once")
+        if case let .handle(error, key, operation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(error, .invalidKeyFormat, "Error handler should be notified of invalidKeyFormat")
+            XCTAssertEqual(key, emptyKey, "Error handler should receive the empty key")
+            XCTAssertTrue(operation.contains("save (empty key)"), "Operation description should indicate save with empty key")
+        } else {
+            XCTFail("Error handler message not in expected format. Got: \(String(describing: errorHandlerSpy.messages.first))")
+        }
+        XCTAssertTrue(encryptorSpy.receivedMessages.isEmpty, "Encryptor should not be called when key is empty")
+        XCTAssertTrue(writerSpy.receivedMessages.isEmpty, "Writer should not be called when key is empty")
+    }
+
+    func test_delete_whenKeyIsEmpty_throwsInvalidKeyFormatErrorAndNotifiesHandler() {
+        let (sut, _, writerSpy, _, errorHandlerSpy) = makeSUT()
+        let emptyKey = ""
+
+        XCTAssertThrowsError(try sut.delete(forKey: emptyKey)) { error in
+            XCTAssertEqual(error as? KeychainError, .invalidKeyFormat, "Should throw invalidKeyFormat for empty key")
+        }
+
+        XCTAssertEqual(errorHandlerSpy.messages.count, 1, "Error handler should be notified once")
+        if case let .handle(error, key, operation) = errorHandlerSpy.messages.first {
+            XCTAssertEqual(error, .invalidKeyFormat, "Error handler should be notified of invalidKeyFormat")
+            XCTAssertEqual(key, emptyKey, "Error handler should receive the empty key")
+            XCTAssertTrue(operation.contains("delete (empty key)"), "Operation description should indicate delete with empty key")
+        } else {
+            XCTFail("Error handler message not in expected format. Got: \(String(describing: errorHandlerSpy.messages.first))")
+        }
+        XCTAssertTrue(writerSpy.receivedMessages.isEmpty, "Writer should not be called when key is empty")
     }
 
     // MARK: - Migration Tests
@@ -160,7 +215,7 @@ final class KeychainManagerTests: XCTestCase {
         let plainTextTokenData = Data("old-plain-text-token".utf8)
         let encryptionError = KeychainError.dataConversionFailed
 
-        readerSpy.completeLoad(with: plainTextTokenData)
+        readerSpy.completeLoad(with: plainTextTokenData, forKey: testKey)
         encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
         encryptorSpy.completeEncrypt(with: encryptionError)
 
@@ -175,10 +230,10 @@ final class KeychainManagerTests: XCTestCase {
         let plainTextTokenData = Data("old-plain-text-token".utf8)
         let encryptedData = Data("encrypted-data".utf8)
 
-        readerSpy.completeLoad(with: plainTextTokenData)
+        readerSpy.completeLoad(with: plainTextTokenData, forKey: testKey)
         encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
         encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSaveSuccessfully()
+        writerSpy.completeSaveSuccessfully(forKey: testKey)
 
         var returnedData: Data?
         XCTAssertNoThrow(returnedData = try sut.load(forKey: testKey), "Should not throw during successful migration")
@@ -188,13 +243,11 @@ final class KeychainManagerTests: XCTestCase {
         XCTAssertEqual(writerSpy.receivedMessages, [.save(data: encryptedData, key: testKey)], "Should save encrypted version during migration")
     }
 
-    // MARK: - Additional Tests for Complete Coverage
-
     func test_load_whenReaderReturnsNil_returnsNilAndDoesNotNotifyHandler() {
         let (sut, readerSpy, _, _, errorHandlerSpy) = makeSUT()
         let testKey = "anyKeyReturnsNil"
 
-        readerSpy.completeLoad(with: nil)
+        readerSpy.completeLoad(with: nil, forKey: testKey)
 
         var capturedData: Data?
         XCTAssertNoThrow(capturedData = try sut.load(forKey: testKey), "Should not throw when reader returns nil")
@@ -210,7 +263,7 @@ final class KeychainManagerTests: XCTestCase {
         let decryptedData = Data("decrypted-data".utf8)
         let testKey = "anyKeyDecryptAfterFailure"
 
-        readerSpy.completeLoad(with: encryptedData)
+        readerSpy.completeLoad(with: encryptedData, forKey: testKey)
         encryptorSpy.completeDecrypt(with: decryptedData)
 
         var capturedData: Data?
@@ -226,7 +279,7 @@ final class KeychainManagerTests: XCTestCase {
         let testKey = "migrationStringConversionErrorKey"
         let invalidData = Data([0xFF, 0xFE, 0xFD])
 
-        readerSpy.completeLoad(with: invalidData)
+        readerSpy.completeLoad(with: invalidData, forKey: testKey)
         encryptorSpy.completeDecrypt(with: KeychainError.decryptionFailed)
 
         XCTAssertThrowsError(try sut.load(forKey: testKey)) { error in
@@ -243,7 +296,7 @@ final class KeychainManagerTests: XCTestCase {
         let testKey = "testSaveSuccessKey"
 
         encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSaveSuccessfully()
+        writerSpy.completeSaveSuccessfully(forKey: testKey)
 
         XCTAssertNoThrow(try sut.save(data: plainData, forKey: testKey), "Should not throw when encryption and writing succeed")
 
@@ -260,7 +313,7 @@ final class KeychainManagerTests: XCTestCase {
         let genericError = NSError(domain: "TestErrorDomain", code: 999, userInfo: nil)
 
         encryptorSpy.completeEncrypt(with: encryptedData)
-        writerSpy.completeSave(with: genericError)
+        writerSpy.completeSave(with: genericError, forKey: testKey)
 
         XCTAssertThrowsError(try sut.save(data: plainData, forKey: testKey)) { error in
             XCTAssertIdentical(error as NSError?, genericError, "Should rethrow the original generic error")
@@ -282,7 +335,7 @@ final class KeychainManagerTests: XCTestCase {
         let testKey = "testDeleteGenericErrorKey"
         let genericError = NSError(domain: "DeleteErrorDomain", code: 888, userInfo: nil)
 
-        writerSpy.completeDelete(with: genericError)
+        writerSpy.completeDelete(with: genericError, forKey: testKey)
 
         XCTAssertThrowsError(try sut.delete(forKey: testKey)) { error in
             XCTAssertIdentical(error as NSError?, genericError, "Should rethrow the original generic error")
@@ -298,8 +351,6 @@ final class KeychainManagerTests: XCTestCase {
             }
         }
     }
-
-    // MARK: - Helpers
 
     private func makeSUT(
         file: StaticString = #filePath,

@@ -64,7 +64,12 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
     }
 
     public func load(forKey key: String) throws -> Data? {
-        try queue.sync {
+        guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorHandler.handle(error: .invalidKeyFormat, forKey: key, operation: "load (empty key)")
+            throw KeychainError.invalidKeyFormat
+        }
+
+        return try queue.sync {
             do {
                 guard let rawData = try reader.load(forKey: key) else {
                     return nil
@@ -74,9 +79,17 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
                     return try decryptData(rawData, forKey: key)
                 } catch KeychainError.decryptionFailed {
                     return try migrationManager.attemptMigration(for: rawData, key: key)
+                } catch let decryptionError as KeychainError {
+                    errorHandler.handle(error: decryptionError, forKey: key, operation: "load (decryption phase)")
+                    throw decryptionError
+                } catch {
+                    errorHandler.handleUnexpectedError(forKey: key, operation: "load (decryption phase)")
+                    throw error
                 }
             } catch let error as KeychainError {
-                errorHandler.handle(error: error, forKey: key, operation: "load")
+                if error != .decryptionFailed {
+                    errorHandler.handle(error: error, forKey: key, operation: "load")
+                }
                 throw error
             } catch {
                 errorHandler.handleUnexpectedError(forKey: key, operation: "load")
@@ -86,6 +99,11 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
     }
 
     public func save(data: Data, forKey key: String) throws {
+        guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorHandler.handle(error: .invalidKeyFormat, forKey: key, operation: "save (empty key)")
+            throw KeychainError.invalidKeyFormat
+        }
+
         try queue.sync(flags: .barrier) {
             try performKeychainOperation(
                 operation: "save",
@@ -105,6 +123,11 @@ public final class KeychainManager: @unchecked Sendable, KeychainManaging {
     }
 
     public func delete(forKey key: String) throws {
+        guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            errorHandler.handle(error: .invalidKeyFormat, forKey: key, operation: "delete (empty key)")
+            throw KeychainError.invalidKeyFormat
+        }
+
         try queue.sync(flags: .barrier) {
             try performKeychainOperation(
                 operation: "delete",
