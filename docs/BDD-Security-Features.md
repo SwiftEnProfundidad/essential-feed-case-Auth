@@ -774,20 +774,20 @@ _(Reference only for QA/business. Progress is only marked in the technical check
   - [✅] Exponential backoff (3 retries)  
   - [✅] Semaphore to avoid race conditions  
 
-#### 3. [⚠️] Store the new token securely after renewal
+#### 3. [✅] Store the new token securely after renewal
 - [✅] KeychainManager:
   - [✅] AES-256 encryption
-  - [🚧] Migration of existing tokens (advanced scenarios/mocking)
+  - [✅] Migration of existing tokens (advanced scenarios/mocking)
   - [✅] Security tests (Keychain Spy):
     - [✅] Stores token in Keychain on successful refresh (happy path)
     - [✅] Tests that verify encryption (AES-256) on write
-    - [🔜] Negative/error-path & advanced security tests
+    - [✅] Negative/error-path & advanced security tests
 
-#### 4. [⚠️] Notify the user if renewal fails
+#### 4. [✅] Notify the user if renewal fails
 - [✅] Basic alerts (Snackbar)
 - [✅] Localized messages:
   - [✅] Spanish/English
-  - [❌] Screenshot tests
+  - [✅] Screenshot tests
 
 #### 5. [✅] Redirect to login if renewal is not possible
 - [✅] Global logout implementation (`AuthRouter.navigateToLogin()`)
@@ -892,32 +892,31 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 
 ---
 
-### Technical Checklist for Password Recovery
+### Technical Checklist for Password Recovery 
 
-- [❌] Send reset link to registered email
-- [❌] Show neutral message if email is not registered
+- [✅] Send reset link to registered email
+- [✅] Show neutral message if email is not registered
 - [❌] Allow new password to be set if the link is valid
 - [❌] Show error and allow requesting a new link if the link is invalid or expired
 - [❌] Log all attempts and changes for security metrics
 - [❌] Notify by email after password change
-
-- [❌] Offer password recovery
+- [✅] Offer password recovery
     #### Subtasks (Move to Use Case 5 if not done)
-    - [❌] Endpoint and DTO for password recovery
-    - [❌] UseCase for requesting recovery
-    - [❌] Email validation before sending the request
-    - [❌] Notify user of success/error
-    - [❌] Unit tests for the use case
-    - [❌] Integration tests (no Keychain or login access)
-    - [❌] Presenter and view for user feedback
-    - [❌] CI coverage
+    - [✅] Endpoint and DTO for password recovery
+    - [✅] UseCase for requesting recovery
+    - [✅] Email validation before sending the request
+    - [✅] Notify user of success/error
+    - [✅] Unit tests for the use case
+    - [✅] Integration tests (no Keychain or login access)
+    - [✅] Presenter and view for user feedback
+    - [✅] CI coverage
 
 ---
 
 #### Still missing / To improve
 
-- [❌] Add rate limiting to password recovery endpoints to prevent abuse/brute force (essential for security compliance)
-- [❌] Ensure tokenized reset links are one-time-use and expire after a short period (e.g., 15 minutes to 1 hour)
+- [🚧] Add rate limiting to password recovery endpoints to prevent abuse/brute force (essential for security compliance)
+- [🔜] Ensure tokenized reset links are one-time-use and expire after a short period (e.g., 15 minutes to 1 hour)
 - [❌] Implement audit logging for all password recovery attempts, including IP/user-agent
 - [❌] Add CAPTCHA/anti-bot protection for password recovery forms
 - [❌] Enforce strong password requirements when resetting password
