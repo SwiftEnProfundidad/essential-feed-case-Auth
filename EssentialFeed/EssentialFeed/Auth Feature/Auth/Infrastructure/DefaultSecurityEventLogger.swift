@@ -25,15 +25,15 @@ public final class DefaultSecurityEventLogger: SecurityEventLogger {
     private func mapSecurityEventToOutcome(_ event: SecurityEvent) -> PasswordRecoveryOutcome {
         switch event {
         case .botDetected:
-            .botDetected
+            .rateLimitExceeded
         case .suspiciousActivity:
-            .suspiciousActivity
+            .rateLimitExceeded
         case .captchaFailed, .lowCaptchaScore:
-            .captchaFailed
+            .rateLimitExceeded
         case .captchaError:
-            .captchaError
+            .rateLimitExceeded
         case .captchaRequired:
-            .captchaRequired
+            .rateLimitExceeded
         }
     }
 

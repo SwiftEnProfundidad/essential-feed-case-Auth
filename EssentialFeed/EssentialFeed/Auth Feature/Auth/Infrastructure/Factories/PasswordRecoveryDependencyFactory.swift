@@ -26,11 +26,7 @@ public enum PasswordRecoveryDependencyFactory {
         PasswordRecoveryAuditMemoryStore()
     }
 
-    public static func makeSecurePasswordRecoveryUseCase(
-        httpClient: HTTPClient,
-        baseURL: URL,
-        captchaConfiguration: CaptchaConfiguration? = nil
-    ) -> UserPasswordRecoveryUseCase {
+    public static func makeSecurePasswordRecoveryUseCase(httpClient: HTTPClient, baseURL: URL) -> UserPasswordRecoveryUseCase {
         let baseUseCase = RemoteUserPasswordRecoveryUseCase(
             api: makePasswordRecoveryAPI(httpClient: httpClient, baseURL: baseURL),
             rateLimiter: makePasswordRecoveryRateLimiter(),
@@ -38,9 +34,9 @@ public enum PasswordRecoveryDependencyFactory {
             auditLogger: makePasswordRecoveryAuditLogger()
         )
 
-        let securityValidationService = makeSecurityValidationService(
-            httpClient: httpClient,
-            captchaConfiguration: captchaConfiguration
+        let securityValidationService = SimpleSecurityValidationService(
+            botDetection: makeBotDetectionService(),
+            captchaValidator: makeGoogleRecaptchaValidator(httpClient: httpClient)
         )
         let securityLogger = makeSecurityEventLogger()
 
@@ -51,29 +47,9 @@ public enum PasswordRecoveryDependencyFactory {
         )
     }
 
-    private static func makeSecurityValidationService(
-        httpClient: HTTPClient,
-        captchaConfiguration: CaptchaConfiguration?
-    ) -> SecurityValidationService {
-        let botDetection = makeBotDetectionService()
-        let captchaValidator = captchaConfiguration.map {
-            makeCaptchaValidator(httpClient: httpClient, configuration: $0)
-        }
-
-        return DefaultSecurityValidationService(
-            botDetection: botDetection,
-            captchaValidator: captchaValidator
-        )
-    }
-
-    private static func makeCaptchaValidator(
-        httpClient: HTTPClient,
-        configuration: CaptchaConfiguration
-    ) -> CaptchaValidator {
-        switch configuration.provider {
-        case let .googleRecaptcha(secretKey):
-            return GoogleRecaptchaValidator(secretKey: secretKey, httpClient: httpClient)
-        }
+    private static func makeGoogleRecaptchaValidator(httpClient: HTTPClient) -> CaptchaValidator {
+        let secretKey = ProcessInfo.processInfo.environment["RECAPTCHA_SECRET_KEY"] ?? "test-secret-key"
+        return GoogleRecaptchaValidator(secretKey: secretKey, httpClient: httpClient)
     }
 
     private static func makeBotDetectionService() -> BotDetectionService {
@@ -96,4 +72,54 @@ public struct CaptchaConfiguration {
 
 public enum CaptchaProvider {
     case googleRecaptcha(secretKey: String)
+}
+
+private final class SimpleSecurityValidationService: SecurityValidationService {
+    private let botDetection: BotDetectionService
+    private let captchaValidator: CaptchaValidator
+
+    init(botDetection: BotDetectionService, captchaValidator: CaptchaValidator) {
+        self.botDetection = botDetection
+        self.captchaValidator = captchaValidator
+    }
+
+    func validateSecurityRequirements(
+        email _: String,
+        ipAddress: String?,
+        userAgent: String?,
+        captchaResponse: String?,
+        requestPattern: RequestPattern
+    ) async throws -> SecurityValidationResult {
+        let botResult = botDetection.analyzeRequest(
+            ipAddress: ipAddress,
+            userAgent: userAgent,
+            requestPattern: requestPattern
+        )
+
+        switch botResult {
+        case let .bot(confidence):
+            return .denied(.botDetected(confidence: confidence))
+        case let .suspicious(reason):
+            if let captchaResponse {
+                let captchaResult = try await captchaValidator.validateCaptcha(
+                    response: captchaResponse,
+                    clientIP: ipAddress
+                )
+
+                if !captchaResult.isValid {
+                    return .denied(.captchaFailed)
+                }
+
+                if let score = captchaResult.score, score < 0.5 {
+                    return .denied(.lowCaptchaScore(score: score))
+                }
+
+                return .allowed
+            } else {
+                return .requiresCaptcha(.suspiciousActivity(reason: reason))
+            }
+        case .human:
+            return .allowed
+        }
+    }
 }
