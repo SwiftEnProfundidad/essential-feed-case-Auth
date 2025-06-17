@@ -2,24 +2,27 @@ import CryptoKit
 @preconcurrency import EssentialFeed
 import Foundation
 
-enum KeychainDependencyFactory {
-    static func makeKeychainManager() -> KeychainManager {
+public enum KeychainDependencyFactory {
+    public static func makeKeychainManager() -> KeychainManager {
         let keychainHelper = KeychainHelper()
-        let keychainReader = KeychainHelperReaderAdapter(keychainHelper: keychainHelper)
-        let keychainWriter = KeychainHelperWriterAdapter(keychainHelper: keychainHelper)
-        let encryptor = SimpleEncryptor()
-        let errorHandler = LoggingKeychainErrorHandler()
+        let readerAdapter = KeychainHelperReaderAdapter(keychainHelper: keychainHelper)
+        let writerAdapter = KeychainHelperWriterAdapter(keychainHelper: keychainHelper)
+        let symmetricKey = SymmetricKey(size: .bits256)
+        let aesEncryptor = AES256CryptoKitEncryptor(symmetricKey: symmetricKey)
+        // This will now correctly refer to EssentialFeed.LoggingKeychainErrorHandler
+        // which implements EssentialFeed.KeychainErrorHandler
+        let loggingErrorHandler: KeychainErrorHandler = LoggingKeychainErrorHandler()
 
         return KeychainManager(
-            reader: keychainReader,
-            writer: keychainWriter,
-            encryptor: encryptor,
-            errorHandler: errorHandler
+            reader: readerAdapter,
+            writer: writerAdapter,
+            encryptor: aesEncryptor,
+            errorHandler: loggingErrorHandler
         )
     }
 
-    static func makeTokenStorage() -> TokenStorage {
-        let keychainManager = makeKeychainManager()
-        return KeychainTokenStore(keychainManager: keychainManager)
+    public static func makeTokenStorage() -> TokenStorage {
+        let manager = makeKeychainManager()
+        return KeychainTokenStore(keychainManager: manager)
     }
 }

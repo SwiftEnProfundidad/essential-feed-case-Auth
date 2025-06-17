@@ -1,25 +1,41 @@
 import EssentialFeed
 import Foundation
+import os
 
-public final class KeychainErrorHandlerSpy: KeychainErrorHandling {
+public final class KeychainErrorHandlerSpy: KeychainErrorHandler {
     public enum Message: Equatable {
-        case handled(error: KeychainError, key: String?, operation: String)
+        case handle(error: KeychainError, key: String?, operation: String)
+        case handleUnexpectedError(key: String?, operation: String)
     }
 
-    public private(set) var receivedMessages = [Message]()
+    private let lock = OSAllocatedUnfairLock()
+    private var _messages = [Message]()
+
+    public var messages: [Message] {
+        lock.withLock { _messages }
+    }
+
+    public var handledErrors: [Message] {
+        lock.withLock { _messages }
+    }
 
     public init() {}
 
     public func handle(error: KeychainError, forKey key: String?, operation: String) {
-        receivedMessages.append(.handled(error: error, key: key, operation: operation))
+        lock.withLock {
+            _messages.append(.handle(error: error, key: key, operation: operation))
+        }
     }
 
     public func clearMessages() {
-        receivedMessages.removeAll()
+        lock.withLock {
+            _messages.removeAll()
+        }
     }
 
     public func handleUnexpectedError(forKey key: String?, operation: String) {
-        let error = KeychainError.unhandledError(-1)
-        handle(error: error, forKey: key, operation: "\(operation) - unexpected error type")
+        lock.withLock {
+            _messages.append(.handleUnexpectedError(key: key, operation: operation))
+        }
     }
 }

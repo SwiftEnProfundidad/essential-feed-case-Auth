@@ -41,7 +41,8 @@ extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
 
         let timeSinceLastAttempt = timeProvider().timeIntervalSince(lastAttempt)
         if timeSinceLastAttempt >= configuration.blockDuration {
-            await store.resetAttempts(for: username)
+            // Auto-unlock después del timeout - resetear intentos
+            await resetAttempts(username: username)
             return false
         }
         return true
@@ -50,7 +51,8 @@ extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
     public func getRemainingBlockTime(username: String) -> TimeInterval? {
         guard let lastAttempt = store.lastAttemptTime(for: username) else { return nil }
         let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        return max(0, configuration.blockDuration - elapsed)
+        let remaining = configuration.blockDuration - elapsed
+        return remaining > 0 ? remaining : nil
     }
 }
 

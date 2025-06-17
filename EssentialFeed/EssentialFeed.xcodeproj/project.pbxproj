@@ -144,6 +144,8 @@
 		B4047DC72DDA71BC00A0C34C /* SecureStorageProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */; };
 		B4047DFA2DDA7D4300A0C34C /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */; };
 		B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */; };
+		B40ADA942E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */; };
+		B40ADA952E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */; };
 		B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */; };
 		B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
@@ -170,7 +172,6 @@
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
 		B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
-		B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		B447C6422DBE28E100E738D3 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B44EA3952DDF309D008D41A1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B44EA3942DDF309D008D41A1 /* Localizable.xcstrings */; };
 		B4586AB32DE6976800A82535 /* UserRegistrationResponseMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4586AB22DE6976800A82535 /* UserRegistrationResponseMapper.swift */; };
@@ -340,7 +341,6 @@
 		B4BBD4D82DFA4AEB001E1965 /* TokenRefreshEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BBD4D52DFA4AEB001E1965 /* TokenRefreshEndToEndTests.swift */; };
 		B4CE05362DCCCAC300EAE847 /* HTTPClientStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */; };
 		B4CE054A2DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */; };
-		B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */; };
 		B4D2DC652DEE567800606891 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D2DC642DEE567800606891 /* KeychainManager.swift */; };
 		B4D2DC672DEE568900606891 /* KeychainMigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D2DC662DEE568900606891 /* KeychainMigrationManager.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
@@ -591,6 +591,8 @@
 		B4047DC62DDA71BC00A0C34C /* SecureStorageProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStorageProtocols.swift; sourceTree = "<group>"; };
 		B4047DF82DDA7D4300A0C34C /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4047DF92DDA7D4300A0C34C /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerAdvancedSecurityTests.swift; sourceTree = "<group>"; };
+		B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainMigrationManagerAdvancedTests.swift; sourceTree = "<group>"; };
 		B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationHTTPClientSpy.swift; sourceTree = "<group>"; };
 		B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPersistenceSpy.swift; sourceTree = "<group>"; };
 		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
@@ -788,7 +790,6 @@
 		B4BBD4D52DFA4AEB001E1965 /* TokenRefreshEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshEndToEndTests.swift; sourceTree = "<group>"; };
 		B4CE05352DCCCAC300EAE847 /* HTTPClientStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClientStub.swift; sourceTree = "<group>"; };
 		B4CE05492DCD0B6700EAE847 /* RetryOfflineRegistrationsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryOfflineRegistrationsUseCaseTests.swift; path = EssentialFeedTests/FeaturesTest/AuthTest/RegistrationTest/DomainTest/UseCases/RetryOfflineRegistrationsUseCaseTests.swift; sourceTree = SOURCE_ROOT; };
-		B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainErrorHandling.swift; sourceTree = "<group>"; };
 		B4D2DC642DEE567800606891 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		B4D2DC662DEE568900606891 /* KeychainMigrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainMigrationManager.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
@@ -878,7 +879,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B447C6382DBE284300E738D3 /* EssentialFeed.framework in Frameworks */,
-				B447C6412DBE28E100E738D3 /* EssentialFeed.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1568,7 +1568,6 @@
 				B4BBD4902DF923F7001E1965 /* SessionUserDefaultsManager.swift */,
 				B4D2DC662DEE568900606891 /* KeychainMigrationManager.swift */,
 				B4D2DC642DEE567800606891 /* KeychainManager.swift */,
-				B4D2DC622DEE564800606891 /* KeychainErrorHandling.swift */,
 				B4047DB22DDA6EA300A0C34C /* SecureStorage.swift */,
 			);
 			path = Storage;
@@ -2029,6 +2028,8 @@
 		B4A7467D2DDD24060087C33C /* StorageTest */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADA922E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift */,
+				B40ADA932E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift */,
 				B4F64DBC2DFB7FAD00EB362C /* KeychainManagerIntegrationTests.swift */,
 				B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */,
 				B4BBD4982DF92473001E1965 /* SessionUserDefaultsManagerTests.swift */,
@@ -2502,7 +2503,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "Essential Developer";
 				TargetAttributes = {
 					080EDEF021B6DA7E00813479 = {
@@ -2668,7 +2669,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n#!/bin/sh\n################################################################################\n# SwiftFormat Run Script\n# • Detecta el binario (Homebrew Apple Silicon / Intel o $PATH)\n# • Lee la versión de Swift desde .swift-version (fallback 5.9)\n# • Ejecuta SwiftFormat sobre TODO el repo (raíz)\n# • Usa el archivo .swiftformat que está en la raíz del repo\n# • Crea un output ficticio para contentar a Xcode si el sandbox está activo\n################################################################################\n\n# 1. Detectar binario de SwiftFormat\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\"          # Apple Silicon (brew)\nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"             # Intel (brew)\nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"                   # En el $PATH\nelse\n  echo \"warning: SwiftFormat not installed. Download from https://github.com/nicklockwood/SwiftFormat\"\n  exit 0    # No fallar el build si no está instalado\nfi\n\n# 2. Determinar versión de Swift\nif [ -f \"$SRCROOT/../.swift-version\" ]; then\n  SWIFT_VER=$(cat \"$SRCROOT/../.swift-version\")\nelse\n  SWIFT_VER=\"5.9\"\nfi\n\n# 3. Rutas\nREPO_ROOT=\"$SRCROOT/..\"                       # Raíz del repo (subimos un nivel)\nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"         # Config global en la raíz\n\n# 4. Ejecutar SwiftFormat\necho \"Running SwiftFormat (Swift $SWIFT_VER)…\"\n\n\"$SWIFTFORMAT\" \\\n  \"$REPO_ROOT\" \\\n  --swiftversion \"$SWIFT_VER\" \\\n  --config \"$CONFIG_FILE\" \\\n  --exclude build,DerivedData,.build \\\n  --quiet || exit 1\n\n# 5. Output ficticio para Xcode cuando el sandbox está activado\ntouch \"${DERIVED_FILE_DIR}/swiftformat.done\"\n";
+			shellScript = "#!/bin/sh\n\n# 1. Desactivar sandbox (necesario para Xcode 16.4)\nexport DISABLE_XCODE_USER_SCRIPT_SANDBOXING=1\n\n# 2. Detectar binario de SwiftFormat según arquitectura\nif [ -x \"/opt/homebrew/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/opt/homebrew/bin/swiftformat\" \nelif [ -x \"/usr/local/bin/swiftformat\" ]; then\n  SWIFTFORMAT=\"/usr/local/bin/swiftformat\"  \nelif which swiftformat >/dev/null 2>&1; then\n  SWIFTFORMAT=\"$(which swiftformat)\"    \nelse\n  echo \"warning: SwiftFormat not installed. Install via: brew install swiftformat\"\n  exit 0\nfi\n\n# 3. Configuración de rutas\nREPO_ROOT=\"$SRCROOT/..\" \nCONFIG_FILE=\"$REPO_ROOT/.swiftformat\"\n\n# 4. Verificar que existe el archivo de configuración\nif [ ! -f \"$CONFIG_FILE\" ]; then\n  echo \"warning: SwiftFormat config file not found at $CONFIG_FILE\"\n  exit 0\nfi\n\n# 5. Determinar versión de Swift\nSWIFT_VERSION=\"5.9\" # Default\nif [ -f \"$REPO_ROOT/.swift-version\" ]; then\n  SWIFT_VERSION=$(cat \"$REPO_ROOT/.swift-version\")\nfi\n\n# 6. Ejecutar SwiftFormat en todo el directorio EssentialFeed\n# IMPORTANTE: Aquí \"$SRCROOT\" se refiere al directorio raíz del target específico\n# donde se está ejecutando este script (ej. el target \"EssentialFeed\").\n# Si la intención es formatear TODO el contenido dentro de la carpeta\n# \"essential-feed-case-study/EssentialFeed/\", entonces \"$SRCROOT\" está bien.\necho \"Running SwiftFormat on EssentialFeed project files (path: $SRCROOT, Swift $SWIFT_VERSION)...\"\n\n\"$SWIFTFORMAT\" \"$SRCROOT\" \\\n  --config \"$CONFIG_FILE\" \\\n  --swiftversion \"$SWIFT_VERSION\" \\\n  --exclude \"build,DerivedData,.build,*.xcodeproj,*.xcworkspace\" \\\n  --quiet \\\n  || exit 1 \n\n# 7. Output ficticio para Xcode\ntouch \"${DERIVED_FILE_DIR}/swiftformat.EssentialFeed.done\" \necho \"SwiftFormat completed successfully for EssentialFeed project files.\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2800,7 +2801,6 @@
 				B4F52FE72DFB234E00CC9322 /* RefreshCoordinator.swift in Sources */,
 				B4F52FE82DFB234E00CC9322 /* DefaultAuthenticationService.swift in Sources */,
 				B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */,
-				B4D2DC632DEE564800606891 /* KeychainErrorHandling.swift in Sources */,
 				B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */,
 				B45C36E32DDA92EE00184F55 /* LoginPersistenceRepository.swift in Sources */,
 				B4F52FF82DFB419B00CC9322 /* KeychainManaging.swift in Sources */,
@@ -2942,6 +2942,8 @@
 				B4A746872DDD25150087C33C /* KeychainEncryptorSpy.swift in Sources */,
 				B4A7467F2DDD24060087C33C /* KeychainManagerTests.swift in Sources */,
 				082DB86421F763F900A71F69 /* URLSessionHTTPClientTests.swift in Sources */,
+				B40ADA942E00A5E800A39B40 /* KeychainManagerAdvancedSecurityTests.swift in Sources */,
+				B40ADA952E00A5E800A39B40 /* KeychainMigrationManagerAdvancedTests.swift in Sources */,
 				08C4E984233E037200D939F8 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */,
 				08346CEB24F93B0A00A9F17C /* ImageCommentsMapperTests.swift in Sources */,
 				B4725B052DD5397800E99BEC /* LoginTestSpies.swift in Sources */,
@@ -3276,7 +3278,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
@@ -3304,7 +3306,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
@@ -3331,6 +3333,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z273P8K3M7;
@@ -3468,7 +3471,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Z273P8K3M7;
@@ -3502,7 +3505,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = Z273P8K3M7;

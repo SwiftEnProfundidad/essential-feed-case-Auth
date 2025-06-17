@@ -8,35 +8,33 @@ extension XCTestCase {
         let snapshotURL = makeSnapshotURL(named: name, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
 
-        guard let storedSnapshotData = try? Data(contentsOf: snapshotURL) else {
-            XCTFail("Failed to load stored snapshot at URL: \(snapshotURL). Use the `record` method to store a snapshot before asserting.", file: file, line: line)
-            return
-        }
+        let recordMode = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "true"
 
-        if snapshotData != storedSnapshotData {
-            let temporarySnapshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-                .appendingPathComponent(snapshotURL.lastPathComponent)
+        if recordMode {
+            do {
+                try FileManager.default.createDirectory(
+                    at: snapshotURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
 
-            try? snapshotData?.write(to: temporarySnapshotURL)
+                try snapshotData?.write(to: snapshotURL)
+            } catch {
+                XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
+            }
+        } else {
+            guard let storedSnapshotData = try? Data(contentsOf: snapshotURL) else {
+                XCTFail("Failed to load stored snapshot at URL: \(snapshotURL). Use the `record` method (by setting RECORD_SNAPSHOTS=true environment variable) to store a snapshot before asserting.", file: file, line: line)
+                return
+            }
 
-            XCTFail("New snapshot does not match stored snapshot. New snapshot URL: \(temporarySnapshotURL), Stored snapshot URL: \(snapshotURL)", file: file, line: line)
-        }
-    }
+            if snapshotData != storedSnapshotData {
+                let temporarySnapshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+                    .appendingPathComponent(snapshotURL.lastPathComponent)
 
-    func record(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
-        let snapshotURL = makeSnapshotURL(named: name, file: file)
-        let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
+                try? snapshotData?.write(to: temporarySnapshotURL)
 
-        do {
-            try FileManager.default.createDirectory(
-                at: snapshotURL.deletingLastPathComponent(),
-                withIntermediateDirectories: true
-            )
-
-            try snapshotData?.write(to: snapshotURL)
-            XCTFail("Record succeeded - use `assert` to compare the snapshot from now on.", file: file, line: line)
-        } catch {
-            XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
+                XCTFail("New snapshot does not match stored snapshot. New snapshot URL: \(temporarySnapshotURL), Stored snapshot URL: \(snapshotURL)", file: file, line: line)
+            }
         }
     }
 

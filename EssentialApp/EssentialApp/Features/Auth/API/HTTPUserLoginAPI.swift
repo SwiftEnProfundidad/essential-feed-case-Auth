@@ -16,10 +16,7 @@ class HTTPUserLoginAPI: UserLoginAPI {
     }
 
     func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
-        print("API: Attempting login for \(credentials.email)")
-
         if credentials.email == "real@example.com", credentials.password == "realPassword" {
-            // LoginResponse solo espera 'token' según su definición en EssentialFeed
             return .success(LoginResponse(token: "real-user-token-123"))
         }
         if credentials.email == "offline@example.com" {

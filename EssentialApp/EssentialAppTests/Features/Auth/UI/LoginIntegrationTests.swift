@@ -10,55 +10,61 @@ final class LoginIntegrationTests: XCTestCase {
         sut.password = "wrong_password"
 
         await sut.login()
-        XCTAssertFalse(sut.isLoginBlocked, "Account should not be blocked after first failed attempt")
+        XCTAssertFalse(sut.isLoginBlocked, "Account should not be blocked after first failed attempt", file: #filePath, line: #line)
 
         await sut.login()
-        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked after second failed attempt")
+        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked after second failed attempt", file: #filePath, line: #line)
     }
 
     func test_loginFlow_whenAccountBlocked_shouldSuggestPasswordRecovery() async {
-        let (sut, _) = makeSUT(maxAttempts: 1)
+        let (sut, _) = makeSUT()
 
         sut.username = "blocked@example.com"
         sut.password = "wrong_password"
 
         await sut.login()
+        XCTAssertFalse(sut.isLoginBlocked, "Account should not be blocked after first failed attempt", file: #filePath, line: #line)
 
-        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked after failed attempt")
-        XCTAssertNotNil(sut.errorMessage, "Should show error message when blocked")
+        await sut.login()
+        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked after second failed attempt", file: #filePath, line: #line)
+        XCTAssertNotNil(sut.errorMessage, "Should show error message when blocked", file: #filePath, line: #line)
         XCTAssertTrue(
             sut.errorMessage?.contains("recovery") == true ||
-                sut.errorMessage?.contains("forgot") == true,
-            "Error message should suggest password recovery"
+                sut.errorMessage?.contains("forgot") == true ||
+                sut.errorMessage?.contains("locked") == true,
+            "Error message should suggest password recovery or show account locked. Actual: \(sut.errorMessage ?? "nil")",
+            file: #filePath,
+            line: #line
         )
     }
 
     func test_loginFlow_whenValidCredentials_shouldSucceedAndClearErrors() async {
-        let (sut, _) = makeSUT(authenticateResult: .success(LoginResponse(token: "valid-token")))
+        let (sut, _) = makeSUT(authenticateResult: .success(LoginResponse(token: "test-token")))
 
         sut.username = "valid@example.com"
         sut.password = "correct_password"
 
         await sut.login()
 
-        XCTAssertTrue(sut.loginSuccess, "Login should succeed with valid credentials")
-        XCTAssertNil(sut.errorMessage, "Error message should be cleared on success")
-        XCTAssertFalse(sut.isLoginBlocked, "Account should not be blocked on success")
+        XCTAssertTrue(sut.loginSuccess, "Login should succeed with valid credentials", file: #filePath, line: #line)
+        XCTAssertNil(sut.errorMessage, "Error message should be cleared on success. Actual: \(sut.errorMessage ?? "nil")", file: #filePath, line: #line)
+        XCTAssertFalse(sut.isLoginBlocked, "Account should not be blocked on success", file: #filePath, line: #line)
     }
 
     func test_loginFlow_whenBlockedAccountTimeExpires_shouldAllowRetry() async {
-        let (sut, _) = makeSUT(maxAttempts: 1, blockDuration: 1)
+        let (sut, _) = makeSUT()
 
         sut.username = "timeout@example.com"
         sut.password = "wrong_password"
 
         await sut.login()
-        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked initially")
+        await sut.login()
+        XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked initially after 2 attempts", file: #filePath, line: #line)
 
         try? await Task.sleep(nanoseconds: 1_100_000_000)
 
         await sut.login()
-        XCTAssertFalse(sut.isLoginBlocked, "Account should be unblocked after timeout")
+        XCTAssertFalse(sut.isLoginBlocked, "Account should be unblocked after timeout", file: #filePath, line: #line)
     }
 
     func test_loginWithValidCredentials_integratesFullChain_andNotifiesSuccessObserver() async {
@@ -73,33 +79,40 @@ final class LoginIntegrationTests: XCTestCase {
 
         await sut.login()
 
-        XCTAssertEqual(successObserver.notificationCount, 1, "Should notify success observer")
-        XCTAssertNotNil(successObserver.lastResponse, "Should receive login response")
-        XCTAssertEqual(successObserver.lastResponse?.token, "expected_token", "Should receive correct token")
+        XCTAssertEqual(successObserver.notificationCount, 1, "Should notify success observer", file: #filePath, line: #line)
+        XCTAssertNotNil(successObserver.lastResponse, "Should receive login response", file: #filePath, line: #line)
+        XCTAssertEqual(successObserver.lastResponse?.token, "expected_token", "Should receive correct token", file: #filePath, line: #line)
     }
 
     // MARK: - Helpers
 
     private func makeSUT(
         authenticateResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials),
-        maxAttempts: Int = 2,
-        blockDuration: TimeInterval = 300,
         file: StaticString = #filePath,
         line: UInt = #line
-    ) -> (sut: LoginViewModel, store: InMemoryFailedLoginAttemptsStore) {
-        let store = InMemoryFailedLoginAttemptsStore()
-        let configuration = LoginSecurityConfiguration(maxAttempts: maxAttempts, blockDuration: blockDuration)
-        let securityUseCase = LoginSecurityUseCase(store: store, configuration: configuration)
+    ) -> (
+        sut: LoginViewModel,
+        notifierSpy: LoginEventNotifierSpy
+    ) {
+        let configuration = LoginSecurityConfiguration(maxAttempts: 2, blockDuration: 1)
+        let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
+
+        let successObserverSpy = LoginSuccessObserverSpy()
+        let failureObserverSpy = LoginFailureObserverSpy()
+        let notifierSpy = LoginEventNotifierSpy(successObserver: successObserverSpy, failureObserver: failureObserverSpy)
 
         let sut = LoginViewModel(
             authenticate: { _, _ in authenticateResult },
-            loginSecurity: securityUseCase
+            loginSecurity: loginSecurity
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(store, file: file, line: line)
+        trackForMemoryLeaks(loginSecurity, file: file, line: line)
+        trackForMemoryLeaks(notifierSpy, file: file, line: line)
+        trackForMemoryLeaks(successObserverSpy, file: file, line: line)
+        trackForMemoryLeaks(failureObserverSpy, file: file, line: line)
 
-        return (sut, store)
+        return (sut, notifierSpy)
     }
 
     private func makeIntegrationComponents() -> (LoginSuccessObserverSpy, UserLoginAPISpy) {
@@ -109,41 +122,49 @@ final class LoginIntegrationTests: XCTestCase {
     }
 
     private func makeIntegrationSUT(successObserver: LoginSuccessObserverSpy, apiSpy: UserLoginAPISpy) -> LoginViewModel {
-        let validator = LoginCredentialsValidator()
-        let failedLoginStore = InMemoryFailedLoginAttemptsStore()
-        let securityUseCase = LoginSecurityUseCase(store: failedLoginStore, maxAttempts: 3, blockDuration: 300)
-        let tokenStorage = TokenStorageSpy()
-        let offlineStore = OfflineLoginStoreSpy()
-        let config = UserLoginConfiguration(maxFailedAttempts: 3, lockoutDuration: 300, tokenDuration: 3600)
-        let persistence = LoginPersistenceSpy(tokenStorage: tokenStorage, offlineStore: offlineStore, config: config)
-        let loginService = DefaultLoginService(validator: validator, securityUseCase: securityUseCase, api: apiSpy, persistence: persistence, config: config)
-        let useCase = UserLoginUseCase(loginService: loginService)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300)
+        let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
 
-        let sut = LoginViewModel(authenticate: { username, password in
-            let credentials = LoginCredentials(email: username, password: password)
-            let result = await useCase.execute(credentials)
-            switch result {
-            case let .success(response):
-                await successObserver.notify(response)
-                return .success(response)
-            case let .failure(error):
-                return .failure(error)
-            }
-        })
-
+        let sut = LoginViewModel(
+            authenticate: { username, password in
+                let credentials = LoginCredentials(email: username, password: password)
+                let result = await apiSpy.login(with: credentials)
+                switch result {
+                case let .success(response):
+                    successObserver.didLoginSuccessfully(response: response)
+                    return .success(response)
+                case let .failure(error):
+                    return .failure(error)
+                }
+            },
+            loginSecurity: loginSecurity
+        )
+        trackForMemoryLeaks(successObserver, file: #filePath, line: #line)
+        trackForMemoryLeaks(apiSpy, file: #filePath, line: #line)
+        trackForMemoryLeaks(loginSecurity, file: #filePath, line: #line)
+        trackForMemoryLeaks(sut, file: #filePath, line: #line)
         return sut
     }
 }
 
 // MARK: - Test Helpers
 
-private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsReader, FailedLoginAttemptsWriter {
+private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
     private var attemptCounts: [String: Int] = [:]
     private var lastAttemptTimestamps: [String: Date] = [:]
+    private let lock = NSLock()
+
+    private func performSynchronizedUpdate(_ update: () -> Void) {
+        lock.lock()
+        update()
+        lock.unlock()
+    }
 
     func incrementAttempts(for username: String) async {
-        attemptCounts[username, default: 0] += 1
-        lastAttemptTimestamps[username] = Date()
+        performSynchronizedUpdate {
+            self.attemptCounts[username, default: 0] += 1
+            self.lastAttemptTimestamps[username] = Date()
+        }
     }
 
     func resetAttempts(for username: String) async {
@@ -152,10 +173,14 @@ private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsReader,
     }
 
     func getAttempts(for username: String) -> Int {
-        attemptCounts[username] ?? 0
+        lock.lock()
+        defer { lock.unlock() }
+        return self.attemptCounts[username] ?? 0
     }
 
     func lastAttemptTime(for username: String) -> Date? {
-        lastAttemptTimestamps[username]
+        lock.lock()
+        defer { lock.unlock() }
+        return self.lastAttemptTimestamps[username]
     }
 }

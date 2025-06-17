@@ -86,8 +86,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
     ) -> LoginViewModel {
         let loginSecurity = LoginSecurityUseCase(
             store: store,
-            maxAttempts: maxAttempts,
-            blockDuration: lockoutTime,
+            configuration: LoginSecurityConfiguration(maxAttempts: maxAttempts, blockDuration: lockoutTime),
             timeProvider: timeProvider
         )
 

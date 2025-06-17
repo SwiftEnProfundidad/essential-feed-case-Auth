@@ -19,12 +19,16 @@ public final class SystemKeychain: KeychainFull {
             return keychain.load(forKey: key)
         }
         guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
-        let query: [String: Any] = [
+        var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
+        if let accessGroup = Bundle.main.bundleIdentifier {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+
         var dataTypeRef: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
         if status == errSecSuccess {
@@ -49,10 +53,14 @@ public final class SystemKeychain: KeychainFull {
 
     private func _delete(forKey key: String) -> Bool {
         guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
-        let query: [String: Any] = [
+        var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
+        if let accessGroup = Bundle.main.bundleIdentifier {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess || status == errSecItemNotFound
     }
@@ -121,18 +129,28 @@ public final class SystemKeychain: KeychainFull {
     }
 
     private func makeQuery(forKey key: String) -> [String: Any] {
-        [
+        var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
+        if let accessGroup = Bundle.main.bundleIdentifier {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+        return query
     }
 
     private func makeQueryWithData(forKey key: String, data: Data) -> [String: Any] {
-        [
+        var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
+        if let accessGroup = Bundle.main.bundleIdentifier {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+        query[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+
+        return query
     }
 
     private func isDataPersisted(forKey key: String, data: Data) -> Bool {
@@ -154,10 +172,14 @@ public final class SystemKeychain: KeychainFull {
 
     private func _update(data: Data, forKey key: String) -> OSStatus {
         guard !key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, !data.isEmpty else { return errSecParam }
-        let query: [String: Any] = [
+        var query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
+        if let accessGroup = Bundle.main.bundleIdentifier {
+            query[kSecAttrAccessGroup as String] = accessGroup
+        }
+
         let attributesToUpdate: [String: Any] = [
             kSecValueData as String: data
         ]

@@ -2,6 +2,12 @@ import EssentialFeed
 import XCTest
 
 final class KeychainHelperTests: XCTestCase {
+    override func setUpWithError() throws {
+        #if targetEnvironment(simulator)
+            throw XCTSkip("Keychain tests require macOS environment with proper entitlements")
+        #endif
+    }
+
     func test_setAndGet_returnsSavedValue() {
         let (sut, key, value) = makeRealKeychainSUT()
         let data = value.data(using: .utf8)!
@@ -9,14 +15,13 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
         let saveResult = sut.save(data, for: key)
 
-        if case .success = saveResult {
-        } else {
-            XCTFail("Expected success result, got \(saveResult)")
-        }
+        XCTAssertTrue(saveResult.isSuccess, "Expected success result, got \(saveResult)")
         let retrievedData = sut.getData(key)
 
-        XCTAssertNotNil(retrievedData, "Expected to retrieve some data")
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), value, "Expected to retrieve the saved value")
+        XCTAssertNotNil(retrievedData, "Failed to retrieve data from Keychain for key '\(key)'")
+        if let retrievedData {
+            XCTAssertEqual(String(data: retrievedData, encoding: .utf8), value, "Expected to retrieve the saved value")
+        }
 
         cleanUp(key: key, in: sut)
     }
@@ -39,16 +44,14 @@ final class KeychainHelperTests: XCTestCase {
         let firstSaveResult = sut.save(valueData, for: key)
         let secondSaveResult = sut.save(otherValueData, for: key)
 
-        if case .failure = firstSaveResult {
-            XCTFail("Expected first save to succeed")
-        }
-        if case .failure = secondSaveResult {
-            XCTFail("Expected second save to succeed")
-        }
+        XCTAssertTrue(firstSaveResult.isSuccess, "Expected first save to succeed")
+        XCTAssertTrue(secondSaveResult.isSuccess, "Expected second save to succeed")
 
         let retrievedData = sut.getData(key)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), otherValue, "Expected the last saved value")
+        XCTAssertNotNil(retrievedData, "Failed to retrieve data from Keychain for key '\(key)'")
+        if let retrievedData {
+            XCTAssertEqual(String(data: retrievedData, encoding: .utf8), otherValue, "Expected the last saved value")
+        }
 
         cleanUp(key: key, in: sut)
     }
@@ -58,16 +61,10 @@ final class KeychainHelperTests: XCTestCase {
         let valueData = value.data(using: .utf8)!
 
         let saveResult = sut.save(valueData, for: key)
-        if case .failure = saveResult {
-            XCTFail("Expected save to succeed")
-        }
+        XCTAssertTrue(saveResult.isSuccess, "Expected save to succeed")
 
         let deleteResult = sut.delete(key)
-        if case let .failure(error) = deleteResult {
-            if error != .itemNotFound {
-                XCTFail("Expected delete to succeed or return itemNotFound, got \(error)")
-            }
-        }
+        XCTAssertTrue(deleteResult.isSuccess || deleteResult.isItemNotFound, "Expected delete to succeed or return itemNotFound, got \(deleteResult)")
 
         XCTAssertNil(sut.getData(key), "Expected value to be deleted")
     }
@@ -77,11 +74,7 @@ final class KeychainHelperTests: XCTestCase {
         cleanUp(key: key, in: sut)
 
         let deleteResult = sut.delete(key)
-        if case let .failure(error) = deleteResult {
-            if error != .itemNotFound {
-                XCTFail("Expected delete to succeed or return itemNotFound for non-existent key, got \(error)")
-            }
-        }
+        XCTAssertTrue(deleteResult.isSuccess || deleteResult.isItemNotFound, "Expected delete to succeed or return itemNotFound for non-existent key, got \(deleteResult)")
         XCTAssertNil(sut.getData(key), "Expected no value for non-existent key")
     }
 
@@ -101,14 +94,13 @@ final class KeychainHelperTests: XCTestCase {
         cleanUp(key: key, in: sut)
 
         let saveResult = sut.save(valueData, for: key)
+        XCTAssertTrue(saveResult.isSuccess, "Expected success result, got \(saveResult)")
 
-        if case .success = saveResult {
-        } else {
-            XCTFail("Expected success result, got \(saveResult)")
-        }
         let retrievedData = sut.getData(key)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), value, "Expected to retrieve the saved value")
+        XCTAssertNotNil(retrievedData, "Failed to retrieve data from Keychain for key '\(key)'")
+        if let retrievedData {
+            XCTAssertEqual(String(data: retrievedData, encoding: .utf8), value, "Expected to retrieve the saved value")
+        }
 
         cleanUp(key: key, in: sut)
     }
@@ -137,10 +129,7 @@ final class KeychainHelperTests: XCTestCase {
         XCTAssertEqual(spy.saveCalls.count, 1, "Expected save to be called once")
         XCTAssertEqual(spy.saveCalls.first?.0, key, "Expected save with correct key")
         XCTAssertEqual(spy.saveCalls.first?.1, valueData, "Expected save with correct value data")
-        if case .success = result {
-        } else {
-            XCTFail("Expected success result, got \(result)")
-        }
+        XCTAssertTrue(result.isSuccess, "Expected success result, got \(result)")
     }
 
     func test_save_propagatesErrorFromSpy() {
@@ -167,11 +156,7 @@ final class KeychainHelperTests: XCTestCase {
         let result = sut.delete(key)
 
         XCTAssertEqual(spy.deleteCalls, [key], "Expected delete to be called once with the correct key")
-        if case .success = result {
-        } else if case let .failure(error) = result, error == .itemNotFound {
-        } else {
-            XCTFail("Expected success or itemNotFound result, got \(result)")
-        }
+        XCTAssertTrue(result.isSuccess || result.isItemNotFound, "Expected success or itemNotFound result, got \(result)")
     }
 
     func test_delete_propagatesErrorFromSpy() {
@@ -197,10 +182,10 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
 
         let saveResult = sut.save(value, for: key)
-        if case .failure = saveResult { XCTFail("Expected save to succeed") }
+        XCTAssertTrue(saveResult.isSuccess, "Expected save to succeed")
 
         let retrieved = sut.getData(key)
-        XCTAssertEqual(retrieved, value)
+        XCTAssertEqual(retrieved, value, "Expected to retrieve identical data")
 
         cleanUpData(key: key, in: sut)
     }
@@ -215,10 +200,10 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
 
         let saveResult = sut.save(value, for: key)
-        if case .failure = saveResult { XCTFail("Expected save to succeed") }
+        XCTAssertTrue(saveResult.isSuccess, "Expected save to succeed")
 
         let retrieved = sut.getData(key)
-        XCTAssertEqual(retrieved, value)
+        XCTAssertEqual(retrieved, value, "Expected to retrieve identical data")
 
         cleanUpData(key: key, in: sut)
     }
@@ -232,11 +217,7 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.save(value, for: key)
 
         let deleteResult = sut.delete(key)
-        if case .success = deleteResult {
-        } else if case let .failure(error) = deleteResult, error == .itemNotFound {
-        } else {
-            XCTFail("Expected success or itemNotFound result, got \(deleteResult)")
-        }
+        XCTAssertTrue(deleteResult.isSuccess || deleteResult.isItemNotFound, "Expected success or itemNotFound result, got \(deleteResult)")
 
         let retrieved = sut.getData(key)
         XCTAssertNil(retrieved)
@@ -261,12 +242,12 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
 
         let saveResult = sut.save(value, for: key)
-        if case .success = saveResult {
-        } else {
-            XCTFail("Expected success result, got \(saveResult)")
-        }
+        XCTAssertTrue(saveResult.isSuccess, "Expected success result, got \(saveResult)")
+
         let retrieved = sut.getData(key)
-        XCTAssertEqual(retrieved, value)
+        XCTAssertEqual(retrieved, value, "Expected to retrieve the saved value")
+
+        cleanUpData(key: key, in: sut)
     }
 
     func test_saveData_overwritesPreviousData_withDeleteBeforeAdd() {
@@ -278,12 +259,12 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
         _ = sut.save(value1, for: key)
         let saveResult = sut.save(value2, for: key)
-        if case .success = saveResult {
-        } else {
-            XCTFail("Expected success result, got \(saveResult)")
-        }
+        XCTAssertTrue(saveResult.isSuccess, "Expected success result, got \(saveResult)")
+
         let retrieved = sut.getData(key)
-        XCTAssertEqual(retrieved, value2)
+        XCTAssertEqual(retrieved, value2, "Expected to retrieve the overwritten value")
+
+        cleanUpData(key: key, in: sut)
     }
 
     func test_stringOperations_remainCompatibleAfterDataSupport() {
@@ -294,21 +275,23 @@ final class KeychainHelperTests: XCTestCase {
         _ = sut.delete(key)
         let valueData = value.data(using: .utf8)!
         let saveResult = sut.save(valueData, for: key)
-        if case .success = saveResult {
-        } else {
-            XCTFail("Expected success result, got \(saveResult)")
-        }
+        XCTAssertTrue(saveResult.isSuccess, "Expected success result, got \(saveResult)")
+
         let retrievedData = sut.getData(key)
-        XCTAssertNotNil(retrievedData)
-        let retrievedString = String(data: retrievedData!, encoding: .utf8)
-        XCTAssertEqual(retrievedString, value)
+        XCTAssertNotNil(retrievedData, "Failed to retrieve data from Keychain for key '\(key)'")
+        if let retrievedData {
+            let retrievedString = String(data: retrievedData, encoding: .utf8)
+            XCTAssertEqual(retrievedString, value)
+        }
+
+        cleanUp(key: key, in: sut)
     }
 
     func test_handleUnicodeKeys_correctly() {
         let unicodeKeys = [
             "🔑-clave-segura-漢字-😀-𝄞-😺",
             "k͏e͏y͏-w͏i͏t͏h͏-z͏e͏r͏o͏-w͏i͏d͏t͏h͏-s͏p͏a͏c͏e͏s͏",
-            "ǩ̸̌̽̉̉̊̔̽̽̈́̀̎̈́͆̎̈́̎̌̽̌̽̈́̽̇͌̉̇̈́͌̌̈́̉͌̈́̌̈́̉͝͝͝͝͝͝͝͝͝͝",
+            "ǩ̸̌̽̉̉̊̔̽̽�8́̀̎�8́͆̎�8́̎̌̽̌̽�8́̽�7͌�97�8́͌̌�8́�98�88�88�88�88",
             "مرحبا-بالعالم-😊",
             "こんにちは-世界-🌏",
             "Привет-мир-🚀"
@@ -321,18 +304,13 @@ final class KeychainHelperTests: XCTestCase {
             _ = sut.delete(unicodeKey)
 
             let saveResult = sut.save(testData, for: unicodeKey)
-            if case .failure = saveResult {
-                XCTFail("Failed to save with Unicode key: \(unicodeKey)")
-            }
+            XCTAssertTrue(saveResult.isSuccess, "Failed to save with Unicode key: \(unicodeKey)")
 
             let retrievedData = sut.getData(unicodeKey)
-            XCTAssertNotNil(retrievedData, "Could not retrieve data with Unicode key: \(unicodeKey)")
             XCTAssertEqual(retrievedData, testData, "Retrieved data doesn't match for key: \(unicodeKey)")
 
             let deleteResult = sut.delete(unicodeKey)
-            if case let .failure(error) = deleteResult, error != .itemNotFound {
-                XCTFail("Failed to delete data with Unicode key: \(unicodeKey)")
-            }
+            XCTAssertTrue(deleteResult.isSuccess || deleteResult.isItemNotFound, "Failed to delete data with Unicode key: \(unicodeKey)")
             XCTAssertNil(sut.getData(unicodeKey), "Data still exists after deletion for key: \(unicodeKey)")
         }
     }
@@ -418,5 +396,17 @@ final class KeychainHelperTests: XCTestCase {
             if let error = stubbedDeleteError { return .failure(error) }
             return .success(())
         }
+    }
+}
+
+extension KeychainOperationResult {
+    var isSuccess: Bool {
+        if case .success = self { return true }
+        return false
+    }
+
+    var isItemNotFound: Bool {
+        if case .failure(.itemNotFound) = self { return true }
+        return false
     }
 }
