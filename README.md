@@ -917,9 +917,9 @@ _(Reference only for QA/business. Progress is tracked solely in the technical ch
 
 - [✅] Add rate limiting to password recovery endpoints to prevent abuse/brute force (essential for security compliance)
 - [✅] Ensure tokenized reset links are one-time-use and expire after a short period (e.g., 15 minutes to 1 hour)
-- [🚧] Implement audit logging for all password recovery attempts, including IP/user-agent
-- [🔜] Add CAPTCHA/anti-bot protection for password recovery forms
-- [❌] Enforce strong password requirements when resetting password
+- [✅] Implement audit logging for all password recovery attempts, including IP/user-agent
+- [🚧] Add CAPTCHA/anti-bot protection for password recovery forms
+- [🔜] Enforce strong password requirements when resetting password
 
 ---
 

@@ -3,7 +3,7 @@ import XCTest
 
 final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     func test_recoverPassword_deliversSuccessWithResetToken_onValidEmailWithinRateLimit() {
-        let (sut, _, _, tokenManager) = makeSUT()
+        let (sut, _, _, tokenManager, _) = makeSUT()
         let resetToken = PasswordResetToken(token: "reset-token-123", email: "test@example.com", expirationDate: Date().addingTimeInterval(900))
         tokenManager.stubbedGeneratedToken = resetToken
 
@@ -19,7 +19,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_generatesResetToken_onValidEmail() {
-        let (sut, _, _, tokenManager) = makeSUT()
+        let (sut, _, _, tokenManager, _) = makeSUT()
 
         _ = recoverPasswordSync(sut: sut, email: "test@example.com")
 
@@ -28,7 +28,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversTokenGenerationError_whenTokenGenerationFails() {
-        let (sut, _, _, tokenManager) = makeSUT()
+        let (sut, _, _, tokenManager, _) = makeSUT()
         tokenManager.shouldThrowOnGenerate = true
 
         let result = recoverPasswordSync(sut: sut, email: "test@example.com")
@@ -42,7 +42,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversInvalidEmailError_onInvalidEmail() {
-        let (sut, _, _, _) = makeSUT()
+        let (sut, _, _, _, _) = makeSUT()
 
         let result = recoverPasswordSync(sut: sut, email: "invalid")
 
@@ -55,7 +55,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversRateLimitError_whenRateLimitExceeded() {
-        let (sut, rateLimiterSpy, _, _) = makeSUT()
+        let (sut, rateLimiterSpy, _, _, _) = makeSUT()
         rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
 
         let result = recoverPasswordSync(sut: sut, email: "test@example.com")
@@ -73,7 +73,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_recordsAttempt_onValidEmail() {
-        let (sut, rateLimiterSpy, _, _) = makeSUT()
+        let (sut, rateLimiterSpy, _, _, _) = makeSUT()
 
         _ = recoverPasswordSync(sut: sut, email: "test@example.com")
 
@@ -82,7 +82,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_doesNotRecordAttempt_onInvalidEmail() {
-        let (sut, rateLimiterSpy, _, _) = makeSUT()
+        let (sut, rateLimiterSpy, _, _, _) = makeSUT()
 
         _ = recoverPasswordSync(sut: sut, email: "invalid")
 
@@ -90,7 +90,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_doesNotGenerateToken_whenRateLimitExceeded() {
-        let (sut, rateLimiterSpy, _, tokenManager) = makeSUT()
+        let (sut, rateLimiterSpy, _, tokenManager, _) = makeSUT()
         rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
 
         _ = recoverPasswordSync(sut: sut, email: "test@example.com")
@@ -99,7 +99,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversEmailNotFoundError_onUnknownEmail() {
-        let (sut, _, apiSpy, _) = makeSUT()
+        let (sut, _, apiSpy, _, _) = makeSUT()
         apiSpy.stubbedResult = .failure(.emailNotFound)
 
         let result = recoverPasswordSync(sut: sut, email: "unknown@example.com")
@@ -113,7 +113,7 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversNetworkError_onNetworkFailure() {
-        let (sut, _, apiSpy, _) = makeSUT()
+        let (sut, _, apiSpy, _, _) = makeSUT()
         apiSpy.stubbedResult = .failure(.network)
 
         let result = recoverPasswordSync(sut: sut, email: "test@example.com")
@@ -126,12 +126,32 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
         }
     }
 
+    func test_recoverPassword_logsAuditAttempt_onValidEmail() {
+        let (sut, _, _, _, auditLogger) = makeSUT()
+
+        _ = recoverPasswordSync(sut: sut, email: "test@example.com")
+
+        XCTAssertEqual(auditLogger.logRecoveryAttemptCallCount, 1, "Expected audit log to be called once")
+        XCTAssertEqual(auditLogger.loggedAuditLogs.first?.email, "test@example.com", "Expected audit log email to match")
+        XCTAssertEqual(auditLogger.loggedAuditLogs.first?.outcome, .success, "Expected success outcome in audit log")
+    }
+
+    func test_recoverPassword_logsAuditAttempt_onInvalidEmail() {
+        let (sut, _, _, _, auditLogger) = makeSUT()
+
+        _ = recoverPasswordSync(sut: sut, email: "invalid")
+
+        XCTAssertEqual(auditLogger.logRecoveryAttemptCallCount, 1, "Expected audit log to be called once")
+        XCTAssertEqual(auditLogger.loggedAuditLogs.first?.email, "invalid", "Expected audit log email to match")
+        XCTAssertEqual(auditLogger.loggedAuditLogs.first?.outcome, .invalidEmailFormat, "Expected invalid email outcome in audit log")
+    }
+
     // MARK: - Helpers
 
     private func recoverPasswordSync(sut: UserPasswordRecoveryUseCase, email: String) -> Result<PasswordRecoveryResponse, PasswordRecoveryError>? {
         let exp = expectation(description: "Wait for recovery")
         var receivedResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>?
-        sut.recoverPassword(email: email) { result in
+        sut.recoverPassword(email: email, ipAddress: "192.168.1.1", userAgent: "TestAgent/1.0") { result in
             receivedResult = result
             exp.fulfill()
         }
@@ -142,15 +162,17 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     private func makeSUT(
         file: StaticString = #filePath,
         line: UInt = #line
-    ) -> (sut: UserPasswordRecoveryUseCase, rateLimiterSpy: PasswordRecoveryRateLimiterSpy, apiSpy: PasswordRecoveryAPISpy, tokenManager: PasswordResetTokenManagerSpy) {
+    ) -> (sut: UserPasswordRecoveryUseCase, rateLimiterSpy: PasswordRecoveryRateLimiterSpy, apiSpy: PasswordRecoveryAPISpy, tokenManager: PasswordResetTokenManagerSpy, auditLogger: PasswordRecoveryAuditLoggerSpy) {
         let rateLimiterSpy = PasswordRecoveryRateLimiterSpy()
         let apiSpy = PasswordRecoveryAPISpy()
         let tokenManager = PasswordResetTokenManagerSpy()
-        let sut = RemoteUserPasswordRecoveryUseCase(api: apiSpy, rateLimiter: rateLimiterSpy, tokenManager: tokenManager)
+        let auditLogger = PasswordRecoveryAuditLoggerSpy()
+        let sut = RemoteUserPasswordRecoveryUseCase(api: apiSpy, rateLimiter: rateLimiterSpy, tokenManager: tokenManager, auditLogger: auditLogger)
         trackForMemoryLeaks(rateLimiterSpy, file: file, line: line)
         trackForMemoryLeaks(apiSpy, file: file, line: line)
         trackForMemoryLeaks(tokenManager, file: file, line: line)
+        trackForMemoryLeaks(auditLogger, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return (sut, rateLimiterSpy, apiSpy, tokenManager)
+        return (sut, rateLimiterSpy, apiSpy, tokenManager, auditLogger)
     }
 }
