@@ -51,8 +51,6 @@
 		B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2052DBD6ABC0078F27B /* LoginView.swift */; };
 		B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2022DBD6ABC0078F27B /* AuthComposer.swift */; };
 		B46C63A42DE075EC008EEEBD /* HTTPUserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */; };
-		B46C63A72DE076E2008EEEBD /* UserDefaultsLoginPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63A62DE076E2008EEEBD /* UserDefaultsLoginPersistence.swift */; };
-		B46C63AA2DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63A92DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift */; };
 		B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */; };
 		B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */; };
 		B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */; };
@@ -170,8 +168,6 @@
 		B449F2032DBD6ABC0078F27B /* LoginComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginComposer.swift; sourceTree = "<group>"; };
 		B449F2052DBD6ABC0078F27B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPUserLoginAPI.swift; sourceTree = "<group>"; };
-		B46C63A62DE076E2008EEEBD /* UserDefaultsLoginPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsLoginPersistence.swift; sourceTree = "<group>"; };
-		B46C63A92DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLoginEventNotifier.swift; sourceTree = "<group>"; };
 		B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLoginFlowHandler.swift; sourceTree = "<group>"; };
 		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
 		B46CA1652DBEA66200CE9ADC /* PasswordRecoveryComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryComposer.swift; sourceTree = "<group>"; };
@@ -349,17 +345,8 @@
 		B46C63A52DE07617008EEEBD /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
-				B46C63A62DE076E2008EEEBD /* UserDefaultsLoginPersistence.swift */,
 			);
 			path = Infrastructure;
-			sourceTree = "<group>";
-		};
-		B46C63A82DE0772A008EEEBD /* Subscribers */ = {
-			isa = PBXGroup;
-			children = (
-				B46C63A92DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift */,
-			);
-			path = Subscribers;
 			sourceTree = "<group>";
 		};
 		B46C63AB2DE0776D008EEEBD /* Routing */ = {
@@ -467,7 +454,6 @@
 			children = (
 				B40563E72DE5C2500063C09A /* Resources */,
 				B46C63AB2DE0776D008EEEBD /* Routing */,
-				B46C63A82DE0772A008EEEBD /* Subscribers */,
 				B40E6B892DE0751400A0202F /* API */,
 				B44823402DD3AD14009E59A5 /* Presentation */,
 				B4D6B2572DC8D07900F5A3FE /* Composition */,
@@ -672,7 +658,6 @@
 				B4BBD4762DF9131D001E1965 /* NetworkDependencyFactory.swift in Sources */,
 				B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */,
 				B4BBD4782DF9131D001E1965 /* ConfigurationFactory.swift in Sources */,
-				B46C63AA2DE0774F008EEEBD /* ConsoleLoginEventNotifier.swift in Sources */,
 				B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */,
 				B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */,
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
@@ -690,7 +675,6 @@
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
 				08073B49238D2DFA00A75DC6 /* FeedViewAdapter.swift in Sources */,
 				B46CA1662DBEA66200CE9ADC /* PasswordRecoveryComposer.swift in Sources */,
-				B46C63A72DE076E2008EEEBD /* UserDefaultsLoginPersistence.swift in Sources */,
 				0835BF6D24850F9800A793D2 /* CombineHelpers.swift in Sources */,
 				088B441C25309B6E00D75AAD /* CommentsUIComposer.swift in Sources */,
 			);
