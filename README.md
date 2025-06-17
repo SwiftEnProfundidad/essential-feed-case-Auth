@@ -783,11 +783,11 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Tests that verify encryption (AES-256) on write
     - [✅] Negative/error-path & advanced security tests
 
-#### 4. [⚠️] Notify the user if renewal fails
+#### 4. [✅] Notify the user if renewal fails
 - [✅] Basic alerts (Snackbar)
 - [✅] Localized messages:
   - [✅] Spanish/English
-  - [🚧] Screenshot tests
+  - [✅] Screenshot tests
 
 #### 5. [✅] Redirect to login if renewal is not possible
 - [✅] Global logout implementation (`AuthRouter.navigateToLogin()`)
