@@ -384,6 +384,9 @@
 		B4D611132E01D62500CF1A9C /* SecurityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611122E01D62500CF1A9C /* SecurityValidationService.swift */; };
 		B4D611142E01D62500CF1A9C /* CaptchaErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611112E01D62500CF1A9C /* CaptchaErrorMapper.swift */; };
 		B4D611162E01D6B200CF1A9C /* DefaultSecurityValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611152E01D6B200CF1A9C /* DefaultSecurityValidationService.swift */; };
+		B4D6111A2E01D99200CF1A9C /* SecurityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611192E01D99200CF1A9C /* SecurityEvent.swift */; };
+		B4D6111B2E01D99200CF1A9C /* RequestPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611182E01D99200CF1A9C /* RequestPattern.swift */; };
+		B4D6111C2E01D99200CF1A9C /* BotDetectionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
 		B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */; };
 		B4D71EEF2DAF1643003A1316 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -847,6 +850,9 @@
 		B4D611112E01D62500CF1A9C /* CaptchaErrorMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaErrorMapper.swift; sourceTree = "<group>"; };
 		B4D611122E01D62500CF1A9C /* SecurityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityValidationService.swift; sourceTree = "<group>"; };
 		B4D611152E01D6B200CF1A9C /* DefaultSecurityValidationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSecurityValidationService.swift; sourceTree = "<group>"; };
+		B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotDetectionResult.swift; sourceTree = "<group>"; };
+		B4D611182E01D99200CF1A9C /* RequestPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestPattern.swift; sourceTree = "<group>"; };
+		B4D611192E01D99200CF1A9C /* SecurityEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityEvent.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseTests.swift; sourceTree = "<group>"; };
 		B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorageTests.swift; sourceTree = "<group>"; };
@@ -1765,6 +1771,9 @@
 		B45C36922DDA92EE00184F55 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */,
+				B4D611182E01D99200CF1A9C /* RequestPattern.swift */,
+				B4D611192E01D99200CF1A9C /* SecurityEvent.swift */,
 				B40ADAE02E01C82000A39B40 /* CaptchaValidationResult.swift */,
 				B40ADAD42E018C8400A39B40 /* PasswordRecoveryAuditLog.swift */,
 				B40ADAA42E0179B800A39B40 /* PasswordResetToken.swift */,
@@ -2139,8 +2148,8 @@
 		B4A746892DDD2D950087C33C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
-				B4D611152E01D6B200CF1A9C /* DefaultSecurityValidationService.swift */,
 				B40ADAF92E01CDF500A39B40 /* Factories */,
+				B4D611152E01D6B200CF1A9C /* DefaultSecurityValidationService.swift */,
 				B40ADAF42E01CC5D00A39B40 /* HTTPPasswordRecoveryAPI.swift */,
 				B40ADAE82E01C8D500A39B40 /* BasicBotDetectionService.swift */,
 				B40ADAE92E01C8D500A39B40 /* DefaultSecurityEventLogger.swift */,
@@ -2918,6 +2927,9 @@
 				0889B0FA2530B0AA00FEAB5A /* ImageCommentsEndpoint.swift in Sources */,
 				B40ADAE52E01C85E00A39B40 /* CaptchaValidatorProtocol.swift in Sources */,
 				0804862E236345A40087ED48 /* FeedImageDataCache.swift in Sources */,
+				B4D6111A2E01D99200CF1A9C /* SecurityEvent.swift in Sources */,
+				B4D6111B2E01D99200CF1A9C /* RequestPattern.swift in Sources */,
+				B4D6111C2E01D99200CF1A9C /* BotDetectionResult.swift in Sources */,
 				B4AF1BA62DDB50DD00FD2ED2 /* LoginSecurityServiceFactory.swift in Sources */,
 				B49DC5632DF6FED600C5ADE6 /* OfflineLoginRetryResult.swift in Sources */,
 				B4586AB62DE697FB00A82535 /* TokenAndUser.swift in Sources */,

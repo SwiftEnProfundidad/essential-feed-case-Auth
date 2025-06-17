@@ -13,24 +13,3 @@ public struct CaptchaValidationResult: Equatable {
         self.timestamp = timestamp
     }
 }
-
-public enum BotDetectionResult: Equatable {
-    case human
-    case suspicious(reason: String)
-    case bot(confidence: Double)
-}
-
-public enum RequestPattern: Equatable {
-    case passwordRecovery
-    case login
-    case registration
-}
-
-public enum SecurityEvent: Equatable {
-    case botDetected(confidence: Double)
-    case suspiciousActivity(reason: String)
-    case captchaFailed
-    case lowCaptchaScore(score: Double)
-    case captchaError(error: String)
-    case captchaRequired
-}
