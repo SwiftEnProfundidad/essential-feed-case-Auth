@@ -9,4 +9,13 @@ enum ConfigurationFactory {
             tokenDuration: 3600
         )
     }
+
+    public static func makePasswordRecoveryBaseURL() -> URL {
+        guard let urlString = ProcessInfo.processInfo.environment["PASSWORD_RECOVERY_BASE_URL"],
+              let url = URL(string: urlString)
+        else {
+            return URL(string: "https://api.essentialapp.com")!
+        }
+        return url
+    }
 }

@@ -1,4 +1,3 @@
-
 import EssentialApp
 import EssentialFeed
 import XCTest
@@ -12,38 +11,57 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
     }
 
     func test_recoverPassword_success_displaysSuccessFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
-        useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
+        useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
-        XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-        XCTAssertTrue(sut.isSuccess)
-        XCTAssertTrue(sut.showingFeedback)
-        XCTAssertEqual(sut.feedbackMessage, "OK")
-        XCTAssertEqual(sut.feedbackTitle, "Éxito")
+        DispatchQueue.main.async {
+            XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
+            XCTAssertTrue(sut.isSuccess)
+            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertEqual(sut.feedbackMessage, "OK")
+            XCTAssertEqual(sut.feedbackTitle, "Éxito")
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_recoverPassword_failure_displaysErrorFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .failure(.emailNotFound))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
-        // Simula la respuesta del caso de uso
-        useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.emailNotFound))
-        XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-        XCTAssertFalse(sut.isSuccess)
-        XCTAssertTrue(sut.showingFeedback)
-        XCTAssertEqual(sut.feedbackMessage, "No existe ninguna cuenta asociada a ese email.")
-        XCTAssertEqual(sut.feedbackTitle, "Error")
+        useCaseSpy.completeRecovery(with: .failure(.emailNotFound))
+
+        DispatchQueue.main.async {
+            XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
+            XCTAssertFalse(sut.isSuccess)
+            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertEqual(sut.feedbackMessage, "No account associated with that email.")
+            XCTAssertEqual(sut.feedbackTitle, "Error")
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_onFeedbackDismiss_hidesFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
-        useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
-        sut.onFeedbackDismiss()
-        XCTAssertFalse(sut.showingFeedback)
+        useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
+
+        DispatchQueue.main.async {
+            sut.onFeedbackDismiss()
+            XCTAssertFalse(sut.showingFeedback)
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_recoverPassword_withEmptyEmail_doesNotCallUseCaseAndDoesNotShowFeedback() {
@@ -56,28 +74,41 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
     }
 
     func test_changingEmailAfterFeedback_hidesFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
 
-        useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
-        XCTAssertTrue(sut.showingFeedback)
+        useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
-        sut.email = "nuevo@email.com"
-        XCTAssertFalse(sut.showingFeedback)
-        XCTAssertEqual(sut.feedbackMessage, "")
+        DispatchQueue.main.async {
+            XCTAssertTrue(sut.showingFeedback)
+            sut.email = "nuevo@email.com"
+            XCTAssertFalse(sut.showingFeedback)
+            XCTAssertEqual(sut.feedbackMessage, "")
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_recoverPassword_failureUnknown_displaysGenericErrorFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .failure(.unknown))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
-        useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.unknown))
-        XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-        XCTAssertFalse(sut.isSuccess)
-        XCTAssertTrue(sut.showingFeedback)
-        XCTAssertEqual(sut.feedbackMessage, "Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo más tarde.")
-        XCTAssertEqual(sut.feedbackTitle, "Error")
+        useCaseSpy.completeRecovery(with: .failure(.unknown))
+
+        DispatchQueue.main.async {
+            XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
+            XCTAssertFalse(sut.isSuccess)
+            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertEqual(sut.feedbackMessage, "Unknown error. Please try again.")
+            XCTAssertEqual(sut.feedbackTitle, "Error")
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_doesNotShowFeedback_ifEmailChangesBeforeResponse() {
@@ -87,8 +118,7 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         sut.recoverPassword()
         sut.email = "segundo@email.com"
 
-        let completion = useCaseSpy.recoverPasswordCompletions.first?.1
-        completion?(.success(PasswordRecoveryResponse(message: "OK")))
+        useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
         XCTAssertEqual(sut.feedbackMessage, "")
         XCTAssertFalse(sut.showingFeedback)
@@ -96,37 +126,39 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
     }
 
     func test_emailChange_toSameValue_doesNotHideFeedback() {
-        let (sut, useCaseSpy) = makeSUT(result: .success(PasswordRecoveryResponse(message: "OK")))
+        let (sut, useCaseSpy) = makeSUT()
+        let exp = expectation(description: "Wait for async completion")
         sut.email = "user@email.com"
         sut.recoverPassword()
-        useCaseSpy.recoverPasswordCompletions.first?.1(.success(PasswordRecoveryResponse(message: "OK")))
+        useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
-        XCTAssertTrue(sut.showingFeedback)
+        DispatchQueue.main.async {
+            XCTAssertTrue(sut.showingFeedback)
+            sut.email = "user@email.com"
+            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertEqual(sut.feedbackMessage, "OK")
+            exp.fulfill()
+        }
 
-        sut.email = "user@email.com"
-
-        XCTAssertTrue(sut.showingFeedback)
-        XCTAssertEqual(sut.feedbackMessage, "OK")
+        wait(for: [exp], timeout: 1.0)
     }
 
     func test_doesNotShowFeedback_ifEmailChangesBeforeErrorResponse() {
-        let (sut, useCaseSpy) = makeSUT(result: .failure(.unknown))
+        let (sut, useCaseSpy) = makeSUT()
         sut.email = "primero@email.com"
         sut.recoverPassword()
         sut.email = "segundo@email.com"
 
-        useCaseSpy.recoverPasswordCompletions.first?.1(.failure(.unknown))
+        useCaseSpy.completeRecovery(with: .failure(.unknown))
         XCTAssertEqual(sut.feedbackMessage, "")
         XCTAssertFalse(sut.showingFeedback)
     }
 
     // MARK: - Helpers
 
-    private func makeSUT(result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK")), file: StaticString = #file, line: UInt = #line) -> (sut: PasswordRecoverySwiftUIViewModel, useCaseSpy: UserPasswordRecoveryUseCaseSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: PasswordRecoverySwiftUIViewModel, useCaseSpy: UserPasswordRecoveryUseCaseSpy) {
         let useCaseSpy = UserPasswordRecoveryUseCaseSpy()
-        useCaseSpy.result = result
         let sut = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCaseSpy)
-        sut.presenter = PasswordRecoveryPresenter(view: sut)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(useCaseSpy, file: file, line: line)
         return (sut, useCaseSpy)
@@ -134,12 +166,21 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 
     private final class UserPasswordRecoveryUseCaseSpy: UserPasswordRecoveryUseCase {
         private(set) var receivedEmails = [String]()
-        var result: Result<PasswordRecoveryResponse, PasswordRecoveryError> = .success(PasswordRecoveryResponse(message: "OK"))
-        var recoverPasswordCompletions: [(String, (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void)] = []
+        private(set) var receivedIPAddresses = [String?]()
+        private(set) var receivedUserAgents = [String?]()
+        private var completions: [(Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void] = []
 
-        func recoverPassword(email: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
+        func recoverPassword(email: String, ipAddress: String? = nil, userAgent: String? = nil, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
             receivedEmails.append(email)
-            recoverPasswordCompletions.append((email, completion))
+            receivedIPAddresses.append(ipAddress)
+            receivedUserAgents.append(userAgent)
+            completions.append(completion)
+        }
+
+        func completeRecovery(with result: Result<PasswordRecoveryResponse, PasswordRecoveryError>, at index: Int = 0) {
+            guard completions.indices.contains(index) else { return }
+            let completion = completions.remove(at: index)
+            completion(result)
         }
     }
 }
