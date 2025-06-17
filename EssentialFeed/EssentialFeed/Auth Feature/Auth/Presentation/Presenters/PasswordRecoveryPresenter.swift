@@ -23,6 +23,8 @@ public enum PasswordRecoveryPresenter {
             return minutes > 0
                 ? "Too many attempts. Please try again in \(minutes) minutes."
                 : "Too many attempts. Please try again in a few seconds."
+        case .tokenGenerationFailed:
+            return "Unable to generate reset token. Please try again."
         case .unknown:
             return "Unknown error. Please try again."
         }

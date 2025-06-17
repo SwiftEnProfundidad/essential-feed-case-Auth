@@ -152,10 +152,29 @@
 		B40ADA9F2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */; };
 		B40ADAA12E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */; };
 		B40ADAA32E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */; };
+		B40ADAA52E0179B800A39B40 /* PasswordResetToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA42E0179B800A39B40 /* PasswordResetToken.swift */; };
+		B40ADAA82E0179D400A39B40 /* PasswordResetTokenGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAA62E0179D400A39B40 /* PasswordResetTokenGenerator.swift */; };
+		B40ADAAF2E017A0000A39B40 /* PasswordResetTokenWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAAE2E0179FF00A39B40 /* PasswordResetTokenWriter.swift */; };
+		B40ADAB02E017A0000A39B40 /* PasswordResetTokenUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAAD2E0179FF00A39B40 /* PasswordResetTokenUpdater.swift */; };
+		B40ADAB12E017A0000A39B40 /* PasswordResetTokenCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAAA2E0179FF00A39B40 /* PasswordResetTokenCleaner.swift */; };
+		B40ADAB22E017A0000A39B40 /* PasswordResetTokenReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAAB2E0179FF00A39B40 /* PasswordResetTokenReader.swift */; };
+		B40ADAB32E017A0000A39B40 /* PasswordResetTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAAC2E0179FF00A39B40 /* PasswordResetTokenStore.swift */; };
+		B40ADAB52E017A3800A39B40 /* PasswordResetTokenMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAB42E017A3800A39B40 /* PasswordResetTokenMemoryStore.swift */; };
+		B40ADAB72E017A6900A39B40 /* PasswordResetUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAB62E017A6900A39B40 /* PasswordResetUseCase.swift */; };
+		B40ADABB2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADABA2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift */; };
+		B40ADABD2E017B9900A39B40 /* PasswordResetTokenManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADABC2E017B9900A39B40 /* PasswordResetTokenManagerTests.swift */; };
+		B40ADABF2E017BB600A39B40 /* PasswordResetUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADABE2E017BB600A39B40 /* PasswordResetUseCaseTests.swift */; };
+		B40ADAC12E017C7E00A39B40 /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC02E017C7E00A39B40 /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
+		B40ADAC32E017E7900A39B40 /* UserPasswordRecoveryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC22E017E7900A39B40 /* UserPasswordRecoveryUseCase.swift */; };
+		B40ADAC82E017EA400A39B40 /* PasswordResetTokenManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC72E017EA400A39B40 /* PasswordResetTokenManagerSpy.swift */; };
+		B40ADAC92E017EA400A39B40 /* PasswordRecoveryAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC52E017EA400A39B40 /* PasswordRecoveryAPISpy.swift */; };
+		B40ADACA2E017EA400A39B40 /* KeychainMigrationManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC42E017EA400A39B40 /* KeychainMigrationManagerSpy.swift */; };
+		B40ADACB2E017EA400A39B40 /* PasswordRecoveryRateLimiterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAC62E017EA400A39B40 /* PasswordRecoveryRateLimiterSpy.swift */; };
+		B40ADACD2E017F1C00A39B40 /* PasswordResetTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADACC2E017F1C00A39B40 /* PasswordResetTokenManager.swift */; };
+		B40ADAD12E017F6900A39B40 /* DefaultPasswordResetTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40ADAD02E017F6900A39B40 /* DefaultPasswordResetTokenManager.swift */; };
 		B40E6B872DE0454500A0202F /* RegistrationHTTPClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */; };
 		B40E6B882DE0454500A0202F /* RegistrationPersistenceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */; };
 		B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */; };
-		B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */; };
 		B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */; };
 		B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE362DCE02870096D12B /* TokenStorageSpy.swift */; };
 		B417AE3B2DCE09660096D12B /* SecureStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B417AE392DCE09660096D12B /* SecureStoreSpy.swift */; };
@@ -196,7 +215,6 @@
 		B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */; };
 		B45C36CB2DDA92EE00184F55 /* LoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369B2DDA92EE00184F55 /* LoginViewModelProtocol.swift */; };
 		B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */; };
-		B45C36CD2DDA92EE00184F55 /* PasswordRecoveryUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */; };
 		B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368F2DDA92EE00184F55 /* LoginError.swift */; };
 		B45C36CF2DDA92EE00184F55 /* LoginCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368E2DDA92EE00184F55 /* LoginCredentials.swift */; };
 		B45C36D02DDA92EE00184F55 /* SessionManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369E2DDA92EE00184F55 /* SessionManagerProtocol.swift */; };
@@ -604,6 +622,26 @@
 		B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPasswordRecoveryRateLimiter.swift; sourceTree = "<group>"; };
 		B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryPasswordRecoveryRateLimitStore.swift; sourceTree = "<group>"; };
 		B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryRateLimiterTests.swift; sourceTree = "<group>"; };
+		B40ADAA42E0179B800A39B40 /* PasswordResetToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetToken.swift; sourceTree = "<group>"; };
+		B40ADAA62E0179D400A39B40 /* PasswordResetTokenGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenGenerator.swift; sourceTree = "<group>"; };
+		B40ADAAA2E0179FF00A39B40 /* PasswordResetTokenCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenCleaner.swift; sourceTree = "<group>"; };
+		B40ADAAB2E0179FF00A39B40 /* PasswordResetTokenReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenReader.swift; sourceTree = "<group>"; };
+		B40ADAAC2E0179FF00A39B40 /* PasswordResetTokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenStore.swift; sourceTree = "<group>"; };
+		B40ADAAD2E0179FF00A39B40 /* PasswordResetTokenUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenUpdater.swift; sourceTree = "<group>"; };
+		B40ADAAE2E0179FF00A39B40 /* PasswordResetTokenWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenWriter.swift; sourceTree = "<group>"; };
+		B40ADAB42E017A3800A39B40 /* PasswordResetTokenMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenMemoryStore.swift; sourceTree = "<group>"; };
+		B40ADAB62E017A6900A39B40 /* PasswordResetUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetUseCase.swift; sourceTree = "<group>"; };
+		B40ADABA2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordResetTokenIntegrationTests.swift; path = ../EssentialFeedTests/FeaturesTest/AuthTest/LoginTest/IntegrationTest/PasswordResetTokenIntegrationTests.swift; sourceTree = SOURCE_ROOT; };
+		B40ADABC2E017B9900A39B40 /* PasswordResetTokenManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordResetTokenManagerTests.swift; path = ../EssentialFeedTests/FeaturesTest/AuthTest/LoginTest/DomainTest/UseCases/PasswordResetTokenManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		B40ADABE2E017BB600A39B40 /* PasswordResetUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordResetUseCaseTests.swift; path = ../EssentialFeedTests/FeaturesTest/AuthTest/LoginTest/DomainTest/UseCases/PasswordResetUseCaseTests.swift; sourceTree = SOURCE_ROOT; };
+		B40ADAC02E017C7E00A39B40 /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserPasswordRecoveryUseCaseDomainTests.swift; path = ../EssentialFeedTests/FeaturesTest/AuthTest/LoginTest/DomainTest/UseCases/UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = SOURCE_ROOT; };
+		B40ADAC22E017E7900A39B40 /* UserPasswordRecoveryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCase.swift; sourceTree = "<group>"; };
+		B40ADAC42E017EA400A39B40 /* KeychainMigrationManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainMigrationManagerSpy.swift; sourceTree = "<group>"; };
+		B40ADAC52E017EA400A39B40 /* PasswordRecoveryAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryAPISpy.swift; sourceTree = "<group>"; };
+		B40ADAC62E017EA400A39B40 /* PasswordRecoveryRateLimiterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryRateLimiterSpy.swift; sourceTree = "<group>"; };
+		B40ADAC72E017EA400A39B40 /* PasswordResetTokenManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenManagerSpy.swift; sourceTree = "<group>"; };
+		B40ADACC2E017F1C00A39B40 /* PasswordResetTokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetTokenManager.swift; sourceTree = "<group>"; };
+		B40ADAD02E017F6900A39B40 /* DefaultPasswordResetTokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPasswordResetTokenManager.swift; sourceTree = "<group>"; };
 		B40E6B852DE0454500A0202F /* RegistrationHTTPClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationHTTPClientSpy.swift; sourceTree = "<group>"; };
 		B40E6B862DE0454500A0202F /* RegistrationPersistenceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationPersistenceSpy.swift; sourceTree = "<group>"; };
 		B416599A2DDF7B1A0056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Shared.strings; sourceTree = "<group>"; };
@@ -611,7 +649,6 @@
 		B416599C2DDF7B260056B792 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Feed.strings; sourceTree = "<group>"; };
 		B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCaseTests.swift; sourceTree = "<group>"; };
 		B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCaseTests.swift; sourceTree = "<group>"; };
-		B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPasswordRecoveryUseCaseDomainTests.swift; sourceTree = "<group>"; };
 		B417AE362DCE02870096D12B /* TokenStorageSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorageSpy.swift; sourceTree = "<group>"; };
 		B417AE392DCE09660096D12B /* SecureStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStoreSpy.swift; sourceTree = "<group>"; };
 		B417AE3D2DCE0B440096D12B /* LoginViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelTests.swift; sourceTree = "<group>"; };
@@ -669,7 +706,6 @@
 		B45C36A52DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryPolicyUseCase.swift; sourceTree = "<group>"; };
 		B45C36A62DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionNotifierUseCase.swift; sourceTree = "<group>"; };
 		B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySuggestionServiceUseCase.swift; sourceTree = "<group>"; };
-		B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoveryUseCase.swift; sourceTree = "<group>"; };
 		B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTokenUseCase.swift; sourceTree = "<group>"; };
 		B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineRegistrationsUseCase.swift; sourceTree = "<group>"; };
 		B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCase.swift; sourceTree = "<group>"; };
@@ -1170,6 +1206,10 @@
 		0844768D21FCB23900439BE9 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAC42E017EA400A39B40 /* KeychainMigrationManagerSpy.swift */,
+				B40ADAC52E017EA400A39B40 /* PasswordRecoveryAPISpy.swift */,
+				B40ADAC62E017EA400A39B40 /* PasswordRecoveryRateLimiterSpy.swift */,
+				B40ADAC72E017EA400A39B40 /* PasswordResetTokenManagerSpy.swift */,
 				B4F52FD72DFAF85200CC9322 /* SessionLogoutManagerSpy.swift */,
 				B41D5DED2DE034370020B37B /* AuthServiceSpy.swift */,
 				B41D5DEE2DE034370020B37B /* InMemoryPendingRequestStore.swift */,
@@ -1595,12 +1635,14 @@
 		B417AE2F2DCE00090096D12B /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAC02E017C7E00A39B40 /* UserPasswordRecoveryUseCaseDomainTests.swift */,
+				B40ADABE2E017BB600A39B40 /* PasswordResetUseCaseTests.swift */,
+				B40ADABC2E017B9900A39B40 /* PasswordResetTokenManagerTests.swift */,
 				B40ADAA22E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift */,
 				B4AF1BB62DDB770E00FD2ED2 /* RetryOfflineLoginsUseCaseTests.swift */,
 				B45C37042DDAD54D00184F55 /* AuthUseCaseTests.swift */,
 				B417AE2C2DCE00090096D12B /* RefreshTokenUseCaseTests.swift */,
 				B417AE2D2DCE00090096D12B /* UserLoginUseCaseTests.swift */,
-				B417AE2E2DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1711,6 +1753,7 @@
 		B45C36922DDA92EE00184F55 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAA42E0179B800A39B40 /* PasswordResetToken.swift */,
 				B47A6AD12DF1BFB8001D47CE /* UserLoginConfiguration.swift */,
 				B4A7468D2DDD3BB10087C33C /* User.swift */,
 				B4A7468E2DDD3BB10087C33C /* UserRegistrationData.swift */,
@@ -1740,6 +1783,12 @@
 		B45C36A32DDA92EE00184F55 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADACC2E017F1C00A39B40 /* PasswordResetTokenManager.swift */,
+				B40ADAAA2E0179FF00A39B40 /* PasswordResetTokenCleaner.swift */,
+				B40ADAAB2E0179FF00A39B40 /* PasswordResetTokenReader.swift */,
+				B40ADAAC2E0179FF00A39B40 /* PasswordResetTokenStore.swift */,
+				B40ADAAD2E0179FF00A39B40 /* PasswordResetTokenUpdater.swift */,
+				B40ADAAE2E0179FF00A39B40 /* PasswordResetTokenWriter.swift */,
 				B40ADA9C2E01741D00A39B40 /* PasswordRecoveryRateLimitStore.swift */,
 				B4BBD48C2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift */,
 				B4BBD48A2DF92066001E1965 /* OfflineRegistrationStoreCleaning.swift */,
@@ -1763,6 +1812,8 @@
 		B45C36AD2DDA92EE00184F55 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAC22E017E7900A39B40 /* UserPasswordRecoveryUseCase.swift */,
+				B40ADAB62E017A6900A39B40 /* PasswordResetUseCase.swift */,
 				B4586AB12DE6976800A82535 /* UserRegistrationPersistenceHandler.swift */,
 				B4586AB22DE6976800A82535 /* UserRegistrationResponseMapper.swift */,
 				B4AF1BB82DDB77F700FD2ED2 /* RetryOfflineLoginsUseCase.swift */,
@@ -1773,7 +1824,6 @@
 				B45C36A52DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift */,
 				B45C36A62DDA92EE00184F55 /* PasswordRecoverySuggestionNotifierUseCase.swift */,
 				B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */,
-				B45C36A82DDA92EE00184F55 /* PasswordRecoveryUseCase.swift */,
 				B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */,
 				B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */,
 				B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */,
@@ -1917,6 +1967,8 @@
 		B47A6AC12DF1B471001D47CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAD02E017F6900A39B40 /* DefaultPasswordResetTokenManager.swift */,
+				B40ADAA62E0179D400A39B40 /* PasswordResetTokenGenerator.swift */,
 				B40ADA9E2E01746E00A39B40 /* DefaultPasswordRecoveryRateLimiter.swift */,
 				B49DC5732DF7490000C5ADE6 /* RegistrationCommandChain.swift */,
 				B49DC56F2DF747C400C5ADE6 /* RegistrationPersistenceService.swift */,
@@ -2066,6 +2118,7 @@
 		B4A746892DDD2D950087C33C /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADAB42E017A3800A39B40 /* PasswordResetTokenMemoryStore.swift */,
 				B40ADAA02E01748400A39B40 /* InMemoryPasswordRecoveryRateLimitStore.swift */,
 				B47A6AB02DF06C6E001D47CE /* Security */,
 				B4A746882DDD2D950087C33C /* KeychainTokenStore.swift */,
@@ -2248,6 +2301,7 @@
 		B4D6B2782DC8F0A000F5A3FE /* IntegrationTest */ = {
 			isa = PBXGroup;
 			children = (
+				B40ADABA2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift */,
 				B42939612DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift */,
 				B46CA15C2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift */,
 				B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */,
@@ -2695,6 +2749,7 @@
 			files = (
 				08C4E986233E139400D939F8 /* LocalFeedImageDataLoader.swift in Sources */,
 				08285AFB228C17B8000A8987 /* CoreDataHelpers.swift in Sources */,
+				B40ADAA52E0179B800A39B40 /* PasswordResetToken.swift in Sources */,
 				08C0880E21E4EF2900ACFB30 /* FeedItemsMapper.swift in Sources */,
 				B45C37032DDAD2E500184F55 /* AuthUseCase.swift in Sources */,
 				087148C4232BFCF100D6BE1A /* FeedImageViewModel.swift in Sources */,
@@ -2743,6 +2798,7 @@
 				080F9A372531DDC600EAD475 /* FeedEndpoint.swift in Sources */,
 				B49EFABB2DB54B6F007B703C /* (null) in Sources */,
 				B47A6AAB2DF06C08001D47CE /* SessionLogoutManager.swift in Sources */,
+				B40ADAB72E017A6900A39B40 /* PasswordResetUseCase.swift in Sources */,
 				B4047DB82DDA6EA300A0C34C /* SystemSessionManager.swift in Sources */,
 				B4047DB92DDA6EA300A0C34C /* SessionManaging.swift in Sources */,
 				B4047DBA2DDA6EA300A0C34C /* Session.swift in Sources */,
@@ -2766,9 +2822,15 @@
 				B4047DC32DDA6EA300A0C34C /* KeychainSecureStorage.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedImage.swift in Sources */,
 				B45C36BF2DDA92EE00184F55 /* LoginPersistenceRepositoryProtocol.swift in Sources */,
+				B40ADAD12E017F6900A39B40 /* DefaultPasswordResetTokenManager.swift in Sources */,
 				B45C36C02DDA92EE00184F55 /* PasswordRecoveryView.swift in Sources */,
 				B45C36C12DDA92EE00184F55 /* LoginEventNotifierRepository.swift in Sources */,
 				B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */,
+				B40ADAAF2E017A0000A39B40 /* PasswordResetTokenWriter.swift in Sources */,
+				B40ADAB02E017A0000A39B40 /* PasswordResetTokenUpdater.swift in Sources */,
+				B40ADAB12E017A0000A39B40 /* PasswordResetTokenCleaner.swift in Sources */,
+				B40ADAB22E017A0000A39B40 /* PasswordResetTokenReader.swift in Sources */,
+				B40ADAB32E017A0000A39B40 /* PasswordResetTokenStore.swift in Sources */,
 				B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */,
 				B42939682DDB8D3F00811CBC /* TokenValidator.swift in Sources */,
 				B45C36C42DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift in Sources */,
@@ -2787,7 +2849,6 @@
 				B47A6AA52DF04B00001D47CE /* TokenAuthenticationInterceptor.swift in Sources */,
 				B47A6AA62DF04B00001D47CE /* TokenRefreshInterceptor.swift in Sources */,
 				B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */,
-				B45C36CD2DDA92EE00184F55 /* PasswordRecoveryUseCase.swift in Sources */,
 				B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */,
 				B45C36CF2DDA92EE00184F55 /* LoginCredentials.swift in Sources */,
 				B45C36D02DDA92EE00184F55 /* SessionManagerProtocol.swift in Sources */,
@@ -2798,10 +2859,12 @@
 				B45C36D52DDA92EE00184F55 /* PasswordRecoveryPresenter.swift in Sources */,
 				B45C36D62DDA92EE00184F55 /* UserLoginUseCase.swift in Sources */,
 				B45C36D72DDA92EE00184F55 /* PasswordRecoveryPolicyUseCase.swift in Sources */,
+				B40ADAC32E017E7900A39B40 /* UserPasswordRecoveryUseCase.swift in Sources */,
 				B47A6AB82DF06F66001D47CE /* InterceptorChain.swift in Sources */,
 				B47A6AB92DF06F66001D47CE /* HTTPClientInterceptor.swift in Sources */,
 				B47A6ABA2DF06F66001D47CE /* TokenValidationInterceptor.swift in Sources */,
 				B47A6ABB2DF06F66001D47CE /* RouteAuthenticationInterceptor.swift in Sources */,
+				B40ADAB52E017A3800A39B40 /* PasswordResetTokenMemoryStore.swift in Sources */,
 				B47A6ABC2DF06F66001D47CE /* GlobalLogoutInterceptor.swift in Sources */,
 				B45C36D82DDA92EE00184F55 /* FailedLoginAttemptEvent.swift in Sources */,
 				B45C36D92DDA92EE00184F55 /* LoginViewModel.swift in Sources */,
@@ -2813,6 +2876,7 @@
 				B45C36DD2DDA92EE00184F55 /* RefreshTokenUseCase.swift in Sources */,
 				B45C36DE2DDA92EE00184F55 /* LoginBlockMessageProvider.swift in Sources */,
 				B4A7468F2DDD3BB10087C33C /* User.swift in Sources */,
+				B40ADACD2E017F1C00A39B40 /* PasswordResetTokenManager.swift in Sources */,
 				B4A746902DDD3BB10087C33C /* UserRegistrationData.swift in Sources */,
 				B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */,
 				B45D92702DE6308200B3CD1E /* ExponentialBackoffPolicy.swift in Sources */,
@@ -2832,6 +2896,7 @@
 				B45C36EA2DDA92EE00184F55 /* RemoteTokenRefreshService.swift in Sources */,
 				B45C36EB2DDA92EE00184F55 /* UserRegistrationResponse.swift in Sources */,
 				B45C36EC2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift in Sources */,
+				B40ADAA82E0179D400A39B40 /* PasswordResetTokenGenerator.swift in Sources */,
 				B4AF1BBE2DDB78CE00FD2ED2 /* RetryOfflineLoginsUseCase.swift in Sources */,
 				B4A746742DDD20C90087C33C /* KeychainErrorHandler.swift in Sources */,
 				B45C37012DDACCC300184F55 /* LoginFlowHandlerProtocol.swift in Sources */,
@@ -2885,6 +2950,7 @@
 			files = (
 				B46CA1512DBE8F6500CE9ADC /* RegistrationValidatorWithLogicStub.swift in Sources */,
 				B46CA1522DBE8F6500CE9ADC /* UserRegistrationServerUseCaseTests.swift in Sources */,
+				B40ADAC12E017C7E00A39B40 /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
 				081C0DB122491E1200AC754E /* FeedCacheTestHelpers.swift in Sources */,
 				B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */,
 				B48D300A2DCCB5A8002943D9 /* RegistrationValidatorTestStub.swift in Sources */,
@@ -2923,6 +2989,7 @@
 				08DDC13A21BEA99E00F490ED /* FeedItemsMapperTests.swift in Sources */,
 				087148C0232BF27700D6BE1A /* FeedImagePresenterTests.swift in Sources */,
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
+				B40ADABB2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift in Sources */,
 				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
 				B40ADAA32E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift in Sources */,
 				B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */,
@@ -2934,6 +3001,7 @@
 				B4E5AC972DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift in Sources */,
 				B4E5AC982DB5785C007B8F34 /* SystemKeychainTests.swift in Sources */,
 				B42939712DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift in Sources */,
+				B40ADABD2E017B9900A39B40 /* PasswordResetTokenManagerTests.swift in Sources */,
 				B41D5DF02DE034370020B37B /* TokenRefreshServiceSpy.swift in Sources */,
 				B42B78032DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift in Sources */,
 				B48C070A2DE717BD009F9682 /* KeychainHelperTests.swift in Sources */,
@@ -2987,10 +3055,10 @@
 				B417AE302DCE00090096D12B /* RefreshTokenUseCaseTests.swift in Sources */,
 				B417AE3B2DCE09660096D12B /* SecureStoreSpy.swift in Sources */,
 				B48B763F2DE02485008A4EF4 /* AuthenticatedHTTPClientDecoratorTests.swift in Sources */,
-				B417AE312DCE00090096D12B /* UserPasswordRecoveryUseCaseDomainTests.swift in Sources */,
 				B417AE322DCE00090096D12B /* UserLoginUseCaseTests.swift in Sources */,
 				B42939622DDB882C00811CBC /* RetryOfflineLoginsUseCaseIntegrationTests.swift in Sources */,
 				B417AE372DCE02870096D12B /* TokenStorageSpy.swift in Sources */,
+				B40ADABF2E017BB600A39B40 /* PasswordResetUseCaseTests.swift in Sources */,
 				08604500233E2294005ECD22 /* CoreDataFeedImageDataStoreTests.swift in Sources */,
 				B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */,
 				B48914262DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift in Sources */,
@@ -3010,6 +3078,10 @@
 				B47D597C2DB3D67F00034806 /* SecureStorageTests.swift in Sources */,
 				B4BBD4A02DF92B0D001E1965 /* GlobalLogoutIntegrationTests.swift in Sources */,
 				B46CA15D2DBE9C3E00CE9ADC /* UserPasswordRecoveryIntegrationTests.swift in Sources */,
+				B40ADAC82E017EA400A39B40 /* PasswordResetTokenManagerSpy.swift in Sources */,
+				B40ADAC92E017EA400A39B40 /* PasswordRecoveryAPISpy.swift in Sources */,
+				B40ADACA2E017EA400A39B40 /* KeychainMigrationManagerSpy.swift in Sources */,
+				B40ADACB2E017EA400A39B40 /* PasswordRecoveryRateLimiterSpy.swift in Sources */,
 				0844768F21FCB24E00439BE9 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				B48407BD2DDC5AFF00834C15 /* EncryptionServiceSpy.swift in Sources */,
 				08285AEF228BF7E3000A8987 /* CoreDataFeedStoreTests.swift in Sources */,
