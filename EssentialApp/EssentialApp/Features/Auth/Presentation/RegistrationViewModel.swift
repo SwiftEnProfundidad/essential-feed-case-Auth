@@ -2,6 +2,10 @@ import Combine
 import EssentialFeed
 import Foundation
 
+public protocol RegistrationNavigation: AnyObject {
+    func showLogin()
+}
+
 public final class RegistrationViewModel: ObservableObject {
     @Published public var email: String = ""
     @Published public var password: String = ""
@@ -10,10 +14,20 @@ public final class RegistrationViewModel: ObservableObject {
     @Published public var isLoading: Bool = false
     @Published public var registrationSuccess: Bool = false
 
+    public let registrationCompleted = PassthroughSubject<Void, Never>()
+    private var cancellables: Set<AnyCancellable> = []
     private let userRegisterer: UserRegisterer?
+    public var navigation: RegistrationNavigation?
 
     public init(userRegisterer: UserRegisterer? = nil) {
         self.userRegisterer = userRegisterer
+
+        registrationCompleted
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.navigation?.showLogin()
+            }
+            .store(in: &cancellables)
     }
 
     @MainActor
@@ -51,6 +65,7 @@ public final class RegistrationViewModel: ObservableObject {
                 password = ""
                 confirmPassword = ""
                 registrationSuccess = true
+                registrationCompleted.send()
             case let .failure(error):
                 errorMessage = error.localizedDescription
             }

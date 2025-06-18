@@ -2,6 +2,18 @@ import EssentialFeed
 import SwiftUI
 import UIKit
 
+public final class BasicRegistrationFlowHandler: RegistrationNavigation {
+    private weak var presentingViewController: UIViewController?
+
+    public init(presentingViewController: UIViewController) {
+        self.presentingViewController = presentingViewController
+    }
+
+    public func showLogin() {
+        presentingViewController?.dismiss(animated: true)
+    }
+}
+
 public enum RegistrationComposer {
     @MainActor public static func registrationViewController() -> UIViewController {
         let httpClient = NetworkDependencyFactory.makeHTTPClient()
@@ -19,6 +31,10 @@ public enum RegistrationComposer {
         let viewModel = RegistrationViewModel(userRegisterer: userRegistrationUseCase)
         let registrationView = RegistrationView(viewModel: viewModel)
 
-        return UIHostingController(rootView: registrationView)
+        let hostingController = UIHostingController(rootView: registrationView)
+        let navigationHandler = BasicRegistrationFlowHandler(presentingViewController: hostingController)
+        viewModel.navigation = navigationHandler
+
+        return hostingController
     }
 }

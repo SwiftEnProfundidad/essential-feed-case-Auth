@@ -102,6 +102,43 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertEqual(sut.confirmPassword, "password123", "Confirm password should not be cleared on failure")
     }
 
+    func test_register_onSuccess_triggersNavigationToLogin() async {
+        let userRegistererSpy = UserRegistererSpy()
+        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: User(name: "Test", email: "test@example.com")))
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showLoginCallCount, 1, "Should trigger navigation to login after successful registration")
+    }
+
+    func test_register_onFailure_doesNotTriggerNavigation() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
+        userRegistererSpy.result = .failure(networkError)
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showLoginCallCount, 0, "Should not trigger navigation on registration failure")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -129,5 +166,13 @@ private final class UserRegistererSpy: UserRegisterer {
         receivedEmail = email
         receivedPassword = password
         return result
+    }
+}
+
+private final class RegistrationNavigationSpy: RegistrationNavigation {
+    private(set) var showLoginCallCount = 0
+
+    func showLogin() {
+        showLoginCallCount += 1
     }
 }

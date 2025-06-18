@@ -473,10 +473,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
         - [✅] Inject `UserRegistrationUseCase` into `RegistrationViewModel`.
             - **Note (No Backend):** Configure the `UserRegistrationAPI` (dependency of `UserRegistrationUseCase`) to use an `HTTPClientStub` that returns a successful registration response (e.g., HTTP 201) for UI testing purposes.
             - **Note (No Backend):** Ensure `RegistrationPersistenceInterfaces` (dependencies like `KeychainProtocol`, `TokenStorage`) are using stubs/spies that don't cause unexpected failures during this UI flow test (e.g., `TokenStorageSpy` should successfully "store" a fake token if the stubbed API response includes one).
-        - [🚧] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
-- [🔜] **Error Handling in UI:**
-    - [❌] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
- - [❌] **(Optional Initial) Auto-Login Flow Post-Registration:**
+        - [✅] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
+- [🚧] **Error Handling in UI:**
+    - [🚧] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
+ - [🔜] **(Optional Initial) Auto-Login Flow Post-Registration:**
     - [❌] Consider whether the user should be auto-logged in or taken to Login after successful registration. Implement according to decision.
 
 ### Technical Checklist for Registration
