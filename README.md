@@ -450,10 +450,10 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 ### Technical Checklist for Registration UI & Presentation Flow
     
 - [🚧] **LoginView Integration:**
-    - [🚧] **TDD:** Test (UI/Snapshot) for `LoginView` verifying the presence of a "Register" button/link.
-    - [🔜] Add "Register" button/link to `LoginView.swift`.
-    - [❌] Implement navigation from "Register" button in `LoginView` to `RegistrationView` (e.g., via `AuthComposer` or a new `RegistrationComposer`).
-- [❌] **RegistrationView & ViewModel Implementation:**
+    - [✅] **TDD:** Test (UI/Snapshot) for `LoginView` verifying the presence of a "Register" button/link.
+    - [✅] Add "Register" button/link to `LoginView.swift`.
+    - [🚧] Implement navigation from "Register" button in `LoginView` to `RegistrationView` (e.g., via `AuthComposer` or a new `RegistrationComposer`).
+- [🔜] **RegistrationView & ViewModel Implementation:**
     - [❌] Define `RegistrationView.swift` (SwiftUI or UIKit, according to your app's standard).
         - [❌] Fields: Email, Password, Confirm Password.
         - [❌] "Register" button.
