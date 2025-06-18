@@ -8,6 +8,7 @@ public final class RegistrationViewModel: ObservableObject {
     @Published public var confirmPassword: String = ""
     @Published public var errorMessage: String?
     @Published public var isLoading: Bool = false
+    @Published public var registrationSuccess: Bool = false
 
     private let userRegisterer: UserRegisterer?
 
@@ -18,6 +19,7 @@ public final class RegistrationViewModel: ObservableObject {
     @MainActor
     public func register() async {
         errorMessage = nil
+        registrationSuccess = false
 
         if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "Email cannot be empty"
@@ -45,7 +47,10 @@ public final class RegistrationViewModel: ObservableObject {
             let result = await userRegisterer.register(name: "", email: email, password: password)
             switch result {
             case .success:
-                break
+                email = ""
+                password = ""
+                confirmPassword = ""
+                registrationSuccess = true
             case let .failure(error):
                 errorMessage = error.localizedDescription
             }

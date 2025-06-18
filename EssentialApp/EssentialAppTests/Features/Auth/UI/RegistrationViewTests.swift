@@ -63,6 +63,25 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertEqual(userRegistererSpy.receivedPassword, "password123", "Should pass correct password")
     }
 
+    func test_register_onSuccess_clearsFieldsAndShowsSuccessState() async {
+        let userRegistererSpy = UserRegistererSpy()
+        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: User(name: "Test", email: "test@example.com")))
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        XCTAssertEqual(sut.email, "", "Email should be cleared after successful registration")
+        XCTAssertEqual(sut.password, "", "Password should be cleared after successful registration")
+        XCTAssertEqual(sut.confirmPassword, "", "Confirm password should be cleared after successful registration")
+        XCTAssertNil(sut.errorMessage, "Error message should be nil after successful registration")
+        XCTAssertFalse(sut.isLoading, "Loading should be false after registration completes")
+        XCTAssertTrue(sut.registrationSuccess, "Registration success flag should be true")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -82,12 +101,13 @@ private final class UserRegistererSpy: UserRegisterer {
     private(set) var receivedName = ""
     private(set) var receivedEmail = ""
     private(set) var receivedPassword = ""
+    var result: UserRegistrationResult = .failure(NSError(domain: "TestError", code: 0, userInfo: nil))
 
     func register(name: String, email: String, password: String) async -> UserRegistrationResult {
         registerCallCount += 1
         receivedName = name
         receivedEmail = email
         receivedPassword = password
-        return .failure(NSError(domain: "TestError", code: 0, userInfo: nil))
+        return result
     }
 }
