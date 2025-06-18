@@ -1,4 +1,5 @@
 import Combine
+import EssentialFeed
 import Foundation
 
 public final class RegistrationViewModel: ObservableObject {
@@ -8,7 +9,11 @@ public final class RegistrationViewModel: ObservableObject {
     @Published public var errorMessage: String?
     @Published public var isLoading: Bool = false
 
-    public init() {}
+    private let userRegisterer: UserRegisterer?
+
+    public init(userRegisterer: UserRegisterer? = nil) {
+        self.userRegisterer = userRegisterer
+    }
 
     @MainActor
     public func register() async {
@@ -29,10 +34,28 @@ public final class RegistrationViewModel: ObservableObject {
             return
         }
 
+        guard let userRegisterer = userRegisterer else {
+            isLoading = true
+            isLoading = false
+            return
+        }
+
         do {
             isLoading = true
-            // TODO: Implement actual registration logic with UserRegistrationUseCase
+            let result = await userRegisterer.register(name: "", email: email, password: password)
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                errorMessage = error.localizedDescription
+            }
         }
         isLoading = false
+    }
+}
+
+private struct MockRegistrationService: RegistrationService {
+    func register(name _: String, email _: String, password _: String) async -> UserRegistrationResult {
+        return .failure(NSError(domain: "MockError", code: 0, userInfo: nil))
     }
 }

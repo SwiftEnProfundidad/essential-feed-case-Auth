@@ -47,14 +47,47 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertEqual(sut.errorMessage, "Passwords do not match", "Should show password mismatch error")
     }
 
+    func test_register_callsUserRegistrationUseCaseWithCorrectData() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        XCTAssertEqual(userRegistererSpy.registerCallCount, 1, "Should call register once")
+        XCTAssertEqual(userRegistererSpy.receivedName, "", "Should pass empty name")
+        XCTAssertEqual(userRegistererSpy.receivedEmail, "test@example.com", "Should pass correct email")
+        XCTAssertEqual(userRegistererSpy.receivedPassword, "password123", "Should pass correct password")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
+        userRegisterer: UserRegisterer = UserRegistererSpy(),
         file: StaticString = #file,
         line: UInt = #line
     ) -> RegistrationViewModel {
-        let sut = RegistrationViewModel()
+        let sut = RegistrationViewModel(userRegisterer: userRegisterer)
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(userRegisterer, file: file, line: line)
         return sut
+    }
+}
+
+private final class UserRegistererSpy: UserRegisterer {
+    private(set) var registerCallCount = 0
+    private(set) var receivedName = ""
+    private(set) var receivedEmail = ""
+    private(set) var receivedPassword = ""
+
+    func register(name: String, email: String, password: String) async -> UserRegistrationResult {
+        registerCallCount += 1
+        receivedName = name
+        receivedEmail = email
+        receivedPassword = password
+        return .failure(NSError(domain: "TestError", code: 0, userInfo: nil))
     }
 }

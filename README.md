@@ -454,20 +454,20 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Add "Register" button/link to `LoginView.swift`.
     - [✅] Implement navigation from "Register" button in `LoginView` to `RegistrationView` (e.g., via `AuthComposer` or a new `RegistrationComposer`).
 - [🚧] **RegistrationView & ViewModel Implementation:**
-    - [🚧] Define `RegistrationView.swift` (SwiftUI or UIKit, according to your app's standard).
-        - [❌] Fields: Email, Password, Confirm Password.
-        - [❌] "Register" button.
-        - [❌] Area for error messages.
-    - [❌] Define `RegistrationViewModel.swift`.
-        - [❌] Properties for email, password, confirmPassword, error messages, loading state.
-        - [❌] **TDD:** ViewModel unit tests for input validations (empty fields, email format, password match, password strength - if applicable).
-        - [❌] **TDD:** ViewModel unit test for `register()` action:
-            - [❌] Verifies `UserRegistrationUseCase.register()` is called with correct `UserRegistrationData`.
-            - [❌] Verifies UI state updates correctly on `UserRegistrationUseCase` success (e.g., clear fields, set success state/message, trigger navigation).
-            - [❌] Verifies UI state updates correctly on `UserRegistrationUseCase` failure (e.g., show specific error message from `RegistrationError`).
+    - [✅] Define `RegistrationView.swift` (SwiftUI or UIKit, according to your app's standard).
+        - [✅] Fields: Email, Password, Confirm Password.
+        - [✅] "Register" button.
+        - [✅] Area for error messages.
+    - [🚧] Define `RegistrationViewModel.swift`.
+        - [✅] Properties for email, password, confirmPassword, error messages, loading state.
+        - [✅] **TDD:** ViewModel unit tests for input validations (empty fields, email format, password match, password strength - if applicable).
+        - [🚧] **TDD:** ViewModel unit test for `register()` action:
+            - [✅] Verifies `UserRegistrationUseCase.register()` is called with correct `UserRegistrationData`.
+            - [🚧] Verifies UI state updates correctly on `UserRegistrationUseCase` success (e.g., clear fields, set success state/message, trigger navigation).
+            - [🔜] Verifies UI state updates correctly on `UserRegistrationUseCase` failure (e.g., show specific error message from `RegistrationError`).
     - [❌] Implement `RegistrationViewModel` logic, including calling `UserRegistrationUseCase`.
     - [❌] Implement `RegistrationView` UI and bind it to `RegistrationViewModel`.
- - [🔜] **Composition for Registration UI:**
+ - [❌] **Composition for Registration UI:**
     - [❌] Create/Update a Composer (e.g., `RegistrationComposer` or extend `AuthComposer`) to:
         - [❌] Instantiate `RegistrationView` and `RegistrationViewModel`.
         - [❌] Inject `UserRegistrationUseCase` into `RegistrationViewModel`.
