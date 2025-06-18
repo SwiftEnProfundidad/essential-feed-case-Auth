@@ -5,7 +5,8 @@ import UIKit
 public enum LoginComposer {
     @MainActor public static func composedLoginViewController(
         onAuthenticated: @escaping () -> Void,
-        onRecoveryRequested: @escaping () -> Void
+        onRecoveryRequested: @escaping () -> Void,
+        onRegisterRequested: @escaping () -> Void
     ) -> UIViewController {
         let config = ConfigurationFactory.makeUserLoginConfiguration()
         let httpClient = NetworkDependencyFactory.makeHTTPClient()
@@ -24,7 +25,8 @@ public enum LoginComposer {
 
         return LoginUIComposer.composedLoginViewController(
             with: viewModel,
-            onRecoveryRequested: onRecoveryRequested
+            onRecoveryRequested: onRecoveryRequested,
+            onRegisterRequested: onRegisterRequested
         )
     }
 }

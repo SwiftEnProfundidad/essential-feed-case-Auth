@@ -84,6 +84,12 @@
 		B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */; };
 		B4D0FE5D2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */; };
 		B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */; };
+		B4D611202E025FBB00CF1A9C /* LoginNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6111F2E025FBB00CF1A9C /* LoginNavigationTests.swift */; };
+		B4D611222E0260A900CF1A9C /* RegistrationComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611212E0260A900CF1A9C /* RegistrationComposer.swift */; };
+		B4D611292E0262E100CF1A9C /* RegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611262E0262E100CF1A9C /* RegistrationViewModel.swift */; };
+		B4D6112A2E0262E100CF1A9C /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611252E0262E100CF1A9C /* RegistrationView.swift */; };
+		B4D6112C2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112B2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift */; };
+		B4D6112E2E02637500CF1A9C /* RegistrationViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112D2E02637500CF1A9C /* RegistrationViewTests.swift */; };
 		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 		B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */; };
@@ -201,6 +207,12 @@
 		B4D0FE582DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5C2DBEEA5600033FF3 /* LoginNotificationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNotificationSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Snapshot.swift"; sourceTree = "<group>"; };
+		B4D6111F2E025FBB00CF1A9C /* LoginNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationTests.swift; sourceTree = "<group>"; };
+		B4D611212E0260A900CF1A9C /* RegistrationComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationComposer.swift; sourceTree = "<group>"; };
+		B4D611252E0262E100CF1A9C /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
+		B4D611262E0262E100CF1A9C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
+		B4D6112B2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
+		B4D6112D2E02637500CF1A9C /* RegistrationViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewTests.swift; sourceTree = "<group>"; };
 		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 		B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRefreshFailureLockoutUIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -337,6 +349,8 @@
 		B44823402DD3AD14009E59A5 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611252E0262E100CF1A9C /* RegistrationView.swift */,
+				B4D611262E0262E100CF1A9C /* RegistrationViewModel.swift */,
 				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
 			);
 			path = Presentation;
@@ -429,6 +443,7 @@
 		B4D6B2572DC8D07900F5A3FE /* Composition */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611212E0260A900CF1A9C /* RegistrationComposer.swift */,
 				B4BBD46C2DF9131D001E1965 /* Adapters */,
 				B4BBD4712DF9131D001E1965 /* Factories */,
 				B4BBD4732DF9131D001E1965 /* Implementations */,
@@ -442,6 +457,7 @@
 		B4D6B2582DC8D07900F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6112B2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift */,
 				B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */,
 				B46CA1672DBEAA6A00CE9ADC /* PasswordRecoveryScreen.swift */,
 				B44823382DD3A226009E59A5 /* LoginUIComposer.swift */,
@@ -485,6 +501,8 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6112D2E02637500CF1A9C /* RegistrationViewTests.swift */,
+				B4D6111F2E025FBB00CF1A9C /* LoginNavigationTests.swift */,
 				B40ADA962E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift */,
 				B448233A2DD3A29F009E59A5 /* LoginUISnapshotTests.swift */,
 				B49DC58F2DF76D0D00C5ADE6 /* LoginIntegrationTests.swift */,
@@ -650,10 +668,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4D611222E0260A900CF1A9C /* RegistrationComposer.swift in Sources */,
 				B4BBD4742DF9131D001E1965 /* KeychainDependencyFactory.swift in Sources */,
 				B4BBD4752DF9131D001E1965 /* KeychainAdapters.swift in Sources */,
 				B4BBD47F2DF91563001E1965 /* SimpleEncryptor.swift in Sources */,
 				B4BBD4802DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,
+				B4D6112C2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift in Sources */,
 				B4BBD4812DF91563001E1965 /* InMemoryOfflineLoginStore.swift in Sources */,
 				B4BBD4762DF9131D001E1965 /* NetworkDependencyFactory.swift in Sources */,
 				B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */,
@@ -670,6 +690,8 @@
 				B44823392DD3A226009E59A5 /* LoginUIComposer.swift in Sources */,
 				08073B45238D2DFA00A75DC6 /* LoadResourcePresentationAdapter.swift in Sources */,
 				08CF92F62555A15B006B7E7D /* NullStore.swift in Sources */,
+				B4D611292E0262E100CF1A9C /* RegistrationViewModel.swift in Sources */,
+				B4D6112A2E0262E100CF1A9C /* RegistrationView.swift in Sources */,
 				B48914272DDE568700C6EF73 /* PasswordRecoveryScreen.swift in Sources */,
 				08073B48238D2DFA00A75DC6 /* WeakRefVirtualProxy.swift in Sources */,
 				0895DA89234B3B950031BB2D /* SceneDelegate.swift in Sources */,
@@ -705,6 +727,7 @@
 				B448233B2DD3A29F009E59A5 /* LoginUISnapshotTests.swift in Sources */,
 				B47A6AE02DF1CA99001D47CE /* UserLoginAPISpy.swift in Sources */,
 				B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */,
+				B4D6112E2E02637500CF1A9C /* RegistrationViewTests.swift in Sources */,
 				B47A6AE12DF1CA99001D47CE /* LoginFailureObserverSpy.swift in Sources */,
 				B47A6AE22DF1CA99001D47CE /* LoginLockStatusProviderSpy.swift in Sources */,
 				B47A6AE32DF1CA99001D47CE /* LoginFlowHandlerSpy.swift in Sources */,
@@ -716,6 +739,7 @@
 				08073B59238D2E1000A75DC6 /* UIImage+TestHelpers.swift in Sources */,
 				B482DFE12DC76871008CE733 /* FailedLoginAttemptsStoreSpy.swift in Sources */,
 				B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */,
+				B4D611202E025FBB00CF1A9C /* LoginNavigationTests.swift in Sources */,
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */,
 				B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */,
