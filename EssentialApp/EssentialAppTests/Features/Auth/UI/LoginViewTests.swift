@@ -399,6 +399,9 @@ final class LoginViewTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should be locked after \(maxAttempts) attempts")
         viewModel.handleRecoveryTap()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
         XCTAssertEqual(navigationSpy.recoveryScreenShown, true, "Should navigate to recovery screen")
     }
 
@@ -639,7 +642,7 @@ final class LoginViewTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
     }
 
-    func test_loginView_displaysRegisterButton() {
+    func test_loginView_displaysRegisterButton() async {
         let navigationSpy = NavigationSpy()
         let viewModel = makeSUT()
         viewModel.navigation = navigationSpy
@@ -647,6 +650,8 @@ final class LoginViewTests: XCTestCase {
         XCTAssertFalse(navigationSpy.registerScreenShown, "Register screen should not be shown initially")
 
         viewModel.handleRegisterTap()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         XCTAssertTrue(navigationSpy.registerScreenShown, "Expected register screen to be shown after handleRegisterTap")
     }
@@ -657,6 +662,8 @@ final class LoginViewTests: XCTestCase {
         viewModel.navigation = navigationSpy
 
         viewModel.handleRegisterTap()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
 
         XCTAssertTrue(navigationSpy.registerScreenShown, "Expected register navigation to be triggered")
         XCTAssertFalse(navigationSpy.recoveryScreenShown, "Expected only register navigation to be triggered")

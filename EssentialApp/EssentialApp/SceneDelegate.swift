@@ -9,6 +9,38 @@ import os
 import SwiftUI
 import UIKit
 
+private enum TemporaryRegistrationComposer {
+    @MainActor static func registrationViewController() -> UIViewController {
+        let placeholder = RegistrationPlaceholderView()
+        return UIHostingController(rootView: placeholder)
+    }
+}
+
+private struct RegistrationPlaceholderView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Registration Screen")
+                .font(.largeTitle)
+                .padding()
+
+            Text("Coming Soon...")
+                .font(.title2)
+                .foregroundColor(.secondary)
+
+            Button("Close") {
+                dismiss()
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+        }
+        .padding()
+    }
+}
+
 public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     override public init() {
         self.isUserAuthenticatedClosure = {
@@ -109,6 +141,19 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         let recoveryScreen = PasswordRecoveryComposer.passwordRecoveryViewScreen()
                         let recoveryVC = UIHostingController(rootView: recoveryScreen)
                         presentingVC.present(recoveryVC, animated: true)
+                    }
+                },
+                onRegisterRequested: { [weak self] in
+                    guard let self,
+                          let window = self.window,
+                          let presentingVC = window.rootViewController
+                    else {
+                        return
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        let registrationScreen = RegistrationComposer.registrationViewController()
+                        presentingVC.present(registrationScreen, animated: true)
                     }
                 }
             )

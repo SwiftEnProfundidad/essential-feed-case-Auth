@@ -203,11 +203,11 @@ public final class LoginViewModel: ObservableObject {
     }
 
     public func handleRecoveryTap() {
-        navigation?.showRecovery()
+        recoveryRequested.send(())
     }
 
     public func handleRegisterTap() {
-        navigation?.showRegister()
+        registerRequested.send(())
     }
 
     public func userDidInitiateEditing() {
