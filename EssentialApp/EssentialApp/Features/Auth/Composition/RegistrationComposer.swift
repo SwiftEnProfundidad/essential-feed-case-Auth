@@ -1,35 +1,40 @@
+import EssentialFeed
 import SwiftUI
 import UIKit
 
-public enum RegistrationComposer {
-    @MainActor public static func registrationViewController() -> UIViewController {
-        let viewModel = RegistrationViewModel()
-        let registrationView = RegistrationView(viewModel: viewModel)
-        return UIHostingController(rootView: registrationView)
+public final class BasicRegistrationFlowHandler: RegistrationNavigation {
+    private weak var presentingViewController: UIViewController?
+
+    public init(presentingViewController: UIViewController) {
+        self.presentingViewController = presentingViewController
+    }
+
+    public func showLogin() {
+        presentingViewController?.dismiss(animated: true)
     }
 }
 
-private struct RegistrationPlaceholderView: View {
-    @Environment(\.dismiss) private var dismiss
+public enum RegistrationComposer {
+    @MainActor public static func registrationViewController() -> UIViewController {
+        let httpClient = NetworkDependencyFactory.makeHTTPClient()
+        let registrationAPI = HTTPUserRegistrationAPI(client: httpClient)
+        let tokenStorage = KeychainDependencyFactory.makeTokenStorage()
+        let offlineStore = InMemoryOfflineRegistrationStore()
 
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Registration Screen")
-                .font(.largeTitle)
-                .padding()
+        let registrationService = DefaultRegistrationService(
+            registrationAPI: registrationAPI,
+            tokenStorage: tokenStorage,
+            offlineStore: offlineStore
+        )
 
-            Text("Coming Soon...")
-                .font(.title2)
-                .foregroundColor(.secondary)
+        let userRegistrationUseCase = UserRegistrationUseCase(registrationService: registrationService)
+        let viewModel = RegistrationViewModel(userRegisterer: userRegistrationUseCase)
+        let registrationView = RegistrationView(viewModel: viewModel)
 
-            Button("Close") {
-                dismiss()
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-        }
-        .padding()
+        let hostingController = UIHostingController(rootView: registrationView)
+        let navigationHandler = BasicRegistrationFlowHandler(presentingViewController: hostingController)
+        viewModel.navigation = navigationHandler
+
+        return hostingController
     }
 }

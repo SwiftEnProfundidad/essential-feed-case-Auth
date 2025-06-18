@@ -159,20 +159,15 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
         return receivedResult
     }
 
-    private func makeSUT(
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> (sut: UserPasswordRecoveryUseCase, rateLimiterSpy: PasswordRecoveryRateLimiterSpy, apiSpy: PasswordRecoveryAPISpy, tokenManager: PasswordResetTokenManagerSpy, auditLogger: PasswordRecoveryAuditLoggerSpy) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: UserPasswordRecoveryUseCase, rateLimiterSpy: PasswordRecoveryRateLimiterSpy, apiSpy: PasswordRecoveryAPISpy, tokenManager: PasswordResetTokenManagerSpy, auditLogger: PasswordRecoveryAuditLoggerSpy) {
         let rateLimiterSpy = PasswordRecoveryRateLimiterSpy()
         let apiSpy = PasswordRecoveryAPISpy()
         let tokenManager = PasswordResetTokenManagerSpy()
         let auditLogger = PasswordRecoveryAuditLoggerSpy()
         let sut = RemoteUserPasswordRecoveryUseCase(api: apiSpy, rateLimiter: rateLimiterSpy, tokenManager: tokenManager, auditLogger: auditLogger)
-        trackForMemoryLeaks(rateLimiterSpy, file: file, line: line)
-        trackForMemoryLeaks(apiSpy, file: file, line: line)
-        trackForMemoryLeaks(tokenManager, file: file, line: line)
-        trackForMemoryLeaks(auditLogger, file: file, line: line)
+
         trackForMemoryLeaks(sut, file: file, line: line)
+
         return (sut, rateLimiterSpy, apiSpy, tokenManager, auditLogger)
     }
 }

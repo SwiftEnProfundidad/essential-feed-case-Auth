@@ -63,6 +63,82 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertEqual(userRegistererSpy.receivedPassword, "password123", "Should pass correct password")
     }
 
+    func test_register_onSuccess_clearsFieldsAndShowsSuccessState() async {
+        let userRegistererSpy = UserRegistererSpy()
+        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: User(name: "Test", email: "test@example.com")))
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        XCTAssertEqual(sut.email, "", "Email should be cleared after successful registration")
+        XCTAssertEqual(sut.password, "", "Password should be cleared after successful registration")
+        XCTAssertEqual(sut.confirmPassword, "", "Confirm password should be cleared after successful registration")
+        XCTAssertNil(sut.errorMessage, "Error message should be nil after successful registration")
+        XCTAssertFalse(sut.isLoading, "Loading should be false after registration completes")
+        XCTAssertTrue(sut.registrationSuccess, "Registration success flag should be true")
+    }
+
+    func test_register_onFailure_showsSpecificErrorMessage() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
+        userRegistererSpy.result = .failure(networkError)
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        XCTAssertEqual(sut.errorMessage, "Network connection failed", "Should show specific error message from registration failure")
+        XCTAssertFalse(sut.registrationSuccess, "Registration success flag should be false on failure")
+        XCTAssertFalse(sut.isLoading, "Loading should be false after registration completes")
+        XCTAssertEqual(sut.email, "test@example.com", "Email should not be cleared on failure")
+        XCTAssertEqual(sut.password, "password123", "Password should not be cleared on failure")
+        XCTAssertEqual(sut.confirmPassword, "password123", "Confirm password should not be cleared on failure")
+    }
+
+    func test_register_onSuccess_triggersNavigationToLogin() async {
+        let userRegistererSpy = UserRegistererSpy()
+        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: User(name: "Test", email: "test@example.com")))
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showLoginCallCount, 1, "Should trigger navigation to login after successful registration")
+    }
+
+    func test_register_onFailure_doesNotTriggerNavigation() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
+        userRegistererSpy.result = .failure(networkError)
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showLoginCallCount, 0, "Should not trigger navigation on registration failure")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -82,12 +158,21 @@ private final class UserRegistererSpy: UserRegisterer {
     private(set) var receivedName = ""
     private(set) var receivedEmail = ""
     private(set) var receivedPassword = ""
+    var result: UserRegistrationResult = .failure(NSError(domain: "TestError", code: 0, userInfo: nil))
 
     func register(name: String, email: String, password: String) async -> UserRegistrationResult {
         registerCallCount += 1
         receivedName = name
         receivedEmail = email
         receivedPassword = password
-        return .failure(NSError(domain: "TestError", code: 0, userInfo: nil))
+        return result
+    }
+}
+
+private final class RegistrationNavigationSpy: RegistrationNavigation {
+    private(set) var showLoginCallCount = 0
+
+    func showLogin() {
+        showLoginCallCount += 1
     }
 }

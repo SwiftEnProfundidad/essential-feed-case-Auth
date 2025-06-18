@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import Foundation
 import XCTest
@@ -34,6 +33,10 @@ public final class AuthAPISpy: UserLoginAPI, UserRegistrationAPI {
     }
 
     public func completeRegistration(with error: UserRegistrationError) {
+        registrationResult = .failure(error)
+    }
+
+    public func completeRegistrationWithFailure(_ error: UserRegistrationError) {
         registrationResult = .failure(error)
     }
 

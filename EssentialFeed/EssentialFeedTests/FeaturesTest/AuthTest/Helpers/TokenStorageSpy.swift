@@ -36,6 +36,10 @@ public actor TokenStorageSpy: TokenStorage {
         _saveTokenBundleError = error
     }
 
+    public func completeTokenSaveWithFailure(_ error: Error) {
+        _saveTokenBundleError = error
+    }
+
     public func stubNextLoadTokenBundle(result: Result<Token?, Error>) {
         _loadTokenBundleResultsQueue.append(result)
     }

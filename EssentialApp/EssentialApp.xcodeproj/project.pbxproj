@@ -90,6 +90,11 @@
 		B4D6112A2E0262E100CF1A9C /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611252E0262E100CF1A9C /* RegistrationView.swift */; };
 		B4D6112C2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112B2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift */; };
 		B4D6112E2E02637500CF1A9C /* RegistrationViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112D2E02637500CF1A9C /* RegistrationViewTests.swift */; };
+		B4D611342E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611312E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */; };
+		B4D611352E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611302E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift */; };
+		B4D611362E02C97E00CF1A9C /* RegistrationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611322E02C97E00CF1A9C /* RegistrationComposerTests.swift */; };
+		B4D611372E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112F2E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift */; };
+		B4D611392E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */; };
 		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 		B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */; };
@@ -213,6 +218,11 @@
 		B4D611262E0262E100CF1A9C /* RegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewModel.swift; sourceTree = "<group>"; };
 		B4D6112B2E02631000CF1A9C /* AnyFailedLoginAttemptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyFailedLoginAttemptStore.swift; sourceTree = "<group>"; };
 		B4D6112D2E02637500CF1A9C /* RegistrationViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewTests.swift; sourceTree = "<group>"; };
+		B4D6112F2E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultRegistrationServiceTests.swift; sourceTree = "<group>"; };
+		B4D611302E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPUserRegistrationAPITests.swift; sourceTree = "<group>"; };
+		B4D611312E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineRegistrationStoreTests.swift; sourceTree = "<group>"; };
+		B4D611322E02C97E00CF1A9C /* RegistrationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationComposerTests.swift; sourceTree = "<group>"; };
+		B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationComposerIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 		B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRefreshFailureLockoutUIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -440,6 +450,18 @@
 			path = snapshots;
 			sourceTree = "<group>";
 		};
+		B4D611332E02C97E00CF1A9C /* Composition */ = {
+			isa = PBXGroup;
+			children = (
+				B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */,
+				B4D6112F2E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift */,
+				B4D611302E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift */,
+				B4D611312E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */,
+				B4D611322E02C97E00CF1A9C /* RegistrationComposerTests.swift */,
+			);
+			path = Composition;
+			sourceTree = "<group>";
+		};
 		B4D6B2572DC8D07900F5A3FE /* Composition */ = {
 			isa = PBXGroup;
 			children = (
@@ -522,6 +544,7 @@
 		B4D6B2742DC8E42800F5A3FE /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611332E02C97E00CF1A9C /* Composition */,
 				B4D6B2712DC8E42800F5A3FE /* Integration */,
 				B4D6B2732DC8E42800F5A3FE /* UI */,
 			);
@@ -708,6 +731,10 @@
 			files = (
 				B448233D2DD3A2E3009E59A5 /* LoginViewModelAdapterTest.swift in Sources */,
 				B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */,
+				B4D611342E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift in Sources */,
+				B4D611352E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift in Sources */,
+				B4D611362E02C97E00CF1A9C /* RegistrationComposerTests.swift in Sources */,
+				B4D611372E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
 				B40ADA972E00A61300A39B40 /* TokenRefreshFailureNotificationSnapshotTests.swift in Sources */,
 				082C00062359E4C6008927D3 /* SharedTestHelpers.swift in Sources */,
@@ -743,6 +770,7 @@
 				0851CDAC239AB13100C19B1D /* HTTPClientStub.swift in Sources */,
 				B4D0FE5B2DBEE83B00033FF3 /* PasswordRecoverySnapshotTests.swift in Sources */,
 				B4AA3BE72DCAA6AD001386EC /* FakeRefreshControl.swift in Sources */,
+				B4D611392E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift in Sources */,
 				08073B5A238D2E1000A75DC6 /* UIRefreshControl+TestHelpers.swift in Sources */,
 				08073B54238D2E1000A75DC6 /* FeedImageCell+TestHelpers.swift in Sources */,
 				B4D0FE5F2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift in Sources */,

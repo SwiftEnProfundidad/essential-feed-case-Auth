@@ -2,22 +2,38 @@ import Combine
 import EssentialFeed
 import Foundation
 
+public protocol RegistrationNavigation: AnyObject {
+    func showLogin()
+}
+
 public final class RegistrationViewModel: ObservableObject {
     @Published public var email: String = ""
     @Published public var password: String = ""
     @Published public var confirmPassword: String = ""
     @Published public var errorMessage: String?
     @Published public var isLoading: Bool = false
+    @Published public var registrationSuccess: Bool = false
 
+    public let registrationCompleted = PassthroughSubject<Void, Never>()
+    private var cancellables: Set<AnyCancellable> = []
     private let userRegisterer: UserRegisterer?
+    public var navigation: RegistrationNavigation?
 
     public init(userRegisterer: UserRegisterer? = nil) {
         self.userRegisterer = userRegisterer
+
+        registrationCompleted
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.navigation?.showLogin()
+            }
+            .store(in: &cancellables)
     }
 
     @MainActor
     public func register() async {
         errorMessage = nil
+        registrationSuccess = false
 
         if email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             errorMessage = "Email cannot be empty"
@@ -45,7 +61,11 @@ public final class RegistrationViewModel: ObservableObject {
             let result = await userRegisterer.register(name: "", email: email, password: password)
             switch result {
             case .success:
-                break
+                email = ""
+                password = ""
+                confirmPassword = ""
+                registrationSuccess = true
+                registrationCompleted.send()
             case let .failure(error):
                 errorMessage = error.localizedDescription
             }

@@ -449,34 +449,34 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ### Technical Checklist for Registration UI & Presentation Flow
     
-- [🚧] **LoginView Integration:**
+- [✅] **LoginView Integration:**
     - [✅] **TDD:** Test (UI/Snapshot) for `LoginView` verifying the presence of a "Register" button/link.
     - [✅] Add "Register" button/link to `LoginView.swift`.
     - [✅] Implement navigation from "Register" button in `LoginView` to `RegistrationView` (e.g., via `AuthComposer` or a new `RegistrationComposer`).
-- [🚧] **RegistrationView & ViewModel Implementation:**
+- [✅] **RegistrationView & ViewModel Implementation:**
     - [✅] Define `RegistrationView.swift` (SwiftUI or UIKit, according to your app's standard).
         - [✅] Fields: Email, Password, Confirm Password.
         - [✅] "Register" button.
         - [✅] Area for error messages.
-    - [🚧] Define `RegistrationViewModel.swift`.
+    - [✅] Define `RegistrationViewModel.swift`.
         - [✅] Properties for email, password, confirmPassword, error messages, loading state.
         - [✅] **TDD:** ViewModel unit tests for input validations (empty fields, email format, password match, password strength - if applicable).
-        - [🚧] **TDD:** ViewModel unit test for `register()` action:
+        - [✅] **TDD:** ViewModel unit test for `register()` action:
             - [✅] Verifies `UserRegistrationUseCase.register()` is called with correct `UserRegistrationData`.
-            - [🚧] Verifies UI state updates correctly on `UserRegistrationUseCase` success (e.g., clear fields, set success state/message, trigger navigation).
-            - [🔜] Verifies UI state updates correctly on `UserRegistrationUseCase` failure (e.g., show specific error message from `RegistrationError`).
-    - [❌] Implement `RegistrationViewModel` logic, including calling `UserRegistrationUseCase`.
-    - [❌] Implement `RegistrationView` UI and bind it to `RegistrationViewModel`.
- - [❌] **Composition for Registration UI:**
-    - [❌] Create/Update a Composer (e.g., `RegistrationComposer` or extend `AuthComposer`) to:
-        - [❌] Instantiate `RegistrationView` and `RegistrationViewModel`.
-        - [❌] Inject `UserRegistrationUseCase` into `RegistrationViewModel`.
+            - [✅] Verifies UI state updates correctly on `UserRegistrationUseCase` success (e.g., clear fields, set success state/message, trigger navigation).
+            - [✅] Verifies UI state updates correctly on `UserRegistrationUseCase` failure (e.g., show specific error message from `RegistrationError`).
+    - [✅] Implement `RegistrationViewModel` logic, including calling `UserRegistrationUseCase`.
+    - [✅] Implement `RegistrationView` UI and bind it to `RegistrationViewModel`.
+ - [🚧] **Composition for Registration UI:**
+    - [✅] Create/Update a Composer (e.g., `RegistrationComposer` or extend `AuthComposer`) to:
+        - [✅] Instantiate `RegistrationView` and `RegistrationViewModel`.
+        - [✅] Inject `UserRegistrationUseCase` into `RegistrationViewModel`.
             - **Note (No Backend):** Configure the `UserRegistrationAPI` (dependency of `UserRegistrationUseCase`) to use an `HTTPClientStub` that returns a successful registration response (e.g., HTTP 201) for UI testing purposes.
-             - **Note (No Backend):** Ensure `RegistrationPersistenceInterfaces` (dependencies like `KeychainProtocol`, `TokenStorage`) are using stubs/spies that don't cause unexpected failures during this UI flow test (e.g., `TokenStorageSpy` should successfully "store" a fake token if the stubbed API response includes one).
-        - [❌] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
-- [❌] **Error Handling in UI:**
-    - [❌] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
- - [❌] **(Optional Initial) Auto-Login Flow Post-Registration:**
+            - **Note (No Backend):** Ensure `RegistrationPersistenceInterfaces` (dependencies like `KeychainProtocol`, `TokenStorage`) are using stubs/spies that don't cause unexpected failures during this UI flow test (e.g., `TokenStorageSpy` should successfully "store" a fake token if the stubbed API response includes one).
+        - [✅] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
+- [🚧] **Error Handling in UI:**
+    - [🚧] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
+ - [🔜] **(Optional Initial) Auto-Login Flow Post-Registration:**
     - [❌] Consider whether the user should be auto-logged in or taken to Login after successful registration. Implement according to decision.
 
 ### Technical Checklist for Registration
