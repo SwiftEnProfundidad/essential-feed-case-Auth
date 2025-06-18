@@ -82,6 +82,26 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertTrue(sut.registrationSuccess, "Registration success flag should be true")
     }
 
+    func test_register_onFailure_showsSpecificErrorMessage() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
+        userRegistererSpy.result = .failure(networkError)
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        XCTAssertEqual(sut.errorMessage, "Network connection failed", "Should show specific error message from registration failure")
+        XCTAssertFalse(sut.registrationSuccess, "Registration success flag should be false on failure")
+        XCTAssertFalse(sut.isLoading, "Loading should be false after registration completes")
+        XCTAssertEqual(sut.email, "test@example.com", "Email should not be cleared on failure")
+        XCTAssertEqual(sut.password, "password123", "Password should not be cleared on failure")
+        XCTAssertEqual(sut.confirmPassword, "password123", "Confirm password should not be cleared on failure")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
