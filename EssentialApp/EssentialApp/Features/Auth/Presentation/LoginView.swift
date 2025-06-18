@@ -239,6 +239,7 @@ public struct LoginView: View {
                 VStack(spacing: 20) {
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
+                    registerButtonNeumorphic
                 }
             case .blocked:
                 VStack(spacing: 16) {
@@ -249,14 +250,19 @@ public struct LoginView: View {
                             String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
+                    registerButtonNeumorphic
                 }
             case let .error(message):
-                Text(message)
-                    .font(Font.system(.headline, design: .rounded).weight(.semibold))
-                    .foregroundColor(AppTheme.Colors.textError)
-                    .multilineTextAlignment(.center)
-                    .padding(.vertical, 40)
-                    .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
+                VStack(spacing: 16) {
+                    Text(message)
+                        .font(Font.system(.headline, design: .rounded).weight(.semibold))
+                        .foregroundColor(AppTheme.Colors.textError)
+                        .multilineTextAlignment(.center)
+                        .padding(.vertical, 40)
+                        .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
+
+                    registerButtonNeumorphic
+                }
             case let .success(message):
                 Text(message)
                     .font(Font.system(.headline, design: .rounded).weight(.semibold))
@@ -293,6 +299,20 @@ public struct LoginView: View {
                 .foregroundColor(AppTheme.Colors.textSecondary)
         }
         .buttonStyle(SimplePressButtonStyle())
+        .padding(.top, 5)
+    }
+
+    private var registerButtonNeumorphic: some View {
+        Button {
+            focusedField = nil
+            viewModel.handleRegisterTap()
+        } label: {
+            Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
+                .font(Font.system(.callout, design: .rounded).weight(.medium))
+                .foregroundColor(AppTheme.Colors.textSecondary)
+        }
+        .buttonStyle(SimplePressButtonStyle())
+        .accessibilityIdentifier("register_button")
         .padding(.top, 5)
     }
 }

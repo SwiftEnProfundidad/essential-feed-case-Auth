@@ -1,4 +1,3 @@
-
 import EssentialApp
 import EssentialFeed
 import SwiftUI
@@ -20,7 +19,15 @@ final class PasswordRecoverySnapshotTests: XCTestCase {
 
     private func makeSUT(email: String, apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> UIViewController {
         let api = DummyPasswordRecoveryAPI(result: apiResult)
-        let useCase = RemoteUserPasswordRecoveryUseCase(api: api)
+        let rateLimiter = DummyPasswordRecoveryRateLimiter()
+        let tokenManager = DummyPasswordResetTokenManager()
+        let auditLogger = DummyPasswordRecoveryAuditLogger()
+        let useCase = RemoteUserPasswordRecoveryUseCase(
+            api: api,
+            rateLimiter: rateLimiter,
+            tokenManager: tokenManager,
+            auditLogger: auditLogger
+        )
         let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCase)
         viewModel.email = email
         let view = PasswordRecoveryScreen(viewModel: viewModel)
@@ -39,5 +46,31 @@ private final class DummyPasswordRecoveryAPI: PasswordRecoveryAPI {
 
     func recover(email _: String, completion: @escaping (Result<PasswordRecoveryResponse, PasswordRecoveryError>) -> Void) {
         completion(result)
+    }
+}
+
+private final class DummyPasswordRecoveryRateLimiter: PasswordRecoveryRateLimiter {
+    func isAllowed(for _: String) -> Result<Void, PasswordRecoveryError> {
+        return .success(())
+    }
+
+    func recordAttempt(for _: String, ipAddress _: String?) {
+        // No-op for dummy
+    }
+}
+
+private final class DummyPasswordResetTokenManager: PasswordResetTokenManager {
+    func generateResetToken(for email: String) throws -> PasswordResetToken {
+        return PasswordResetToken(
+            token: "dummy-token",
+            email: email,
+            expirationDate: Date().addingTimeInterval(900)
+        )
+    }
+}
+
+private final class DummyPasswordRecoveryAuditLogger: PasswordRecoveryAuditLogger {
+    func logRecoveryAttempt(_: PasswordRecoveryAuditLog) async throws {
+        // No-op for dummy
     }
 }

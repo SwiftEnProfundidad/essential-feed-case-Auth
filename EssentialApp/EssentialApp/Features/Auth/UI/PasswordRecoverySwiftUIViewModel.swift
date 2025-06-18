@@ -1,4 +1,3 @@
-
 import EssentialFeed
 import SwiftUI
 
@@ -12,7 +11,6 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     @Published public var showingFeedback: Bool = false
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
-    public var presenter: PasswordRecoveryPresenter?
     private var lastRequestedEmail: String?
 
     public var feedbackTitle: String {
@@ -27,10 +25,6 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         self.recoveryUseCase = recoveryUseCase
     }
 
-    public func setPresenter(_ presenter: PasswordRecoveryPresenter) {
-        self.presenter = presenter
-    }
-
     public func onFeedbackDismiss() {
         showingFeedback = false
     }
@@ -38,9 +32,16 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     public func recoverPassword() {
         guard !email.isEmpty else { return }
         lastRequestedEmail = email
-        recoveryUseCase.recoverPassword(email: email) { [weak self] (result: Result<PasswordRecoveryResponse, PasswordRecoveryError>) in
+        recoveryUseCase.recoverPassword(
+            email: email,
+            ipAddress: getCurrentIPAddress(),
+            userAgent: getCurrentUserAgent()
+        ) { [weak self] result in
             guard let self, self.email == self.lastRequestedEmail else { return }
-            self.presenter?.didRecoverPassword(with: result)
+            DispatchQueue.main.async {
+                let viewModel = PasswordRecoveryPresenter.map(result)
+                self.display(viewModel)
+            }
         }
     }
 
@@ -48,6 +49,14 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         guard showingFeedback, oldValue != newValue else { return }
         feedbackMessage = ""
         showingFeedback = false
+    }
+
+    private func getCurrentIPAddress() -> String? {
+        return nil
+    }
+
+    private func getCurrentUserAgent() -> String? {
+        return "EssentialApp/1.0"
     }
 }
 

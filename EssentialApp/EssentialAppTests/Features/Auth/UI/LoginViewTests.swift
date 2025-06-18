@@ -639,6 +639,29 @@ final class LoginViewTests: XCTestCase {
         XCTAssertNil(viewModel.errorMessage)
     }
 
+    func test_loginView_displaysRegisterButton() {
+        let navigationSpy = NavigationSpy()
+        let viewModel = makeSUT()
+        viewModel.navigation = navigationSpy
+
+        XCTAssertFalse(navigationSpy.registerScreenShown, "Register screen should not be shown initially")
+
+        viewModel.handleRegisterTap()
+
+        XCTAssertTrue(navigationSpy.registerScreenShown, "Expected register screen to be shown after handleRegisterTap")
+    }
+
+    func test_registerButton_triggersNavigation() async {
+        let navigationSpy = NavigationSpy()
+        let viewModel = makeSUT()
+        viewModel.navigation = navigationSpy
+
+        viewModel.handleRegisterTap()
+
+        XCTAssertTrue(navigationSpy.registerScreenShown, "Expected register navigation to be triggered")
+        XCTAssertFalse(navigationSpy.recoveryScreenShown, "Expected only register navigation to be triggered")
+    }
+
     // MARK: Helpers
 
     private func makeSUT(
@@ -670,9 +693,14 @@ final class LoginViewTests: XCTestCase {
 
     private class NavigationSpy: LoginNavigation {
         private(set) var recoveryScreenShown = false
+        private(set) var registerScreenShown = false
 
         func showRecovery() {
             recoveryScreenShown = true
+        }
+
+        func showRegister() {
+            registerScreenShown = true
         }
     }
 }
