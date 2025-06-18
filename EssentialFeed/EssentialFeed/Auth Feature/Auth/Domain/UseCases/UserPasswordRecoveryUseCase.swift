@@ -23,9 +23,10 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
 
         guard emailPredicate.evaluate(with: trimmedEmail) else {
-            Task {
+            Task { [weak self] in
+                guard let self else { return }
                 let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .invalidEmailFormat)
-                try? await auditLogger.logRecoveryAttempt(auditLog)
+                try? await self.auditLogger.logRecoveryAttempt(auditLog)
             }
             completion(.failure(.invalidEmailFormat))
             return
@@ -36,7 +37,9 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
             rateLimiter.recordAttempt(for: trimmedEmail, ipAddress: ipAddress)
 
             api.recover(email: trimmedEmail) { [weak self] result in
-                Task {
+                guard let self else { return }
+
+                Task { [weak self] in
                     guard let self else { return }
 
                     switch result {
@@ -75,11 +78,12 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
                 }
             }
         case let .failure(error):
-            Task {
+            Task { [weak self] in
+                guard let self else { return }
                 let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .rateLimitExceeded, errorDetails: error.localizedDescription)
-                try? await auditLogger.logRecoveryAttempt(auditLog)
+                try? await self.auditLogger.logRecoveryAttempt(auditLog)
+                completion(.failure(error))
             }
-            completion(.failure(error))
         }
     }
 }

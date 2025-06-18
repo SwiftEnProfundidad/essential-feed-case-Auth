@@ -1,35 +1,24 @@
+import EssentialFeed
 import SwiftUI
 import UIKit
 
 public enum RegistrationComposer {
     @MainActor public static func registrationViewController() -> UIViewController {
-        let viewModel = RegistrationViewModel()
+        let httpClient = NetworkDependencyFactory.makeHTTPClient()
+        let registrationAPI = HTTPUserRegistrationAPI(client: httpClient)
+        let tokenStorage = KeychainDependencyFactory.makeTokenStorage()
+        let offlineStore = InMemoryOfflineRegistrationStore()
+
+        let registrationService = DefaultRegistrationService(
+            registrationAPI: registrationAPI,
+            tokenStorage: tokenStorage,
+            offlineStore: offlineStore
+        )
+
+        let userRegistrationUseCase = UserRegistrationUseCase(registrationService: registrationService)
+        let viewModel = RegistrationViewModel(userRegisterer: userRegistrationUseCase)
         let registrationView = RegistrationView(viewModel: viewModel)
+
         return UIHostingController(rootView: registrationView)
-    }
-}
-
-private struct RegistrationPlaceholderView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Text("Registration Screen")
-                .font(.largeTitle)
-                .padding()
-
-            Text("Coming Soon...")
-                .font(.title2)
-                .foregroundColor(.secondary)
-
-            Button("Close") {
-                dismiss()
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-        }
-        .padding()
     }
 }
