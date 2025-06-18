@@ -447,24 +447,37 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-### Technical Checklist for Registration (Reviewed)
-
-- [✅] **Store initial credentials (email/password) securely (Keychain)** (Implemented in `UserRegistrationUseCase` calling `keychain.save`)
-- [✅] **Store authentication token received (OAuth/JWT) securely after registration** (`UserRegistrationUseCase` stores token via `TokenStorage`)
-- [✅] **Notify registration success** (Via `UserRegistrationResult.success`)
-- [✅] **Notify that the email is already in use** (Handled by `UserRegistrationUseCase` and notifier)
-- [✅] **Show appropriate and specific error messages** (Via returned error types)
-- [✅] **Save data for retry if there is no connection and notify error** (`UserRegistrationUseCase` saves data via `offlineStore` and returns `.noConnectivity`.)
-- [✅] **Refactor UserRegistrationUseCase constructor** (Reduce dependencies, improve SRP. E.g., group persistence dependencies or use a Facade).
-- [✅] **Implement logic to retry saved offline registration requests** (When connectivity is restored)
-    - [✅] whenNoOfflineRegistrations → returns empty array, no side-effects
-    - [✅] whenOneOfflineRegistrationSucceeds → saves token, deletes request
-    - [✅] whenApiCallFails → keeps data, returns `.registrationFailed`
-    - [✅] whenTokenStorageFails → returns `.tokenStorageFailed`
-    - [✅] whenDeleteFails → returns `.offlineStoreDeleteFailed`- [✅] **Unit and integration tests for all paths (happy/sad path)** (Tests cover existing functionality for saving offline, but not yet for retrying.)
-- [✅] **Refactor: test helper uses concrete KeychainSpy for clear asserts** (`KeychainFullSpy` is used in tests) 
-    // *Note: this seems to refer to KeychainSpy, but in UserRegistration we use OfflineStoreSpy and TokenStorageSpy. Maybe this item is more generic.*
-- [✅] **Documentation and architecture aligned** (General technical diagram is coherent, but the use case implementation omits key BDD points.)
+### Technical Checklist for Registration UI & Presentation Flow
+    
+- [🚧] **LoginView Integration:**
+    - [🚧] **TDD:** Test (UI/Snapshot) for `LoginView` verifying the presence of a "Register" button/link.
+    - [🔜] Add "Register" button/link to `LoginView.swift`.
+    - [❌] Implement navigation from "Register" button in `LoginView` to `RegistrationView` (e.g., via `AuthComposer` or a new `RegistrationComposer`).
+- [❌] **RegistrationView & ViewModel Implementation:**
+    - [❌] Define `RegistrationView.swift` (SwiftUI or UIKit, according to your app's standard).
+        - [❌] Fields: Email, Password, Confirm Password.
+        - [❌] "Register" button.
+        - [❌] Area for error messages.
+    - [❌] Define `RegistrationViewModel.swift`.
+        - [❌] Properties for email, password, confirmPassword, error messages, loading state.
+        - [❌] **TDD:** ViewModel unit tests for input validations (empty fields, email format, password match, password strength - if applicable).
+        - [❌] **TDD:** ViewModel unit test for `register()` action:
+            - [❌] Verifies `UserRegistrationUseCase.register()` is called with correct `UserRegistrationData`.
+            - [❌] Verifies UI state updates correctly on `UserRegistrationUseCase` success (e.g., clear fields, set success state/message, trigger navigation).
+            - [❌] Verifies UI state updates correctly on `UserRegistrationUseCase` failure (e.g., show specific error message from `RegistrationError`).
+    - [❌] Implement `RegistrationViewModel` logic, including calling `UserRegistrationUseCase`.
+    - [❌] Implement `RegistrationView` UI and bind it to `RegistrationViewModel`.
+ - [❌] **Composition for Registration UI:**
+    - [❌] Create/Update a Composer (e.g., `RegistrationComposer` or extend `AuthComposer`) to:
+        - [❌] Instantiate `RegistrationView` and `RegistrationViewModel`.
+        - [❌] Inject `UserRegistrationUseCase` into `RegistrationViewModel`.
+            - **Note (No Backend):** Configure the `UserRegistrationAPI` (dependency of `UserRegistrationUseCase`) to use an `HTTPClientStub` that returns a successful registration response (e.g., HTTP 201) for UI testing purposes.
+             - **Note (No Backend):** Ensure `RegistrationPersistenceInterfaces` (dependencies like `KeychainProtocol`, `TokenStorage`) are using stubs/spies that don't cause unexpected failures during this UI flow test (e.g., `TokenStorageSpy` should successfully "store" a fake token if the stubbed API response includes one).
+        - [❌] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
+- [❌] **Error Handling in UI:**
+    - [❌] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
+ - [❌] **(Optional Initial) Auto-Login Flow Post-Registration:**
+    - [❌] Consider whether the user should be auto-logged in or taken to Login after successful registration. Implement according to decision.
 
 ### Technical Checklist for Registration
 
@@ -604,7 +617,7 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ---
 
-### Technical Checklist for Login (Reviewed)
+### Technical Checklist for Login 
 
 - [✅] **Store authentication token securely after successful login** (`UserLoginUseCase` stores the token via `TokenStorage`.)
 - [✅] **Register active session in `SessionManager`** (`UserLoginUseCase` does not interact with `SessionManager`. `RealSessionManager` derives state from Keychain. "Activation" depends on the token being saved in Keychain by `UserLoginUseCase`.)
@@ -634,8 +647,6 @@ _(Reference only for QA/business. Progress is only marked in the technical check
     - [✅] Integration tests ensure no HTTP request or Keychain access is made when there are format errors
     - [✅] The cycle is covered by automated tests in CI
     
-<!-- ESTADO: Todo validado y cubierto, no hay tareas pendientes aquí. -->
-
 - [✅] **Save login credentials offline on connectivity error and notify** (`UserLoginUseCase` saves credentials via `offlineStore` and returns `.noConnectivity`.)
     #### Subtasks
     - [✅] Define DTO/model for pending login request (`LoginCredentials` is used and is `Equatable`)
@@ -678,6 +689,17 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 - [✅] **Clarify if you must also save login credentials to Keychain for login flow (or only token)**
 - [✅] **Full robust logic and tests for "Retry saved offline login requests" (when online)**
 - [✅] **End-to-end integration/UI tests covering lockout and recovery suggestion flows**
+
+### Technical Checklist for Login (dentro del Caso de Uso 3) — Seccion CAPTCHA UI
+    
+- [ ] **Conditional CAPTCHA UI in LoginView:**
+     - [ ] **TDDViewModel:** Test `LoginViewModel` state change to require CAPTCHA after N failed login attempts.
+     - [ ] **TDDViewModel:** Test `LoginViewModel` handling CAPTCHA token input **for login**.
+     - [ ] **TDDViewModel:** Test `LoginViewModel` passing CAPTCHA token with login credentials.
+     - [ ] Add CAPTCHA UI component to `LoginView.swift`, initially hidden.
+     - [ ] Implement logic in `LoginView` to show CAPTCHA component when `LoginViewModel` state indicates it's required.
+     - [ ] Pass CAPTCHA token from `LoginView` to `LoginViewModel` when submitted.
+     - [ ] **Note (No Backend):** The `CaptchaValidatorProtocol` used by the login flow (si lo hay) should be stubbed.
 
 > **Technical note:**
 > - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
