@@ -12,6 +12,16 @@ public final class BasicRegistrationFlowHandler: RegistrationNavigation {
     public func showLogin() {
         presentingViewController?.dismiss(animated: true)
     }
+
+    public func showMainApp(for user: User) {
+        presentingViewController?.dismiss(animated: true) {
+            NotificationCenter.default.post(name: .userDidLogin, object: user)
+        }
+    }
+}
+
+extension Notification.Name {
+    static let userDidLogin = Notification.Name("userDidLogin")
 }
 
 public enum RegistrationComposer {

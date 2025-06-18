@@ -4,6 +4,7 @@ import Foundation
 
 public protocol RegistrationNavigation: AnyObject {
     func showLogin()
+    func showMainApp(for user: User)
 }
 
 public final class RegistrationViewModel: ObservableObject {
@@ -14,20 +15,12 @@ public final class RegistrationViewModel: ObservableObject {
     @Published public var isLoading: Bool = false
     @Published public var registrationSuccess: Bool = false
 
-    public let registrationCompleted = PassthroughSubject<Void, Never>()
     private var cancellables: Set<AnyCancellable> = []
     private let userRegisterer: UserRegisterer?
     public var navigation: RegistrationNavigation?
 
     public init(userRegisterer: UserRegisterer? = nil) {
         self.userRegisterer = userRegisterer
-
-        registrationCompleted
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.navigation?.showLogin()
-            }
-            .store(in: &cancellables)
     }
 
     @MainActor
@@ -60,12 +53,12 @@ public final class RegistrationViewModel: ObservableObject {
             isLoading = true
             let result = await userRegisterer.register(name: "", email: email, password: password)
             switch result {
-            case .success:
+            case let .success(tokenAndUser):
                 email = ""
                 password = ""
                 confirmPassword = ""
                 registrationSuccess = true
-                registrationCompleted.send()
+                navigation?.showMainApp(for: tokenAndUser.user)
             case let .failure(error):
                 errorMessage = RegistrationErrorMapper.userFriendlyMessage(for: error)
             }

@@ -102,24 +102,6 @@ final class RegistrationViewTests: XCTestCase {
         XCTAssertEqual(sut.confirmPassword, "password123", "Confirm password should not be cleared on failure")
     }
 
-    func test_register_onSuccess_triggersNavigationToLogin() async {
-        let userRegistererSpy = UserRegistererSpy()
-        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: User(name: "Test", email: "test@example.com")))
-        let navigationSpy = RegistrationNavigationSpy()
-        let sut = makeSUT(userRegisterer: userRegistererSpy)
-        sut.navigation = navigationSpy
-
-        sut.email = "test@example.com"
-        sut.password = "password123"
-        sut.confirmPassword = "password123"
-
-        await sut.register()
-
-        try? await Task.sleep(nanoseconds: 100_000_000)
-
-        XCTAssertEqual(navigationSpy.showLoginCallCount, 1, "Should trigger navigation to login after successful registration")
-    }
-
     func test_register_onFailure_doesNotTriggerNavigation() async {
         let userRegistererSpy = UserRegistererSpy()
         let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
@@ -137,6 +119,49 @@ final class RegistrationViewTests: XCTestCase {
         try? await Task.sleep(nanoseconds: 100_000_000)
 
         XCTAssertEqual(navigationSpy.showLoginCallCount, 0, "Should not trigger navigation on registration failure")
+        XCTAssertEqual(navigationSpy.showMainAppCallCount, 0, "Should not trigger auto-login on registration failure")
+    }
+
+    func test_register_onSuccess_triggersAutoLoginToMainApp() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let testUser = User(name: "Test User", email: "test@example.com")
+        userRegistererSpy.result = .success(TokenAndUser(token: Token(accessToken: "token123", expiry: Date(), refreshToken: nil), user: testUser))
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showMainAppCallCount, 1, "Should trigger auto-login to main app after successful registration")
+        XCTAssertEqual(navigationSpy.showLoginCallCount, 0, "Should not trigger showLogin in auto-login flow")
+        XCTAssertEqual(navigationSpy.receivedUser?.name, "Test User", "Should pass correct user for auto-login")
+        XCTAssertEqual(navigationSpy.receivedUser?.email, "test@example.com", "Should pass correct user email for auto-login")
+    }
+
+    func test_register_onFailure_doesNotTriggerAutoLogin() async {
+        let userRegistererSpy = UserRegistererSpy()
+        let networkError = NSError(domain: "NetworkError", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Network connection failed"])
+        userRegistererSpy.result = .failure(networkError)
+        let navigationSpy = RegistrationNavigationSpy()
+        let sut = makeSUT(userRegisterer: userRegistererSpy)
+        sut.navigation = navigationSpy
+
+        sut.email = "test@example.com"
+        sut.password = "password123"
+        sut.confirmPassword = "password123"
+
+        await sut.register()
+
+        try? await Task.sleep(nanoseconds: 100_000_000)
+
+        XCTAssertEqual(navigationSpy.showMainAppCallCount, 0, "Should not trigger auto-login on registration failure")
+        XCTAssertNil(navigationSpy.receivedUser, "Should not pass user data on failure")
     }
 
     // MARK: - Error Handling Tests
@@ -318,8 +343,15 @@ private final class UserRegistererSpy: UserRegisterer {
 
 private final class RegistrationNavigationSpy: RegistrationNavigation {
     private(set) var showLoginCallCount = 0
+    private(set) var showMainAppCallCount = 0
+    private(set) var receivedUser: User?
 
     func showLogin() {
         showLoginCallCount += 1
+    }
+
+    func showMainApp(for user: User) {
+        showMainAppCallCount += 1
+        receivedUser = user
     }
 }

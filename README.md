@@ -476,8 +476,8 @@ _(Reference only for QA/business. Progress is only marked in the technical check
         - [✅] Handle navigation upon successful registration (e.g., back to Login screen, or trigger `onRegistrationComplete` callback).
 - [✅] **Error Handling in UI:**
     - [✅] Ensure `RegistrationView` correctly displays errors inherited from `RegistrationViewModel` (e.g., "Email already in use", "Network error").
- - [🚧] **(Optional Initial) Auto-Login Flow Post-Registration:**
-    - [❌] Consider whether the user should be auto-logged in or taken to Login after successful registration. Implement according to dec🚧ision.
+ - [✅] **(Optional Initial) Auto-Login Flow Post-Registration:**
+    - [✅] Consider whether the user should be auto-logged in or taken to Login after successful registration. Implement according to dec🚧ision.
 
 ### Technical Checklist for Registration
 
