@@ -95,6 +95,7 @@
 		B4D611362E02C97E00CF1A9C /* RegistrationComposerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611322E02C97E00CF1A9C /* RegistrationComposerTests.swift */; };
 		B4D611372E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6112F2E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift */; };
 		B4D611392E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */; };
+		B4D611492E033F2800CF1A9C /* RegistrationErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611482E033F2800CF1A9C /* RegistrationErrorMapper.swift */; };
 		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 		B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */; };
@@ -223,6 +224,7 @@
 		B4D611312E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineRegistrationStoreTests.swift; sourceTree = "<group>"; };
 		B4D611322E02C97E00CF1A9C /* RegistrationComposerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationComposerTests.swift; sourceTree = "<group>"; };
 		B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationComposerIntegrationTests.swift; sourceTree = "<group>"; };
+		B4D611482E033F2800CF1A9C /* RegistrationErrorMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationErrorMapper.swift; sourceTree = "<group>"; };
 		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 		B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRefreshFailureLockoutUIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 		B44823402DD3AD14009E59A5 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611482E033F2800CF1A9C /* RegistrationErrorMapper.swift */,
 				B4D611252E0262E100CF1A9C /* RegistrationView.swift */,
 				B4D611262E0262E100CF1A9C /* RegistrationViewModel.swift */,
 				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
@@ -693,6 +696,7 @@
 			files = (
 				B4D611222E0260A900CF1A9C /* RegistrationComposer.swift in Sources */,
 				B4BBD4742DF9131D001E1965 /* KeychainDependencyFactory.swift in Sources */,
+				B4D611492E033F2800CF1A9C /* RegistrationErrorMapper.swift in Sources */,
 				B4BBD4752DF9131D001E1965 /* KeychainAdapters.swift in Sources */,
 				B4BBD47F2DF91563001E1965 /* SimpleEncryptor.swift in Sources */,
 				B4BBD4802DF91563001E1965 /* InMemoryFailedLoginAttemptsStore.swift in Sources */,

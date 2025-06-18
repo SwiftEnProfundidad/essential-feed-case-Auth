@@ -67,7 +67,7 @@ public final class RegistrationViewModel: ObservableObject {
                 registrationSuccess = true
                 registrationCompleted.send()
             case let .failure(error):
-                errorMessage = error.localizedDescription
+                errorMessage = RegistrationErrorMapper.userFriendlyMessage(for: error)
             }
         }
         isLoading = false
