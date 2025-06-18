@@ -5,6 +5,7 @@
 "LOGIN_VIEW_PASSWORD_PLACEHOLDER" = "Password";
 "LOGIN_VIEW_LOGIN_BUTTON" = "Login";
 "LOGIN_VIEW_FORGOT_PASSWORD" = "Forgot your password?";
+"LOGIN_VIEW_REGISTER_BUTTON" = "New here? Sign up";
 
 "LOGIN_ERROR_VALIDATION" = "Validation error";
 "LOGIN_ERROR_INVALID_CREDENTIALS" = "Invalid credentials";

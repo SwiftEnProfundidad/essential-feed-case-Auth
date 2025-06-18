@@ -3,6 +3,7 @@ import Foundation
 
 public protocol LoginNavigation: AnyObject {
     func showRecovery()
+    func showRegister()
 }
 
 public enum ViewState: Hashable {
@@ -42,6 +43,7 @@ public final class LoginViewModel: ObservableObject {
     @Published public private(set) var publishedViewState: ViewState = .idle
     public let authenticated = PassthroughSubject<Void, Never>()
     public let recoveryRequested = PassthroughSubject<Void, Never>()
+    public let registerRequested = PassthroughSubject<Void, Never>()
     private var cancellables: Set<AnyCancellable> = []
     private var delayTask: Task<Void, Never>?
 
@@ -65,6 +67,13 @@ public final class LoginViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.navigation?.showRecovery()
+            }
+            .store(in: &cancellables)
+
+        registerRequested
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.navigation?.showRegister()
             }
             .store(in: &cancellables)
     }
@@ -195,6 +204,10 @@ public final class LoginViewModel: ObservableObject {
 
     public func handleRecoveryTap() {
         navigation?.showRecovery()
+    }
+
+    public func handleRegisterTap() {
+        navigation?.showRegister()
     }
 
     public func userDidInitiateEditing() {
