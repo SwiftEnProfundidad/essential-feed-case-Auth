@@ -59,16 +59,23 @@ final class CaptchaSnapshotTests: XCTestCase {
     }
 
     func test_captchaView_loading_light() {
-        var sut: UIViewController? = makeCaptchaView(
-            isVisible: true, colorScheme: .light, isLoading: true, initialLoading: true
-        )
+        autoreleasepool {
+            weak var weakRef: UIViewController?
 
-        assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "light")
-        assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "light")
+            autoreleasepool {
+                let sut = makeCaptchaView(isVisible: true, colorScheme: .light, isLoading: true, initialLoading: true)
+                weakRef = sut
 
-        RunLoop.current.run(until: Date())
-        sut?.view.removeFromSuperview()
-        sut = nil
+                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "light")
+                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "light")
+
+                forceCleanupWebViews(in: sut.view)
+                sut.view.removeFromSuperview()
+            }
+
+            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+            XCTAssertNil(weakRef, "Memory leak: SUT wasn't deallocated")
+        }
     }
 
     func test_captchaView_loading_dark() {
@@ -183,7 +190,6 @@ extension CaptchaSnapshotTests {
                 )
 
                 try snapshotData?.write(to: snapshotURL)
-                print("✅ Snapshot recorded successfully at: \(snapshotURL)")
                 return
             } catch {
                 XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
