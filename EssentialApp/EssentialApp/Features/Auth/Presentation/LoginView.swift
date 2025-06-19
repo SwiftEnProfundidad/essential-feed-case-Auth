@@ -237,6 +237,17 @@ public struct LoginView: View {
             switch viewModel.publishedViewState {
             case .idle:
                 VStack(spacing: 20) {
+                    if viewModel.shouldShowCaptcha {
+                        CaptchaView(
+                            token: $viewModel.captchaToken,
+                            onTokenReceived: { token in
+                                viewModel.setCaptchaToken(token)
+                            },
+                            isVisible: viewModel.shouldShowCaptcha
+                        )
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+
                     loginButtonNeumorphic
                     forgotPasswordButtonNeumorphic
                     registerButtonNeumorphic
@@ -261,6 +272,18 @@ public struct LoginView: View {
                         .padding(.vertical, 40)
                         .accessibilityIdentifier(String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
 
+                    if viewModel.shouldShowCaptcha {
+                        CaptchaView(
+                            token: $viewModel.captchaToken,
+                            onTokenReceived: { token in
+                                viewModel.setCaptchaToken(token)
+                            },
+                            isVisible: viewModel.shouldShowCaptcha
+                        )
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+
+                    loginButtonNeumorphic
                     registerButtonNeumorphic
                 }
             case let .success(message):
@@ -275,6 +298,7 @@ public struct LoginView: View {
         }
         .id(viewModel.publishedViewState)
         .frame(minHeight: 130)
+        .animation(.easeInOut(duration: 0.3), value: viewModel.shouldShowCaptcha)
     }
 
     private var loginButtonNeumorphic: some View {

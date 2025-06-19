@@ -393,6 +393,13 @@
 		B4D611422E02CBBB00CF1A9C /* DefaultRegistrationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611402E02CBBB00CF1A9C /* DefaultRegistrationServiceTests.swift */; };
 		B4D611462E02CBF900CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611442E02CBF900CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */; };
 		B4D611472E02CBF900CF1A9C /* HTTPUserRegistrationAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611432E02CBF900CF1A9C /* HTTPUserRegistrationAPITests.swift */; };
+		B4D6114E2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6114D2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift */; };
+		B4D611552E034C6900CF1A9C /* CaptchaStateQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611542E034C6900CF1A9C /* CaptchaStateQuerying.swift */; };
+		B4D611562E034C6900CF1A9C /* CaptchaFlowCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611512E034C6900CF1A9C /* CaptchaFlowCoordinating.swift */; };
+		B4D611572E034C6900CF1A9C /* CaptchaStateCommanding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611522E034C6900CF1A9C /* CaptchaStateCommanding.swift */; };
+		B4D611582E034C6900CF1A9C /* CaptchaStateManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611532E034C6900CF1A9C /* CaptchaStateManaging.swift */; };
+		B4D6115A2E034D4F00CF1A9C /* LoginSecurityConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611592E034D4F00CF1A9C /* LoginSecurityConfiguration.swift */; };
+		B4D6125C2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6125A2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift */; };
 		B4D6B26C2DC8D93400F5A3FE /* UserLoginUseCaseIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6462DBE291A00E738D3 /* UserLoginUseCaseIntegrationTests.swift */; };
 		B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */; };
 		B4D71EEF2DAF1643003A1316 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -865,6 +872,13 @@
 		B4D611402E02CBBB00CF1A9C /* DefaultRegistrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultRegistrationServiceTests.swift; sourceTree = "<group>"; };
 		B4D611432E02CBF900CF1A9C /* HTTPUserRegistrationAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPUserRegistrationAPITests.swift; sourceTree = "<group>"; };
 		B4D611442E02CBF900CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryOfflineRegistrationStoreTests.swift; sourceTree = "<group>"; };
+		B4D6114D2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCaptchaFlowCoordinator.swift; sourceTree = "<group>"; };
+		B4D611512E034C6900CF1A9C /* CaptchaFlowCoordinating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaFlowCoordinating.swift; sourceTree = "<group>"; };
+		B4D611522E034C6900CF1A9C /* CaptchaStateCommanding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaStateCommanding.swift; sourceTree = "<group>"; };
+		B4D611532E034C6900CF1A9C /* CaptchaStateManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaStateManaging.swift; sourceTree = "<group>"; };
+		B4D611542E034C6900CF1A9C /* CaptchaStateQuerying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaStateQuerying.swift; sourceTree = "<group>"; };
+		B4D611592E034D4F00CF1A9C /* LoginSecurityConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSecurityConfiguration.swift; sourceTree = "<group>"; };
+		B4D6125A2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCaptchaFlowCoordinatorTests.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseTests.swift; sourceTree = "<group>"; };
 		B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorageTests.swift; sourceTree = "<group>"; };
@@ -1783,6 +1797,7 @@
 		B45C36922DDA92EE00184F55 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611592E034D4F00CF1A9C /* LoginSecurityConfiguration.swift */,
 				B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */,
 				B4D611182E01D99200CF1A9C /* RequestPattern.swift */,
 				B4D611192E01D99200CF1A9C /* SecurityEvent.swift */,
@@ -1819,6 +1834,10 @@
 		B45C36A32DDA92EE00184F55 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				B4D611512E034C6900CF1A9C /* CaptchaFlowCoordinating.swift */,
+				B4D611522E034C6900CF1A9C /* CaptchaStateCommanding.swift */,
+				B4D611532E034C6900CF1A9C /* CaptchaStateManaging.swift */,
+				B4D611542E034C6900CF1A9C /* CaptchaStateQuerying.swift */,
 				B40ADAE42E01C85E00A39B40 /* CaptchaValidatorProtocol.swift */,
 				B40ADAD22E018C4D00A39B40 /* PasswordRecoveryAuditLogger.swift */,
 				B40ADACC2E017F1C00A39B40 /* PasswordResetTokenManager.swift */,
@@ -2007,6 +2026,7 @@
 		B47A6AC12DF1B471001D47CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6114D2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift */,
 				B4D6113A2E02CB7300CF1A9C /* DefaultRegistrationService.swift */,
 				B4D611112E01D62500CF1A9C /* CaptchaErrorMapper.swift */,
 				B4D611122E01D62500CF1A9C /* SecurityValidationService.swift */,
@@ -2207,6 +2227,7 @@
 		B4AF1BAF2DDB527200FD2ED2 /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4D6125B2E03505600CF1A9C /* Services */,
 				B45D92712DE6382C00B3CD1E /* ExponentialBackoffPolicyTests.swift */,
 				B4AF1BAE2DDB527200FD2ED2 /* UseCases */,
 			);
@@ -2255,6 +2276,14 @@
 				B4D611442E02CBF900CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift */,
 			);
 			path = Infrastructure;
+			sourceTree = "<group>";
+		};
+		B4D6125B2E03505600CF1A9C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B4D6125A2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		B4D6B2622DC8D15400F5A3FE /* Auth Feature */ = {
@@ -2949,6 +2978,7 @@
 				B45C36EB2DDA92EE00184F55 /* UserRegistrationResponse.swift in Sources */,
 				B45C36EC2DDA92EE00184F55 /* AnyFailedLoginAttemptStore.swift in Sources */,
 				B40ADAF52E01CC5D00A39B40 /* HTTPPasswordRecoveryAPI.swift in Sources */,
+				B4D6114E2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift in Sources */,
 				B40ADAA82E0179D400A39B40 /* PasswordResetTokenGenerator.swift in Sources */,
 				B4AF1BBE2DDB78CE00FD2ED2 /* RetryOfflineLoginsUseCase.swift in Sources */,
 				B4A746742DDD20C90087C33C /* KeychainErrorHandler.swift in Sources */,
@@ -2995,7 +3025,12 @@
 				08604503233E2917005ECD22 /* CoreDataFeedStore+FeedImageDataStore.swift in Sources */,
 				087148C2232BFC7100D6BE1A /* FeedImagePresenter.swift in Sources */,
 				08F8822D236499B200CAEE16 /* FeedCache.swift in Sources */,
+				B4D611552E034C6900CF1A9C /* CaptchaStateQuerying.swift in Sources */,
+				B4D611562E034C6900CF1A9C /* CaptchaFlowCoordinating.swift in Sources */,
+				B4D611572E034C6900CF1A9C /* CaptchaStateCommanding.swift in Sources */,
+				B4D611582E034C6900CF1A9C /* CaptchaStateManaging.swift in Sources */,
 				B4D2DC652DEE567800606891 /* KeychainManager.swift in Sources */,
+				B4D6115A2E034D4F00CF1A9C /* LoginSecurityConfiguration.swift in Sources */,
 				B4047DC72DDA71BC00A0C34C /* SecureStorageProtocols.swift in Sources */,
 				08285AFF228C1874000A8987 /* ManagedFeedImage.swift in Sources */,
 				B4D71EEF2DAF1643003A1316 /* (null) in Sources */,
@@ -3050,6 +3085,7 @@
 				B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */,
 				B40ADABB2E017B1D00A39B40 /* PasswordResetTokenIntegrationTests.swift in Sources */,
 				B4F64DC82DFB876E00EB362C /* GlobalLogoutEndToEndTests.swift in Sources */,
+				B4D6125C2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift in Sources */,
 				B40ADAA32E0174B400A39B40 /* PasswordRecoveryRateLimiterTests.swift in Sources */,
 				B40ADA9B2E014FA800A39B40 /* KeychainManagerTests.swift in Sources */,
 				B4A7467B2DDD23680087C33C /* KeychainErrorHandlerSpy.swift in Sources */,

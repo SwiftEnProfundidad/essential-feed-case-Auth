@@ -47,7 +47,7 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             }
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
             let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
@@ -68,7 +68,7 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
     private func makeViewModel(
         authenticateResult: Result<LoginResponse, LoginError> = .failure(LoginError.invalidCredentials)
     ) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2)
         return LoginViewModel(
             authenticate: { _, _ in authenticateResult },
             pendingRequestStore: nil,

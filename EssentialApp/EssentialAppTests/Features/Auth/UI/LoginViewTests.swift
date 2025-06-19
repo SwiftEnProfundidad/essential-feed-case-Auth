@@ -680,7 +680,7 @@ final class LoginViewTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2)
         let loginSecurity = LoginSecurityUseCase(
             store: failedAttemptsStore,
             configuration: configuration

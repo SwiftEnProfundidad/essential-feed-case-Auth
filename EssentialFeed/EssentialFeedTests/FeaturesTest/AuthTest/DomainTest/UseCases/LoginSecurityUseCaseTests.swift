@@ -46,7 +46,7 @@ final class LoginSecurityUseCaseTests: XCTestCase {
         let travelTime: TimeInterval = 120
         let expectedRemainingTime = blockDuration - travelTime
         let (sut, _) = makeSUT(
-            configuration: LoginSecurityConfiguration(maxAttempts: 5, blockDuration: blockDuration),
+            configuration: LoginSecurityConfiguration(maxAttempts: 5, blockDuration: blockDuration, captchaThreshold: 3),
             timeProvider: { timeTraveler.currentDate }
         )
         let username = "user1"

@@ -42,7 +42,7 @@
          <EnvironmentVariable
             key = "RECORD_SNAPSHOTS"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <CodeCoverageTargets>

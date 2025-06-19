@@ -41,7 +41,7 @@ class LoginLockingIntegrationTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 5, blockDuration: 300)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 5, blockDuration: 300, captchaThreshold: 3)
         let loginSecurity = LoginSecurityUseCase(
             store: store,
             configuration: configuration,

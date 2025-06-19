@@ -4,6 +4,8 @@ import SwiftUI
 import XCTest
 
 final class LoginUISnapshotTests: XCTestCase {
+    // NOTE: test_record_loginView_allStates is marked private as it seems to be a helper for recording, not a runnable test.
+    // If it's meant to be a runnable test, remove `private`.
     private func test_record_loginView_allStates() async {
         let localesToTest = [
             Locale(identifier: "en"),
@@ -33,7 +35,9 @@ final class LoginUISnapshotTests: XCTestCase {
             await recordSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            // THE FIX IS FOR THIS LINE:
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
+
             let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
@@ -81,7 +85,8 @@ final class LoginUISnapshotTests: XCTestCase {
             assertSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300)
+            // CORRECTED LINE: (This one was already correct in your paste, but ensuring it stays correct)
+            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
             let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
@@ -104,11 +109,14 @@ final class LoginUISnapshotTests: XCTestCase {
 
     private func makeViewModel(authenticateResult: Result<LoginResponse, LoginError>) -> LoginViewModel {
         let store = InMemoryFailedLoginAttemptsStore()
-        let securityUseCase = LoginSecurityUseCase(store: store)
+        // CORRECTED: Ensure LoginSecurityUseCase is initialized with a configuration that includes captchaThreshold
+        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2) // Default values, adjust if needed
+        let securityUseCase = LoginSecurityUseCase(store: store, configuration: configuration)
         let vm = LoginViewModel(
             authenticate: { _, _ in authenticateResult },
             loginSecurity: securityUseCase
         )
+        // Consider adding trackForMemoryLeaks here for vm and securityUseCase if not done elsewhere
         return vm
     }
 
@@ -174,25 +182,38 @@ final class LoginUISnapshotTests: XCTestCase {
     }
 }
 
-private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsReader, FailedLoginAttemptsWriter {
+private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore { // Conforms to FailedLoginAttemptsStore
     private var attemptCounts: [String: Int] = [:]
     private var lastAttemptTimestamps: [String: Date] = [:]
+    private let lockQueue = DispatchQueue(label: "com.essentialdeveloper.inmemoryfailedloginattemptsstore.lock")
 
     func incrementAttempts(for username: String) async {
-        attemptCounts[username, default: 0] += 1
-        lastAttemptTimestamps[username] = Date()
+        await Task { @MainActor in // Ensure modifications are thread-safe if called from multiple threads
+            lockQueue.sync {
+                attemptCounts[username, default: 0] += 1
+                lastAttemptTimestamps[username] = Date()
+            }
+        }.value
     }
 
     func resetAttempts(for username: String) async {
-        attemptCounts[username] = nil
-        lastAttemptTimestamps[username] = nil
+        await Task { @MainActor in
+            lockQueue.sync {
+                attemptCounts[username] = nil
+                lastAttemptTimestamps[username] = nil
+            }
+        }.value
     }
 
     func getAttempts(for username: String) -> Int {
-        attemptCounts[username] ?? 0
+        lockQueue.sync {
+            attemptCounts[username] ?? 0
+        }
     }
 
     func lastAttemptTime(for username: String) -> Date? {
-        lastAttemptTimestamps[username]
+        lockQueue.sync {
+            lastAttemptTimestamps[username]
+        }
     }
 }

@@ -2,19 +2,16 @@ import Foundation
 
 public final class DefaultLoginSecurityServiceUseCase {
     private let store: FailedLoginAttemptsStore
-    private let maxAttempts: Int
-    private let blockDuration: TimeInterval
+    private let configuration: LoginSecurityConfiguration
     private let timeProvider: () -> Date
 
     public init(
         store: FailedLoginAttemptsStore,
-        maxAttempts: Int = 5,
-        blockDuration: TimeInterval = 300, // 5 minutos
+        configuration: LoginSecurityConfiguration = .default,
         timeProvider: @escaping () -> Date = { Date() }
     ) {
         self.store = store
-        self.maxAttempts = maxAttempts
-        self.blockDuration = blockDuration
+        self.configuration = configuration
         self.timeProvider = timeProvider
     }
 }
@@ -24,14 +21,14 @@ public final class DefaultLoginSecurityServiceUseCase {
 extension DefaultLoginSecurityServiceUseCase: LoginLockStatusProviderProtocol {
     public func isAccountLocked(username: String) async -> Bool {
         let attempts = store.getAttempts(for: username)
-        guard attempts >= maxAttempts,
+        guard attempts >= configuration.maxAttempts,
               let lastAttempt = store.lastAttemptTime(for: username)
         else {
             return false
         }
 
         let timeSinceLastAttempt = timeProvider().timeIntervalSince(lastAttempt)
-        if timeSinceLastAttempt >= blockDuration {
+        if timeSinceLastAttempt >= configuration.blockDuration {
             await store.resetAttempts(for: username)
             return false
         }
@@ -41,7 +38,7 @@ extension DefaultLoginSecurityServiceUseCase: LoginLockStatusProviderProtocol {
     public func getRemainingBlockTime(username: String) -> TimeInterval? {
         guard let lastAttempt = store.lastAttemptTime(for: username) else { return nil }
         let elapsed = timeProvider().timeIntervalSince(lastAttempt)
-        return max(0, blockDuration - elapsed)
+        return max(0, configuration.blockDuration - elapsed)
     }
 }
 
@@ -54,5 +51,9 @@ extension DefaultLoginSecurityServiceUseCase: FailedLoginHandlerProtocol {
 
     public func resetAttempts(username: String) async {
         await store.resetAttempts(for: username)
+    }
+
+    public func getFailedAttempts(username: String) -> Int {
+        store.getAttempts(for: username)
     }
 }

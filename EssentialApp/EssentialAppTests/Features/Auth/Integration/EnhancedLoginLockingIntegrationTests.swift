@@ -79,6 +79,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         store: FailedLoginAttemptsStore,
         maxAttempts: Int = 5,
         lockoutTime: TimeInterval = 300,
+        captchaThreshold: Int = 3,
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
         timeProvider: @escaping () -> Date = { Date() },
         file: StaticString = #filePath,
@@ -86,7 +87,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
     ) -> LoginViewModel {
         let loginSecurity = LoginSecurityUseCase(
             store: store,
-            configuration: LoginSecurityConfiguration(maxAttempts: maxAttempts, blockDuration: lockoutTime),
+            configuration: LoginSecurityConfiguration(maxAttempts: maxAttempts, blockDuration: lockoutTime, captchaThreshold: captchaThreshold),
             timeProvider: timeProvider
         )
 

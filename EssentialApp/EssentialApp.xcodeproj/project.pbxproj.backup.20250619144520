@@ -50,98 +50,6 @@
 		B449F2082DBD6ABC0078F27B /* LoginComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2032DBD6ABC0078F27B /* LoginComposer.swift */; };
 		B449F2092DBD6ABC0078F27B /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2052DBD6ABC0078F27B /* LoginView.swift */; };
 		B449F20A2DBD6ABC0078F27B /* AuthComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B449F2022DBD6ABC0078F27B /* AuthComposer.swift */; };
-		B45AD9FA2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45AD9FB2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9EC2E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45AD9FC2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9ED2E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45AD9FD2E0471700042D9F3 /* TOKEN_REFRESH_FAILURE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C92E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */; };
-		B45AD9FE2E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BB2E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */; };
-		B45AD9FF2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99B2E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA002E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9DA2E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA012E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99A2E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA022E0471700042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AF2E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */; };
-		B45ADA032E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9DE2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */; };
-		B45ADA042E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA052E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D82E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */; };
-		B45ADA062E0471700042D9F3 /* CAPTCHA_HIDDEN.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B32E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */; };
-		B45ADA072E0471700042D9F3 /* CAPTCHA_HIDDEN.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9DC2E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */; };
-		B45ADA082E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AA2E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */; };
-		B45ADA092E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AD2E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA0A2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9DD2E04716F0042D9F3 /* CAPTCHA_LOADING.png */; };
-		B45ADA0B2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA0C2E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A92E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */; };
-		B45ADA0D2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D32E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA0E2E0471700042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AC2E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */; };
-		B45ADA0F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B92E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA102E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E52E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */; };
-		B45ADA112E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9EE2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA122E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A82E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */; };
-		B45ADA132E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA142E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E62E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */; };
-		B45ADA152E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9912E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA162E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9DF2E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */; };
-		B45ADA172E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9972E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA182E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BA2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA192E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BE2E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */; };
-		B45ADA1A2E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D02E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */; };
-		B45ADA1B2E0471700042D9F3 /* PASSWORD_RECOVERY_ERROR.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B02E04716F0042D9F3 /* PASSWORD_RECOVERY_ERROR.png */; };
-		B45ADA1C2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F62E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA1D2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9982E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA1E2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F52E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA1F2E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9CF2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */; };
-		B45ADA202E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E82E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA212E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A12E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */; };
-		B45ADA222E0471700042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B62E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */; };
-		B45ADA232E0471700042D9F3 /* TOKEN_REFRESH_FAILURE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B12E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */; };
-		B45ADA242E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D42E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */; };
-		B45ADA252E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9992E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA262E0471700042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AE2E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */; };
-		B45ADA272E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D12E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA282E0471700042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C22E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */; };
-		B45ADA292E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9942E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA2A2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B82E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA2B2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BC2E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */; };
-		B45ADA2C2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D52E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */; };
-		B45ADA2D2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E22E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA2E2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9EF2E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA2F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9922E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA302E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9932E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
-		B45ADA312E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A52E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */; };
-		B45ADA322E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E42E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */; };
-		B45ADA332E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D72E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */; };
-		B45ADA342E0471700042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C52E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */; };
-		B45ADA352E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F02E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA362E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BF2E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */; };
-		B45ADA372E0471700042D9F3 /* PASSWORD_RECOVERY_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C82E04716F0042D9F3 /* PASSWORD_RECOVERY_SUCCESS.png */; };
-		B45ADA382E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E32E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */; };
-		B45ADA392E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D92E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA3A2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA3B2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B42E04716F0042D9F3 /* CAPTCHA_LOADING.png */; };
-		B45ADA3C2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E02E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA3D2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9AB2E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA3E2E0471700042D9F3 /* NETWORK_ERROR_REFRESH_RETRY.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C62E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY.png */; };
-		B45ADA3F2E0471700042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C42E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */; };
-		B45ADA402E0471700042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A02E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */; };
-		B45ADA412E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C32E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA422E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E12E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA432E0471700042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9CB2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */; };
-		B45ADA442E0471700042D9F3 /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C72E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY-failure.png */; };
-		B45ADA452E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B72E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */; };
-		B45ADA462E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9952E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA472E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E72E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */; };
-		B45ADA482E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9B52E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */; };
-		B45ADA492E0471700042D9F3 /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C12E04716F0042D9F3 /* LOGIN_IDLE.png */; };
-		B45ADA4A2E0471700042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9CA2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH.png */; };
-		B45ADA4B2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9F22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */; };
-		B45ADA4C2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9CE2E04716F0042D9F3 /* CAPTCHA_LOADING.png */; };
-		B45ADA4D2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9E92E04716F0042D9F3 /* LOGIN_SUCCESS.png */; };
-		B45ADA4E2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A62E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */; };
-		B45ADA4F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D22E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */; };
-		B45ADA502E0471700042D9F3 /* LOGIN_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9A72E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */; };
-		B45ADA512E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9D62E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */; };
-		B45ADA522E0471700042D9F3 /* LOGIN_ERROR_NOTIFICATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9BD2E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */; };
-		B45ADA532E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99E2E04716F0042D9F3 /* CAPTCHA_LOADING.png */; };
-		B45ADA542E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C02E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */; };
-		B45ADA552E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99F2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */; };
 		B46C63A42DE075EC008EEEBD /* HTTPUserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */; };
 		B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */; };
 		B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */; };
@@ -189,12 +97,21 @@
 		B4D611392E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611382E02CAC200CF1A9C /* RegistrationComposerIntegrationTests.swift */; };
 		B4D611492E033F2800CF1A9C /* RegistrationErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D611482E033F2800CF1A9C /* RegistrationErrorMapper.swift */; };
 		B4D611502E034BD200CF1A9C /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6114F2E034BD200CF1A9C /* CaptchaView.swift */; };
+		B4D611DC2E034FDF00CF1A9C /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6116B2E034FDF00CF1A9C /* LOGIN_FORM_VALIDATION.png */; };
 		B4D611DF2E034FDF00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D12E034FDF00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png */; };
+		B4D611E02E034FDF00CF1A9C /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6117D2E034FDF00CF1A9C /* LOGIN_ERROR_NO_CONNECTIVITY.png */; };
+		B4D611E12E034FDF00CF1A9C /* LOGIN_ERROR_NETWORK.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611672E034FDF00CF1A9C /* LOGIN_ERROR_NETWORK.png */; };
 		B4D611E32E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611852E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png */; };
+		B4D611E72E034FDF00CF1A9C /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611602E034FDF00CF1A9C /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */; };
 		B4D611E82E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D82E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png */; };
+		B4D611E92E034FDF00CF1A9C /* LOGIN_ACCOUNT_LOCKED.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6117A2E034FDF00CF1A9C /* LOGIN_ACCOUNT_LOCKED.png */; };
+		B4D611F42E034FDF00CF1A9C /* LOGIN_IDLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611812E034FDF00CF1A9C /* LOGIN_IDLE.png */; };
 		B4D611F82E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611872E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png */; };
+		B4D611F92E034FDF00CF1A9C /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611662E034FDF00CF1A9C /* LOGIN_ERROR_INVALID_CREDENTIALS.png */; };
 		B4D611FE2E034FDF00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D22E034FDF00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png */; };
 		B4D612002E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611DA2E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */; };
+		B4D612092E034FDF00CF1A9C /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611742E034FDF00CF1A9C /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */; };
+		B4D6120F2E034FDF00CF1A9C /* LOGIN_SUCCESS.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611822E034FDF00CF1A9C /* LOGIN_SUCCESS.png */; };
 		B4D612122E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D72E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png */; };
 		B4D612192E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D52E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png */; };
 		B4D6121D2E034FDF00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D611D32E034FDF00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png */; };
@@ -206,6 +123,20 @@
 		B4D612582E03501000CF1A9C /* CaptchaViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D612562E03501000CF1A9C /* CaptchaViewTests.swift */; };
 		B4D612592E03501000CF1A9C /* CaptchaWebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D612572E03501000CF1A9C /* CaptchaWebViewTests.swift */; };
 		B4D6125E2E03599400CF1A9C /* CaptchaSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6125D2E03599400CF1A9C /* CaptchaSnapshotTests.swift */; };
+		B4D612982E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612892E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png */; };
+		B4D612992E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128D2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png */; };
+		B4D6129C2E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612962E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */; };
+		B4D6129F2E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612912E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png */; };
+		B4D612A32E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612952E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png */; };
+		B4D612A42E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128E2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png */; };
+		B4D612A52E035C5E00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612902E035C5E00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png */; };
+		B4D612AA2E035C5E00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128F2E035C5E00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png */; };
+		B4D612B42E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612932E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png */; };
+		B4D612B62E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612942E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png */; };
+		B4D612B72E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D612922E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png */; };
+		B4D612BC2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128C2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png */; };
+		B4D612C62E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128A2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png */; };
+		B4D612C82E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png in Resources */ = {isa = PBXBuildFile; fileRef = B4D6128B2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png */; };
 		B4E31B6D2DE4D74C003C45B6 /* EnhancedLoginLockingIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */; };
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 		B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */; };
@@ -289,98 +220,6 @@
 		B449F2022DBD6ABC0078F27B /* AuthComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthComposer.swift; sourceTree = "<group>"; };
 		B449F2032DBD6ABC0078F27B /* LoginComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginComposer.swift; sourceTree = "<group>"; };
 		B449F2052DBD6ABC0078F27B /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		B45AD9912E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9922E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9932E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9942E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9952E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9972E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9982E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9992E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD99A2E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD99B2E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD99E2E04716F0042D9F3 /* CAPTCHA_LOADING.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_LOADING.png; sourceTree = "<group>"; };
-		B45AD99F2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_VISIBLE.png; sourceTree = "<group>"; };
-		B45AD9A02E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GLOBAL_LOGOUT_REQUIRED.png; sourceTree = "<group>"; };
-		B45AD9A12E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9A22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9A32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9A42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9A52E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NETWORK.png; sourceTree = "<group>"; };
-		B45AD9A62E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NO_CONNECTIVITY.png; sourceTree = "<group>"; };
-		B45AD9A72E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9A82E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_OFFLINE_STORE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9A92E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_TOKEN_STORAGE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9AA2E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_FORM_VALIDATION.png; sourceTree = "<group>"; };
-		B45AD9AB2E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9AC2E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9AD2E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9AE2E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9AF2E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9B02E04716F0042D9F3 /* PASSWORD_RECOVERY_ERROR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR.png; sourceTree = "<group>"; };
-		B45AD9B12E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE.png; sourceTree = "<group>"; };
-		B45AD9B32E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_HIDDEN.png; sourceTree = "<group>"; };
-		B45AD9B42E04716F0042D9F3 /* CAPTCHA_LOADING.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_LOADING.png; sourceTree = "<group>"; };
-		B45AD9B52E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_VISIBLE.png; sourceTree = "<group>"; };
-		B45AD9B62E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GLOBAL_LOGOUT_REQUIRED.png; sourceTree = "<group>"; };
-		B45AD9B72E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9B82E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9B92E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9BA2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9BB2E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NETWORK.png; sourceTree = "<group>"; };
-		B45AD9BC2E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NO_CONNECTIVITY.png; sourceTree = "<group>"; };
-		B45AD9BD2E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9BE2E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_OFFLINE_STORE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9BF2E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_TOKEN_STORAGE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9C02E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_FORM_VALIDATION.png; sourceTree = "<group>"; };
-		B45AD9C12E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9C22E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_NETWORK_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9C32E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9C42E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9C52E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_UNKNOWN_ERROR_NOTIFICATION.png; sourceTree = "<group>"; };
-		B45AD9C62E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NETWORK_ERROR_REFRESH_RETRY.png; sourceTree = "<group>"; };
-		B45AD9C72E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NETWORK_ERROR_REFRESH_RETRY-failure.png"; sourceTree = "<group>"; };
-		B45AD9C82E04716F0042D9F3 /* PASSWORD_RECOVERY_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9C92E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE.png; sourceTree = "<group>"; };
-		B45AD9CA2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE_SPANISH.png; sourceTree = "<group>"; };
-		B45AD9CB2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TOKEN_REFRESH_FAILURE_SPANISH-failure.png"; sourceTree = "<group>"; };
-		B45AD9CE2E04716F0042D9F3 /* CAPTCHA_LOADING.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_LOADING.png; sourceTree = "<group>"; };
-		B45AD9CF2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_VISIBLE.png; sourceTree = "<group>"; };
-		B45AD9D02E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9D12E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9D22E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9D32E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9D42E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NETWORK.png; sourceTree = "<group>"; };
-		B45AD9D52E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NO_CONNECTIVITY.png; sourceTree = "<group>"; };
-		B45AD9D62E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_OFFLINE_STORE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9D72E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_TOKEN_STORAGE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9D82E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_FORM_VALIDATION.png; sourceTree = "<group>"; };
-		B45AD9D92E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9DA2E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9DC2E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_HIDDEN.png; sourceTree = "<group>"; };
-		B45AD9DD2E04716F0042D9F3 /* CAPTCHA_LOADING.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_LOADING.png; sourceTree = "<group>"; };
-		B45AD9DE2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CAPTCHA_VISIBLE.png; sourceTree = "<group>"; };
-		B45AD9DF2E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9E02E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9E12E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9E22E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9E32E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NETWORK.png; sourceTree = "<group>"; };
-		B45AD9E42E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_NO_CONNECTIVITY.png; sourceTree = "<group>"; };
-		B45AD9E52E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_OFFLINE_STORE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9E62E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_TOKEN_STORAGE_FAILED.png; sourceTree = "<group>"; };
-		B45AD9E72E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_FORM_VALIDATION.png; sourceTree = "<group>"; };
-		B45AD9E82E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9E92E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9EC2E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9ED2E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9EE2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9EF2E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9F02E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
-		B45AD9F22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_ACCOUNT_LOCKED.png; sourceTree = "<group>"; };
-		B45AD9F32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png; sourceTree = "<group>"; };
-		B45AD9F42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
-		B45AD9F52E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
-		B45AD9F62E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
 		B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPUserLoginAPI.swift; sourceTree = "<group>"; };
 		B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLoginFlowHandler.swift; sourceTree = "<group>"; };
 		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
@@ -517,6 +356,20 @@
 		B4D612842E035C5E00CF1A9C /* LOGIN_FORM_VALIDATION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_FORM_VALIDATION.png; sourceTree = "<group>"; };
 		B4D612852E035C5E00CF1A9C /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
 		B4D612862E035C5E00CF1A9C /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
+		B4D612892E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GLOBAL_LOGOUT_REQUIRED_DARK.png; sourceTree = "<group>"; };
+		B4D6128A2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GLOBAL_LOGOUT_REQUIRED_DARK-failure.png"; sourceTree = "<group>"; };
+		B4D6128B2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GLOBAL_LOGOUT_REQUIRED_LIGHT.png; sourceTree = "<group>"; };
+		B4D6128C2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png"; sourceTree = "<group>"; };
+		B4D6128D2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NETWORK_ERROR_REFRESH_RETRY.png; sourceTree = "<group>"; };
+		B4D6128E2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NETWORK_ERROR_REFRESH_RETRY-failure.png"; sourceTree = "<group>"; };
+		B4D6128F2E035C5E00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_ERROR_dark.png; sourceTree = "<group>"; };
+		B4D612902E035C5E00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PASSWORD_RECOVERY_SUCCESS_light.png; sourceTree = "<group>"; };
+		B4D612912E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE_DARK.png; sourceTree = "<group>"; };
+		B4D612922E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TOKEN_REFRESH_FAILURE_DARK-failure.png"; sourceTree = "<group>"; };
+		B4D612932E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE_LIGHT.png; sourceTree = "<group>"; };
+		B4D612942E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TOKEN_REFRESH_FAILURE_LIGHT-failure.png"; sourceTree = "<group>"; };
+		B4D612952E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TOKEN_REFRESH_FAILURE_SPANISH.png; sourceTree = "<group>"; };
+		B4D612962E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TOKEN_REFRESH_FAILURE_SPANISH-failure.png"; sourceTree = "<group>"; };
 		B4E31B6C2DE4D74B003C45B6 /* EnhancedLoginLockingIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginLockingIntegrationTests.swift; sourceTree = "<group>"; };
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 		B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRefreshFailureLockoutUIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -660,201 +513,6 @@
 				B449F2052DBD6ABC0078F27B /* LoginView.swift */,
 			);
 			path = Presentation;
-			sourceTree = "<group>";
-		};
-		B45AD9962E04716F0042D9F3 /* dark */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9912E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9922E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9932E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9942E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9952E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = dark;
-			sourceTree = "<group>";
-		};
-		B45AD99C2E04716F0042D9F3 /* light */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9972E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9982E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9992E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD99A2E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD99B2E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = light;
-			sourceTree = "<group>";
-		};
-		B45AD99D2E04716F0042D9F3 /* el */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9962E04716F0042D9F3 /* dark */,
-				B45AD99C2E04716F0042D9F3 /* light */,
-			);
-			path = el;
-			sourceTree = "<group>";
-		};
-		B45AD9B22E04716F0042D9F3 /* dark */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD99E2E04716F0042D9F3 /* CAPTCHA_LOADING.png */,
-				B45AD99F2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */,
-				B45AD9A02E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */,
-				B45AD9A12E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */,
-				B45AD9A22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9A32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9A42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9A52E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */,
-				B45AD9A62E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */,
-				B45AD9A72E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */,
-				B45AD9A82E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */,
-				B45AD9A92E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */,
-				B45AD9AA2E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */,
-				B45AD9AB2E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9AC2E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */,
-				B45AD9AD2E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-				B45AD9AE2E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */,
-				B45AD9AF2E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */,
-				B45AD9B02E04716F0042D9F3 /* PASSWORD_RECOVERY_ERROR.png */,
-				B45AD9B12E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */,
-			);
-			path = dark;
-			sourceTree = "<group>";
-		};
-		B45AD9CC2E04716F0042D9F3 /* light */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9B32E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */,
-				B45AD9B42E04716F0042D9F3 /* CAPTCHA_LOADING.png */,
-				B45AD9B52E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */,
-				B45AD9B62E04716F0042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png */,
-				B45AD9B72E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */,
-				B45AD9B82E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9B92E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9BA2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9BB2E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */,
-				B45AD9BC2E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */,
-				B45AD9BD2E04716F0042D9F3 /* LOGIN_ERROR_NOTIFICATION.png */,
-				B45AD9BE2E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */,
-				B45AD9BF2E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */,
-				B45AD9C02E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */,
-				B45AD9C12E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9C22E04716F0042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png */,
-				B45AD9C32E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-				B45AD9C42E04716F0042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png */,
-				B45AD9C52E04716F0042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png */,
-				B45AD9C62E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY.png */,
-				B45AD9C72E04716F0042D9F3 /* NETWORK_ERROR_REFRESH_RETRY-failure.png */,
-				B45AD9C82E04716F0042D9F3 /* PASSWORD_RECOVERY_SUCCESS.png */,
-				B45AD9C92E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE.png */,
-				B45AD9CA2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH.png */,
-				B45AD9CB2E04716F0042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */,
-			);
-			path = light;
-			sourceTree = "<group>";
-		};
-		B45AD9CD2E04716F0042D9F3 /* en */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9B22E04716F0042D9F3 /* dark */,
-				B45AD9CC2E04716F0042D9F3 /* light */,
-			);
-			path = en;
-			sourceTree = "<group>";
-		};
-		B45AD9DB2E04716F0042D9F3 /* dark */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9CE2E04716F0042D9F3 /* CAPTCHA_LOADING.png */,
-				B45AD9CF2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */,
-				B45AD9D02E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */,
-				B45AD9D12E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9D22E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9D32E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9D42E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */,
-				B45AD9D52E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */,
-				B45AD9D62E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */,
-				B45AD9D72E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */,
-				B45AD9D82E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */,
-				B45AD9D92E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9DA2E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = dark;
-			sourceTree = "<group>";
-		};
-		B45AD9EA2E04716F0042D9F3 /* light */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9DC2E04716F0042D9F3 /* CAPTCHA_HIDDEN.png */,
-				B45AD9DD2E04716F0042D9F3 /* CAPTCHA_LOADING.png */,
-				B45AD9DE2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */,
-				B45AD9DF2E04716F0042D9F3 /* LOGIN_ACCOUNT_LOCKED.png */,
-				B45AD9E02E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9E12E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9E22E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9E32E04716F0042D9F3 /* LOGIN_ERROR_NETWORK.png */,
-				B45AD9E42E04716F0042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png */,
-				B45AD9E52E04716F0042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png */,
-				B45AD9E62E04716F0042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png */,
-				B45AD9E72E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */,
-				B45AD9E82E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9E92E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = light;
-			sourceTree = "<group>";
-		};
-		B45AD9EB2E04716F0042D9F3 /* es */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9DB2E04716F0042D9F3 /* dark */,
-				B45AD9EA2E04716F0042D9F3 /* light */,
-			);
-			path = es;
-			sourceTree = "<group>";
-		};
-		B45AD9F12E04716F0042D9F3 /* dark */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9EC2E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9ED2E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9EE2E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9EF2E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9F02E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = dark;
-			sourceTree = "<group>";
-		};
-		B45AD9F72E04716F0042D9F3 /* light */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9F22E04716F0042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png */,
-				B45AD9F32E04716F0042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png */,
-				B45AD9F42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */,
-				B45AD9F52E04716F0042D9F3 /* LOGIN_IDLE.png */,
-				B45AD9F62E04716F0042D9F3 /* LOGIN_SUCCESS.png */,
-			);
-			path = light;
-			sourceTree = "<group>";
-		};
-		B45AD9F82E04716F0042D9F3 /* pt_BR */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD9F12E04716F0042D9F3 /* dark */,
-				B45AD9F72E04716F0042D9F3 /* light */,
-			);
-			path = pt_BR;
-			sourceTree = "<group>";
-		};
-		B45AD9F92E04716F0042D9F3 /* snapshots */ = {
-			isa = PBXGroup;
-			children = (
-				B45AD99D2E04716F0042D9F3 /* el */,
-				B45AD9CD2E04716F0042D9F3 /* en */,
-				B45AD9EB2E04716F0042D9F3 /* es */,
-				B45AD9F82E04716F0042D9F3 /* pt_BR */,
-			);
-			path = snapshots;
 			sourceTree = "<group>";
 		};
 		B46C63A52DE07617008EEEBD /* Infrastructure */ = {
@@ -1138,6 +796,20 @@
 			children = (
 				B4D612732E035C5E00CF1A9C /* en */,
 				B4D612882E035C5E00CF1A9C /* es */,
+				B4D612892E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png */,
+				B4D6128A2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png */,
+				B4D6128B2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png */,
+				B4D6128C2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png */,
+				B4D6128D2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png */,
+				B4D6128E2E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png */,
+				B4D6128F2E035C5E00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png */,
+				B4D612902E035C5E00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png */,
+				B4D612912E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png */,
+				B4D612922E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png */,
+				B4D612932E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png */,
+				B4D612942E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png */,
+				B4D612952E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png */,
+				B4D612962E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png */,
 			);
 			path = snapshots;
 			sourceTree = "<group>";
@@ -1203,7 +875,6 @@
 		B4D6B2732DC8E42800F5A3FE /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				B45AD9F92E04716F0042D9F3 /* snapshots */,
 				B4D612972E035C5E00CF1A9C /* snapshots */,
 				B4D6125D2E03599400CF1A9C /* CaptchaSnapshotTests.swift */,
 				B4D612562E03501000CF1A9C /* CaptchaViewTests.swift */,
@@ -1348,103 +1019,25 @@
 				B4D611F82E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png in Resources */,
 				B4D611FE2E034FDF00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */,
 				B4D612002E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */,
+				B4D612982E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK.png in Resources */,
+				B4D612992E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY.png in Resources */,
+				B4D6129C2E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */,
+				B4D6129F2E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png in Resources */,
+				B4D612A32E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png in Resources */,
+				B4D612A42E035C5E00CF1A9C /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */,
+				B4D612A52E035C5E00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
+				B4D612AA2E035C5E00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
+				B4D612B42E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png in Resources */,
+				B4D612B62E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT-failure.png in Resources */,
+				B4D612B72E035C5E00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png in Resources */,
+				B4D612BC2E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png in Resources */,
+				B4D612C62E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png in Resources */,
+				B4D612C82E035C5E00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT.png in Resources */,
 				B4D612122E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_LIGHT.png in Resources */,
 				B4D612192E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK.png in Resources */,
 				B4D6121D2E034FDF00CF1A9C /* PASSWORD_RECOVERY_ERROR_dark.png in Resources */,
 				B4D6121E2E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_DARK-failure.png in Resources */,
 				B4D612222E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_SPANISH.png in Resources */,
-				B45AD9FA2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45AD9FB2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45AD9FC2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45AD9FD2E0471700042D9F3 /* TOKEN_REFRESH_FAILURE.png in Resources */,
-				B45AD9FE2E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */,
-				B45AD9FF2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA002E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA012E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA022E0471700042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA032E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */,
-				B45ADA042E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA052E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */,
-				B45ADA062E0471700042D9F3 /* CAPTCHA_HIDDEN.png in Resources */,
-				B45ADA072E0471700042D9F3 /* CAPTCHA_HIDDEN.png in Resources */,
-				B45ADA082E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */,
-				B45ADA092E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA0A2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */,
-				B45ADA0B2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA0C2E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */,
-				B45ADA0D2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA0E2E0471700042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA0F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA102E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */,
-				B45ADA112E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA122E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */,
-				B45ADA132E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA142E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */,
-				B45ADA152E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA162E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA172E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA182E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA192E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */,
-				B45ADA1A2E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA1B2E0471700042D9F3 /* PASSWORD_RECOVERY_ERROR.png in Resources */,
-				B45ADA1C2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA1D2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA1E2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA1F2E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */,
-				B45ADA202E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA212E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA222E0471700042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png in Resources */,
-				B45ADA232E0471700042D9F3 /* TOKEN_REFRESH_FAILURE.png in Resources */,
-				B45ADA242E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */,
-				B45ADA252E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA262E0471700042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png in Resources */,
-				B45ADA272E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA282E0471700042D9F3 /* LOGIN_NETWORK_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA292E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA2A2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA2B2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */,
-				B45ADA2C2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */,
-				B45ADA2D2E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA2E2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA2F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA302E0471700042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png in Resources */,
-				B45ADA312E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */,
-				B45ADA322E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */,
-				B45ADA332E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */,
-				B45ADA342E0471700042D9F3 /* LOGIN_UNKNOWN_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA352E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA362E0471700042D9F3 /* LOGIN_ERROR_TOKEN_STORAGE_FAILED.png in Resources */,
-				B45ADA372E0471700042D9F3 /* PASSWORD_RECOVERY_SUCCESS.png in Resources */,
-				B45ADA382E0471700042D9F3 /* LOGIN_ERROR_NETWORK.png in Resources */,
-				B45ADA392E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA3A2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA3B2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */,
-				B45ADA3C2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA3D2E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA3E2E0471700042D9F3 /* NETWORK_ERROR_REFRESH_RETRY.png in Resources */,
-				B45ADA3F2E0471700042D9F3 /* LOGIN_SUCCESS_NOTIFICATION.png in Resources */,
-				B45ADA402E0471700042D9F3 /* GLOBAL_LOGOUT_REQUIRED.png in Resources */,
-				B45ADA412E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA422E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA432E0471700042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH-failure.png in Resources */,
-				B45ADA442E0471700042D9F3 /* NETWORK_ERROR_REFRESH_RETRY-failure.png in Resources */,
-				B45ADA452E0471700042D9F3 /* LOGIN_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA462E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA472E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */,
-				B45ADA482E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */,
-				B45ADA492E0471700042D9F3 /* LOGIN_IDLE.png in Resources */,
-				B45ADA4A2E0471700042D9F3 /* TOKEN_REFRESH_FAILURE_SPANISH.png in Resources */,
-				B45ADA4B2E0471700042D9F3 /* LOGIN_BLOCKED_ACCOUNT_LOCKED.png in Resources */,
-				B45ADA4C2E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */,
-				B45ADA4D2E0471700042D9F3 /* LOGIN_SUCCESS.png in Resources */,
-				B45ADA4E2E0471700042D9F3 /* LOGIN_ERROR_NO_CONNECTIVITY.png in Resources */,
-				B45ADA4F2E0471700042D9F3 /* LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION.png in Resources */,
-				B45ADA502E0471700042D9F3 /* LOGIN_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA512E0471700042D9F3 /* LOGIN_ERROR_OFFLINE_STORE_FAILED.png in Resources */,
-				B45ADA522E0471700042D9F3 /* LOGIN_ERROR_NOTIFICATION.png in Resources */,
-				B45ADA532E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */,
-				B45ADA542E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */,
-				B45ADA552E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */,
 				B4D612242E034FDF00CF1A9C /* GLOBAL_LOGOUT_REQUIRED_LIGHT-failure.png in Resources */,
 				B4D612312E034FDF00CF1A9C /* TOKEN_REFRESH_FAILURE_DARK-failure.png in Resources */,
 				B4D612402E034FDF00CF1A9C /* PASSWORD_RECOVERY_SUCCESS_light.png in Resources */,
