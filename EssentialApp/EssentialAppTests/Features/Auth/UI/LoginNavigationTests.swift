@@ -66,7 +66,11 @@ final class LoginNavigationTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> (sut: LoginViewModel, spy: NavigationSpy) {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300)
+        let configuration = LoginSecurityConfiguration(
+            maxAttempts: 3,
+            blockDuration: 300,
+            captchaThreshold: 2 // <<< ASEGÚRATE QUE ESTA LÍNEA ESTÉ ASÍ
+        )
         let loginSecurity = LoginSecurityUseCase(
             store: ThreadSafeFailedLoginAttemptsStoreSpy(),
             configuration: configuration

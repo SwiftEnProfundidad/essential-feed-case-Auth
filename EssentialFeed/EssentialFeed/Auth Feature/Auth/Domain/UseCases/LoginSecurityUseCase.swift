@@ -1,17 +1,5 @@
 import Foundation
 
-public struct LoginSecurityConfiguration {
-    public let maxAttempts: Int
-    public let blockDuration: TimeInterval
-
-    public init(maxAttempts: Int, blockDuration: TimeInterval) {
-        self.maxAttempts = maxAttempts
-        self.blockDuration = blockDuration
-    }
-
-    public static let `default` = LoginSecurityConfiguration(maxAttempts: 5, blockDuration: 300)
-}
-
 public final class LoginSecurityUseCase {
     private let store: FailedLoginAttemptsStore
     private let configuration: LoginSecurityConfiguration
@@ -41,7 +29,6 @@ extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
 
         let timeSinceLastAttempt = timeProvider().timeIntervalSince(lastAttempt)
         if timeSinceLastAttempt >= configuration.blockDuration {
-            // Auto-unlock después del timeout - resetear intentos
             await resetAttempts(username: username)
             return false
         }
@@ -65,5 +52,9 @@ extension LoginSecurityUseCase: FailedLoginHandlerProtocol {
 
     public func resetAttempts(username: String) async {
         await store.resetAttempts(for: username)
+    }
+
+    public func getFailedAttempts(username: String) -> Int {
+        store.getAttempts(for: username)
     }
 }

@@ -19,7 +19,8 @@ enum LoginServiceFactory {
 
         let securityConfig = LoginSecurityConfiguration(
             maxAttempts: config.maxFailedAttempts,
-            blockDuration: config.lockoutDuration
+            blockDuration: config.lockoutDuration,
+            captchaThreshold: LoginSecurityConfiguration.default.captchaThreshold
         )
 
         let securityUseCase = LoginSecurityUseCase(

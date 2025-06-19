@@ -94,7 +94,7 @@ final class LoginIntegrationTests: XCTestCase {
         sut: LoginViewModel,
         notifierSpy: LoginEventNotifierSpy
     ) {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 2, blockDuration: 1)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 2, blockDuration: 1, captchaThreshold: 2)
         let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
 
         let successObserverSpy = LoginSuccessObserverSpy()
@@ -122,7 +122,7 @@ final class LoginIntegrationTests: XCTestCase {
     }
 
     private func makeIntegrationSUT(successObserver: LoginSuccessObserverSpy, apiSpy: UserLoginAPISpy) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300)
+        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2)
         let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
 
         let sut = LoginViewModel(

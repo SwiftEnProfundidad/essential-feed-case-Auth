@@ -57,7 +57,7 @@ final class LoginRefreshFailureLockoutUIEndToEndTests: XCTestCase {
         let failedLoginAttemptsStore = ThreadSafeFailedLoginAttemptsStoreSpy()
         let securityUseCase = LoginSecurityUseCase(
             store: failedLoginAttemptsStore,
-            configuration: LoginSecurityConfiguration(maxAttempts: 3, blockDuration: blockDuration)
+            configuration: LoginSecurityConfiguration(maxAttempts: 3, blockDuration: blockDuration, captchaThreshold: 3)
         )
 
         let sut = LoginViewModel(
