@@ -24,14 +24,10 @@ public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, Failed
 
     public func incrementAttempts(for username: String) async {
         messages.append(.incrementAttempts(username))
-        // Normalmente aquí se modificaría attemptsToReturn, pero el spy no lo hace.
-        // Si se espera que lo haga, se debe añadir esa lógica.
     }
 
     public func resetAttempts(for username: String) async {
         messages.append(.resetAttempts(username))
-        // Normalmente aquí se modificaría attemptsToReturn para ese username,
-        // pero este spy tiene un attemptsToReturn global.
     }
 
     public func lastAttemptTime(for username: String) -> Date? {
@@ -44,7 +40,6 @@ public final class FailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore, Failed
         if let error = clearAllError {
             throw error
         }
-        // ADDED: Reset internal state
         attemptsToReturn = 0
         lastAttemptTimeToReturn = nil
     }

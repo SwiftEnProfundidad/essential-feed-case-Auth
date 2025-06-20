@@ -37,7 +37,7 @@ public struct CaptchaView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(AppTheme.Colors.neumorphicBase(for: colorScheme))
-                        .frame(height: 80)
+                        .frame(height: 250)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(AppTheme.Colors.textSecondary.opacity(0.3), lineWidth: 1)
@@ -49,7 +49,7 @@ public struct CaptchaView: View {
                             .foregroundColor(AppTheme.Colors.textSecondary)
                     } else {
                         CaptchaWebView(token: $token, onTokenReceived: onTokenReceived)
-                            .frame(height: 80)
+                            .frame(height: 250)
                             .cornerRadius(8)
                     }
                 }
@@ -99,8 +99,8 @@ struct CaptchaWebView: UIViewRepresentable {
         <head>
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <style>
-                body { margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; height: 60px; }
-                .g-recaptcha { transform: scale(0.9); transform-origin: center; }
+                body { margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 230px; /* Adjusted for new frame height */ }
+                .g-recaptcha { transform: scale(1.0); transform-origin: center; /* Adjusted scale */ }
             </style>
         </head>
         <body>
@@ -119,7 +119,7 @@ struct CaptchaWebView: UIViewRepresentable {
         """
 
         webView.configuration.userContentController.add(context.coordinator, name: "captcha")
-        webView.loadHTMLString(htmlContent, baseURL: nil)
+        webView.loadHTMLString(htmlContent, baseURL: URL(string: "http://localhost"))
 
         return webView
     }

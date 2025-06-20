@@ -3,10 +3,15 @@ import Foundation
 
 enum ConfigurationFactory {
     static func makeUserLoginConfiguration() -> UserLoginConfiguration {
-        UserLoginConfiguration(
+        let captchaSecretKey =
+            ProcessInfo.processInfo.environment["CAPTCHA_SECRET_KEY"]
+                ?? "YOUR_FALLBACK_CAPTCHA_SECRET_KEY"
+
+        return UserLoginConfiguration(
             maxFailedAttempts: 3,
             lockoutDuration: 300,
-            tokenDuration: 3600
+            tokenDuration: 3600,
+            captchaSecretKey: captchaSecretKey
         )
     }
 

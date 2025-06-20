@@ -266,7 +266,7 @@ public struct LoginView: View {
             case let .error(message):
                 VStack(spacing: 16) {
                     Text(message)
-                        .font(Font.system(.headline, design: .rounded).weight(.semibold))
+                        .font(Font.system(viewModel.shouldShowCaptcha ? .title3 : .headline, design: .rounded).weight(.semibold))
                         .foregroundColor(AppTheme.Colors.textError)
                         .multilineTextAlignment(.center)
                         .padding(.vertical, 40)

@@ -142,6 +142,9 @@
 		B45ADA532E0471700042D9F3 /* CAPTCHA_LOADING.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99E2E04716F0042D9F3 /* CAPTCHA_LOADING.png */; };
 		B45ADA542E0471700042D9F3 /* LOGIN_FORM_VALIDATION.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD9C02E04716F0042D9F3 /* LOGIN_FORM_VALIDATION.png */; };
 		B45ADA552E0471700042D9F3 /* CAPTCHA_VISIBLE.png in Resources */ = {isa = PBXBuildFile; fileRef = B45AD99F2E04716F0042D9F3 /* CAPTCHA_VISIBLE.png */; };
+		B45ADA592E0479210042D9F3 /* InMemoryTokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45ADA582E0479210042D9F3 /* InMemoryTokenStorage.swift */; };
+		B45ADA5E2E04F9630042D9F3 /* LoginCredentialsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45ADA5C2E04F9630042D9F3 /* LoginCredentialsHelper.swift */; };
+		B45ADA672E04FBB00042D9F3 /* MockCaptchaValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45ADA642E04FBB00042D9F3 /* MockCaptchaValidator.swift */; };
 		B46C63A42DE075EC008EEEBD /* HTTPUserLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */; };
 		B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */; };
 		B46CA1642DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */; };
@@ -381,6 +384,9 @@
 		B45AD9F42E04716F0042D9F3 /* LOGIN_ERROR_INVALID_CREDENTIALS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_ERROR_INVALID_CREDENTIALS.png; sourceTree = "<group>"; };
 		B45AD9F52E04716F0042D9F3 /* LOGIN_IDLE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_IDLE.png; sourceTree = "<group>"; };
 		B45AD9F62E04716F0042D9F3 /* LOGIN_SUCCESS.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LOGIN_SUCCESS.png; sourceTree = "<group>"; };
+		B45ADA582E0479210042D9F3 /* InMemoryTokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryTokenStorage.swift; sourceTree = "<group>"; };
+		B45ADA5C2E04F9630042D9F3 /* LoginCredentialsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCredentialsHelper.swift; sourceTree = "<group>"; };
+		B45ADA642E04FBB00042D9F3 /* MockCaptchaValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCaptchaValidator.swift; sourceTree = "<group>"; };
 		B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPUserLoginAPI.swift; sourceTree = "<group>"; };
 		B46C63AC2DE07792008EEEBD /* BasicLoginFlowHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLoginFlowHandler.swift; sourceTree = "<group>"; };
 		B46CA1632DBEA59300CE9ADC /* PasswordRecoverySwiftUIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordRecoverySwiftUIViewModel.swift; sourceTree = "<group>"; };
@@ -548,6 +554,8 @@
 		082C00022359E43F008927D3 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B45ADA642E04FBB00042D9F3 /* MockCaptchaValidator.swift */,
+				B45ADA5C2E04F9630042D9F3 /* LoginCredentialsHelper.swift */,
 				B4AA3BE62DCAA6AD001386EC /* FakeRefreshControl.swift */,
 				B4D0FE5E2DBEEAED00033FF3 /* XCTestCase+Snapshot.swift */,
 				B4D0FE562DBEE81900033FF3 /* UIViewController+Snapshot.swift */,
@@ -645,6 +653,7 @@
 		B40E6B892DE0751400A0202F /* API */ = {
 			isa = PBXGroup;
 			children = (
+				B45ADA582E0479210042D9F3 /* InMemoryTokenStorage.swift */,
 				B46C63A32DE075EC008EEEBD /* HTTPUserLoginAPI.swift */,
 			);
 			path = API;
@@ -855,13 +864,6 @@
 				B45AD9F82E04716F0042D9F3 /* pt_BR */,
 			);
 			path = snapshots;
-			sourceTree = "<group>";
-		};
-		B46C63A52DE07617008EEEBD /* Infrastructure */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Infrastructure;
 			sourceTree = "<group>";
 		};
 		B46C63AB2DE0776D008EEEBD /* Routing */ = {
@@ -1176,7 +1178,6 @@
 				B44823402DD3AD14009E59A5 /* Presentation */,
 				B4D6B2572DC8D07900F5A3FE /* Composition */,
 				B4D6B2582DC8D07900F5A3FE /* UI */,
-				B46C63A52DE07617008EEEBD /* Infrastructure */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -1494,6 +1495,7 @@
 				B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */,
 				B4BBD4782DF9131D001E1965 /* ConfigurationFactory.swift in Sources */,
 				B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */,
+				B45ADA592E0479210042D9F3 /* InMemoryTokenStorage.swift in Sources */,
 				B46C63AD2DE07792008EEEBD /* BasicLoginFlowHandler.swift in Sources */,
 				08073B44238D2DFA00A75DC6 /* FeedUIComposer.swift in Sources */,
 				0895DA87234B3B950031BB2D /* AppDelegate.swift in Sources */,
@@ -1526,6 +1528,7 @@
 				B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */,
 				B4D611342E02C97E00CF1A9C /* InMemoryOfflineRegistrationStoreTests.swift in Sources */,
 				B4D611352E02C97E00CF1A9C /* HTTPUserRegistrationAPITests.swift in Sources */,
+				B45ADA5E2E04F9630042D9F3 /* LoginCredentialsHelper.swift in Sources */,
 				B4D611362E02C97E00CF1A9C /* RegistrationComposerTests.swift in Sources */,
 				B4D611372E02C97E00CF1A9C /* DefaultRegistrationServiceTests.swift in Sources */,
 				08073B55238D2E1000A75DC6 /* FeedUIIntegrationTests+LoaderSpy.swift in Sources */,
@@ -1536,6 +1539,7 @@
 				B4D612582E03501000CF1A9C /* CaptchaViewTests.swift in Sources */,
 				B4D612592E03501000CF1A9C /* CaptchaWebViewTests.swift in Sources */,
 				B4D0FE572DBEE81900033FF3 /* UIViewController+Snapshot.swift in Sources */,
+				B45ADA672E04FBB00042D9F3 /* MockCaptchaValidator.swift in Sources */,
 				08073B56238D2E1000A75DC6 /* FeedUIIntegrationTests+Assertions.swift in Sources */,
 				0832C9D0238D2811002314C9 /* SceneDelegateTests.swift in Sources */,
 				B482DFDF2DC75BBC008CE733 /* LoginLockingIntegrationTests.swift in Sources */,

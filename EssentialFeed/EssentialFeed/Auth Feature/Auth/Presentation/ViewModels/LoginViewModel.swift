@@ -99,7 +99,8 @@ public final class LoginViewModel: ObservableObject {
 
         if isLoginBlocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            errorMessage = blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             return
         }
 
@@ -118,7 +119,8 @@ public final class LoginViewModel: ObservableObject {
     @MainActor
     private func validateCaptchaAndProceed() async {
         guard let token = captchaToken,
-              let coordinator = captchaFlowCoordinator else { return }
+              let coordinator = captchaFlowCoordinator
+        else { return }
 
         let result = await coordinator.handleCaptchaValidation(token: token, username: username)
 
@@ -216,9 +218,10 @@ public final class LoginViewModel: ObservableObject {
         let isLocked = await loginSecurity.isAccountLocked(username: username)
         if isLocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            self.errorMessage = self.blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             self.isLoginBlocked = true
-            self.shouldShowCaptcha = false
+            self.shouldShowCaptcha = true
         } else {
             let failedAttempts = loginSecurity.getFailedAttempts(username: username)
 
@@ -242,9 +245,10 @@ public final class LoginViewModel: ObservableObject {
         let isLocked = await loginSecurity.isAccountLocked(username: username)
         if isLocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            errorMessage = blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             isLoginBlocked = true
-            shouldShowCaptcha = false
+            shouldShowCaptcha = true
         } else {
             isLoginBlocked = false
             if errorMessage?.contains("locked") == true {
@@ -301,8 +305,13 @@ public final class LoginViewModel: ObservableObject {
     }
 
     private func updateViewState() {
-        if isLoginBlocked {
-            publishedViewState = .blocked
+        if shouldShowCaptcha, let message = errorMessage {
+            publishedViewState = .error(message)
+        } else if isLoginBlocked {
+            let messageToDisplay = errorMessage ?? blockMessageProvider.message(
+                for: LoginError.accountLocked(
+                    remainingTime: Int(loginSecurity.getRemainingBlockTime(username: username) ?? 0)))
+            publishedViewState = .error(messageToDisplay)
         } else if let message = errorMessage {
             publishedViewState = .error(message)
         } else if loginSuccess {
