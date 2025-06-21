@@ -21,7 +21,7 @@ final class MockCaptchaValidator: CaptchaValidator {
             }
         }
 
-        return .success
+        return CaptchaValidationResult(isValid: true)
     }
 
     func completeWith(result: Result<CaptchaValidationResult, Error>) {

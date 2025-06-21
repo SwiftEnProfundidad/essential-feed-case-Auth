@@ -48,26 +48,23 @@ public final class DefaultLoginService: LoginService {
         return nil
     }
 
-    private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+    private func handleSuccess(_ response: LoginResponse, _ credentials: LoginCredentials) async
+        -> Result<LoginResponse, LoginError>
+    {
         let email = validator.normalizeEmail(credentials.email)
         await securityUseCase.resetAttempts(username: email)
 
         do {
-            let expiryDate = Date().addingTimeInterval(config.tokenDuration)
-            let tokenToStore = Token(
-                accessToken: response.token,
-                expiry: expiryDate,
-                refreshToken: nil
-            )
-            try await persistence.saveToken(tokenToStore)
-            try? await persistence.saveOfflineCredentials(credentials)
+            try await persistence.saveLoginData(response, credentials)
             return .success(response)
         } catch {
             return .failure(.tokenStorageFailed)
         }
     }
 
-    private func handleAuthFailure(_ error: LoginError, _ credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
+    private func handleAuthFailure(_ error: LoginError, _ credentials: LoginCredentials) async
+        -> Result<LoginResponse, LoginError>
+    {
         guard error == .invalidCredentials else {
             return .failure(error)
         }

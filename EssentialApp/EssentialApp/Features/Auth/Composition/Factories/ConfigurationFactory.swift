@@ -5,7 +5,7 @@ enum ConfigurationFactory {
     static func makeUserLoginConfiguration() -> UserLoginConfiguration {
         let captchaSecretKey =
             ProcessInfo.processInfo.environment["CAPTCHA_SECRET_KEY"]
-                ?? "YOUR_FALLBACK_CAPTCHA_SECRET_KEY"
+                ?? "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"
 
         return UserLoginConfiguration(
             maxFailedAttempts: 3,

@@ -11,7 +11,10 @@ final class UserLoginUseCaseTests: XCTestCase {
     func test_login_delegatesToLoginService() async {
         let (sut, loginServiceSpy) = makeSUT()
         let credentials = LoginCredentials(email: validEmail, password: validPassword)
-        loginServiceSpy.stubbedResult = .success(LoginResponse(token: validToken))
+        loginServiceSpy.stubbedResult = .success(LoginResponse(
+            user: User(name: "Test User", email: validEmail),
+            token: Token(accessToken: validToken, expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+        ))
 
         _ = await sut.login(with: credentials)
 
@@ -39,14 +42,17 @@ final class UserLoginUseCaseTests: XCTestCase {
     func test_login_successful_returnsServiceResult() async {
         let (sut, loginServiceSpy) = makeSUT()
         let credentials = LoginCredentials(email: validEmail, password: validPassword)
-        let expectedResponse = LoginResponse(token: validToken)
+        let expectedResponse = LoginResponse(
+            user: User(name: "Test User", email: validEmail),
+            token: Token(accessToken: validToken, expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+        )
         loginServiceSpy.stubbedResult = .success(expectedResponse)
 
         let result = await sut.login(with: credentials)
 
         switch result {
         case let .success(response):
-            XCTAssertEqual(response.token, validToken, "Should return service response")
+            XCTAssertEqual(response.token.accessToken, validToken, "Should return service response")
             XCTAssertEqual(loginServiceSpy.executeCallCount, 1, "Should call service")
             XCTAssertEqual(loginServiceSpy.lastCredentials, credentials, "Should pass credentials to service")
         default:
@@ -109,7 +115,10 @@ final class UserLoginUseCaseTests: XCTestCase {
     func test_login_passesCredentialsExactly() async {
         let (sut, loginServiceSpy) = makeSUT()
         let expectedCredentials = LoginCredentials(email: "test@test.com", password: "testpass")
-        loginServiceSpy.stubbedResult = .success(LoginResponse(token: "any"))
+        loginServiceSpy.stubbedResult = .success(LoginResponse(
+            user: User(name: "Test User", email: "test@test.com"),
+            token: Token(accessToken: "any", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+        ))
 
         _ = await sut.login(with: expectedCredentials)
 

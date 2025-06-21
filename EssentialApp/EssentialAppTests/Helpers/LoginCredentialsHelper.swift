@@ -18,7 +18,7 @@ class MockLoginAPI: UserLoginAPI {
         if credentials.email == LoginCredentialsHelper.testEmail &&
             credentials.password == LoginCredentialsHelper.testPassword
         {
-            return .success(LoginResponse(token: "mock-token-123456"))
+            return .success(LoginResponse(user: User(name: "Test User", email: LoginCredentialsHelper.testEmail), token: Token(accessToken: "mock-token-123456", expiry: Date().addingTimeInterval(3600), refreshToken: nil)))
         }
 
         return .failure(.invalidCredentials)

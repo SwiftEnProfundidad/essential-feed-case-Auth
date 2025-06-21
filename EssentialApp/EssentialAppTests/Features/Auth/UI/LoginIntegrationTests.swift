@@ -39,7 +39,7 @@ final class LoginIntegrationTests: XCTestCase {
     }
 
     func test_loginFlow_whenValidCredentials_shouldSucceedAndClearErrors() async {
-        let (sut, _) = makeSUT(authenticateResult: .success(LoginResponse(token: "test-token")))
+        let (sut, _) = makeSUT(authenticateResult: .success(LoginResponse(user: User(name: "Test User", email: "valid@example.com"), token: Token(accessToken: "test-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil))))
 
         sut.username = "valid@example.com"
         sut.password = "correct_password"
@@ -70,7 +70,7 @@ final class LoginIntegrationTests: XCTestCase {
     func test_loginWithValidCredentials_integratesFullChain_andNotifiesSuccessObserver() async {
         let (successObserver, apiSpy) = makeIntegrationComponents()
 
-        apiSpy.stubbedResult = Result<LoginResponse, LoginError>.success(LoginResponse(token: "expected_token"))
+        apiSpy.stubbedResult = Result<LoginResponse, LoginError>.success(LoginResponse(user: User(name: "Valid User", email: "valid@email.com"), token: Token(accessToken: "expected_token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)))
 
         let sut = makeIntegrationSUT(successObserver: successObserver, apiSpy: apiSpy)
 
@@ -81,7 +81,7 @@ final class LoginIntegrationTests: XCTestCase {
 
         XCTAssertEqual(successObserver.notificationCount, 1, "Should notify success observer", file: #filePath, line: #line)
         XCTAssertNotNil(successObserver.lastResponse, "Should receive login response", file: #filePath, line: #line)
-        XCTAssertEqual(successObserver.lastResponse?.token, "expected_token", "Should receive correct token", file: #filePath, line: #line)
+        XCTAssertEqual(successObserver.lastResponse?.token.accessToken, "expected_token", "Should receive correct token", file: #filePath, line: #line)
     }
 
     // MARK: - Helpers

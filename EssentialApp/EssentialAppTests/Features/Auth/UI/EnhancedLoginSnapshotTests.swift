@@ -22,7 +22,10 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
             let validationView = await LoginView(viewModel: validationVM, animationsEnabled: false)
             assertSnapshot(for: validationView, named: "LOGIN_FORM_VALIDATION", locale: locale)
 
-            let successVM = makeViewModel(authenticateResult: .success(LoginResponse(token: "token123")))
+            let successVM = makeViewModel(authenticateResult: .success(LoginResponse(
+                user: User(name: "Test User", email: "success@email.com"),
+                token: Token(accessToken: "token123", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            )))
             successVM.username = "success@email.com"
             successVM.password = "valid_password"
             await successVM.login()

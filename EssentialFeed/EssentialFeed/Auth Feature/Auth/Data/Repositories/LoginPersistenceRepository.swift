@@ -22,9 +22,9 @@ public final class DefaultLoginPersistence: LoginPersistence {
     public func saveLoginData(_ response: LoginResponse, _ credentials: LoginCredentials) async throws {
         let expiryDate = Date().addingTimeInterval(config.tokenDuration)
         let tokenToStore = Token(
-            accessToken: response.token,
+            accessToken: response.token.accessToken,
             expiry: expiryDate,
-            refreshToken: nil
+            refreshToken: response.token.refreshToken
         )
         try await saveToken(tokenToStore)
         try? await saveOfflineCredentials(credentials)

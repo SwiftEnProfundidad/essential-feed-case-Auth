@@ -5,7 +5,10 @@ final class LoginViewModelTests: XCTestCase {
     func test_login_success_whenCredentialsAreValid_shouldSetLoginSuccessAndNoErrorMessage() async {
         let credentials = (email: "carlos@example.com", password: "SafePass123!")
         let (viewModel, loginService) = makeSUT()
-        loginService.stubbedResult = .success(LoginResponse(token: "test-token"))
+        loginService.stubbedResult = .success(LoginResponse(
+            user: User(name: "Test User", email: credentials.email),
+            token: Token(accessToken: "test-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+        ))
         viewModel.username = credentials.email
         viewModel.password = credentials.password
         await viewModel.login()
@@ -21,7 +24,7 @@ final class LoginViewModelTests: XCTestCase {
         viewModel.password = credentials.password
         await viewModel.login()
         XCTAssertFalse(viewModel.loginSuccess)
-        let expectedMessage = DefaultLoginBlockMessageProvider().message(for: LoginError.invalidCredentials)
+        let expectedMessage = "Invalid username or password."
         XCTAssertEqual(viewModel.errorMessage, expectedMessage)
     }
 

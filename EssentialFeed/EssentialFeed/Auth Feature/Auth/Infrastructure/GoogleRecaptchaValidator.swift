@@ -5,17 +5,25 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
     private let httpClient: HTTPClient
     private let verifyURL: URL
 
-    public init(secretKey: String, httpClient: HTTPClient, verifyURL: URL = URL(string: "https://www.google.com/recaptcha/api/siteverify")!) {
+    public init(
+        secretKey: String, httpClient: HTTPClient,
+        verifyURL: URL = URL(string: "https://www.google.com/recaptcha/api/siteverify")!
+    ) {
         self.secretKey = secretKey
         self.httpClient = httpClient
         self.verifyURL = verifyURL
     }
 
-    public func validateCaptcha(response: String, clientIP: String?) async throws -> CaptchaValidationResult {
+    public func validateCaptcha(response token: String, clientIP: String?) async throws
+        -> CaptchaValidationResult
+    {
+        print("--- CAPTCHA VALIDATION ATTEMPT ---")
+        print("Secret Key Used (from self.secretKey): \(self.secretKey)")
+        print("Token Received (response parameter): \(token)")
         var components = URLComponents()
         components.queryItems = [
-            URLQueryItem(name: "secret", value: secretKey),
-            URLQueryItem(name: "response", value: response)
+            URLQueryItem(name: "secret", value: self.secretKey),
+            URLQueryItem(name: "response", value: token)
         ]
 
         if let clientIP {
@@ -23,6 +31,7 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
         }
 
         guard let bodyData = components.query?.data(using: .utf8) else {
+            print("Error: Could not create bodyData for Google request.")
             throw CaptchaError.malformedRequest
         }
 
@@ -31,14 +40,26 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.httpBody = bodyData
 
-        do {
-            let (data, response) = try await httpClient.send(request)
+        print(
+            "Request Body Sent to Google: \(String(data: bodyData, encoding: .utf8) ?? "Could not decode bodyData")"
+        )
 
-            guard response.statusCode == 200 else {
+        do {
+            let (data, httpResponse) = try await httpClient.send(request)
+
+            print("Google Response Status Code: \(httpResponse.statusCode)")
+            let responseBodyString =
+                String(data: data, encoding: .utf8) ?? "Could not decode response data"
+            print("Google Response Body: \(responseBodyString)")
+
+            guard httpResponse.statusCode == 200 else {
+                print(
+                    "Error: Google service unavailable or bad request. Status: \(httpResponse.statusCode)")
                 throw CaptchaError.serviceUnavailable
             }
 
             let recaptchaResponse = try JSONDecoder().decode(RecaptchaResponse.self, from: data)
+            print("Decoded Google Response: \(recaptchaResponse)")
 
             return CaptchaValidationResult(
                 isValid: recaptchaResponse.success,
@@ -46,10 +67,15 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
                 challengeId: recaptchaResponse.challengeTs,
                 timestamp: Date()
             )
-        } catch let captchaError as CaptchaError {
-            throw captchaError
+        } catch let specificError as CaptchaError {
+            print("CaptchaError during HTTPClient.send or JSON decoding: \(specificError)")
+            throw specificError
+        } catch let decodingError as DecodingError {
+            print("DecodingError during HTTPClient.send or JSON decoding: \(decodingError)")
+            throw CaptchaError.invalidResponse
         } catch {
-            throw CaptchaError.networkError
+            print("Generic error during HTTPClient.send or JSON decoding: \(error)")
+            throw CaptchaError.unknownError(error.localizedDescription)
         }
     }
 }

@@ -37,7 +37,7 @@ final class AuthUseCaseTests: XCTestCase {
     }
 
     func test_execute_returnsSuccessOnSuccessfulAuthentication() async {
-        let expectedResponse = LoginResponse(token: "a-token")
+        let expectedResponse = LoginResponse(user: User(name: "Test User", email: "test@user.com"), token: Token(accessToken: "a-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil))
         let (sut, authSpy, _) = makeSUT()
         authSpy.stubbedResult = .success(expectedResponse)
 

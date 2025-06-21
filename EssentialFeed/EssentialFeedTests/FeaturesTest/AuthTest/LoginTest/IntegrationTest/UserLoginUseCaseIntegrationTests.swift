@@ -19,7 +19,7 @@ final class UserLoginUseCaseIntegrationTests: XCTestCase {
     func test_login_withValidCredentials_notifiesSuccessEvent_andUIShowsSuccess() async {
         let (sut, loginService) = makeSUT()
         let credentials = LoginCredentials(email: "success@example.com", password: "ValidPassword123")
-        let expectedResponse = LoginResponse(token: "VALID_TOKEN")
+        let expectedResponse = LoginResponse(user: User(name: "Test User", email: "success@example.com"), token: Token(accessToken: "VALID_TOKEN", expiry: Date().addingTimeInterval(3600), refreshToken: nil))
         loginService.stubbedResult = .success(expectedResponse)
 
         let result = await sut.login(with: credentials)

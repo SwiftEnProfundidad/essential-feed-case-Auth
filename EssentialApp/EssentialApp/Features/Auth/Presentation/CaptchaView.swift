@@ -97,10 +97,11 @@ struct CaptchaWebView: UIViewRepresentable {
         <!DOCTYPE html>
         <html>
         <head>
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <style>
                 body { margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 230px; /* Adjusted for new frame height */ }
-                .g-recaptcha { transform: scale(1.0); transform-origin: center; /* Adjusted scale */ }
+                .g-recaptcha { transform: scale(1.15); transform-origin: center; /* Increased scale slightly */ }
             </style>
         </head>
         <body>
