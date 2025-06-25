@@ -102,14 +102,18 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
 
         captchaCoordinator.simulateSuccessfulValidation()
 
-        sut.captchaToken = "valid_token"
+        sut.setCaptchaToken("valid_token")
 
-        try? await waitForAsyncOperations()
+        var attempts = 0
+        let maxAttempts = 50
+        while sut.shouldShowCaptcha && attempts < maxAttempts {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+            attempts += 1
+        }
 
         loginErrorToReturn = .accountLocked(remainingTime: 300)
 
         XCTAssertFalse(sut.shouldShowCaptcha, "CAPTCHA should be hidden after successful validation")
-
         XCTAssertFalse(sut.shouldShowCaptcha, "CAPTCHA should not reappear after account locked error")
     }
 
