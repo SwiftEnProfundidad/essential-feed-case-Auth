@@ -1,6 +1,8 @@
 import Combine
 import EssentialApp
 import EssentialFeed
+import SwiftUI
+import UIKit
 import XCTest
 
 final class LoginViewTests: XCTestCase {
@@ -105,15 +107,22 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "wrongpass"
         await viewModel.login()
-        XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
+        XCTAssertNotNil(
+            viewModel.errorMessage, "Expected errorMessage to be present after failed login"
+        )
 
         viewModel.username = "new@email.com"
-        XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing username, but got: \(viewModel.errorMessage ?? "nil")")
+        XCTAssertNil(
+            viewModel.errorMessage,
+            "Expected errorMessage to be nil after editing username, but got: \(viewModel.errorMessage ?? "nil")"
+        )
 
         viewModel.username = "user@email.com"
         viewModel.password = "wrongpass"
         await viewModel.login()
-        XCTAssertNotNil(viewModel.errorMessage, "Expected errorMessage to be present after failed login")
+        XCTAssertNotNil(
+            viewModel.errorMessage, "Expected errorMessage to be present after failed login"
+        )
 
         viewModel.password = "newpassword"
         XCTAssertNil(viewModel.errorMessage, "Expected errorMessage to be nil after editing password")
@@ -149,7 +158,9 @@ final class LoginViewTests: XCTestCase {
         failingViewModel.username = "user@email.com"
         failingViewModel.password = "wrongpass"
         await failingViewModel.login()
-        XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
+        XCTAssertNotNil(
+            failingViewModel.errorMessage, "Expected errorMessage to be present after failed login"
+        )
 
         let successViewModel = makeSUT(authenticate: { _, _ in
             .success(
@@ -168,7 +179,9 @@ final class LoginViewTests: XCTestCase {
             successViewModel.errorMessage,
             "Expected errorMessage to be nil after successful login, but got: \(successViewModel.errorMessage ?? "nil")"
         )
-        XCTAssertTrue(successViewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
+        XCTAssertTrue(
+            successViewModel.loginSuccess, "Expected loginSuccess to be true after successful login"
+        )
     }
 
     func test_usernameAndPassword_arePublishedAndObservable() async {
@@ -177,8 +190,12 @@ final class LoginViewTests: XCTestCase {
         let expectedPassword = "testpass123"
         viewModel.username = expectedUsername
         viewModel.password = expectedPassword
-        XCTAssertEqual(viewModel.username, expectedUsername, "Expected username to be published and observable")
-        XCTAssertEqual(viewModel.password, expectedPassword, "Expected password to be published and observable")
+        XCTAssertEqual(
+            viewModel.username, expectedUsername, "Expected username to be published and observable"
+        )
+        XCTAssertEqual(
+            viewModel.password, expectedPassword, "Expected password to be published and observable"
+        )
     }
 
     func test_onSuccessAlertDismissed_executesCallback() async {
@@ -204,8 +221,12 @@ final class LoginViewTests: XCTestCase {
             callbackCalled = true
         }
         viewModel.onSuccessAlertDismissed()
-        XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false after dismissing alert")
-        XCTAssertTrue(callbackCalled, "Expected onAuthenticated callback to be called after alert dismissed")
+        XCTAssertFalse(
+            viewModel.loginSuccess, "Expected loginSuccess to be false after dismissing alert"
+        )
+        XCTAssertTrue(
+            callbackCalled, "Expected onAuthenticated callback to be called after alert dismissed"
+        )
     }
 
     func test_initialState_isClean() async {
@@ -221,8 +242,13 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = ""
         viewModel.password = ""
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.", "Expected validation error when username is empty")
-        XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
+        XCTAssertEqual(
+            viewModel.errorMessage, "Invalid email format.",
+            "Expected validation error when username is empty"
+        )
+        XCTAssertFalse(
+            viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation"
+        )
     }
 
     func test_login_callsAuthenticateWithTrimmedUsername() async {
@@ -264,7 +290,9 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "fail"
         await viewModel.login()
-        XCTAssertFalse(authenticatedCalled, "Expected authenticated event NOT to be sent after failed login")
+        XCTAssertFalse(
+            authenticatedCalled, "Expected authenticated event NOT to be sent after failed login"
+        )
         _ = cancellable
     }
 
@@ -290,7 +318,9 @@ final class LoginViewTests: XCTestCase {
         XCTAssertNotNil(viewModel.errorMessage, "Expected error message after failed login")
         viewModel.password = "pass"
         await viewModel.login()
-        XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after successful login")
+        XCTAssertNil(
+            viewModel.errorMessage, "Expected error message to be cleared after successful login"
+        )
     }
 
     func test_login_withInvalidPasswordFormat_showsValidationError() async {
@@ -303,7 +333,10 @@ final class LoginViewTests: XCTestCase {
             "Invalid username or password.",
             "Expected validation error when password format is invalid"
         )
-        XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
+        XCTAssertFalse(
+            viewModel.loginSuccess,
+            "Expected loginSuccess to be false when login fails due to invalid password format"
+        )
     }
 
     func test_login_withWhitespacePassword_showsValidationError() async {
@@ -311,7 +344,10 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "    "
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Password cannot be empty.", "Expected validation error when password is only whitespace")
+        XCTAssertEqual(
+            viewModel.errorMessage, "Password cannot be empty.",
+            "Expected validation error when password is only whitespace"
+        )
         XCTAssertFalse(
             viewModel.loginSuccess,
             "Expected loginSuccess to be false when login fails due to validation"
@@ -326,16 +362,23 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "A network error occurred. Please try again.", "Expected network error message after failed login")
+        XCTAssertEqual(
+            viewModel.errorMessage, "A network error occurred. Please try again.",
+            "Expected network error message after failed login"
+        )
 
         viewModel.username = "user2@email.com"
-        XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing username")
+        XCTAssertNil(
+            viewModel.errorMessage, "Expected error message to be cleared after editing username"
+        )
 
         viewModel.username = "user@email.com"
         await viewModel.login()
 
         viewModel.password = "newpassword"
-        XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing password")
+        XCTAssertNil(
+            viewModel.errorMessage, "Expected error message to be cleared after editing password"
+        )
     }
 
     func test_login_withWhitespaceUsername_showsValidationError() async {
@@ -343,7 +386,10 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "    "
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.", "Expected validation error when username is only whitespace")
+        XCTAssertEqual(
+            viewModel.errorMessage, "Invalid email format.",
+            "Expected validation error when username is only whitespace"
+        )
         XCTAssertFalse(
             viewModel.loginSuccess,
             "Expected loginSuccess to be false when login fails due to validation"
@@ -370,7 +416,9 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertTrue(authenticatedCalled, "Expected authenticated event to be sent after successful login")
+        XCTAssertTrue(
+            authenticatedCalled, "Expected authenticated event to be sent after successful login"
+        )
         _ = cancellable
     }
 
@@ -389,7 +437,9 @@ final class LoginViewTests: XCTestCase {
 
         await viewModel.login()
 
-        XCTAssertEqual(pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")])
+        XCTAssertEqual(
+            pendingStore.loadAll(), [LoginRequest(username: "user@email.com", password: "password")]
+        )
 
         viewModel.authenticate = {
             (username: String, password: String) -> Result<LoginResponse, LoginError> in
@@ -530,9 +580,13 @@ final class LoginViewTests: XCTestCase {
 
         await viewModel.unlockAfterRecovery()
 
-        XCTAssertFalse(viewModel.isLoginBlocked, "Account should unlock after calling unlockAfterRecovery()")
+        XCTAssertFalse(
+            viewModel.isLoginBlocked, "Account should unlock after calling unlockAfterRecovery()"
+        )
         XCTAssertNil(viewModel.errorMessage, "Error message should be nil after unlock")
-        XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "resetAttempts should be called exactly once")
+        XCTAssertEqual(
+            spyStore.resetAttemptsCallCount, 1, "resetAttempts should be called exactly once"
+        )
     }
 
     func test_successfulLoginAfter4FailedAttempts_resetsCounter() async {
@@ -578,7 +632,9 @@ final class LoginViewTests: XCTestCase {
             viewModel.isLoginBlocked, "Account should remain blocked even with correct password"
         )
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 0, "Should not reset counter while blocked")
-        XCTAssertEqual(spyStore.attempts["user@test.com"], 3, "Counter should remain at 3 while blocked")
+        XCTAssertEqual(
+            spyStore.attempts["user@test.com"], 3, "Counter should remain at 3 while blocked"
+        )
 
         await viewModel.unlockAfterRecovery()
 
@@ -619,7 +675,9 @@ final class LoginViewTests: XCTestCase {
             try? await Task.sleep(nanoseconds: 10_000_000)
         }
 
-        XCTAssertFalse(viewModel.isLoginBlocked, "Account should not be blocked after 2 failed attempts")
+        XCTAssertFalse(
+            viewModel.isLoginBlocked, "Account should not be blocked after 2 failed attempts"
+        )
         let recordedAttempts = spyStore.attempts["user@test.com"] ?? 0
         XCTAssertEqual(recordedAttempts, 2, "Should record exactly 2 failed attempts")
 
@@ -628,7 +686,9 @@ final class LoginViewTests: XCTestCase {
 
         try? await Task.sleep(nanoseconds: 10_000_000)
 
-        XCTAssertFalse(viewModel.isLoginBlocked, "Account should remain unblocked after successful login")
+        XCTAssertFalse(
+            viewModel.isLoginBlocked, "Account should remain unblocked after successful login"
+        )
         XCTAssertTrue(viewModel.loginSuccess, "Should show login success")
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 1, "Should reset counter after success")
         XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Counter should be 0 after success")
@@ -652,8 +712,12 @@ final class LoginViewTests: XCTestCase {
 
         await viewModel.login()
 
-        XCTAssertEqual(spyStore.attempts["user@test.com"], 1, "Counter should restart at 1 after unlock")
-        XCTAssertEqual(spyStore.incrementAttemptsCallCount, 4, "Should increment attempts for new failures")
+        XCTAssertEqual(
+            spyStore.attempts["user@test.com"], 1, "Counter should restart at 1 after unlock"
+        )
+        XCTAssertEqual(
+            spyStore.incrementAttemptsCallCount, 4, "Should increment attempts for new failures"
+        )
     }
 
     func test_multipleLockUnlockCycles_handlesCountersCorrectly() async {
@@ -677,7 +741,9 @@ final class LoginViewTests: XCTestCase {
         await viewModel.unlockAfterRecovery()
 
         XCTAssertEqual(spyStore.resetAttemptsCallCount, 2, "Should reset attempts twice")
-        XCTAssertEqual(spyStore.incrementAttemptsCallCount, 6, "Should increment attempts for all failures")
+        XCTAssertEqual(
+            spyStore.incrementAttemptsCallCount, 6, "Should increment attempts for all failures"
+        )
         XCTAssertEqual(spyStore.attempts["user@test.com"], 0, "Final counter should be zero")
     }
 
@@ -685,7 +751,9 @@ final class LoginViewTests: XCTestCase {
         let provider = DefaultLoginBlockMessageProvider()
 
         let maxAttemptsMessage = provider.message(for: LoginError.messageForMaxAttemptsReached)
-        XCTAssertEqual(maxAttemptsMessage, "Maximum number of attempts reached. Please try again later.")
+        XCTAssertEqual(
+            maxAttemptsMessage, "Maximum number of attempts reached. Please try again later."
+        )
 
         let invalidCredentialsMessage = provider.message(for: LoginError.invalidCredentials)
         XCTAssertEqual(invalidCredentialsMessage, "Invalid credentials.")
@@ -712,7 +780,9 @@ final class LoginViewTests: XCTestCase {
 
         try? await Task.sleep(nanoseconds: 50_000_000)
 
-        XCTAssertGreaterThanOrEqual(spyStore.incrementAttemptsCallCount, 3, "Should handle at least 3 attempts")
+        XCTAssertGreaterThanOrEqual(
+            spyStore.incrementAttemptsCallCount, 3, "Should handle at least 3 attempts"
+        )
         XCTAssertTrue(viewModel.isLoginBlocked, "Account should be blocked after concurrent attempts")
     }
 
@@ -747,7 +817,9 @@ final class LoginViewTests: XCTestCase {
             await viewModel.login()
         }
 
-        XCTAssertTrue(viewModel.shouldShowCaptcha, "Captcha should be shown after multiple failed attempts")
+        XCTAssertTrue(
+            viewModel.shouldShowCaptcha, "Captcha should be shown after multiple failed attempts"
+        )
 
         mockCaptchaCoordinator.validationResult = .success(())
         viewModel.setCaptchaToken("valid-token")
@@ -759,10 +831,20 @@ final class LoginViewTests: XCTestCase {
             attempts += 1
         }
 
-        XCTAssertFalse(viewModel.shouldShowCaptcha, "Captcha should not be shown after successful validation")
-        XCTAssertFalse(viewModel.isLoginBlocked, "Account should not be blocked after successful captcha validation")
-        XCTAssertNil(viewModel.errorMessage, "There should be no error messages after successful captcha validation")
-        XCTAssertEqual(spyStore.getAttempts(for: "test@example.com"), 0, "Attempts should be reset after successful captcha validation")
+        XCTAssertFalse(
+            viewModel.shouldShowCaptcha, "Captcha should not be shown after successful validation"
+        )
+        XCTAssertFalse(
+            viewModel.isLoginBlocked, "Account should not be blocked after successful captcha validation"
+        )
+        XCTAssertNil(
+            viewModel.errorMessage,
+            "There should be no error messages after successful captcha validation"
+        )
+        XCTAssertEqual(
+            spyStore.getAttempts(for: "test@example.com"), 0,
+            "Attempts should be reset after successful captcha validation"
+        )
     }
 
     func test_errorState_clearsAfterNewInput() async {
@@ -810,6 +892,34 @@ final class LoginViewTests: XCTestCase {
         XCTAssertTrue(navigationSpy.registerScreenShown, "Expected register navigation to be triggered")
         XCTAssertFalse(
             navigationSpy.recoveryScreenShown, "Expected only register navigation to be triggered"
+        )
+    }
+
+    func test_captchaView_isRendered_whenCaptchaIsRequired() {
+        let viewModel = makeSUT()
+        viewModel.shouldShowCaptcha = true
+
+        let sut = UIHostingController(
+            rootView: LoginView(viewModel: viewModel, animationsEnabled: false))
+        sut.loadViewIfNeeded()
+
+        XCTAssertTrue(
+            sut.view.containsAccessibilityIdentifier("captcha_view"),
+            "Expected captcha view to be rendered when required, but it was not."
+        )
+    }
+
+    func test_captchaView_isNotRendered_whenCaptchaIsNotRequired() {
+        let viewModel = makeSUT()
+        viewModel.shouldShowCaptcha = false
+
+        let sut = UIHostingController(
+            rootView: LoginView(viewModel: viewModel, animationsEnabled: false))
+        sut.loadViewIfNeeded()
+
+        XCTAssertFalse(
+            sut.view.containsAccessibilityIdentifier("captcha_view"),
+            "Expected captcha view not to be rendered when not required, but it was."
         )
     }
 
@@ -868,13 +978,27 @@ final class LoginViewTests: XCTestCase {
             return shouldTriggerCaptchaResult
         }
 
-        func handleCaptchaValidation(token: String, username: String) async -> Result<
-            Void, CaptchaError
-        > {
+        func handleCaptchaValidation(token: String, username: String) async -> Result<Void, CaptchaError> {
             captchaValidationCallCount += 1
             receivedTokens.append(token)
             receivedUsernames.append(username)
             return validationResult
         }
+    }
+}
+
+extension UIView {
+    func containsAccessibilityIdentifier(_ identifier: String) -> Bool {
+        if self.accessibilityIdentifier == identifier {
+            return true
+        }
+
+        for subview in self.subviews {
+            if subview.containsAccessibilityIdentifier(identifier) {
+                return true
+            }
+        }
+
+        return false
     }
 }

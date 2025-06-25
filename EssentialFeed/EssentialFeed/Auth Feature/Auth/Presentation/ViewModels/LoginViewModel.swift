@@ -40,7 +40,7 @@ public final class LoginViewModel: ObservableObject {
         didSet { updateViewState() }
     }
 
-    @Published private(set) var isPerformingLogin: Bool = false
+    @Published public private(set) var isPerformingLogin: Bool = false
 
     @Published public private(set) var publishedViewState: ViewState = .idle
     @Published public var shouldShowCaptcha: Bool = false {
