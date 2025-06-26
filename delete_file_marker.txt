@@ -1,0 +1,1 @@
+DELETE: /Users/juancarlosmerlosalbarracin/Developer/Essential_Developer/essential-feed-case-study/EssentialApp/EssentialAppTests/Helpers/XCTestCase+StateObservation.swift

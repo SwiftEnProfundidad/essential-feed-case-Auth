@@ -1,6 +1,6 @@
 import Foundation
 
-public final class InMemoryFailedLoginHandler: FailedLoginHandlerProtocol {
+public final class InMemoryFailedLoginHandler: LoginSecurityHandlerProtocol {
     private var failedAttempts: [String: Int] = [:]
     private let maxAttempts: Int
     private let lockStatusProvider: InMemoryLoginLockStatusProvider
@@ -26,5 +26,9 @@ public final class InMemoryFailedLoginHandler: FailedLoginHandlerProtocol {
 
     public func resetAttempts(username: String) async {
         failedAttempts.removeValue(forKey: username)
+    }
+
+    public func handleSuccessfulCaptcha(for username: String) async {
+        await resetAttempts(username: username)
     }
 }

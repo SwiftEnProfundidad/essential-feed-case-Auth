@@ -68,6 +68,7 @@ extension UIViewController {
         format.scale = UIScreen.main.scale
         let renderer = UIGraphicsImageRenderer(size: window.bounds.size, format: format)
         let image = renderer.image { _ in
+            // This captures everything, including system alerts.
             window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
         }
 

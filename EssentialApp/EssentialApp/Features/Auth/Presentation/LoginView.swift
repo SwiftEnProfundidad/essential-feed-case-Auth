@@ -129,9 +129,6 @@ public struct LoginView: View {
                 Text(LocalizedStringKey("LOGIN_VIEW_TITLE"))
                     .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
                     .foregroundColor(currentAccentColor)
-                // .opacity(titleAnimation ? 1 : 0)
-                // .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
-                // .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
 
                 VStack(spacing: 25) {
                     TextField(
@@ -192,6 +189,19 @@ public struct LoginView: View {
                         .transition(.opacity.combined(with: .move(edge: .top)))
                     }
 
+                    if let notification = viewModel.currentNotification {
+                        InAppNotificationView(
+                            title: notification.title,
+                            message: notification.message,
+                            type: notification.type,
+                            actionButtonTitle: notification.actionButton ?? "OK",
+                            onAction: {
+                                viewModel.dismissNotification()
+                            }
+                        )
+                        .transition(.opacity.combined(with: .scale))
+                    }
+
                     switch viewModel.publishedViewState {
                     case .idle:
                         if viewModel.isPerformingLogin {
@@ -199,207 +209,63 @@ public struct LoginView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
                         } else {
-                            VStack(spacing: 16) {
-                                Button {
-                                    Task { [weak viewModel] in
-                                        focusedField = nil
-                                        await viewModel?.login()
-                                    }
-                                } label: {
-                                    Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
-                                        .font(Font.system(.headline, design: .rounded).weight(.bold))
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(NeumorphicButtonStyle(
-                                    baseColor: currentBaseColor,
-                                    lightShadowColor: lightShadow,
-                                    darkShadowColor: darkShadow,
-                                    pressedLightShadowColor: pressedLightShadow,
-                                    pressedDarkShadowColor: pressedDarkShadow,
-                                    labelColor: currentAccentColor
-                                ))
-                                .disabled(viewModel.isPerformingLogin)
-
-                                Button {
-                                    Task { [weak viewModel] in
-                                        focusedField = nil
-                                        viewModel?.handleRecoveryTap()
-                                    }
-                                } label: {
-                                    Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
-                                        .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                        .foregroundColor(currentTextSecondaryColor)
-                                }
-                                .buttonStyle(SimplePressButtonStyle())
-                                .disabled(viewModel.isPerformingLogin)
-                                .padding(.top, 5)
-
-                                Button {
-                                    Task { [weak viewModel] in
-                                        focusedField = nil
-                                        viewModel?.handleRegisterTap()
-                                    }
-                                } label: {
-                                    Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
-                                        .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                        .foregroundColor(currentTextSecondaryColor)
-                                }
-                                .buttonStyle(SimplePressButtonStyle())
-                                .disabled(viewModel.isPerformingLogin)
-                                .accessibilityIdentifier("register_button")
-                                .padding(.top, 5)
-                            }
+                            loginButtonsView(
+                                currentBaseColor: currentBaseColor,
+                                lightShadow: lightShadow,
+                                darkShadow: darkShadow,
+                                pressedLightShadow: pressedLightShadow,
+                                pressedDarkShadow: pressedDarkShadow,
+                                currentAccentColor: currentAccentColor,
+                                currentTextSecondaryColor: currentTextSecondaryColor
+                            )
                         }
 
                     case .blocked:
-                        VStack(spacing: 16) {
-                            Text(LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED"))
-                                .font(Font.system(.headline, design: .rounded).weight(.semibold))
-                                .foregroundColor(Color.red)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .accessibilityIdentifier(
-                                    String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
+                        blockedStateView(
+                            currentBaseColor: currentBaseColor,
+                            lightShadow: lightShadow,
+                            darkShadow: darkShadow,
+                            pressedLightShadow: pressedLightShadow,
+                            pressedDarkShadow: pressedDarkShadow,
+                            currentAccentColor: currentAccentColor,
+                            currentTextSecondaryColor: currentTextSecondaryColor
+                        )
 
+                    case .error:
+                        errorStateView(
+                            currentBaseColor: currentBaseColor,
+                            lightShadow: lightShadow,
+                            darkShadow: darkShadow,
+                            pressedLightShadow: pressedLightShadow,
+                            pressedDarkShadow: pressedDarkShadow,
+                            currentAccentColor: currentAccentColor,
+                            currentTextSecondaryColor: currentTextSecondaryColor
+                        )
+
+                    case .success:
+                        if viewModel.currentNotification == nil {
                             ProgressView()
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .accessibilityIdentifier(
-                                    String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
-
-                            Button {
-                                Task { [weak viewModel] in
-                                    focusedField = nil
-                                    await viewModel?.login()
-                                }
-                            } label: {
-                                Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
-                                    .font(Font.system(.headline, design: .rounded).weight(.bold))
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(NeumorphicButtonStyle(
-                                baseColor: currentBaseColor,
-                                lightShadowColor: lightShadow,
-                                darkShadowColor: darkShadow,
-                                pressedLightShadowColor: pressedLightShadow,
-                                pressedDarkShadowColor: pressedDarkShadow,
-                                labelColor: currentAccentColor
-                            ))
-                            .disabled(viewModel.isPerformingLogin)
-
-                            Button {
-                                Task { [weak viewModel] in
-                                    focusedField = nil
-                                    viewModel?.handleRecoveryTap()
-                                }
-                            } label: {
-                                Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
-                                    .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(currentTextSecondaryColor)
-                            }
-                            .buttonStyle(SimplePressButtonStyle())
-                            .disabled(viewModel.isPerformingLogin)
-                            .padding(.top, 5)
-
-                            Button {
-                                Task { [weak viewModel] in
-                                    focusedField = nil
-                                    viewModel?.handleRegisterTap()
-                                }
-                            } label: {
-                                Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
-                                    .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(currentTextSecondaryColor)
-                            }
-                            .buttonStyle(SimplePressButtonStyle())
-                            .disabled(viewModel.isPerformingLogin)
-                            .accessibilityIdentifier("register_button")
-                            .padding(.top, 5)
-                        }
-
-                    case let .error(message):
-                        VStack(spacing: 16) {
-                            Text(message)
-                                .font(
-                                    Font.system(viewModel.shouldShowCaptcha ? .title3 : .headline, design: .rounded)
-                                        .weight(.semibold)
-                                )
-                                .foregroundColor(Color.red)
-                                .multilineTextAlignment(.center)
                                 .padding(.vertical, 40)
-                                .accessibilityIdentifier(
-                                    String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
-
-                            Button {
-                                Task { [weak viewModel] in
-                                    focusedField = nil
-                                    await viewModel?.login()
-                                }
-                            } label: {
-                                Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
-                                    .font(Font.system(.headline, design: .rounded).weight(.bold))
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(NeumorphicButtonStyle(
-                                baseColor: currentBaseColor,
-                                lightShadowColor: lightShadow,
-                                darkShadowColor: darkShadow,
-                                pressedLightShadowColor: pressedLightShadow,
-                                pressedDarkShadowColor: pressedDarkShadow,
-                                labelColor: currentAccentColor
-                            ))
-                            .disabled(viewModel.isPerformingLogin)
-
-                            Button {
-                                Task { [weak viewModel] in
-                                    focusedField = nil
-                                    viewModel?.handleRegisterTap()
-                                }
-                            } label: {
-                                Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
-                                    .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(currentTextSecondaryColor)
-                            }
-                            .buttonStyle(SimplePressButtonStyle())
-                            .disabled(viewModel.isPerformingLogin)
-                            .accessibilityIdentifier("register_button")
-                            .padding(.top, 5)
+                        } else {
+                            EmptyView()
                         }
 
-                    case let .success(message):
-                        VStack {
-                            Text(message)
-                                .font(Font.system(.headline, design: .rounded).weight(.semibold))
-                                .foregroundColor(Color.white)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.green.opacity(0.8))
-                                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-                                )
-                                .accessibilityIdentifier(
-                                    String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
-                        }
-                        .padding(.vertical, 20)
+                    case .showingNotification:
+                        EmptyView()
                     }
                 }
                 .frame(minHeight: 130)
                 .animation(.easeInOut(duration: 0.3), value: viewModel.shouldShowCaptcha)
+                .animation(.easeInOut(duration: 0.3), value: viewModel.currentNotification)
             }
             .padding(.horizontal, LoginView.loginPaddingHorizontal)
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .opacity(contentAnimation ? 1 : 0)
             .offset(y: contentAnimation ? 0 : UIScreen.main.bounds.height / 3)
-            // .animation(.spring(response: 0.8, dampingFraction: 0.4).delay(1.0), value: contentAnimation)
         }
+        .animation(.default, value: viewModel.currentNotification)
         .onAppear {
             if animationsEnabled {
-                // withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
-                //     contentAnimation = true
-                // }
-                // titleAnimation = true
                 contentAnimation = true
                 titleAnimation = true
             } else {
@@ -411,6 +277,123 @@ public struct LoginView: View {
             if newValue != nil {
                 viewModel?.userDidInitiateEditing()
             }
+        }
+    }
+
+    @ViewBuilder
+    private func loginButtonsView(
+        currentBaseColor: Color,
+        lightShadow: Color,
+        darkShadow: Color,
+        pressedLightShadow: Color,
+        pressedDarkShadow: Color,
+        currentAccentColor: Color,
+        currentTextSecondaryColor: Color
+    ) -> some View {
+        VStack(spacing: 16) {
+            Button {
+                Task { [weak viewModel] in
+                    focusedField = nil
+                    await viewModel?.login()
+                }
+            } label: {
+                Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
+                    .font(Font.system(.headline, design: .rounded).weight(.bold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(NeumorphicButtonStyle(
+                baseColor: currentBaseColor,
+                lightShadowColor: lightShadow,
+                darkShadowColor: darkShadow,
+                pressedLightShadowColor: pressedLightShadow,
+                pressedDarkShadowColor: pressedDarkShadow,
+                labelColor: currentAccentColor
+            ))
+            .disabled(viewModel.isPerformingLogin)
+
+            Button {
+                Task { [weak viewModel] in
+                    focusedField = nil
+                    viewModel?.handleRecoveryTap()
+                }
+            } label: {
+                Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
+                    .font(Font.system(.callout, design: .rounded).weight(.medium))
+                    .foregroundColor(currentTextSecondaryColor)
+            }
+            .buttonStyle(SimplePressButtonStyle())
+            .disabled(viewModel.isPerformingLogin)
+            .padding(.top, 5)
+
+            Button {
+                Task { [weak viewModel] in
+                    focusedField = nil
+                    viewModel?.handleRegisterTap()
+                }
+            } label: {
+                Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
+                    .font(Font.system(.callout, design: .rounded).weight(.medium))
+                    .foregroundColor(currentTextSecondaryColor)
+            }
+            .buttonStyle(SimplePressButtonStyle())
+            .disabled(viewModel.isPerformingLogin)
+            .accessibilityIdentifier("register_button")
+            .padding(.top, 5)
+        }
+    }
+
+    @ViewBuilder
+    private func blockedStateView(
+        currentBaseColor: Color,
+        lightShadow: Color,
+        darkShadow: Color,
+        pressedLightShadow: Color,
+        pressedDarkShadow: Color,
+        currentAccentColor: Color,
+        currentTextSecondaryColor: Color
+    ) -> some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+                .accessibilityIdentifier(
+                    String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
+
+            loginButtonsView(
+                currentBaseColor: currentBaseColor,
+                lightShadow: lightShadow,
+                darkShadow: darkShadow,
+                pressedLightShadow: pressedLightShadow,
+                pressedDarkShadow: pressedDarkShadow,
+                currentAccentColor: currentAccentColor,
+                currentTextSecondaryColor: currentTextSecondaryColor
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func errorStateView(
+        currentBaseColor: Color,
+        lightShadow: Color,
+        darkShadow: Color,
+        pressedLightShadow: Color,
+        pressedDarkShadow: Color,
+        currentAccentColor: Color,
+        currentTextSecondaryColor: Color
+    ) -> some View {
+        VStack(spacing: 16) {
+            Spacer()
+                .frame(height: 78)
+
+            loginButtonsView(
+                currentBaseColor: currentBaseColor,
+                lightShadow: lightShadow,
+                darkShadow: darkShadow,
+                pressedLightShadow: pressedLightShadow,
+                pressedDarkShadow: pressedDarkShadow,
+                currentAccentColor: currentAccentColor,
+                currentTextSecondaryColor: currentTextSecondaryColor
+            )
         }
     }
 }

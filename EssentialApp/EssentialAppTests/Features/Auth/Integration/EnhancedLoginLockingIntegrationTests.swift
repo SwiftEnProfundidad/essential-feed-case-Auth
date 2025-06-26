@@ -15,13 +15,14 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
             store: store,
             maxAttempts: maxAttempts,
             lockoutTime: lockoutTime,
+            captchaThreshold: 3,
             authenticate: { _, _ in .failure(.invalidCredentials) },
             timeProvider: { currentDate }
         )
 
         for attempt in 1 ..< maxAttempts {
             await attemptLogin(with: sut, username: testUsername)
-            XCTAssertNotNil(sut.errorMessage, "Should show error on attempt \(attempt)")
+            XCTAssertNotNil(sut.currentNotification, "Should show error on attempt \(attempt)")
             XCTAssertFalse(sut.isLoginBlocked, "Account should not be locked after \(attempt) attempts")
         }
 
@@ -29,7 +30,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         XCTAssertTrue(sut.isLoginBlocked, "Account should lock after \(maxAttempts) attempts")
         XCTAssertEqual(store.incrementAttemptsCallCount, maxAttempts, "Should record \(maxAttempts) attempts")
         XCTAssertTrue(store.capturedUsernames.contains(testUsername), "Should capture correct username")
-        XCTAssertNotNil(sut.errorMessage, "Should show lockout message")
+        XCTAssertNotNil(sut.currentNotification, "Should show lockout message")
 
         await attemptLogin(with: sut, username: testUsername)
         XCTAssertEqual(store.incrementAttemptsCallCount, maxAttempts, "Should not increment attempts while locked")
@@ -40,9 +41,8 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
 
         currentDate = initialDate.addingTimeInterval(lockoutTime + 1)
         await attemptLogin(with: sut, username: testUsername)
-
         XCTAssertFalse(sut.isLoginBlocked, "Account should unlock after timeout")
-        XCTAssertEqual(store.incrementAttemptsCallCount, 5, "Should record new attempt after unlock")
+        XCTAssertEqual(store.incrementAttemptsCallCount, 6, "Should record new attempt after unlock")
     }
 
     func test_resetFailedAttemptsOnSuccessfulLogin() async {
@@ -52,6 +52,9 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
 
         let sut = makeSUT(
             store: store,
+            maxAttempts: 5,
+            lockoutTime: 300,
+            captchaThreshold: 3,
             authenticate: { _, _ in
                 if shouldSucceed {
                     .success(LoginResponse(
@@ -73,6 +76,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
 
         XCTAssertEqual(store.resetAttemptsCallCount, 1, "Should reset failed attempts on successful login")
         XCTAssertEqual(store.capturedUsernames.last, testUsername, "Should reset attempts for correct user")
+        XCTAssertEqual(sut.currentNotification?.type, .success, "Should show success notification after successful login")
         XCTAssertNil(sut.errorMessage, "Should not show error after successful login")
     }
 
@@ -83,11 +87,13 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         let testUsername = "test@mail.com"
         let testPassword = "password123"
         let captchaThreshold = 3
-        let captchaCoordinator = CaptchaFlowCoordinatorSpy(captchaThreshold: captchaThreshold)
+        let captchaCoordinator = CaptchaFlowCoordinator(captchaThreshold: captchaThreshold)
         var loginErrorToReturn: LoginError = .invalidCredentials
 
         let sut = makeSUT(
             store: store,
+            maxAttempts: 5,
+            lockoutTime: 300,
             captchaThreshold: captchaThreshold,
             captchaCoordinator: captchaCoordinator,
             authenticate: { _, _ in .failure(loginErrorToReturn) },
@@ -138,7 +144,6 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
 
         let sut = LoginViewModel(
             authenticate: authenticate,
-            pendingRequestStore: nil,
             loginSecurity: loginSecurity,
             captchaFlowCoordinator: captchaCoordinator
         )
@@ -163,11 +168,11 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
     }
 }
 
-final class CaptchaFlowCoordinatorSpy: CaptchaFlowCoordinating {
-    private var validationResult: Result<Void, CaptchaError> = .failure(.networkError)
+final class CaptchaFlowCoordinator: CaptchaFlowCoordinating {
     private(set) var captchaValidationCallCount = 0
     private(set) var capturedTokens: [String] = []
     private(set) var capturedUsernames: [String] = []
+    private var validationResult: Result<Void, CaptchaError> = .failure(.networkError)
     private let captchaThreshold: Int
 
     init(captchaThreshold: Int = 3) {

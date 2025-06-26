@@ -403,6 +403,8 @@
 		B4D6B26F2DC8DD4B00F5A3FE /* AuthAPISpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */; };
 		B4D71EEF2DAF1643003A1316 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */; };
+		B4E458652E0DDE3300DBA56A /* InAppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458632E0DDE3300DBA56A /* InAppNotification.swift */; };
+		B4E458692E0DEA5D00DBA56A /* Attempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458682E0DEA5D00DBA56A /* Attempt.swift */; };
 		B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */; };
 		B4E5AC972DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */; };
 		B4E5AC982DB5785C007B8F34 /* SystemKeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */; };
@@ -872,6 +874,8 @@
 		B4D6125A2E03505600CF1A9C /* DefaultCaptchaFlowCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCaptchaFlowCoordinatorTests.swift; sourceTree = "<group>"; };
 		B4D6B26E2DC8DD4B00F5A3FE /* AuthAPISpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPISpy.swift; sourceTree = "<group>"; };
 		B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseTests.swift; sourceTree = "<group>"; };
+		B4E458632E0DDE3300DBA56A /* InAppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotification.swift; sourceTree = "<group>"; };
+		B4E458682E0DEA5D00DBA56A /* Attempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attempt.swift; sourceTree = "<group>"; };
 		B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorageTests.swift; sourceTree = "<group>"; };
 		B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainIntegrationCoverageTests.swift; sourceTree = "<group>"; };
 		B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainTests.swift; sourceTree = "<group>"; };
@@ -1454,6 +1458,7 @@
 		08EF9D18250BB14C004539C2 /* Shared Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				B4E458642E0DDE3300DBA56A /* Models */,
 				08EF9D19250BB15C004539C2 /* LoadResourcePresenter.swift */,
 				08EF9D26250BBC1B004539C2 /* ResourceLoadingView.swift */,
 				087148BA232BEC1200D6BE1A /* ResourceLoadingViewModel.swift */,
@@ -1778,6 +1783,7 @@
 		B45C36922DDA92EE00184F55 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				B4E458682E0DEA5D00DBA56A /* Attempt.swift */,
 				B43BC9A92E05DF87006DB394 /* LoginResponse.swift */,
 				B4D611592E034D4F00CF1A9C /* LoginSecurityConfiguration.swift */,
 				B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */,
@@ -2418,6 +2424,14 @@
 			path = UseCases;
 			sourceTree = "<group>";
 		};
+		B4E458642E0DDE3300DBA56A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B4E458632E0DDE3300DBA56A /* InAppNotification.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		B4E5AC912DB5785C007B8F34 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2871,6 +2885,7 @@
 				B41D5DEB2DE033870020B37B /* RefreshTokenResponse+Extensions.swift in Sources */,
 				B47A6AA52DF04B00001D47CE /* TokenAuthenticationInterceptor.swift in Sources */,
 				B47A6AA62DF04B00001D47CE /* TokenRefreshInterceptor.swift in Sources */,
+				B4E458692E0DEA5D00DBA56A /* Attempt.swift in Sources */,
 				B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */,
 				B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */,
 				B40ADAE72E01C88200A39B40 /* SecurePasswordRecoveryUseCase.swift in Sources */,
@@ -2962,6 +2977,7 @@
 				08897BEF233A1C8E0029F5E4 /* HTTPURLResponse+StatusCode.swift in Sources */,
 				B41D5DE92DE02F3E0020B37B /* RefreshTokenResponse.swift in Sources */,
 				08285AFD228C1843000A8987 /* ManagedCache.swift in Sources */,
+				B4E458652E0DDE3300DBA56A /* InAppNotification.swift in Sources */,
 				B4D6113E2E02CB8E00CF1A9C /* HTTPUserRegistrationAPI.swift in Sources */,
 				B4D6113F2E02CB8E00CF1A9C /* InMemoryOfflineRegistrationStore.swift in Sources */,
 				08285AF1228BF91E000A8987 /* CoreDataFeedStore.swift in Sources */,
@@ -3598,6 +3614,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3632,6 +3649,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3660,6 +3678,7 @@
 				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3686,6 +3705,7 @@
 				DEVELOPMENT_TEAM = Z273P8K3M7;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = EssentialFeediOSTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

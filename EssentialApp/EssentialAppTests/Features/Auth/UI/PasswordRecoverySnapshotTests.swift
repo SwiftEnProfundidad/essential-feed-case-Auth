@@ -136,7 +136,7 @@ private extension PasswordRecoverySnapshotTests {
             weakSUT = sut
 
             vm.recoverPassword()
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.7))
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
             assertSnapshot(for: sut, config: config, named: named, language: language, scheme: scheme)
 
             if let hostingController = sut as? UIHostingController<PasswordRecoveryScreen> {

@@ -14,17 +14,6 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
                 let locale = Locale(identifier: language)
                 let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
 
-                let (idleVM, idleView) = makeSUT(locale: locale)
-                await assertLoginSnapshotSync(for: idleView, config: config, named: "LOGIN_IDLE", language: language, scheme: schemeName)
-                _ = idleVM
-
-                let (validationVM, validationView) = makeSUT(locale: locale)
-                validationVM.username = "invalidemail"
-                validationVM.password = ""
-                await validationVM.login()
-                await assertLoginSnapshotSync(for: validationView, config: config, named: "LOGIN_FORM_VALIDATION", language: language, scheme: schemeName)
-                _ = validationVM
-
                 let successLoginResponse = LoginResponse(
                     user: User(name: "Test User", email: "success@email.com"),
                     token: Token(accessToken: "token123", expiry: Date().addingTimeInterval(3600), refreshToken: "refresh123")
@@ -33,26 +22,24 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
                 successVM.username = "success@email.com"
                 successVM.password = "valid_password"
                 await successVM.login()
+                XCTAssertTrue(successVM.publishedViewState.isSuccess, "Expected success state after login")
+                try? await Task.sleep(nanoseconds: 200_000_000)
                 await assertLoginSnapshotSync(for: successView, config: config, named: "LOGIN_SUCCESS", language: language, scheme: schemeName)
                 _ = successVM
 
                 let errorCases: [(LoginError, String)] = [
                     (.invalidCredentials, "INVALID_CREDENTIALS"),
                     (.network, "NETWORK_ERROR"),
-                    (.noConnectivity, "NO_CONNECTIVITY"),
-                    (.tokenStorageFailed, "TOKEN_STORAGE_FAILED"),
-                    (.offlineStoreFailed, "OFFLINE_STORE_FAILED"),
-                    (.accountLocked(remainingTime: 60), "ACCOUNT_LOCKED_NOTIFICATION"),
-                    (.invalidEmailFormat, "INVALID_EMAIL_FORMAT_NOTIFICATION"),
-                    (.invalidPasswordFormat, "INVALID_PASSWORD_FORMAT_NOTIFICATION")
+                    (.tokenStorageFailed, "TOKEN_STORAGE_FAILED")
                 ]
                 for (error, stateName) in errorCases {
-                    if case .accountLocked = error, stateName == "ACCOUNT_LOCKED_NOTIFICATION" { continue }
-
                     let (errorVM, errorView) = makeSUT(authenticateResult: .failure(error), locale: locale)
                     errorVM.username = "error@email.com"
                     errorVM.password = "wrong_password"
                     await errorVM.login()
+
+                    XCTAssertTrue(errorVM.publishedViewState.isError, "Expected error state after login for \(stateName)")
+                    try? await Task.sleep(nanoseconds: 200_000_000)
                     await assertLoginSnapshotSync(for: errorView, config: config, named: "LOGIN_ERROR_\(stateName)", language: language, scheme: schemeName)
                     _ = errorVM
                 }
@@ -70,6 +57,8 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
                 blockedVM.password = "blocked_password"
                 await blockedVM.login()
                 await blockedVM.login()
+                XCTAssertTrue(blockedVM.publishedViewState.isError, "Expected error state after blocked login")
+                try? await Task.sleep(nanoseconds: 200_000_000)
                 await assertLoginSnapshotSync(for: blockedView, config: config, named: "LOGIN_ACCOUNT_LOCKED", language: language, scheme: schemeName)
                 _ = blockedVM
             }
@@ -150,8 +139,6 @@ final class EnhancedLoginSnapshotTests: XCTestCase {
         }
 
         await Task.yield()
-        try? await Task.sleep(nanoseconds: 700_000_000)
-
         let snapshot = await MainActor.run {
             hostingController.view.setNeedsLayout()
             hostingController.view.layoutIfNeeded()

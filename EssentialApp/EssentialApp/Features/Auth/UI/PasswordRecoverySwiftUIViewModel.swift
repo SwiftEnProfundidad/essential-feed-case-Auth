@@ -6,9 +6,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         didSet { handleEmailChange(from: oldValue, to: email) }
     }
 
-    @Published public var feedbackMessage: String = ""
-    @Published public var isSuccess: Bool = false
-    @Published public var showingFeedback: Bool = false
+    @Published public var currentNotification: InAppNotification?
     @Published public var isPerformingRecovery: Bool = false
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
@@ -16,11 +14,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     private let mainQueueDispatcher: (@escaping () -> Void) -> Void
 
     public var feedbackTitle: String {
-        if isSuccess {
-            String(localized: "PASSWORD_RECOVERY_SUCCESS_TITLE", bundle: .main)
-        } else {
-            String(localized: "PASSWORD_RECOVERY_ERROR_TITLE", bundle: .main)
-        }
+        String(localized: "PASSWORD_RECOVERY_SUCCESS_TITLE", bundle: .main)
     }
 
     public init(recoveryUseCase: UserPasswordRecoveryUseCase) {
@@ -34,14 +28,17 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     }
 
     public func onFeedbackDismiss() {
-        showingFeedback = false
+        currentNotification = nil
     }
 
     public func recoverPassword() {
         guard !email.isEmpty else {
-            feedbackMessage = "Please enter your email address."
-            showingFeedback = true
-            isSuccess = false
+            currentNotification = InAppNotification(
+                title: "Validation Error",
+                message: "Please enter your email address.",
+                type: .error,
+                actionButton: "OK"
+            )
             return
         }
 
@@ -62,9 +59,8 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     }
 
     private func handleEmailChange(from oldValue: String, to newValue: String) {
-        guard showingFeedback, oldValue != newValue else { return }
-        feedbackMessage = ""
-        showingFeedback = false
+        guard currentNotification != nil, oldValue != newValue else { return }
+        currentNotification = nil
     }
 
     private func getCurrentIPAddress() -> String? {
@@ -74,20 +70,17 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     private func getCurrentUserAgent() -> String? {
         return "EssentialApp/1.0"
     }
-
-    deinit {
-        #if DEBUG
-            print("PasswordRecoverySwiftUIViewModel deallocated")
-        #endif
-    }
 }
 
 // MARK: - PasswordRecoveryView
 
 public extension PasswordRecoverySwiftUIViewModel {
     func display(_ viewModel: PasswordRecoveryViewModel) {
-        feedbackMessage = viewModel.message
-        isSuccess = viewModel.isSuccess
-        showingFeedback = true
+        currentNotification = InAppNotification(
+            title: viewModel.isSuccess ? "Success" : "Error",
+            message: viewModel.message,
+            type: viewModel.isSuccess ? .success : .error,
+            actionButton: "OK"
+        )
     }
 }

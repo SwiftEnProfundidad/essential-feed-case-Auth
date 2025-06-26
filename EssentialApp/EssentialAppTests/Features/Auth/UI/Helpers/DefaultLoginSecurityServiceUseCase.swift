@@ -1,7 +1,7 @@
 import EssentialFeed
 import Foundation
 
-class DefaultLoginSecurityServiceUseCase: LoginLockStatusProviderProtocol, FailedLoginHandlerProtocol {
+class DefaultLoginSecurityServiceUseCase: LoginLockStatusProviderProtocol, LoginSecurityHandlerProtocol {
     private let lockStatusProvider: LoginLockStatusProviderSpy
     private let failedLoginHandler: FailedLoginHandlerSpy
 
@@ -24,5 +24,9 @@ class DefaultLoginSecurityServiceUseCase: LoginLockStatusProviderProtocol, Faile
 
     func handleFailedLogin(username: String) async {
         await failedLoginHandler.handleFailedLogin(username: username)
+    }
+
+    func handleSuccessfulCaptcha(for username: String) async {
+        await failedLoginHandler.handleSuccessfulCaptcha(for: username)
     }
 }

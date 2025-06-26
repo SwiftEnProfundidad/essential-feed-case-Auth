@@ -1,5 +1,5 @@
 //
-//  Copyright © 2019 Essential Developer. All rights reserved.
+//  Copyright 2019 Essential Developer. All rights reserved.
 //
 
 import UIKit
@@ -51,7 +51,11 @@ public final class ErrorView: UIButton {
 
     private func showAnimated(_ message: String) {
         setTitle(message, for: .normal)
-        contentEdgeInsets = .init(top: 8, left: 8, bottom: 8, right: 8)
+        if #available(iOS 15.0, *) {
+            configuration?.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+        } else {
+            contentEdgeInsets = .init(top: 8, left: 8, bottom: 8, right: 8)
+        }
 
         UIView.animate(withDuration: 0.25) {
             self.alpha = 1
@@ -71,7 +75,11 @@ public final class ErrorView: UIButton {
     private func hideMessage() {
         setTitle(nil, for: .normal)
         alpha = 0
-        contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
+        if #available(iOS 15.0, *) {
+            configuration?.contentInsets = NSDirectionalEdgeInsets(top: -2.5, leading: 0, bottom: -2.5, trailing: 0)
+        } else {
+            contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
+        }
         onHide?()
     }
 }

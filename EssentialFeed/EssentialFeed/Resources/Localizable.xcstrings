@@ -1,354 +1,354 @@
 {
-	"sourceLanguage" : "en",
-	"strings" : {
-		"error_login_accountLocked" : {
-			"comment" : "Login error: Account locked after too many attempts (general).",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Account temporarily locked due to multiple failed attempts. Please try again later."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Por favor, inténtalo de nuevo más tarde."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Ο λογαριασμός κλειδώθηκε προσωρινά λόγω πολλαπλών αποτυχημένων προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Conta temporariamente bloqueada devido a múltiplas tentativas falhas. Por favor, tente novamente mais tarde."
-					}
-				}
-			}
-		},
-		"error_login_accountLocked_attempts" : {
-			"comment" : "Login error: Account locked due to multiple failed attempts (specific).",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Account temporarily locked due to multiple failed attempts. Please try again later."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Por favor, inténtalo de nuevo más tarde."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Ο λογαριασμός κλειδώθηκε προσωρινά λόγω πολλαπλών αποτυχημένων προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Conta temporariamente bloqueada devido a múltiplas tentativas falhas. Por favor, tente novamente mais tarde."
-					}
-				}
-			}
-		},
-		"error_login_generic" : {
-			"comment" : "Generic login error message.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "An unknown error occurred. Please try again."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Ocurrió un error desconocido. Por favor, inténtalo de nuevo."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Παρουσιάστηκε ένα άγνωστο σφάλμα. Παρακαλώ προσπαθήστε ξανά."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Ocorreu um erro desconhecido. Por favor, tente novamente."
-					}
-				}
-			}
-		},
-		"error_login_invalidCredentials" : {
-			"comment" : "Login error: Invalid username or password.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Invalid credentials."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Credenciales inválidas."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Μη έγκυρα διαπιστευτήρια."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Credenciais inválidas."
-					}
-				}
-			}
-		},
-		"error_login_invalidEmailFormat" : {
-			"comment" : "Login error: Email format is incorrect.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Invalid email format."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Formato de correo electrónico inválido."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Μη έγκυρη μορφή email."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Formato de e-mail inválido."
-					}
-				}
-			}
-		},
-		"error_login_invalidPasswordFormat" : {
-			"comment" : "Login error: Password format is incorrect (e.g., empty).",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Password cannot be empty."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "La contraseña no puede estar vacía."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "A senha não pode estar vazia."
-					}
-				}
-			}
-		},
-		"error_login_maxAttemptsReached" : {
-			"comment" : "Login error: Maximum login attempts reached.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Maximum number of attempts reached. Please try again later."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Se alcanzó el número máximo de intentos. Por favor, inténtalo de nuevo más tarde."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Επιτεύχθηκε ο μέγιστος αριθμός προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Número máximo de tentativas atingido. Por favor, tente novamente mais tarde."
-					}
-				}
-			}
-		},
-		"error_login_network" : {
-			"comment" : "Login error: Network connection issue.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Could not connect. Please try again."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "No se pudo conectar. Por favor, inténtalo de nuevo."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Δεν ήταν δυνατή η σύνδεση. Παρακαλώ προσπαθήστε ξανά."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Não foi possível conectar. Por favor, tente novamente."
-					}
-				}
-			}
-		},
-		"error_login_noConnectivity" : {
-			"comment" : "Login error: No internet connectivity.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "No connectivity. Please check your internet connection."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Sin conectividad. Por favor, revisa tu conexión a internet."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Χωρίς συνδεσιμότητα. Παρακαλώ ελέγξτε τη σύνδεσή σας στο διαδίκτυο."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Sem conectividade. Por favor, verifique sua conexão com a internet."
-					}
-				}
-			}
-		},
-		"error_login_offlineStoreFailed" : {
-			"comment" : "Login error: Failed to store data offline.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Offline store failed. Please try again."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Falló el almacenamiento offline. Por favor, inténtalo de nuevo."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Η αποθήκευση εκτός σύνδεσης απέτυχε. Παρακαλώ προσπαθήστε ξανά."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Falha no armazenamento offline. Por favor, tente novamente."
-					}
-				}
-			}
-		},
-		"error_login_tokenStorageFailed" : {
-			"comment" : "Login error: Failed to store authentication token.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Token storage failed. Please try again."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Falló el almacenamiento del token. Por favor, inténtalo de nuevo."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Η αποθήκευση του token απέτυχε. Παρακαλώ προσπαθήστε ξανά."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Falha ao armazenar o token. Por favor, tente novamente."
-					}
-				}
-			}
-		},
-		"error_login_unknown" : {
-			"comment" : "Login error: An unspecified error occurred.",
-			"localizations" : {
-				"en" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Something went wrong. Please try again."
-					}
-				},
-				"es" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Algo salió mal. Por favor, inténtalo de nuevo."
-					}
-				},
-				"el" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Κάτι πήγε στραβά. Παρακαλώ προσπαθήστε ξανά."
-					}
-				},
-				"pt-BR" : {
-					"stringUnit" : {
-						"state" : "translated",
-						"value" : "Algo deu errado. Por favor, tente novamente."
-					}
-				}
-			}
-		}
-	},
-	"version" : "1.0"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "error_login_accountLocked" : {
+      "comment" : "Login error: Account locked after too many attempts (general).",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ο λογαριασμός κλειδώθηκε προσωρινά λόγω πολλαπλών αποτυχημένων προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account temporarily locked due to multiple failed attempts. Please try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Por favor, inténtalo de nuevo más tarde."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conta temporariamente bloqueada devido a múltiplas tentativas falhas. Por favor, tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "error_login_accountLocked_attempts" : {
+      "comment" : "Login error: Account locked due to multiple failed attempts (specific).",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ο λογαριασμός κλειδώθηκε προσωρινά λόγω πολλαπλών αποτυχημένων προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account temporarily locked due to multiple failed attempts. Please try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Por favor, inténtalo de nuevo más tarde."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conta temporariamente bloqueada devido a múltiplas tentativas falhas. Por favor, tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "error_login_generic" : {
+      "comment" : "Generic login error message.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Παρουσιάστηκε ένα άγνωστο σφάλμα. Παρακαλώ προσπαθήστε ξανά."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An unknown error occurred. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error desconocido. Por favor, inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocorreu um erro desconhecido. Por favor, tente novamente."
+          }
+        }
+      }
+    },
+    "error_login_invalidCredentials" : {
+      "comment" : "Login error: Invalid username or password.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μη έγκυρα διαπιστευτήρια."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid credentials."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credenciales inválidas."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Credenciais inválidas."
+          }
+        }
+      }
+    },
+    "error_login_invalidEmailFormat" : {
+      "comment" : "Login error: Email format is incorrect.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Μη έγκυρη μορφή email."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid email format."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato de correo electrónico inválido."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formato de e-mail inválido."
+          }
+        }
+      }
+    },
+    "error_login_invalidPasswordFormat" : {
+      "comment" : "Login error: Password format is incorrect (e.g., empty).",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password cannot be empty."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La contraseña no puede estar vacía."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A senha não pode estar vazia."
+          }
+        }
+      }
+    },
+    "error_login_maxAttemptsReached" : {
+      "comment" : "Login error: Maximum login attempts reached.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Επιτεύχθηκε ο μέγιστος αριθμός προσπαθειών. Παρακαλώ προσπαθήστε ξανά αργότερα."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum number of attempts reached. Please try again later."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se alcanzó el número máximo de intentos. Por favor, inténtalo de nuevo más tarde."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Número máximo de tentativas atingido. Por favor, tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "error_login_network" : {
+      "comment" : "Login error: Network connection issue.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Δεν ήταν δυνατή η σύνδεση. Παρακαλώ προσπαθήστε ξανά."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not connect. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo conectar. Por favor, inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível conectar. Por favor, tente novamente."
+          }
+        }
+      }
+    },
+    "error_login_noConnectivity" : {
+      "comment" : "Login error: No internet connectivity.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Χωρίς συνδεσιμότητα. Παρακαλώ ελέγξτε τη σύνδεσή σας στο διαδίκτυο."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No connectivity. Please check your internet connection."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin conectividad. Por favor, revisa tu conexión a internet."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem conectividade. Por favor, verifique sua conexão com a internet."
+          }
+        }
+      }
+    },
+    "error_login_offlineStoreFailed" : {
+      "comment" : "Login error: Failed to store data offline.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η αποθήκευση εκτός σύνδεσης απέτυχε. Παρακαλώ προσπαθήστε ξανά."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline store failed. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falló el almacenamiento offline. Por favor, inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falha no armazenamento offline. Por favor, tente novamente."
+          }
+        }
+      }
+    },
+    "error_login_tokenStorageFailed" : {
+      "comment" : "Login error: Failed to store authentication token.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Η αποθήκευση του token απέτυχε. Παρακαλώ προσπαθήστε ξανά."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token storage failed. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falló el almacenamiento del token. Por favor, inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falha ao armazenar o token. Por favor, tente novamente."
+          }
+        }
+      }
+    },
+    "error_login_unknown" : {
+      "comment" : "Login error: An unspecified error occurred.",
+      "localizations" : {
+        "el" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Κάτι πήγε στραβά. Παρακαλώ προσπαθήστε ξανά."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Please try again."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo salió mal. Por favor, inténtalo de nuevo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo deu errado. Por favor, tente novamente."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
 }

@@ -45,17 +45,17 @@ public final class ThreadSafeFailedLoginAttemptsStoreSpy: FailedLoginAttemptsSto
                 self._resetAttemptsCallCount += 1
                 self._capturedUsernames.append(username)
                 self._attempts[username] = 0
-                self._lastAttemptTimes[username] = nil
+                self._lastAttemptTimes.removeValue(forKey: username)
                 continuation.resume()
             }
         }
     }
 
-    public var incrementAttemptsSinceLastReset: Int {
-        queue.sync { _incrementAttemptsCallCount - _lastResetCount }
-    }
-
     public func lastAttemptTime(for username: String) -> Date? {
         queue.sync { _lastAttemptTimes[username] }
+    }
+
+    public var incrementAttemptsSinceLastReset: Int {
+        queue.sync { _incrementAttemptsCallCount - _lastResetCount }
     }
 }

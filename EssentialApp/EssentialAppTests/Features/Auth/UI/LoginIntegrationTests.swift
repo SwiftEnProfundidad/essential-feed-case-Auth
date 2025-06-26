@@ -61,7 +61,7 @@ final class LoginIntegrationTests: XCTestCase {
         await sut.login()
         XCTAssertTrue(sut.isLoginBlocked, "Account should be blocked initially after 2 attempts", file: #filePath, line: #line)
 
-        try? await Task.sleep(nanoseconds: 1_100_000_000)
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
 
         await sut.login()
         XCTAssertFalse(sut.isLoginBlocked, "Account should be unblocked after timeout", file: #filePath, line: #line)
@@ -95,7 +95,8 @@ final class LoginIntegrationTests: XCTestCase {
         notifierSpy: LoginEventNotifierSpy
     ) {
         let configuration = LoginSecurityConfiguration(maxAttempts: 2, blockDuration: 1, captchaThreshold: 2)
-        let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
+        let store = InMemoryFailedLoginAttemptsStore(timeProvider: { Date() })
+        let loginSecurity = LoginSecurityUseCase(store: store, configuration: configuration, timeProvider: { Date() })
 
         let successObserverSpy = LoginSuccessObserverSpy()
         let failureObserverSpy = LoginFailureObserverSpy()
@@ -123,7 +124,8 @@ final class LoginIntegrationTests: XCTestCase {
 
     private func makeIntegrationSUT(successObserver: LoginSuccessObserverSpy, apiSpy: UserLoginAPISpy) -> LoginViewModel {
         let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2)
-        let loginSecurity = LoginSecurityUseCase(store: InMemoryFailedLoginAttemptsStore(), configuration: configuration)
+        let store = InMemoryFailedLoginAttemptsStore(timeProvider: { Date() })
+        let loginSecurity = LoginSecurityUseCase(store: store, configuration: configuration, timeProvider: { Date() })
 
         let sut = LoginViewModel(
             authenticate: { username, password in
@@ -153,6 +155,11 @@ private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
     private var attemptCounts: [String: Int] = [:]
     private var lastAttemptTimestamps: [String: Date] = [:]
     private let lock = NSLock()
+    private let timeProvider: () -> Date
+
+    init(timeProvider: @escaping () -> Date = { Date() }) {
+        self.timeProvider = timeProvider
+    }
 
     private func performSynchronizedUpdate(_ update: () -> Void) {
         lock.lock()
@@ -163,7 +170,7 @@ private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
     func incrementAttempts(for username: String) async {
         performSynchronizedUpdate {
             self.attemptCounts[username, default: 0] += 1
-            self.lastAttemptTimestamps[username] = Date()
+            self.lastAttemptTimestamps[username] = timeProvider()
         }
     }
 

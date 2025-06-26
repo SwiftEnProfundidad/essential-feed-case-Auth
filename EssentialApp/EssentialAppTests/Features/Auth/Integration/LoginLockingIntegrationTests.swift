@@ -6,7 +6,7 @@ class LoginLockingIntegrationTests: XCTestCase {
     func test_accountLocksAfterMaxFailedAttempts_andUnlocksAfterTimeout() async {
         let initialDate = Date()
         var currentDate = initialDate
-        let store = FailedLoginAttemptsStoreSpy()
+        let store = TimeControlledFailedLoginAttemptsStoreSpy(timeProvider: { currentDate })
         let testUsername = "test@mail.com"
 
         let sut = makeSUT(
@@ -17,9 +17,11 @@ class LoginLockingIntegrationTests: XCTestCase {
 
         for attempt in 1 ... 5 {
             await attemptLogin(with: sut, username: testUsername)
-            XCTAssertNotNil(sut.errorMessage, "Should show error on attempt \(attempt)")
+            await Task.yield()
+            XCTAssertNotNil(sut.currentNotification, "Should show error on attempt \(attempt)")
         }
 
+        await Task.yield()
         XCTAssertTrue(sut.isLoginBlocked, "Account should lock after 5 attempts")
         XCTAssertEqual(store.incrementAttemptsCallCount, 5, "Should record 5 attempts")
         XCTAssertEqual(store.capturedUsernames.last, testUsername, "Should capture correct user")
@@ -28,6 +30,7 @@ class LoginLockingIntegrationTests: XCTestCase {
 
         await attemptLogin(with: sut, username: testUsername)
 
+        await Task.yield()
         XCTAssertFalse(sut.isLoginBlocked, "Account should unlock after timeout")
         XCTAssertEqual(store.incrementAttemptsCallCount, 6, "Should record 6th attempt after unlock")
     }
@@ -35,7 +38,7 @@ class LoginLockingIntegrationTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeSUT(
-        store: FailedLoginAttemptsStore = FailedLoginAttemptsStoreSpy(),
+        store: FailedLoginAttemptsStore = TimeControlledFailedLoginAttemptsStoreSpy(),
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError> = { _, _ in .failure(.invalidCredentials) },
         timeProvider: @escaping () -> Date = { Date() },
         file: StaticString = #filePath,
@@ -62,17 +65,10 @@ class LoginLockingIntegrationTests: XCTestCase {
     private func attemptLogin(
         with sut: LoginViewModel,
         username: String = "test@mail.com",
-        password: String = "password",
-        shouldFail: Bool = true
+        password: String = "password"
     ) async {
         sut.username = username
         sut.password = password
         await sut.login()
-
-        if shouldFail {
-            XCTAssertNotNil(sut.errorMessage, "Should show error message on failed login")
-        } else {
-            XCTAssertNil(sut.errorMessage, "Shouldn't show error message on successful login")
-        }
     }
 }
