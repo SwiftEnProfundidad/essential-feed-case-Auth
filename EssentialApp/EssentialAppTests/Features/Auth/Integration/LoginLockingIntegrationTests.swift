@@ -28,11 +28,14 @@ class LoginLockingIntegrationTests: XCTestCase {
 
         currentDate = initialDate.addingTimeInterval(300 + 1)
 
+        let initialAttemptsBeforeReset = store.incrementAttemptsCallCount
+
         await attemptLogin(with: sut, username: testUsername)
 
         await Task.yield()
         XCTAssertFalse(sut.isLoginBlocked, "Account should unlock after timeout")
-        XCTAssertEqual(store.incrementAttemptsCallCount, 6, "Should record 6th attempt after unlock")
+        XCTAssertEqual(store.resetAttemptsCallCount, 1, "Should reset attempts after timeout")
+        XCTAssertEqual(store.incrementAttemptsCallCount, initialAttemptsBeforeReset + 1, "Should record new attempt after unlock")
     }
 
     // MARK: - Helpers

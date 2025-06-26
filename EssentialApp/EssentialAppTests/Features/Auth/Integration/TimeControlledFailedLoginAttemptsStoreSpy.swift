@@ -4,6 +4,8 @@ import Foundation
 public final class TimeControlledFailedLoginAttemptsStoreSpy: FailedLoginAttemptsStore {
     private var attemptsForUser: [String: Int] = [:]
     private var lastAttemptTimes: [String: Date] = [:]
+    private var resetCallCount = 0
+    private var incrementCallCount = 0
     private let timeProvider: () -> Date
 
     public init(timeProvider: @escaping () -> Date = { Date() }) {
@@ -17,6 +19,7 @@ public final class TimeControlledFailedLoginAttemptsStoreSpy: FailedLoginAttempt
     public func incrementAttempts(for username: String) async {
         attemptsForUser[username, default: 0] += 1
         lastAttemptTimes[username] = timeProvider()
+        incrementCallCount += 1
     }
 
     public func resetAttempts(for username: String) async {
@@ -31,14 +34,12 @@ public final class TimeControlledFailedLoginAttemptsStoreSpy: FailedLoginAttempt
 
     // Helper properties for tests
     public var incrementAttemptsCallCount: Int {
-        attemptsForUser.values.reduce(0, +)
+        incrementCallCount
     }
 
     public var resetAttemptsCallCount: Int {
         resetCallCount
     }
-
-    private var resetCallCount = 0
 
     public var capturedUsernames: [String] {
         Array(attemptsForUser.keys)

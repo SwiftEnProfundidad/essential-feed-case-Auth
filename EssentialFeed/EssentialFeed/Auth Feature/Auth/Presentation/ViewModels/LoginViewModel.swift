@@ -15,14 +15,22 @@ public extension LoginViewModel {
         case showingNotification(InAppNotification)
 
         public var isSuccess: Bool {
-            if case .success = self { return true }
-            return false
+            switch self {
+            case .success:
+                true
+            case let .showingNotification(notification):
+                notification.type == .success
+            default:
+                false
+            }
         }
 
         public var isError: Bool {
             switch self {
-            case .blocked, .error, .showingNotification:
+            case .blocked, .error:
                 true
+            case let .showingNotification(notification):
+                notification.type == .error
             default:
                 false
             }
