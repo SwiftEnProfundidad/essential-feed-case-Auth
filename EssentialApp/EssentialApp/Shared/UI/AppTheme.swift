@@ -2,38 +2,26 @@ import SwiftUI
 
 enum AppTheme {
     enum Colors {
-        // MARK: - Dark Mode Specific Colors (based on User's 'Any Appearance' in Assets)
-
-        private static let darkSchemeNeumorphicBase = Color(
-            red: 45 / 255, green: 47 / 255, blue: 52 / 255
-        )
-        private static let darkSchemeAccentLimeGreen = Color(
-            red: 175 / 255, green: 255 / 255, blue: 51 / 255
-        )
-
-        // MARK: - Light Mode Specific Colors
-
-        private static let lightSchemeNeumorphicBase = Color(
-            red: 255 / 255, green: 255 / 255, blue: 255 / 255
-        )
-        private static let lightSchemeAccentLimeGreen = Color("accentColorLimeGreen")
-
         // MARK: - Dynamic Colors
 
-        static func neumorphicBase(for colorScheme: ColorScheme) -> Color {
-            colorScheme == .dark ? darkSchemeNeumorphicBase : lightSchemeNeumorphicBase
+        static func neumorphicBase(for _: ColorScheme) -> Color {
+            // Asset name should provide correct color for the scheme
+            Color("neumorphicBaseColor")
         }
 
-        static func accentLimeGreen(for colorScheme: ColorScheme) -> Color {
-            colorScheme == .dark ? darkSchemeAccentLimeGreen : lightSchemeAccentLimeGreen
+        static func accentLimeGreen(for _: ColorScheme) -> Color {
+            // Asset name should provide correct color for the scheme
+            Color("accentColorLimeGreen")
         }
 
         static var textPrimary: Color {
-            Color(UIColor.label)
+            // Asset name should provide correct color for the scheme
+            Color("primaryAppText")
         }
 
         static var textSecondary: Color {
-            Color(UIColor.secondaryLabel)
+            // Asset name should provide correct color for the scheme
+            Color("secondaryAppText")
         }
 
         // MARK: - Static Semantic Colors (if used elsewhere)

@@ -42,14 +42,33 @@ extension UIViewController {
 
         let window = UIWindow(frame: CGRect(origin: .zero, size: configuration.size))
         window.overrideUserInterfaceStyle = configuration.style
+        window.windowLevel = .normal
         window.rootViewController = self
+
+        if let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive })
+        {
+            window.windowScene = windowScene
+        }
+
+        window.isHidden = false
         window.makeKeyAndVisible()
 
-        RunLoop.main.run(until: Date().addingTimeInterval(1.5))
+        RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.5))
 
-        let renderer = UIGraphicsImageRenderer(size: window.bounds.size)
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        RunLoop.main.run(until: Date()) // Brief run loop pass
+
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = UIScreen.main.scale
+        let renderer = UIGraphicsImageRenderer(size: window.bounds.size, format: format)
         let image = renderer.image { _ in
-            self.view.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
         }
 
         window.isHidden = true

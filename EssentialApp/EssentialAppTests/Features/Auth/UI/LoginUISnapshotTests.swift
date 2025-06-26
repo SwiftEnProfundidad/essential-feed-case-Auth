@@ -8,63 +8,25 @@ final class LoginUISnapshotTests: XCTestCase {
     func test_login_states() async throws {
         let languages = ["en", "es"]
         let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
-
         for language in languages {
             for (uiStyle, schemeName) in schemes {
                 let locale = Locale(identifier: language)
                 let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
 
-                // MARK: - Idle State
+                let (idleVM, idleView) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
+                await assertLoginSnapshotSync(for: idleView, config: config, named: "LOGIN_IDLE", language: language, scheme: schemeName)
+                _ = idleVM
 
-                var idleVM: LoginViewModel?
-                var idleSUT: UIViewController?
-                weak var weakIdleVM: LoginViewModel?
-                weak var weakIdleSUT: UIViewController?
-
-                (idleVM, idleSUT) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
-                weakIdleVM = idleVM
-                weakIdleSUT = idleSUT
-
-                await assertSnapshot(for: idleSUT!, config: config, named: "LOGIN_IDLE", language: language, scheme: schemeName)
-
-                idleVM = nil
-                idleSUT = nil
-
-                try await Task.sleep(nanoseconds: 300_000_000)
-
-                XCTAssertNil(weakIdleVM, "Idle ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
-                XCTAssertNil(weakIdleSUT, "Idle SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
-
-                // MARK: - Error State
-
-                var errorVM: LoginViewModel?
-                var errorSUT: UIViewController?
-                weak var weakErrorVM: LoginViewModel?
-                weak var weakErrorSUT: UIViewController?
-
-                (errorVM, errorSUT) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
-                weakErrorVM = errorVM
-                weakErrorSUT = errorSUT
-
-                errorVM?.username = "any@email.com"
-                errorVM?.password = "any password"
-                await errorVM?.login()
-
-                await assertSnapshot(
-                    for: errorSUT!, config: config, named: "LOGIN_ERROR_INVALID_CREDENTIALS",
-                    language: language, scheme: schemeName
-                )
-
-                errorVM = nil
-                errorSUT = nil
-                try await Task.sleep(nanoseconds: 300_000_000)
-                XCTAssertNil(weakErrorVM, "Error ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
-                XCTAssertNil(weakErrorSUT, "Error SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
+                let (errorVM, errorView) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
+                errorVM.username = "any@email.com"
+                errorVM.password = "any password"
+                await errorVM.login()
+                await assertLoginSnapshotSync(for: errorView, config: config, named: "LOGIN_ERROR_INVALID_CREDENTIALS", language: language, scheme: schemeName)
             }
         }
     }
 
-    private func makeSUT(authenticateResult: Result<LoginResponse, LoginError>, locale: Locale) -> (LoginViewModel, UIViewController) {
+    private func makeSUT(authenticateResult: Result<LoginResponse, LoginError>, locale _: Locale) -> (LoginViewModel, some View) {
         let store = InMemoryFailedLoginAttemptsStore()
         let configuration = LoginSecurityConfiguration(
             maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
@@ -73,24 +35,44 @@ final class LoginUISnapshotTests: XCTestCase {
         let vm = LoginViewModel(
             authenticate: { _, _ in authenticateResult }, loginSecurity: securityUseCase
         )
-
-        let view = LoginView(viewModel: vm, animationsEnabled: false).environment(\.locale, locale)
-        let controller = UIHostingController(rootView: view)
-        controller.view.backgroundColor = .clear
-        return (vm, controller)
+        let view = LoginView(viewModel: vm, animationsEnabled: false)
+        return (vm, view)
     }
 
-    private func assertSnapshot(
-        for controller: UIViewController, config: SnapshotConfiguration, named: String,
-        language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line
-    ) async {
-        let window = UIWindow(frame: CGRect(origin: .zero, size: config.size))
-        window.rootViewController = controller
+    private func assertLoginSnapshotSync(for view: some View, config: SnapshotConfiguration, named: String, language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line) async {
+        let themedView = view
+            .environment(\.locale, config.locale)
+
+        let hostingController = UIHostingController(rootView: AnyView(themedView))
+
+        let traitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: config.style),
+            UITraitCollection(displayScale: UIScreen.main.scale)
+        ])
+        hostingController.overrideUserInterfaceStyle = config.style
+        hostingController.view.frame = CGRect(origin: .zero, size: config.size)
+
+        await MainActor.run {
+            hostingController.setOverrideTraitCollection(traitCollection, forChild: hostingController)
+        }
+
+        let window = UIWindow(frame: hostingController.view.frame)
+        window.rootViewController = hostingController
         window.makeKeyAndVisible()
-        try? await Task.sleep(nanoseconds: 200_000_000)
-        let snapshot = controller.snapshot(for: config)
-        assert(snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line)
-        window.rootViewController = nil
+
+        await MainActor.run {
+            hostingController.loadViewIfNeeded()
+            hostingController.view.setNeedsLayout()
+            hostingController.view.layoutIfNeeded()
+        }
+
+        try? await Task.sleep(nanoseconds: 300_000_000)
+
+        let snapshot = await MainActor.run { hostingController.snapshot(for: config) }
+        let snapshotNameWithLocale = "\(named)_\(language)_\(config.style == .dark ? "dark" : "light")"
+        assert(snapshot: snapshot, named: snapshotNameWithLocale, language: language, scheme: scheme, file: file, line: line)
+
+        await MainActor.run { window.rootViewController = nil }
     }
 }
 

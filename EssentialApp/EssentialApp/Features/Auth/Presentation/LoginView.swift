@@ -9,20 +9,24 @@ private let neumorphicShadowRadiusPressedFocused: CGFloat = 3
 private let neumorphicShadowOffsetPressedFocused: CGFloat = 2
 
 struct NeumorphicTextFieldStyle: TextFieldStyle {
+    var baseColor: Color
+    var lightShadowColor: Color
+    var darkShadowColor: Color
+
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .padding(15)
             .background(
                 RoundedRectangle(cornerRadius: neumorphicCornerRadius)
-                    .fill(Color(.systemBackground))
+                    .fill(baseColor)
                     .shadow(
-                        color: Color.white.opacity(0.7),
+                        color: lightShadowColor,
                         radius: neumorphicShadowRadiusNormal,
                         x: -neumorphicShadowOffsetNormal,
                         y: -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: Color.black.opacity(0.2),
+                        color: darkShadowColor,
                         radius: neumorphicShadowRadiusNormal,
                         x: neumorphicShadowOffsetNormal,
                         y: neumorphicShadowOffsetNormal
@@ -32,17 +36,24 @@ struct NeumorphicTextFieldStyle: TextFieldStyle {
 }
 
 struct NeumorphicButtonStyle: ButtonStyle {
+    var baseColor: Color
+    var lightShadowColor: Color
+    var darkShadowColor: Color
+    var pressedLightShadowColor: Color
+    var pressedDarkShadowColor: Color
+    var labelColor: Color
+
     func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundColor(Color("accentColorLimeGreen"))
+            .foregroundColor(labelColor)
             .padding()
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: neumorphicCornerRadius)
-                    .fill(Color(.systemBackground))
+                    .fill(baseColor)
                     .shadow(
-                        color: Color.white.opacity(0.7),
+                        color: configuration.isPressed ? pressedLightShadowColor : lightShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -51,7 +62,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
                             ? -neumorphicShadowOffsetPressedFocused : -neumorphicShadowOffsetNormal
                     )
                     .shadow(
-                        color: Color.black.opacity(0.2),
+                        color: configuration.isPressed ? pressedDarkShadowColor : darkShadowColor,
                         radius: configuration.isPressed
                             ? neumorphicShadowRadiusPressedFocused : neumorphicShadowRadiusNormal,
                         x: configuration.isPressed
@@ -97,8 +108,18 @@ public struct LoginView: View {
     private static let loginPaddingHorizontal: CGFloat = 30
 
     public var body: some View {
+        let currentBaseColor = Color("neumorphicBaseColor")
+        let currentAccentColor = Color("accentColorLimeGreen")
+        let currentTextPrimaryColor = Color("primaryAppText")
+        let currentTextSecondaryColor = Color("secondaryAppText")
+
+        let lightShadow = colorScheme == .dark ? Color.white.opacity(0.25) : Color.white.opacity(0.7)
+        let darkShadow = colorScheme == .dark ? Color.black.opacity(0.5) : Color.black.opacity(0.2)
+        let pressedLightShadow = colorScheme == .dark ? Color.white.opacity(0.2) : Color.white.opacity(0.5)
+        let pressedDarkShadow = colorScheme == .dark ? Color.black.opacity(0.6) : Color.black.opacity(0.3)
+
         ZStack {
-            Color(.systemBackground)
+            currentBaseColor
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     focusedField = nil
@@ -107,10 +128,10 @@ public struct LoginView: View {
             VStack(spacing: LoginView.loginFormSpacing) {
                 Text(LocalizedStringKey("LOGIN_VIEW_TITLE"))
                     .font(Font.system(.largeTitle, design: .rounded).weight(.heavy))
-                    .foregroundColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
-                    .opacity(titleAnimation ? 1 : 0)
-                    .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
-                    .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
+                    .foregroundColor(currentAccentColor)
+                // .opacity(titleAnimation ? 1 : 0)
+                // .offset(x: titleAnimation ? 0 : -UIScreen.main.bounds.width / 2)
+                // .animation(.spring(response: 1.2, dampingFraction: 0.3).delay(0.8), value: titleAnimation)
 
                 VStack(spacing: 25) {
                     TextField(
@@ -128,9 +149,13 @@ public struct LoginView: View {
                     .onSubmit {
                         focusedField = .password
                     }
-                    .textFieldStyle(NeumorphicTextFieldStyle())
-                    .foregroundColor(AppTheme.Colors.textPrimary)
-                    .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
+                    .textFieldStyle(NeumorphicTextFieldStyle(
+                        baseColor: currentBaseColor,
+                        lightShadowColor: lightShadow,
+                        darkShadowColor: darkShadow
+                    ))
+                    .foregroundColor(currentTextPrimaryColor)
+                    .accentColor(currentAccentColor)
 
                     SecureField(
                         "",
@@ -145,9 +170,13 @@ public struct LoginView: View {
                         focusedField = nil
                         Task { [weak viewModel] in await viewModel?.login() }
                     }
-                    .textFieldStyle(NeumorphicTextFieldStyle())
-                    .foregroundColor(AppTheme.Colors.textPrimary)
-                    .accentColor(AppTheme.Colors.accentLimeGreen(for: colorScheme))
+                    .textFieldStyle(NeumorphicTextFieldStyle(
+                        baseColor: currentBaseColor,
+                        lightShadowColor: lightShadow,
+                        darkShadowColor: darkShadow
+                    ))
+                    .foregroundColor(currentTextPrimaryColor)
+                    .accentColor(currentAccentColor)
                 }
                 VStack(spacing: 16) {
                     if viewModel.shouldShowCaptcha {
@@ -181,7 +210,14 @@ public struct LoginView: View {
                                         .font(Font.system(.headline, design: .rounded).weight(.bold))
                                         .frame(maxWidth: .infinity)
                                 }
-                                .buttonStyle(NeumorphicButtonStyle())
+                                .buttonStyle(NeumorphicButtonStyle(
+                                    baseColor: currentBaseColor,
+                                    lightShadowColor: lightShadow,
+                                    darkShadowColor: darkShadow,
+                                    pressedLightShadowColor: pressedLightShadow,
+                                    pressedDarkShadowColor: pressedDarkShadow,
+                                    labelColor: currentAccentColor
+                                ))
                                 .disabled(viewModel.isPerformingLogin)
 
                                 Button {
@@ -192,7 +228,7 @@ public struct LoginView: View {
                                 } label: {
                                     Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
                                         .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                        .foregroundColor(AppTheme.Colors.textSecondary)
+                                        .foregroundColor(currentTextSecondaryColor)
                                 }
                                 .buttonStyle(SimplePressButtonStyle())
                                 .disabled(viewModel.isPerformingLogin)
@@ -206,7 +242,7 @@ public struct LoginView: View {
                                 } label: {
                                     Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
                                         .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                        .foregroundColor(AppTheme.Colors.textSecondary)
+                                        .foregroundColor(currentTextSecondaryColor)
                                 }
                                 .buttonStyle(SimplePressButtonStyle())
                                 .disabled(viewModel.isPerformingLogin)
@@ -241,7 +277,14 @@ public struct LoginView: View {
                                     .font(Font.system(.headline, design: .rounded).weight(.bold))
                                     .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(NeumorphicButtonStyle())
+                            .buttonStyle(NeumorphicButtonStyle(
+                                baseColor: currentBaseColor,
+                                lightShadowColor: lightShadow,
+                                darkShadowColor: darkShadow,
+                                pressedLightShadowColor: pressedLightShadow,
+                                pressedDarkShadowColor: pressedDarkShadow,
+                                labelColor: currentAccentColor
+                            ))
                             .disabled(viewModel.isPerformingLogin)
 
                             Button {
@@ -252,7 +295,7 @@ public struct LoginView: View {
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
                                     .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(AppTheme.Colors.textSecondary)
+                                    .foregroundColor(currentTextSecondaryColor)
                             }
                             .buttonStyle(SimplePressButtonStyle())
                             .disabled(viewModel.isPerformingLogin)
@@ -266,7 +309,7 @@ public struct LoginView: View {
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
                                     .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(AppTheme.Colors.textSecondary)
+                                    .foregroundColor(currentTextSecondaryColor)
                             }
                             .buttonStyle(SimplePressButtonStyle())
                             .disabled(viewModel.isPerformingLogin)
@@ -297,7 +340,14 @@ public struct LoginView: View {
                                     .font(Font.system(.headline, design: .rounded).weight(.bold))
                                     .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(NeumorphicButtonStyle())
+                            .buttonStyle(NeumorphicButtonStyle(
+                                baseColor: currentBaseColor,
+                                lightShadowColor: lightShadow,
+                                darkShadowColor: darkShadow,
+                                pressedLightShadowColor: pressedLightShadow,
+                                pressedDarkShadowColor: pressedDarkShadow,
+                                labelColor: currentAccentColor
+                            ))
                             .disabled(viewModel.isPerformingLogin)
 
                             Button {
@@ -308,7 +358,7 @@ public struct LoginView: View {
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
                                     .font(Font.system(.callout, design: .rounded).weight(.medium))
-                                    .foregroundColor(AppTheme.Colors.textSecondary)
+                                    .foregroundColor(currentTextSecondaryColor)
                             }
                             .buttonStyle(SimplePressButtonStyle())
                             .disabled(viewModel.isPerformingLogin)
@@ -320,12 +370,19 @@ public struct LoginView: View {
                         VStack {
                             Text(message)
                                 .font(Font.system(.headline, design: .rounded).weight(.semibold))
-                                .foregroundColor(Color.green)
+                                .foregroundColor(Color.white)
                                 .multilineTextAlignment(.center)
-                                .padding(.vertical, 40)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.green.opacity(0.8))
+                                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                                )
                                 .accessibilityIdentifier(
                                     String(describing: LocalizedStringKey("LOGIN_SUCCESS_MESSAGE_ID")))
                         }
+                        .padding(.vertical, 20)
                     }
                 }
                 .frame(minHeight: 130)
@@ -335,23 +392,15 @@ public struct LoginView: View {
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .opacity(contentAnimation ? 1 : 0)
             .offset(y: contentAnimation ? 0 : UIScreen.main.bounds.height / 3)
-            .animation(.spring(response: 0.5, dampingFraction: 0.5).delay(0.4), value: contentAnimation)
-
-            if viewModel.isPerformingLogin {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: Color.green))
-                    .scaleEffect(2)
-                    .padding()
-                    .background(Color.black.opacity(0.4))
-                    .cornerRadius(10)
-                    .transition(.opacity)
-            }
+            // .animation(.spring(response: 0.8, dampingFraction: 0.4).delay(1.0), value: contentAnimation)
         }
         .onAppear {
             if animationsEnabled {
-                withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
-                    contentAnimation = true
-                }
+                // withAnimation(.interpolatingSpring(stiffness: 100, damping: 15).delay(0.2)) {
+                //     contentAnimation = true
+                // }
+                // titleAnimation = true
+                contentAnimation = true
                 titleAnimation = true
             } else {
                 contentAnimation = true
@@ -369,7 +418,7 @@ public struct LoginView: View {
 struct NeumorphicButtonStyle_Previews: PreviewProvider {
     static var previews: some View {
         Button("Hello World") {}
-            .buttonStyle(NeumorphicButtonStyle())
+            .buttonStyle(NeumorphicButtonStyle(baseColor: Color("neumorphicBaseColor"), lightShadowColor: Color.white.opacity(0.7), darkShadowColor: Color.black.opacity(0.2), pressedLightShadowColor: Color("neumorphicPressedLightShadow"), pressedDarkShadowColor: Color("neumorphicPressedDarkShadow"), labelColor: Color("accentColorLimeGreen")))
             .previewLayout(.sizeThatFits)
     }
 }

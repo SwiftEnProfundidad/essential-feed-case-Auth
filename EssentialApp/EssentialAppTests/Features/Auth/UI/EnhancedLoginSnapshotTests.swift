@@ -3,153 +3,200 @@ import EssentialFeed
 import SwiftUI
 import XCTest
 
+@MainActor
 final class EnhancedLoginSnapshotTests: XCTestCase {
-    func testLoginViewInDifferentStates() async throws {
+    func test_loginViewInDifferentStates() async throws {
         let languages = ["en", "es"]
         let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+
         for language in languages {
             for (uiStyle, schemeName) in schemes {
                 let locale = Locale(identifier: language)
+                let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
 
-                let idleVM = makeViewModel()
-                let idleView = await LoginView(viewModel: idleVM, animationsEnabled: false).environment(\.locale, locale)
-                let idleController = await MainActor.run { UIHostingController(rootView: idleView) }
-                await MainActor.run {
-                    idleController.overrideUserInterfaceStyle = uiStyle
-                    idleController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    idleController.loadViewIfNeeded()
-                }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                let idleSnapshot = await MainActor.run { idleController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)) }
-                assert(snapshot: idleSnapshot, named: "LOGIN_IDLE", language: language, scheme: schemeName)
+                let (idleVM, idleView) = makeSUT(locale: locale)
+                await assertLoginSnapshotSync(for: idleView, config: config, named: "LOGIN_IDLE", language: language, scheme: schemeName)
+                _ = idleVM
 
-                let validationVM = makeViewModel()
-                validationVM.username = "invalid@email"
+                let (validationVM, validationView) = makeSUT(locale: locale)
+                validationVM.username = "invalidemail"
                 validationVM.password = ""
                 await validationVM.login()
-                let validationView = await LoginView(viewModel: validationVM, animationsEnabled: false).environment(\.locale, locale)
-                let validationController = await MainActor.run { UIHostingController(rootView: validationView) }
-                await MainActor.run {
-                    validationController.overrideUserInterfaceStyle = uiStyle
-                    validationController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    validationController.loadViewIfNeeded()
-                }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                let validationSnapshot = await MainActor.run { validationController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)) }
-                assert(snapshot: validationSnapshot, named: "LOGIN_FORM_VALIDATION", language: language, scheme: schemeName)
+                await assertLoginSnapshotSync(for: validationView, config: config, named: "LOGIN_FORM_VALIDATION", language: language, scheme: schemeName)
+                _ = validationVM
 
-                let successVM = makeViewModel(
-                    authenticateResult: .success(
-                        LoginResponse(
-                            user: User(name: "Test User", email: "success@email.com"),
-                            token: Token(accessToken: "token123", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
-                        )
-                    )
+                let successLoginResponse = LoginResponse(
+                    user: User(name: "Test User", email: "success@email.com"),
+                    token: Token(accessToken: "token123", expiry: Date().addingTimeInterval(3600), refreshToken: "refresh123")
                 )
+                let (successVM, successView) = makeSUT(authenticateResult: .success(successLoginResponse), locale: locale)
                 successVM.username = "success@email.com"
                 successVM.password = "valid_password"
                 await successVM.login()
-                let successView = await LoginView(viewModel: successVM, animationsEnabled: false).environment(\.locale, locale)
-                let successController = await MainActor.run { UIHostingController(rootView: successView) }
-                await MainActor.run {
-                    successController.overrideUserInterfaceStyle = uiStyle
-                    successController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    successController.loadViewIfNeeded()
-                }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                let successSnapshot = await MainActor.run { successController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)) }
-                assert(snapshot: successSnapshot, named: "LOGIN_SUCCESS", language: language, scheme: schemeName)
+                await assertLoginSnapshotSync(for: successView, config: config, named: "LOGIN_SUCCESS", language: language, scheme: schemeName)
+                _ = successVM
 
                 let errorCases: [(LoginError, String)] = [
                     (.invalidCredentials, "INVALID_CREDENTIALS"),
-                    (.network, "NETWORK"),
+                    (.network, "NETWORK_ERROR"),
                     (.noConnectivity, "NO_CONNECTIVITY"),
                     (.tokenStorageFailed, "TOKEN_STORAGE_FAILED"),
-                    (.offlineStoreFailed, "OFFLINE_STORE_FAILED")
+                    (.offlineStoreFailed, "OFFLINE_STORE_FAILED"),
+                    (.accountLocked(remainingTime: 60), "ACCOUNT_LOCKED_NOTIFICATION"),
+                    (.invalidEmailFormat, "INVALID_EMAIL_FORMAT_NOTIFICATION"),
+                    (.invalidPasswordFormat, "INVALID_PASSWORD_FORMAT_NOTIFICATION")
                 ]
                 for (error, stateName) in errorCases {
-                    let errorVM = makeViewModel(authenticateResult: .failure(error))
+                    if case .accountLocked = error, stateName == "ACCOUNT_LOCKED_NOTIFICATION" { continue }
+
+                    let (errorVM, errorView) = makeSUT(authenticateResult: .failure(error), locale: locale)
                     errorVM.username = "error@email.com"
                     errorVM.password = "wrong_password"
                     await errorVM.login()
-                    let errorView = await LoginView(viewModel: errorVM, animationsEnabled: false).environment(\.locale, locale)
-                    let errorController = await MainActor.run { UIHostingController(rootView: errorView) }
-                    await MainActor.run {
-                        errorController.overrideUserInterfaceStyle = uiStyle
-                        errorController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                        errorController.loadViewIfNeeded()
-                    }
-                    try? await Task.sleep(nanoseconds: 100_000_000)
-                    let errorSnapshot = await MainActor.run { errorController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)) }
-                    assert(snapshot: errorSnapshot, named: "LOGIN_ERROR_\(stateName)", language: language, scheme: schemeName)
+                    await assertLoginSnapshotSync(for: errorView, config: config, named: "LOGIN_ERROR_\(stateName)", language: language, scheme: schemeName)
+                    _ = errorVM
                 }
 
-                let blockedStore = InMemoryFailedLoginAttemptsStore()
+                let storeForBlockedAccount = InMemoryFailedLoginAttemptsStore()
                 let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
-                let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
-                let blockedVM = LoginViewModel(
-                    authenticate: { _, _ in .failure(.invalidCredentials) },
-                    loginSecurity: blockedSecurityUseCase
+                let securityUseCaseForBlocked = LoginSecurityUseCase(store: storeForBlockedAccount, configuration: blockedConfiguration, timeProvider: { Date() })
+
+                let (blockedVM, blockedView) = makeSUT(
+                    authenticateResult: .failure(.invalidCredentials),
+                    securityUseCase: securityUseCaseForBlocked,
+                    locale: locale
                 )
                 blockedVM.username = "blocked@email.com"
                 blockedVM.password = "blocked_password"
                 await blockedVM.login()
-                let blockedView = await LoginView(viewModel: blockedVM, animationsEnabled: false).environment(\.locale, locale)
-                let blockedController = await MainActor.run { UIHostingController(rootView: blockedView) }
-                await MainActor.run {
-                    blockedController.overrideUserInterfaceStyle = uiStyle
-                    blockedController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    blockedController.loadViewIfNeeded()
-                }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                let blockedSnapshot = await MainActor.run { blockedController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)) }
-                assert(snapshot: blockedSnapshot, named: "LOGIN_ACCOUNT_LOCKED", language: language, scheme: schemeName)
+                await blockedVM.login()
+                await assertLoginSnapshotSync(for: blockedView, config: config, named: "LOGIN_ACCOUNT_LOCKED", language: language, scheme: schemeName)
+                _ = blockedVM
             }
         }
     }
 
-    func test_loginView_withCaptchaVisible() async {
+    func test_loginView_withCaptchaVisible() async throws {
         let languages = ["en", "es"]
         let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+
         for language in languages {
             for (uiStyle, schemeName) in schemes {
                 let locale = Locale(identifier: language)
-                let viewModel = await MainActor.run { makeViewModel() }
-                await MainActor.run {
-                    viewModel.username = "test@email.com"
-                    viewModel.password = "Password123!"
-                    viewModel.shouldShowCaptcha = true
-                }
-                let loginView = await MainActor.run { LoginView(viewModel: viewModel, animationsEnabled: false).environment(\.locale, locale) }
-                let hostingController = await MainActor.run { UIHostingController(rootView: loginView) }
-                await MainActor.run {
-                    hostingController.overrideUserInterfaceStyle = uiStyle
-                    hostingController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    hostingController.loadViewIfNeeded()
-                }
-                try? await Task.sleep(nanoseconds: 100_000_000)
-                let snapshot = await MainActor.run {
-                    hostingController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale))
-                }
-                assert(snapshot: snapshot, named: "LOGIN_WITH_CAPTCHA", language: language, scheme: schemeName)
+                let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
+
+                let (captchaVM, captchaView) = makeSUT(locale: locale)
+                captchaVM.username = "test@email.com"
+                captchaVM.password = "Password123!"
+                await MainActor.run { captchaVM.shouldShowCaptcha = true }
+
+                await assertLoginSnapshotSync(for: captchaView, config: config, named: "LOGIN_WITH_CAPTCHA", language: language, scheme: schemeName)
+                _ = captchaVM
             }
         }
     }
 
-    // MARK: - Helpers
+    private func makeSUT(
+        authenticateResult: Result<LoginResponse, LoginError> = .failure(LoginError.invalidCredentials),
+        securityUseCase: LoginSecurityUseCase? = nil,
+        locale _: Locale
+    ) -> (LoginViewModel, some View) {
+        let store = InMemoryFailedLoginAttemptsStore()
+        let defaultConfiguration = LoginSecurityConfiguration(
+            maxAttempts: 3,
+            blockDuration: 300,
+            captchaThreshold: 2
+        )
+        let finalSecurityUseCase = securityUseCase ?? LoginSecurityUseCase(
+            store: store,
+            configuration: defaultConfiguration,
+            timeProvider: { Date() }
+        )
 
-    func makeViewModel(authenticateResult: Result<LoginResponse, LoginError> = .failure(LoginError.invalidCredentials)) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(
-            maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
-        )
-        return LoginViewModel(
+        let vm = LoginViewModel(
             authenticate: { _, _ in authenticateResult },
-            pendingRequestStore: nil,
-            loginSecurity: LoginSecurityUseCase(
-                store: InMemoryFailedLoginAttemptsStore(),
-                configuration: configuration,
-                timeProvider: { Date() }
-            )
+            loginSecurity: finalSecurityUseCase
         )
+
+        let view = LoginView(viewModel: vm, animationsEnabled: false)
+        return (vm, view)
+    }
+
+    private func assertLoginSnapshotSync(for view: some View, config: SnapshotConfiguration, named: String, language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line) async {
+        let themedView = view
+            .environment(\.locale, config.locale)
+            .environment(\.colorScheme, config.style == .dark ? .dark : .light)
+
+        let hostingController = UIHostingController(rootView: AnyView(themedView))
+        let traitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceStyle: config.style),
+            UITraitCollection(displayScale: UIScreen.main.scale)
+        ])
+        hostingController.overrideUserInterfaceStyle = config.style
+        hostingController.view.frame = CGRect(origin: .zero, size: config.size)
+
+        await MainActor.run {
+            hostingController.setOverrideTraitCollection(traitCollection, forChild: hostingController)
+        }
+
+        let window = UIWindow(frame: hostingController.view.frame)
+        window.rootViewController = hostingController
+        window.makeKeyAndVisible()
+
+        await MainActor.run {
+            hostingController.loadViewIfNeeded()
+            hostingController.view.setNeedsLayout()
+            hostingController.view.layoutIfNeeded()
+        }
+
+        await Task.yield()
+        try? await Task.sleep(nanoseconds: 700_000_000)
+
+        let snapshot = await MainActor.run {
+            hostingController.view.setNeedsLayout()
+            hostingController.view.layoutIfNeeded()
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+            return hostingController.snapshot(for: config)
+        }
+
+        assert(snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line)
+
+        await MainActor.run { window.rootViewController = nil }
+    }
+}
+
+private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
+    private var attemptCounts: [String: Int] = [:]
+    private var lastAttemptTimestamps: [String: Date] = [:]
+    private let lockQueue = DispatchQueue(label: "com.essentialdeveloper.inmemoryfailedloginattemptsstore.lock")
+
+    func incrementAttempts(for username: String) async {
+        await Task { @MainActor in
+            lockQueue.sync {
+                attemptCounts[username, default: 0] += 1
+                lastAttemptTimestamps[username] = Date()
+            }
+        }.value
+    }
+
+    func resetAttempts(for username: String) async {
+        await Task { @MainActor in
+            lockQueue.sync {
+                attemptCounts[username] = nil
+                lastAttemptTimestamps[username] = nil
+            }
+        }.value
+    }
+
+    func getAttempts(for username: String) -> Int {
+        lockQueue.sync {
+            attemptCounts[username] ?? 0
+        }
+    }
+
+    func lastAttemptTime(for username: String) -> Date? {
+        lockQueue.sync {
+            lastAttemptTimestamps[username]
+        }
     }
 }

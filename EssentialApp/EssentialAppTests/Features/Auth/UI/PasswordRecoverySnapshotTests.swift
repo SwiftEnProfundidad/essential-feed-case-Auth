@@ -1,4 +1,3 @@
-
 import EssentialApp
 import EssentialFeed
 import SwiftUI
@@ -114,16 +113,47 @@ private final class DummyPasswordRecoveryAuditLogger: PasswordRecoveryAuditLogge
 }
 
 private extension PasswordRecoverySnapshotTests {
-    func assertSnapshotAndRelease(apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>, config: SnapshotConfiguration, named: String, language: String, scheme: String, weakVM: inout PasswordRecoverySwiftUIViewModel?, weakSUT: inout UIViewController?) {
+    func assertSnapshotAndRelease(
+        apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>,
+        config: SnapshotConfiguration,
+        named: String,
+        language: String,
+        scheme: String,
+        weakVM: inout PasswordRecoverySwiftUIViewModel?,
+        weakSUT: inout UIViewController?
+    ) {
+        var strongVM: PasswordRecoverySwiftUIViewModel?
+        var strongSUT: UIViewController?
+
         autoreleasepool {
             let (vm, sut) = makeSUT(apiResult: apiResult, config: config)
+            strongVM = vm
+            _ = strongVM
+            strongSUT = sut
+            _ = strongSUT
+
             weakVM = vm
             weakSUT = sut
+
             vm.recoverPassword()
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.7))
             assertSnapshot(for: sut, config: config, named: named, language: language, scheme: scheme)
+
+            if let hostingController = sut as? UIHostingController<PasswordRecoveryScreen> {
+                let dummyRecoveryUseCase = RemoteUserPasswordRecoveryUseCase(
+                    api: DummyPasswordRecoveryAPI(result: .success(.init(message: "dummy"))),
+                    rateLimiter: DummyPasswordRecoveryRateLimiter(),
+                    tokenManager: DummyPasswordResetTokenManager(),
+                    auditLogger: DummyPasswordRecoveryAuditLogger()
+                )
+                let dummyViewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: dummyRecoveryUseCase)
+                hostingController.rootView = PasswordRecoveryScreen(viewModel: dummyViewModel)
+            }
+
+            strongVM = nil
+            strongSUT = nil
         }
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
-        autoreleasepool {}
+
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.7))
     }
 }

@@ -14,3 +14,6 @@
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Account blocked";
 "LOGIN_SUCCESS_MESSAGE" = "Login successful!";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Success message";
+
+"PASSWORD_RECOVERY_SUCCESS_TITLE" = "Success";
+"PASSWORD_RECOVERY_ERROR_TITLE" = "Error";

@@ -69,8 +69,9 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         sut.email = ""
         sut.recoverPassword()
         XCTAssertTrue(useCaseSpy.receivedEmails.isEmpty)
-        XCTAssertEqual(sut.feedbackMessage, "")
-        XCTAssertFalse(sut.showingFeedback)
+        XCTAssertEqual(sut.feedbackMessage, "Please enter your email address.")
+        XCTAssertTrue(sut.showingFeedback)
+        XCTAssertFalse(sut.isSuccess)
     }
 
     func test_changingEmailAfterFeedback_hidesFeedback() {

@@ -331,9 +331,6 @@ public final class LoginViewModel: ObservableObject {
     }
 
     deinit {
-        #if DEBUG
-            print("LoginViewModel deallocated")
-        #endif
         delayTask?.cancel()
     }
 

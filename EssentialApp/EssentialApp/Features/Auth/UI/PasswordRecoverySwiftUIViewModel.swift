@@ -9,6 +9,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     @Published public var feedbackMessage: String = ""
     @Published public var isSuccess: Bool = false
     @Published public var showingFeedback: Bool = false
+    @Published public var isPerformingRecovery: Bool = false
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
     private var lastRequestedEmail: String?
@@ -16,9 +17,9 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
     public var feedbackTitle: String {
         if isSuccess {
-            "Éxito"
+            String(localized: "PASSWORD_RECOVERY_SUCCESS_TITLE", bundle: .main)
         } else {
-            "Error"
+            String(localized: "PASSWORD_RECOVERY_ERROR_TITLE", bundle: .main)
         }
     }
 
@@ -37,16 +38,23 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     }
 
     public func recoverPassword() {
-        guard !email.isEmpty else { return }
+        guard !email.isEmpty else {
+            feedbackMessage = "Please enter your email address."
+            showingFeedback = true
+            isSuccess = false
+            return
+        }
+
+        isPerformingRecovery = true
         lastRequestedEmail = email
         recoveryUseCase.recoverPassword(
             email: email,
             ipAddress: getCurrentIPAddress(),
             userAgent: getCurrentUserAgent()
         ) { [weak self] result in
-            guard let self, self.email == self.lastRequestedEmail else { return }
-            self.mainQueueDispatcher { [weak self] in
-                guard let self else { return }
+            Task { @MainActor [weak self] in
+                guard let self, self.email == self.lastRequestedEmail else { return }
+                self.isPerformingRecovery = false
                 let viewModel = PasswordRecoveryPresenter.map(result)
                 self.display(viewModel)
             }
