@@ -4,125 +4,60 @@ import WebKit
 import XCTest
 
 final class CaptchaSnapshotTests: XCTestCase {
-    func test_captchaView_visible_light() {
-        autoreleasepool {
-            var sut: UIViewController? = makeCaptchaView(
-                isVisible: true, colorScheme: .light, initialLoading: false
-            )
-            assertSnapshot(
-                sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "en", scheme: "light"
-            )
-            assertSnapshot(
-                sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "es", scheme: "light"
-            )
-            RunLoop.current.run(until: Date())
-            forceCleanupWebViews(in: sut!.view)
-            sut?.view.removeFromSuperview()
-            sut = nil
+    func test_captchaView_allStates_snapshot_by_language_and_scheme() {
+        let languages = ["en", "es"]
+        let schemes: [(UIUserInterfaceStyle, String, ColorScheme)] = [(.light, "light", .light), (.dark, "dark", .dark)]
 
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-        }
-
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-    }
-
-    func test_captchaView_visible_dark() {
-        autoreleasepool {
-            var sut: UIViewController? = makeCaptchaView(
-                isVisible: true, colorScheme: .dark, initialLoading: false
-            )
-
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "en", scheme: "dark")
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "es", scheme: "dark")
-
-            RunLoop.current.run(until: Date())
-            forceCleanupWebViews(in: sut!.view)
-            sut?.view.removeFromSuperview()
-            sut = nil
-
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-        }
-
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-    }
-
-    func test_captchaView_hidden() {
-        autoreleasepool {
-            var sut: UIViewController? = makeCaptchaView(isVisible: false, colorScheme: .light)
-
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_HIDDEN", language: "en", scheme: "light")
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_HIDDEN", language: "es", scheme: "light")
-
-            RunLoop.current.run(until: Date())
-            forceCleanupWebViews(in: sut!.view)
-            sut?.view.removeFromSuperview()
-            sut = nil
-
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-        }
-
-        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-    }
-
-    func test_captchaView_loading_light() {
-        autoreleasepool {
-            weak var weakRef: UIViewController?
-
-            autoreleasepool {
-                let sut = makeCaptchaView(
-                    isVisible: true, colorScheme: .light, isLoading: true, initialLoading: true
-                )
-                weakRef = sut
-
-                assertSnapshot(
-                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "light"
-                )
-                assertSnapshot(
-                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "light"
-                )
-
-                forceCleanupWebViews(in: sut.view)
-                sut.view.removeFromSuperview()
+        for language in languages {
+            for (_, schemeName, colorScheme) in schemes {
+                autoreleasepool {
+                    var sut: UIViewController? = makeCaptchaView(isVisible: true, colorScheme: colorScheme, initialLoading: false)
+                    let snapshot = sut!.view.snapshot()
+                    assert(snapshot: snapshot, named: "CAPTCHA_VISIBLE", language: language, scheme: schemeName)
+                    forceCleanupWebViews(in: sut!.view)
+                    sut?.view.removeFromSuperview()
+                    sut = nil
+                    RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+                }
             }
-
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-            XCTAssertNil(weakRef, "Memory leak: SUT wasn't deallocated")
         }
-    }
 
-    func test_captchaView_loading_dark() {
-        autoreleasepool {
-            weak var weakRef: UIViewController?
-
-            autoreleasepool {
-                let sut = makeCaptchaView(
-                    isVisible: true, colorScheme: .dark, isLoading: true, initialLoading: true
-                )
-                weakRef = sut
-
-                assertSnapshot(
-                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "dark"
-                )
-                assertSnapshot(
-                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "dark"
-                )
-
-                forceCleanupWebViews(in: sut.view)
-                sut.view.removeFromSuperview()
+        for language in languages {
+            for (_, schemeName, colorScheme) in schemes {
+                autoreleasepool {
+                    var sut: UIViewController? = makeCaptchaView(isVisible: false, colorScheme: colorScheme)
+                    let snapshot = sut!.view.snapshot()
+                    assert(snapshot: snapshot, named: "CAPTCHA_HIDDEN", language: language, scheme: schemeName)
+                    forceCleanupWebViews(in: sut!.view)
+                    sut?.view.removeFromSuperview()
+                    sut = nil
+                    RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+                }
             }
+        }
 
-            RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
-            XCTAssertNil(weakRef, "Memory leak: SUT wasn't deallocated")
+        for language in languages {
+            for (_, schemeName, colorScheme) in schemes {
+                autoreleasepool {
+                    weak var weakRef: UIViewController?
+                    autoreleasepool {
+                        let sut = makeCaptchaView(isVisible: true, colorScheme: colorScheme, isLoading: true, initialLoading: true)
+                        weakRef = sut
+                        let snapshot = sut.view.snapshot()
+                        assert(snapshot: snapshot, named: "CAPTCHA_LOADING", language: language, scheme: schemeName)
+                        forceCleanupWebViews(in: sut.view)
+                        sut.view.removeFromSuperview()
+                    }
+                    RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.1))
+                    XCTAssertNil(weakRef, "Memory leak: SUT wasn't deallocated")
+                }
+            }
         }
     }
 
     private func makeCaptchaView(
-        isVisible: Bool,
-        colorScheme: ColorScheme,
-        isLoading _: Bool = false,
-        initialLoading: Bool = false,
-        file: StaticString = #filePath,
-        line: UInt = #line
+        isVisible: Bool, colorScheme: ColorScheme, isLoading _: Bool = false,
+        initialLoading: Bool = false, file: StaticString = #filePath, line: UInt = #line
     ) -> UIViewController {
         var tokenValue: String? = nil
         let tokenBinding = Binding<String?>(
@@ -153,17 +88,14 @@ final class CaptchaSnapshotTests: XCTestCase {
     }
 }
 
-private extension UIView {
+extension UIView {
     func snapshot() -> UIImage {
         setNeedsDisplay()
         layoutIfNeeded()
-
         let format = UIGraphicsImageRendererFormat()
         format.opaque = true
         format.scale = 1
-
         let renderer = UIGraphicsImageRenderer(bounds: bounds, format: format)
-
         return renderer.image { _ in
             drawHierarchy(in: bounds, afterScreenUpdates: true)
         }
@@ -185,72 +117,5 @@ extension CaptchaSnapshotTests {
                 forceCleanupWebViews(in: subview)
             }
         }
-    }
-
-    func assertSnapshot(
-        _ snapshot: UIImage,
-        named name: String,
-        language: String,
-        scheme: String,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        let snapshotURL = makeSnapshotURL(named: name, language: language, scheme: scheme, file: file)
-        let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
-
-        let recordMode = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "true"
-
-        if recordMode {
-            do {
-                try FileManager.default.createDirectory(
-                    at: snapshotURL.deletingLastPathComponent(),
-                    withIntermediateDirectories: true
-                )
-
-                try snapshotData?.write(to: snapshotURL)
-                return
-            } catch {
-                XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
-            }
-        } else {
-            guard let storedSnapshotData = try? Data(contentsOf: snapshotURL) else {
-                XCTFail(
-                    "Failed to load stored snapshot at URL: \(snapshotURL). Use the `record` method (by setting RECORD_SNAPSHOTS=true environment variable) to store a snapshot before asserting.",
-                    file: file, line: line
-                )
-                return
-            }
-
-            if snapshotData != storedSnapshotData {
-                let temporarySnapshotURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-                    .appendingPathComponent(snapshotURL.lastPathComponent)
-
-                try? snapshotData?.write(to: temporarySnapshotURL)
-
-                XCTFail(
-                    "New snapshot does not match stored snapshot. New snapshot URL: \(temporarySnapshotURL), Stored snapshot URL: \(snapshotURL)",
-                    file: file, line: line
-                )
-            }
-        }
-    }
-
-    func makeSnapshotURL(named name: String, language: String, scheme: String, file: StaticString)
-        -> URL
-    {
-        URL(fileURLWithPath: String(describing: file))
-            .deletingLastPathComponent()
-            .appendingPathComponent("snapshots")
-            .appendingPathComponent(language)
-            .appendingPathComponent(scheme)
-            .appendingPathComponent("\(name).png")
-    }
-
-    private func makeSnapshotData(for snapshot: UIImage, file: StaticString, line: UInt) -> Data? {
-        guard let data = snapshot.pngData() else {
-            XCTFail("Failed to generate PNG data representation from snapshot", file: file, line: line)
-            return nil
-        }
-        return data
     }
 }

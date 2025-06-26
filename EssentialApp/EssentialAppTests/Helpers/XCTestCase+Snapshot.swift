@@ -4,8 +4,8 @@ import UIKit
 import XCTest
 
 extension XCTestCase {
-    func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
-        let snapshotURL = makeSnapshotURL(named: name, file: file)
+    func assert(snapshot: UIImage, named name: String, language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line) {
+        let snapshotURL = makeSnapshotURL(named: name, language: language, scheme: scheme, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
 
         let recordMode = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "true"
@@ -38,10 +38,12 @@ extension XCTestCase {
         }
     }
 
-    func makeSnapshotURL(named name: String, file: StaticString) -> URL {
+    func makeSnapshotURL(named name: String, language: String, scheme: String, file: StaticString) -> URL {
         URL(fileURLWithPath: String(describing: file))
             .deletingLastPathComponent()
             .appendingPathComponent("snapshots")
+            .appendingPathComponent(language)
+            .appendingPathComponent(scheme)
             .appendingPathComponent("\(name).png")
     }
 

@@ -6,10 +6,13 @@ import XCTest
 final class LoginNotificationSnapshotTests: XCTestCase {
     func test_loginSuccess_showsSuccessNotification() async {
         let sut = makeSUT(authenticate: { _, _ in
-            .success(LoginResponse(
-                user: User(name: "Test User", email: "test@example.com"),
-                token: Token(accessToken: "dummy_token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
-            ))
+            .success(
+                LoginResponse(
+                    user: User(name: "Test User", email: "test@example.com"),
+                    token: Token(
+                        accessToken: "dummy_token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                    )
+                ))
         })
         await verifySnapshot(
             for: sut,
@@ -77,20 +80,36 @@ final class LoginNotificationSnapshotTests: XCTestCase {
         line: UInt = #line
     ) async {
         await action(sut)
-
-        let lightSnapshot = sut.snapshot(for: .iPhone13(style: .light))
-        let darkSnapshot = sut.snapshot(for: .iPhone13(style: .dark))
-
-        assert(snapshot: lightSnapshot, named: "\(name)_light", file: file, line: line)
-        assert(snapshot: darkSnapshot, named: "\(name)_dark", file: file, line: line)
+        let languages = ["en", "es"]
+        let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+        for language in languages {
+            for (uiStyle, schemeName) in schemes {
+                let locale = Locale(identifier: language)
+                let sut = makeSUT(authenticate: sut.viewModel.authenticate, locale: locale)
+                await MainActor.run {
+                    sut.controller.overrideUserInterfaceStyle = uiStyle
+                    sut.controller.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+                    sut.controller.view.window?.overrideUserInterfaceStyle = uiStyle
+                    sut.controller.view.window?.rootViewController?.overrideUserInterfaceStyle = uiStyle
+                    sut.controller.view.window?.rootViewController?.view.setNeedsLayout()
+                    sut.controller.view.window?.rootViewController?.view.layoutIfNeeded()
+                }
+                let snapshot = sut.snapshot(for: .iPhone13(style: uiStyle, locale: locale))
+                assert(
+                    snapshot: snapshot, named: name, language: language, scheme: schemeName, file: file,
+                    line: line
+                )
+            }
+        }
     }
 
     private func makeSUT(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
+        locale: Locale = .current,
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> LoginTestHarness {
-        let sut = LoginTestHarness(authenticate: authenticate)
+        let sut = LoginTestHarness(authenticate: authenticate, locale: locale)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
@@ -98,20 +117,21 @@ final class LoginNotificationSnapshotTests: XCTestCase {
 
 final class LoginTestHarness {
     let viewModel: LoginViewModel
-    let controller: UIHostingController<LoginView>
+    let controller: UIHostingController<AnyView>
 
-    init(authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>) {
+    init(authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>, locale: Locale = .current) {
         let viewModel = LoginViewModel(authenticate: authenticate)
         self.viewModel = viewModel
+        let rootView = AnyView(LoginView(viewModel: viewModel).environment(\.locale, locale))
         if !Thread.isMainThread {
-            var controller: UIHostingController<LoginView>!
+            var controller: UIHostingController<AnyView>!
             DispatchQueue.main.sync {
-                controller = UIHostingController(rootView: LoginView(viewModel: viewModel))
+                controller = UIHostingController(rootView: rootView)
                 controller.loadViewIfNeeded()
             }
             self.controller = controller
         } else {
-            self.controller = UIHostingController(rootView: LoginView(viewModel: viewModel))
+            self.controller = UIHostingController(rootView: rootView)
             controller.loadViewIfNeeded()
         }
     }
