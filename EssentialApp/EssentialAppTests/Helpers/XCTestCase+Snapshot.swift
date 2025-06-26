@@ -5,22 +5,10 @@ import XCTest
 
 extension XCTestCase {
     func assert(snapshot: UIImage, named name: String, language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line) {
-        // `name` aquí es lo que viene de assertLoginSnapshotSync, ej "LOGIN_IDLE"
         let snapshotURL = makeSnapshotURL(named: name, language: language, scheme: scheme, file: file)
         let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
 
-        print("*********************************************************")
-        print("[SNAPSHOT ASSERT] Received name: '\(name)'")
-        print("[SNAPSHOT ASSERT] URL from makeSnapshotURL: \(snapshotURL.path)")
-        print("[SNAPSHOT ASSERT] Will attempt to write to: \(snapshotURL.lastPathComponent)")
-        print("*********************************************************")
-
         let recordMode = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "true"
-
-        print("[SNAPSHOT] Ruta destino: \(snapshotURL.path)")
-        if FileManager.default.fileExists(atPath: snapshotURL.path) {
-            print("[SNAPSHOT] ADVERTENCIA: El archivo ya existe y será sobrescrito: \(snapshotURL.lastPathComponent)")
-        }
 
         if recordMode {
             do {
@@ -29,7 +17,6 @@ extension XCTestCase {
                     withIntermediateDirectories: true
                 )
                 try snapshotData?.write(to: snapshotURL)
-                print("[SNAPSHOT ASSERT] SUCCESSFULLY WROTE to: \(snapshotURL.path)")
             } catch {
                 XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
             }
@@ -56,22 +43,12 @@ extension XCTestCase {
         let languageFolderURL = snapshotsFolderURL.appendingPathComponent(language)
         let schemeFolderURL = languageFolderURL.appendingPathComponent(scheme)
 
-        // Intentar crear las carpetas explícitamente por si acaso
         try? fileManager.createDirectory(at: snapshotsFolderURL, withIntermediateDirectories: true, attributes: nil)
         try? fileManager.createDirectory(at: languageFolderURL, withIntermediateDirectories: true, attributes: nil)
         try? fileManager.createDirectory(at: schemeFolderURL, withIntermediateDirectories: true, attributes: nil)
 
         let finalFileName = "\(name).png"
         let snapshotURL = schemeFolderURL.appendingPathComponent(finalFileName)
-
-        print("---------------------------------------------------------")
-        print("[SNAPSHOT MAKE URL] Received name: '\(name)'")
-        print("[SNAPSHOT MAKE URL] Language: '\(language)'")
-        print("[SNAPSHOT MAKE URL] Scheme: '\(scheme)'")
-        print("[SNAPSHOT MAKE URL] Intended final file name part: '\(name).png'")
-        print("[SNAPSHOT MAKE URL] FINAL final file name: '\(finalFileName)'")
-        print("[SNAPSHOT MAKE URL] FULL URL being returned: \(snapshotURL.path)")
-        print("---------------------------------------------------------")
 
         return snapshotURL
     }

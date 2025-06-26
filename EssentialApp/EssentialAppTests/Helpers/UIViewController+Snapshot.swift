@@ -19,12 +19,12 @@ struct SnapshotConfiguration {
         )
     }
 
-    static func iPhone16(
+    static func iPhone16Pro(
         style: UIUserInterfaceStyle = .light, contentSize _: UIContentSizeCategory? = nil,
         locale: Locale = Locale(identifier: "en_US")
     ) -> SnapshotConfiguration {
         SnapshotConfiguration(
-            size: CGSize(width: 430, height: 932),
+            size: CGSize(width: 393, height: 852),
             style: style,
             contentSize: nil,
             locale: locale

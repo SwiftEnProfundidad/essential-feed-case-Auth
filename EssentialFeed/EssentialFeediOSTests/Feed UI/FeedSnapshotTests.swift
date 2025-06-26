@@ -1,5 +1,5 @@
 //
-//  Copyright 2019 Essential Developer. All rights reserved.
+//  Copyright © 2019 Essential Developer. All rights reserved.
 //
 
 import EssentialFeed
@@ -13,13 +13,13 @@ class FeedSnapshotTests: XCTestCase {
         sut.display(feedWithContent())
 
         if isRecording {
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_CONTENT_light")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_CONTENT_dark")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_CONTENT_light_extraExtraExtraLarge")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_CONTENT_light")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_CONTENT_dark")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_CONTENT_light_extraExtraExtraLarge")
         } else {
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_CONTENT_light")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_CONTENT_dark")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_CONTENT_light_extraExtraExtraLarge")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_CONTENT_light")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_CONTENT_dark")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_CONTENT_light_extraExtraExtraLarge")
         }
     }
 
@@ -29,11 +29,11 @@ class FeedSnapshotTests: XCTestCase {
         sut.display(feedWithFailedImageLoading())
 
         if isRecording {
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
         } else {
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_FAILED_IMAGE_LOADING_light")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_FAILED_IMAGE_LOADING_dark")
         }
     }
 
@@ -43,11 +43,11 @@ class FeedSnapshotTests: XCTestCase {
         sut.display(feedWithLoadMoreIndicator())
 
         if isRecording {
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_LOAD_MORE_INDICATOR_light")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_LOAD_MORE_INDICATOR_dark")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_LOAD_MORE_INDICATOR_light")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_LOAD_MORE_INDICATOR_dark")
         } else {
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_LOAD_MORE_INDICATOR_light")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_LOAD_MORE_INDICATOR_dark")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_LOAD_MORE_INDICATOR_light")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_LOAD_MORE_INDICATOR_dark")
         }
     }
 
@@ -57,20 +57,21 @@ class FeedSnapshotTests: XCTestCase {
         sut.display(feedWithLoadMoreError())
 
         if isRecording {
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_LOAD_MORE_ERROR_light")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_LOAD_MORE_ERROR_dark")
-            record(snapshot: sut.snapshot(for: .iPhone13(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_LOAD_MORE_ERROR_extraExtraExtraLarge")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_LOAD_MORE_ERROR_light")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_LOAD_MORE_ERROR_dark")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_LOAD_MORE_ERROR_extraExtraExtraLarge")
         } else {
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "FEED_WITH_LOAD_MORE_ERROR_light")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "FEED_WITH_LOAD_MORE_ERROR_dark")
-            assert(snapshot: sut.snapshot(for: .iPhone13(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_LOAD_MORE_ERROR_extraExtraExtraLarge")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "FEED_WITH_LOAD_MORE_ERROR_light")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "FEED_WITH_LOAD_MORE_ERROR_dark")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "FEED_WITH_LOAD_MORE_ERROR_extraExtraExtraLarge")
         }
     }
 
     // MARK: - Helpers
 
     private var isRecording: Bool {
-        ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"] == "1"
+        let envValue = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"]
+        return envValue == "1" || envValue == "true"
     }
 
     private func makeSUT() -> ListViewController {

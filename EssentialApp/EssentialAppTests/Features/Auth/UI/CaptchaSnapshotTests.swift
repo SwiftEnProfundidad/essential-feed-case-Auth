@@ -15,7 +15,7 @@ final class CaptchaSnapshotTests: XCTestCase {
         for language in languages {
             for (uiStyle, schemeName, colorScheme) in schemes {
                 let locale = Locale(identifier: language)
-                let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
+                let config = SnapshotConfiguration.iPhone16Pro(style: uiStyle, locale: locale)
 
                 await assertSnapshot(
                     for: makeSUT(isVisible: true, initialLoading: false, colorScheme: colorScheme),
@@ -36,6 +36,11 @@ final class CaptchaSnapshotTests: XCTestCase {
     }
 
     // MARK: - Helpers
+
+    private var isRecording: Bool {
+        let envValue = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"]
+        return envValue == "1" || envValue == "true"
+    }
 
     private func makeSUT(isVisible: Bool, initialLoading: Bool, colorScheme: ColorScheme, file: StaticString = #filePath, line: UInt = #line) -> UIViewController {
         let view = CaptchaView(
@@ -67,10 +72,26 @@ final class CaptchaSnapshotTests: XCTestCase {
 
         let snapshot = controller.snapshot(for: config)
 
-        assert(
-            snapshot: snapshot, named: named, language: language, scheme: scheme,
-            file: file, line: line
-        )
+        if isRecording {
+            let snapshotURL = makeSnapshotURL(named: named, language: language, scheme: scheme, file: file)
+            let snapshotData = snapshot.pngData()
+
+            do {
+                try FileManager.default.createDirectory(
+                    at: snapshotURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true
+                )
+                try snapshotData?.write(to: snapshotURL)
+                XCTFail("Record succeeded - use `assert` to compare the snapshot from now on.", file: file, line: line)
+            } catch {
+                XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
+            }
+        } else {
+            assert(
+                snapshot: snapshot, named: named, language: language, scheme: scheme,
+                file: file, line: line
+            )
+        }
 
         forceCleanupWebViews()
         try? await Task.sleep(nanoseconds: 100_000_000)
