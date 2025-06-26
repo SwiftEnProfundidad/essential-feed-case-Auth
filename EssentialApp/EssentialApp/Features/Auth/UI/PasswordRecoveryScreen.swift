@@ -23,7 +23,9 @@ public struct PasswordRecoveryScreen: View {
             Alert(
                 title: Text(viewModel.feedbackTitle),
                 message: Text(viewModel.feedbackMessage),
-                dismissButton: .default(Text("OK"), action: viewModel.onFeedbackDismiss)
+                dismissButton: .default(Text("OK")) {
+                    viewModel.onFeedbackDismiss()
+                }
             )
         }
     }

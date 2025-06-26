@@ -1791,7 +1791,6 @@
 				B4A7468E2DDD3BB10087C33C /* UserRegistrationData.swift */,
 				B45C368D2DDA92EE00184F55 /* FailedLoginAttemptEvent.swift */,
 				B45C368E2DDA92EE00184F55 /* LoginCredentials.swift */,
-				B45C368F2DDA92EE00184F55 /* LoginError.swift */,
 				B45C36902DDA92EE00184F55 /* PasswordRecovery.swift */,
 				B45C36912DDA92EE00184F55 /* Token.swift */,
 			);
@@ -1801,6 +1800,7 @@
 		B45C36962DDA92EE00184F55 /* Errors */ = {
 			isa = PBXGroup;
 			children = (
+				B45C368F2DDA92EE00184F55 /* LoginError.swift */,
 				B40ADAE22E01C84500A39B40 /* CaptchaError.swift */,
 				B49DC5882DF74A0700C5ADE6 /* RegistrationError.swift */,
 				B4A746952DDD3C740087C33C /* TokenParsingError.swift */,

@@ -210,9 +210,7 @@ public final class LoginViewModel: ObservableObject {
     }
 
     @MainActor
-    private func handleFailedLogin(
-        _ error: LoginError, for username: String, isPostCaptchaRetry: Bool = false
-    ) async {
+    private func handleFailedLogin(_ error: LoginError, for username: String, isPostCaptchaRetry: Bool = false) async {
         isPerformingLogin = false
 
         if isPostCaptchaRetry {
@@ -333,6 +331,9 @@ public final class LoginViewModel: ObservableObject {
     }
 
     deinit {
+        #if DEBUG
+            print("LoginViewModel deallocated")
+        #endif
         delayTask?.cancel()
     }
 

@@ -143,7 +143,7 @@ public struct LoginView: View {
                     .focused($focusedField, equals: .password)
                     .onSubmit {
                         focusedField = nil
-                        Task { await viewModel.login() }
+                        Task { [weak viewModel] in await viewModel?.login() }
                     }
                     .textFieldStyle(NeumorphicTextFieldStyle())
                     .foregroundColor(AppTheme.Colors.textPrimary)
@@ -153,8 +153,9 @@ public struct LoginView: View {
                     if viewModel.shouldShowCaptcha {
                         CaptchaView(
                             token: $viewModel.captchaToken,
-                            onTokenReceived: { token in
-                                viewModel.setCaptchaToken(token)
+                            onTokenReceived: { [weak viewModel] token in
+                                viewModel?.captchaToken = token
+                                Task { await viewModel?.login() }
                             },
                             isVisible: true
                         )
@@ -171,9 +172,9 @@ public struct LoginView: View {
                         } else {
                             VStack(spacing: 16) {
                                 Button {
-                                    Task {
+                                    Task { [weak viewModel] in
                                         focusedField = nil
-                                        await viewModel.login()
+                                        await viewModel?.login()
                                     }
                                 } label: {
                                     Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
@@ -184,9 +185,9 @@ public struct LoginView: View {
                                 .disabled(viewModel.isPerformingLogin)
 
                                 Button {
-                                    Task {
+                                    Task { [weak viewModel] in
                                         focusedField = nil
-                                        viewModel.handleRecoveryTap()
+                                        viewModel?.handleRecoveryTap()
                                     }
                                 } label: {
                                     Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
@@ -198,9 +199,9 @@ public struct LoginView: View {
                                 .padding(.top, 5)
 
                                 Button {
-                                    Task {
+                                    Task { [weak viewModel] in
                                         focusedField = nil
-                                        viewModel.handleRegisterTap()
+                                        viewModel?.handleRegisterTap()
                                     }
                                 } label: {
                                     Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
@@ -231,9 +232,9 @@ public struct LoginView: View {
                                     String(describing: LocalizedStringKey("LOGIN_ERROR_ACCOUNT_BLOCKED")))
 
                             Button {
-                                Task {
+                                Task { [weak viewModel] in
                                     focusedField = nil
-                                    await viewModel.login()
+                                    await viewModel?.login()
                                 }
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
@@ -244,9 +245,9 @@ public struct LoginView: View {
                             .disabled(viewModel.isPerformingLogin)
 
                             Button {
-                                Task {
+                                Task { [weak viewModel] in
                                     focusedField = nil
-                                    viewModel.handleRecoveryTap()
+                                    viewModel?.handleRecoveryTap()
                                 }
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_FORGOT_PASSWORD"))
@@ -258,9 +259,9 @@ public struct LoginView: View {
                             .padding(.top, 5)
 
                             Button {
-                                Task {
+                                Task { [weak viewModel] in
                                     focusedField = nil
-                                    viewModel.handleRegisterTap()
+                                    viewModel?.handleRegisterTap()
                                 }
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
@@ -287,9 +288,9 @@ public struct LoginView: View {
                                     String(describing: LocalizedStringKey("LOGIN_ERROR_MESSAGE_ID")))
 
                             Button {
-                                Task {
+                                Task { [weak viewModel] in
                                     focusedField = nil
-                                    await viewModel.login()
+                                    await viewModel?.login()
                                 }
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_LOGIN_BUTTON"))
@@ -300,9 +301,9 @@ public struct LoginView: View {
                             .disabled(viewModel.isPerformingLogin)
 
                             Button {
-                                Task {
+                                Task { [weak viewModel] in
                                     focusedField = nil
-                                    viewModel.handleRegisterTap()
+                                    viewModel?.handleRegisterTap()
                                 }
                             } label: {
                                 Text(LocalizedStringKey("LOGIN_VIEW_REGISTER_BUTTON"))
@@ -357,9 +358,9 @@ public struct LoginView: View {
                 titleAnimation = true
             }
         }
-        .onChange(of: focusedField) { newValue in
+        .onChange(of: focusedField) { [weak viewModel] newValue in
             if newValue != nil {
-                viewModel.userDidInitiateEditing()
+                viewModel?.userDidInitiateEditing()
             }
         }
     }

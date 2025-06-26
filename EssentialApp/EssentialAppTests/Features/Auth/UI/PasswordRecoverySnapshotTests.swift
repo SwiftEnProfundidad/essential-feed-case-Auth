@@ -1,3 +1,4 @@
+
 import EssentialApp
 import EssentialFeed
 import SwiftUI
@@ -5,76 +6,77 @@ import XCTest
 
 @MainActor
 final class PasswordRecoverySnapshotTests: XCTestCase {
-    func test_passwordRecovery_success_and_error_snapshots() async {
+    func test_passwordRecovery_snapshots() {
         let languages = ["en", "es"]
         let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+
         for language in languages {
             for (uiStyle, schemeName) in schemes {
                 let locale = Locale(identifier: language)
-                let (_, controller) = makeSUT(email: "user@email.com", apiResult: .success(PasswordRecoveryResponse(message: "Recovery email sent!")))
-                controller.overrideUserInterfaceStyle = uiStyle
-                controller.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                controller.loadViewIfNeeded()
+                let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
 
-                try? await Task.sleep(nanoseconds: 100_000_000)
+                weak var weakSuccessVM: PasswordRecoverySwiftUIViewModel?
+                weak var weakSuccessSUT: UIViewController?
+                assertSnapshotAndRelease(
+                    apiResult: .success(PasswordRecoveryResponse(message: "Recovery email sent!")),
+                    config: config,
+                    named: "PASSWORD_RECOVERY_SUCCESS",
+                    language: language,
+                    scheme: schemeName,
+                    weakVM: &weakSuccessVM,
+                    weakSUT: &weakSuccessSUT
+                )
+                XCTAssertNil(weakSuccessVM, "Success ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
+                XCTAssertNil(weakSuccessSUT, "Success SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
 
-                controller.view.setNeedsLayout()
-                controller.view.layoutIfNeeded()
-
-                let snapshotSuccess = controller.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale))
-                assert(snapshot: snapshotSuccess, named: "PASSWORD_RECOVERY_SUCCESS", language: language, scheme: schemeName)
-
-                let (_, errorController) = makeSUT(email: "user@email.com", apiResult: .failure(.emailNotFound))
-                errorController.overrideUserInterfaceStyle = uiStyle
-                errorController.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                errorController.loadViewIfNeeded()
-
-                try? await Task.sleep(for: .milliseconds(100))
-                try? await Task.sleep(nanoseconds: 100_000_000)
-
-                errorController.view.setNeedsLayout()
-                errorController.view.layoutIfNeeded()
-
-                let snapshotError = errorController.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale))
-                assert(snapshot: snapshotError, named: "PASSWORD_RECOVERY_ERROR", language: language, scheme: schemeName)
+                weak var weakErrorVM: PasswordRecoverySwiftUIViewModel?
+                weak var weakErrorSUT: UIViewController?
+                assertSnapshotAndRelease(
+                    apiResult: .failure(.emailNotFound),
+                    config: config,
+                    named: "PASSWORD_RECOVERY_ERROR",
+                    language: language,
+                    scheme: schemeName,
+                    weakVM: &weakErrorVM,
+                    weakSUT: &weakErrorSUT
+                )
+                XCTAssertNil(weakErrorVM, "Error ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
+                XCTAssertNil(weakErrorSUT, "Error SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
             }
         }
     }
 
-    // MARK: - Helpers
-
-    private func makeSUT(
-        email: String, apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>
-    ) -> (PasswordRecoverySwiftUIViewModel, UIHostingController<PasswordRecoveryScreen>) {
+    private func makeSUT(apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>, config: SnapshotConfiguration, file: StaticString = #filePath, line: UInt = #line) -> (PasswordRecoverySwiftUIViewModel, UIViewController) {
         let api = DummyPasswordRecoveryAPI(result: apiResult)
         let rateLimiter = DummyPasswordRecoveryRateLimiter()
         let tokenManager = DummyPasswordResetTokenManager()
         let auditLogger = DummyPasswordRecoveryAuditLogger()
-        let useCase = RemoteUserPasswordRecoveryUseCase(
-            api: api,
-            rateLimiter: rateLimiter,
-            tokenManager: tokenManager,
-            auditLogger: auditLogger
-        )
-        let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCase)
-        viewModel.email = email
+        let useCase = RemoteUserPasswordRecoveryUseCase(api: api, rateLimiter: rateLimiter, tokenManager: tokenManager, auditLogger: auditLogger)
+        let viewModel = PasswordRecoverySwiftUIViewModel(recoveryUseCase: useCase, mainQueueDispatcher: { $0() })
+        viewModel.email = "any@email.com"
 
         let view = PasswordRecoveryScreen(viewModel: viewModel)
+            .frame(width: config.size.width, height: config.size.height)
+
         let controller = UIHostingController(rootView: view)
-
-        controller.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
         controller.loadViewIfNeeded()
+        controller.view.backgroundColor = .clear
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
-        window.rootViewController = controller
-        window.makeKeyAndVisible()
-
-        controller.view.setNeedsLayout()
-        controller.view.layoutIfNeeded()
-
-        viewModel.recoverPassword()
+        trackForMemoryLeaks(api, file: file, line: line)
+        trackForMemoryLeaks(rateLimiter, file: file, line: line)
+        trackForMemoryLeaks(tokenManager, file: file, line: line)
+        trackForMemoryLeaks(auditLogger, file: file, line: line)
+        trackForMemoryLeaks(useCase, file: file, line: line)
+        trackForMemoryLeaks(viewModel, file: file, line: line)
+        trackForMemoryLeaks(controller, file: file, line: line)
 
         return (viewModel, controller)
+    }
+
+    private func assertSnapshot(for controller: UIViewController, config: SnapshotConfiguration, named: String, language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line) {
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+        let snapshot = controller.snapshot(for: config)
+        assert(snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line)
     }
 }
 
@@ -94,9 +96,7 @@ private final class DummyPasswordRecoveryRateLimiter: PasswordRecoveryRateLimite
         return .success(())
     }
 
-    func recordAttempt(for _: String, ipAddress _: String?) {
-        // No-op for dummy
-    }
+    func recordAttempt(for _: String, ipAddress _: String?) {}
 }
 
 private final class DummyPasswordResetTokenManager: PasswordResetTokenManager {
@@ -110,7 +110,20 @@ private final class DummyPasswordResetTokenManager: PasswordResetTokenManager {
 }
 
 private final class DummyPasswordRecoveryAuditLogger: PasswordRecoveryAuditLogger {
-    func logRecoveryAttempt(_: PasswordRecoveryAuditLog) async throws {
-        // No-op for dummy
+    func logRecoveryAttempt(_: PasswordRecoveryAuditLog) async throws {}
+}
+
+private extension PasswordRecoverySnapshotTests {
+    func assertSnapshotAndRelease(apiResult: Result<PasswordRecoveryResponse, PasswordRecoveryError>, config: SnapshotConfiguration, named: String, language: String, scheme: String, weakVM: inout PasswordRecoverySwiftUIViewModel?, weakSUT: inout UIViewController?) {
+        autoreleasepool {
+            let (vm, sut) = makeSUT(apiResult: apiResult, config: config)
+            weakVM = vm
+            weakSUT = sut
+            vm.recoverPassword()
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+            assertSnapshot(for: sut, config: config, named: named, language: language, scheme: scheme)
+        }
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+        autoreleasepool {}
     }
 }

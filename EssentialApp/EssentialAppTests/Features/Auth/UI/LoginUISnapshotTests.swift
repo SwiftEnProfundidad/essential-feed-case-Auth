@@ -3,62 +3,87 @@ import EssentialFeed
 import SwiftUI
 import XCTest
 
+@MainActor
 final class LoginUISnapshotTests: XCTestCase {
-    func test_login_idle() async {
+    func test_login_states() async throws {
         let languages = ["en", "es"]
         let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
-        for language in languages {
-            for (uiStyle, schemeName) in schemes {
-                let locale = Locale(identifier: language)
-                let vm = makeViewModel(authenticateResult: .failure(.invalidCredentials))
-                let view = await MainActor.run { LoginView(viewModel: vm, animationsEnabled: false).environment(
-                    \.locale, locale
-                ) }
-                let controller = await MainActor.run { UIHostingController(rootView: view) }
-                await MainActor.run {
-                    controller.overrideUserInterfaceStyle = uiStyle
-                    controller.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    controller.loadViewIfNeeded()
-                }
-                let snapshot = await MainActor.run {
-                    controller.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale))
-                }
-                assert(snapshot: snapshot, named: "LOGIN_IDLE", language: language, scheme: schemeName)
-            }
-        }
-    }
 
-    func test_login_error_invalidCredentials() async {
-        let languages = ["en", "es"]
-        let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
         for language in languages {
             for (uiStyle, schemeName) in schemes {
                 let locale = Locale(identifier: language)
-                let vm = makeViewModel(authenticateResult: .failure(.invalidCredentials))
-                vm.username = "error@email.com"
-                vm.password = "wrong_password"
-                await vm.login()
-                let view = await LoginView(viewModel: vm, animationsEnabled: false)
-                let controller = await MainActor.run { UIHostingController(rootView: view) }
-                await MainActor.run {
-                    controller.overrideUserInterfaceStyle = uiStyle
-                    controller.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
-                    controller.loadViewIfNeeded()
-                }
-                let snapshot = await MainActor.run {
-                    controller.snapshot(for: SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale))
-                }
-                assert(
-                    snapshot: snapshot, named: "LOGIN_ERROR_INVALID_CREDENTIALS", language: language,
+                let config = SnapshotConfiguration.iPhone13(style: uiStyle, locale: locale)
+
+                // MARK: - Idle State
+
+                var idleVM: LoginViewModel?
+                var idleSUT: UIViewController?
+                weak var weakIdleVM: LoginViewModel?
+                weak var weakIdleSUT: UIViewController?
+
+                (idleVM, idleSUT) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
+                weakIdleVM = idleVM
+                weakIdleSUT = idleSUT
+
+                await assertSnapshot(
+                    for: idleSUT!, config: config, named: "LOGIN_IDLE", language: language,
                     scheme: schemeName
+                )
+
+                idleVM = nil
+                idleSUT = nil
+
+                try await Task.sleep(nanoseconds: 100_000_000)
+
+                XCTAssertNil(
+                    weakIdleVM, "Idle ViewModel should have been deallocated. Potential memory leak.",
+                    file: #filePath, line: #line
+                )
+                XCTAssertNil(
+                    weakIdleSUT, "Idle SUT should have been deallocated. Potential memory leak.",
+                    file: #filePath, line: #line
+                )
+
+                // MARK: - Error State
+
+                var errorVM: LoginViewModel?
+                var errorSUT: UIViewController?
+                weak var weakErrorVM: LoginViewModel?
+                weak var weakErrorSUT: UIViewController?
+
+                (errorVM, errorSUT) = makeSUT(authenticateResult: .failure(.invalidCredentials), locale: locale)
+                weakErrorVM = errorVM
+                weakErrorSUT = errorSUT
+
+                errorVM?.username = "any@email.com"
+                errorVM?.password = "any password"
+                await errorVM?.login()
+
+                await assertSnapshot(
+                    for: errorSUT!, config: config, named: "LOGIN_ERROR_INVALID_CREDENTIALS",
+                    language: language, scheme: schemeName
+                )
+
+                errorVM = nil
+                errorSUT = nil
+
+                try await Task.sleep(nanoseconds: 100_000_000)
+
+                XCTAssertNil(
+                    weakErrorVM, "Error ViewModel should have been deallocated. Potential memory leak.",
+                    file: #filePath, line: #line
+                )
+                XCTAssertNil(
+                    weakErrorSUT, "Error SUT should have been deallocated. Potential memory leak.",
+                    file: #filePath, line: #line
                 )
             }
         }
     }
 
-    func makeSUT(
-        authenticateResult: Result<LoginResponse, LoginError> = .failure(.invalidCredentials)
-    ) -> LoginViewModel {
+    private func makeSUT(authenticateResult: Result<LoginResponse, LoginError>, locale: Locale) -> (
+        LoginViewModel, UIViewController
+    ) {
         let store = InMemoryFailedLoginAttemptsStore()
         let configuration = LoginSecurityConfiguration(
             maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
@@ -67,32 +92,22 @@ final class LoginUISnapshotTests: XCTestCase {
         let vm = LoginViewModel(
             authenticate: { _, _ in authenticateResult }, loginSecurity: securityUseCase
         )
-        return vm
+
+        let view = LoginView(viewModel: vm, animationsEnabled: false).environment(\.locale, locale)
+        let controller = UIHostingController(rootView: view)
+        controller.view.backgroundColor = .clear
+        return (vm, controller)
     }
 
-    func makeRecoverySuggestionSUT() -> LoginViewModel {
-        let store = InMemoryFailedLoginAttemptsStore()
-        let configuration = LoginSecurityConfiguration(
-            maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
+    private func assertSnapshot(
+        for controller: UIViewController, config: SnapshotConfiguration, named: String,
+        language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line
+    ) async {
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        let snapshot = controller.snapshot(for: config)
+        assert(
+            snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line
         )
-        let securityUseCase = LoginSecurityUseCase(store: store, configuration: configuration)
-        let vm = LoginViewModel(
-            authenticate: { _, _ in .failure(.invalidCredentials) }, loginSecurity: securityUseCase
-        )
-        vm.errorMessage = "Your account is blocked. Please try again later or recover your password."
-        return vm
-    }
-
-    func makeViewModel(authenticateResult: Result<LoginResponse, LoginError>) -> LoginViewModel {
-        let store = InMemoryFailedLoginAttemptsStore()
-        let configuration = LoginSecurityConfiguration(
-            maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
-        )
-        let securityUseCase = LoginSecurityUseCase(store: store, configuration: configuration)
-        let vm = LoginViewModel(
-            authenticate: { _, _ in authenticateResult }, loginSecurity: securityUseCase
-        )
-        return vm
     }
 }
 

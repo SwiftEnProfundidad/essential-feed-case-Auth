@@ -12,6 +12,7 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
     private var lastRequestedEmail: String?
+    private let mainQueueDispatcher: (@escaping () -> Void) -> Void
 
     public var feedbackTitle: String {
         if isSuccess {
@@ -23,6 +24,12 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
     public init(recoveryUseCase: UserPasswordRecoveryUseCase) {
         self.recoveryUseCase = recoveryUseCase
+        self.mainQueueDispatcher = { block in DispatchQueue.main.async(execute: block) }
+    }
+
+    public init(recoveryUseCase: UserPasswordRecoveryUseCase, mainQueueDispatcher: @escaping (@escaping () -> Void) -> Void) {
+        self.recoveryUseCase = recoveryUseCase
+        self.mainQueueDispatcher = mainQueueDispatcher
     }
 
     public func onFeedbackDismiss() {
@@ -38,7 +45,8 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
             userAgent: getCurrentUserAgent()
         ) { [weak self] result in
             guard let self, self.email == self.lastRequestedEmail else { return }
-            DispatchQueue.main.async {
+            self.mainQueueDispatcher { [weak self] in
+                guard let self else { return }
                 let viewModel = PasswordRecoveryPresenter.map(result)
                 self.display(viewModel)
             }
@@ -57,6 +65,12 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
     private func getCurrentUserAgent() -> String? {
         return "EssentialApp/1.0"
+    }
+
+    deinit {
+        #if DEBUG
+            print("PasswordRecoverySwiftUIViewModel deallocated")
+        #endif
     }
 }
 
