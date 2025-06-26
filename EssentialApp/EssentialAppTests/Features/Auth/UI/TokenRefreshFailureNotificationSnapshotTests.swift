@@ -3,61 +3,67 @@ import SwiftUI
 import XCTest
 
 final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
-    func test_tokenRefreshFailureNotification_lightMode_displaysCorrectly() {
-        let sut = makeTokenRefreshFailureNotificationView()
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .light
-
-        assertSnapshot(matching: hostingController, as: .image, named: "TOKEN_REFRESH_FAILURE_LIGHT")
+    func test_tokenRefreshFailureNotification_snapshots() async {
+        let languages = ["en", "es"]
+        let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+        for language in languages {
+            for (uiStyle, schemeName) in schemes {
+                let locale = Locale(identifier: language)
+                let sut = makeTokenRefreshFailureNotificationView(locale: locale)
+                let hostingController = await MainActor.run { UIHostingController(rootView: sut) }
+                await MainActor.run {
+                    hostingController.overrideUserInterfaceStyle = uiStyle
+                    hostingController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 120)
+                    hostingController.loadViewIfNeeded()
+                }
+                try? await Task.sleep(nanoseconds: 100_000_000)
+                let snapshot = await MainActor.run { hostingController.snapshot(for: .iPhone13(style: uiStyle, locale: locale)) }
+                assert(snapshot: snapshot, named: "TOKEN_REFRESH_FAILURE", language: language, scheme: schemeName)
+            }
+        }
     }
 
-    func test_tokenRefreshFailureNotification_darkMode_displaysCorrectly() {
-        let sut = makeTokenRefreshFailureNotificationView()
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .dark
-
-        assertSnapshot(matching: hostingController, as: .image, named: "TOKEN_REFRESH_FAILURE_DARK")
+    func test_globalLogoutRequiredNotification_snapshots() async {
+        let languages = ["en", "es"]
+        let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+        for language in languages {
+            for (uiStyle, schemeName) in schemes {
+                let locale = Locale(identifier: language)
+                let sut = makeGlobalLogoutRequiredNotificationView()
+                let hostingController = await MainActor.run { UIHostingController(rootView: sut) }
+                await MainActor.run {
+                    hostingController.overrideUserInterfaceStyle = uiStyle
+                    hostingController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 100)
+                    hostingController.loadViewIfNeeded()
+                }
+                try? await Task.sleep(nanoseconds: 100_000_000)
+                let snapshot = await MainActor.run { hostingController.snapshot(for: .iPhone13(style: uiStyle, locale: locale)) }
+                assert(snapshot: snapshot, named: "GLOBAL_LOGOUT_REQUIRED", language: language, scheme: schemeName)
+            }
+        }
     }
 
-    func test_tokenRefreshFailureNotification_spanish_displaysCorrectly() {
-        let sut = makeTokenRefreshFailureNotificationView(locale: Locale(identifier: "es"))
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .light
-
-        assertSnapshot(matching: hostingController, as: .image, named: "TOKEN_REFRESH_FAILURE_SPANISH")
+    func test_networkErrorDuringRefresh_snapshots() async {
+        let languages = ["en", "es"]
+        let schemes: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
+        for language in languages {
+            for (uiStyle, schemeName) in schemes {
+                let locale = Locale(identifier: language)
+                let sut = makeNetworkErrorRefreshNotificationView(locale: locale)
+                let hostingController = await MainActor.run { UIHostingController(rootView: sut) }
+                await MainActor.run {
+                    hostingController.overrideUserInterfaceStyle = uiStyle
+                    hostingController.view.frame = CGRect(x: 0, y: 0, width: 375, height: 140)
+                    hostingController.loadViewIfNeeded()
+                }
+                try? await Task.sleep(nanoseconds: 100_000_000)
+                let snapshot = await MainActor.run { hostingController.snapshot(for: .iPhone13(style: uiStyle, locale: locale)) }
+                assert(snapshot: snapshot, named: "NETWORK_ERROR_REFRESH_RETRY", language: language, scheme: schemeName)
+            }
+        }
     }
 
-    func test_globalLogoutRequiredNotification_lightMode_displaysCorrectly() {
-        let sut = makeGlobalLogoutRequiredNotificationView()
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .light
-
-        assertSnapshot(matching: hostingController, as: .image, named: "GLOBAL_LOGOUT_REQUIRED_LIGHT")
-    }
-
-    func test_globalLogoutRequiredNotification_darkMode_displaysCorrectly() {
-        let sut = makeGlobalLogoutRequiredNotificationView()
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .dark
-
-        assertSnapshot(matching: hostingController, as: .image, named: "GLOBAL_LOGOUT_REQUIRED_DARK")
-    }
-
-    func test_networkErrorDuringRefresh_displaysRetryOption() {
-        let sut = makeNetworkErrorRefreshNotificationView()
-
-        let hostingController = UIHostingController(rootView: sut)
-        hostingController.overrideUserInterfaceStyle = .light
-
-        assertSnapshot(matching: hostingController, as: .image, named: "NETWORK_ERROR_REFRESH_RETRY")
-    }
-
-    private func makeTokenRefreshFailureNotificationView(locale: Locale = Locale(identifier: "en")) -> some View {
+    func makeTokenRefreshFailureNotificationView(locale: Locale = Locale(identifier: "en")) -> some View {
         TokenRefreshFailureNotificationView(
             message: "Session expired. Please login again or retry.",
             onRetry: {},
@@ -68,21 +74,23 @@ final class TokenRefreshFailureNotificationSnapshotTests: XCTestCase {
         .background(Color(.systemBackground))
     }
 
-    private func makeGlobalLogoutRequiredNotificationView() -> some View {
+    func makeGlobalLogoutRequiredNotificationView(locale: Locale = Locale(identifier: "en")) -> some View {
         GlobalLogoutRequiredNotificationView(
             message: "Your session has expired. Please login again.",
             onLoginRedirect: {}
         )
+        .environment(\.locale, locale)
         .frame(width: 375, height: 100)
         .background(Color(.systemBackground))
     }
 
-    private func makeNetworkErrorRefreshNotificationView() -> some View {
+    func makeNetworkErrorRefreshNotificationView(locale: Locale = Locale(identifier: "en")) -> some View {
         NetworkErrorRefreshNotificationView(
             message: "Network error occurred during token refresh. Please try again.",
             onRetry: {},
             onCancel: {}
         )
+        .environment(\.locale, locale)
         .frame(width: 375, height: 140)
         .background(Color(.systemBackground))
     }

@@ -55,21 +55,25 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_deliversRateLimitError_whenRateLimitExceeded() {
-        let (sut, rateLimiterSpy, _, _, _) = makeSUT()
-        rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
-
-        let result = recoverPasswordSync(sut: sut, email: "test@example.com")
-
-        switch result {
-        case let .failure(error):
-            if case let .rateLimitExceeded(retryAfterSeconds) = error {
-                XCTAssertEqual(retryAfterSeconds, 300, "Expected retry after seconds to match")
-            } else {
-                XCTFail("Expected rateLimitExceeded error, got \(error)")
+        weak var weakSUT: AnyObject?
+        do {
+            let (sut, rateLimiterSpy, _, _, _) = makeSUT()
+            weakSUT = sut as AnyObject
+            rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
+            let result = recoverPasswordSync(sut: sut, email: "test@example.com")
+            switch result {
+            case let .failure(error):
+                if case let .rateLimitExceeded(retryAfterSeconds) = error {
+                    XCTAssertEqual(retryAfterSeconds, 300, "Expected retry after seconds to match")
+                } else {
+                    XCTFail("Expected rateLimitExceeded error, got \(error)")
+                }
+            default:
+                XCTFail("Expected rate limit error, got \(String(describing: result))")
             }
-        default:
-            XCTFail("Expected rate limit error, got \(String(describing: result))")
         }
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.2))
+        XCTAssertNil(weakSUT, "UserPasswordRecoveryUseCase should have been deallocated. Potential memory leak.")
     }
 
     func test_recoverPassword_recordsAttempt_onValidEmail() {
@@ -90,12 +94,16 @@ final class UserPasswordRecoveryUseCaseDomainTests: XCTestCase {
     }
 
     func test_recoverPassword_doesNotGenerateToken_whenRateLimitExceeded() {
-        let (sut, rateLimiterSpy, _, tokenManager, _) = makeSUT()
-        rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
-
-        _ = recoverPasswordSync(sut: sut, email: "test@example.com")
-
-        XCTAssertEqual(tokenManager.generateResetTokenCallCount, 0, "Expected no token generation when rate limit exceeded")
+        weak var weakSUT: AnyObject?
+        do {
+            let (sut, rateLimiterSpy, _, tokenManager, _) = makeSUT()
+            weakSUT = sut as AnyObject
+            rateLimiterSpy.stubbedValidationResult = .failure(.rateLimitExceeded(retryAfterSeconds: 300))
+            _ = recoverPasswordSync(sut: sut, email: "test@example.com")
+            XCTAssertEqual(tokenManager.generateResetTokenCallCount, 0, "Expected no token generation when rate limit exceeded")
+        }
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.2))
+        XCTAssertNil(weakSUT, "UserPasswordRecoveryUseCase should have been deallocated. Potential memory leak.")
     }
 
     func test_recoverPassword_deliversEmailNotFoundError_onUnknownEmail() {

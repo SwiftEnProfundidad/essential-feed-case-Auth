@@ -2,24 +2,8 @@ import EssentialFeed
 import SwiftUI
 import UIKit
 
-public enum LoginUIComposer {
-    private class LoginNavigationHandler: LoginNavigation {
-        let onRecoveryRequested: () -> Void
-        let onRegisterRequested: () -> Void
-
-        init(onRecoveryRequested: @escaping () -> Void, onRegisterRequested: @escaping () -> Void = {}) {
-            self.onRecoveryRequested = onRecoveryRequested
-            self.onRegisterRequested = onRegisterRequested
-        }
-
-        func showRecovery() {
-            onRecoveryRequested()
-        }
-
-        func showRegister() {
-            onRegisterRequested()
-        }
-    }
+public final class LoginUIComposer {
+    private init() {}
 
     public static func composedLoginViewController(
         with viewModel: LoginViewModel,
@@ -35,5 +19,23 @@ public enum LoginUIComposer {
         .navigationViewStyle(.stack)
 
         return UIHostingController(rootView: swiftUIView)
+    }
+}
+
+private class LoginNavigationHandler: LoginNavigation {
+    let onRecoveryRequested: () -> Void
+    let onRegisterRequested: () -> Void
+
+    init(onRecoveryRequested: @escaping () -> Void, onRegisterRequested: @escaping () -> Void = {}) {
+        self.onRecoveryRequested = onRecoveryRequested
+        self.onRegisterRequested = onRegisterRequested
+    }
+
+    func showRecovery() {
+        onRecoveryRequested()
+    }
+
+    func showRegister() {
+        onRegisterRequested()
     }
 }

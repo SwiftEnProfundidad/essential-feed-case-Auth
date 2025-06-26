@@ -6,39 +6,52 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
         didSet { handleEmailChange(from: oldValue, to: email) }
     }
 
-    @Published public var feedbackMessage: String = ""
-    @Published public var isSuccess: Bool = false
-    @Published public var showingFeedback: Bool = false
+    @Published public var currentNotification: InAppNotification?
+    @Published public var isPerformingRecovery: Bool = false
 
     private let recoveryUseCase: UserPasswordRecoveryUseCase
     private var lastRequestedEmail: String?
+    private let mainQueueDispatcher: (@escaping () -> Void) -> Void
 
     public var feedbackTitle: String {
-        if isSuccess {
-            "Éxito"
-        } else {
-            "Error"
-        }
+        String(localized: "PASSWORD_RECOVERY_SUCCESS_TITLE", bundle: .main)
     }
 
     public init(recoveryUseCase: UserPasswordRecoveryUseCase) {
         self.recoveryUseCase = recoveryUseCase
+        self.mainQueueDispatcher = { block in DispatchQueue.main.async(execute: block) }
+    }
+
+    public init(recoveryUseCase: UserPasswordRecoveryUseCase, mainQueueDispatcher: @escaping (@escaping () -> Void) -> Void) {
+        self.recoveryUseCase = recoveryUseCase
+        self.mainQueueDispatcher = mainQueueDispatcher
     }
 
     public func onFeedbackDismiss() {
-        showingFeedback = false
+        currentNotification = nil
     }
 
     public func recoverPassword() {
-        guard !email.isEmpty else { return }
+        guard !email.isEmpty else {
+            currentNotification = InAppNotification(
+                title: "Validation Error",
+                message: "Please enter your email address.",
+                type: .error,
+                actionButton: "OK"
+            )
+            return
+        }
+
+        isPerformingRecovery = true
         lastRequestedEmail = email
         recoveryUseCase.recoverPassword(
             email: email,
             ipAddress: getCurrentIPAddress(),
             userAgent: getCurrentUserAgent()
         ) { [weak self] result in
-            guard let self, self.email == self.lastRequestedEmail else { return }
-            DispatchQueue.main.async {
+            Task { @MainActor [weak self] in
+                guard let self, self.email == self.lastRequestedEmail else { return }
+                self.isPerformingRecovery = false
                 let viewModel = PasswordRecoveryPresenter.map(result)
                 self.display(viewModel)
             }
@@ -46,9 +59,8 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
     }
 
     private func handleEmailChange(from oldValue: String, to newValue: String) {
-        guard showingFeedback, oldValue != newValue else { return }
-        feedbackMessage = ""
-        showingFeedback = false
+        guard currentNotification != nil, oldValue != newValue else { return }
+        currentNotification = nil
     }
 
     private func getCurrentIPAddress() -> String? {
@@ -64,8 +76,11 @@ public final class PasswordRecoverySwiftUIViewModel: ObservableObject, PasswordR
 
 public extension PasswordRecoverySwiftUIViewModel {
     func display(_ viewModel: PasswordRecoveryViewModel) {
-        feedbackMessage = viewModel.message
-        isSuccess = viewModel.isSuccess
-        showingFeedback = true
+        currentNotification = InAppNotification(
+            title: viewModel.isSuccess ? "Success" : "Error",
+            message: viewModel.message,
+            type: viewModel.isSuccess ? .success : .error,
+            actionButton: "OK"
+        )
     }
 }

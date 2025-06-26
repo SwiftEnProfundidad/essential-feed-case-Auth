@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 Essential Developer. All rights reserved.
+// Copyright 2020 Essential Developer. All rights reserved.
 //
 
 import EssentialFeed
@@ -12,12 +12,23 @@ class ImageCommentsSnapshotTests: XCTestCase {
 
         sut.display(comments())
 
-        assert(snapshot: sut.snapshot(for: .iPhone13(style: .light)), named: "IMAGE_COMMENTS_light")
-        assert(snapshot: sut.snapshot(for: .iPhone13(style: .dark)), named: "IMAGE_COMMENTS_dark")
-        assert(snapshot: sut.snapshot(for: .iPhone13(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_light_extraExtraExtraLarge")
+        if isRecording {
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "IMAGE_COMMENTS_light")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "IMAGE_COMMENTS_dark")
+            record(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_light_extraExtraExtraLarge")
+        } else {
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light)), named: "IMAGE_COMMENTS_light")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .dark)), named: "IMAGE_COMMENTS_dark")
+            assert(snapshot: sut.snapshot(for: .iPhone16Pro(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_light_extraExtraExtraLarge")
+        }
     }
 
     // MARK: - Helpers
+
+    private var isRecording: Bool {
+        let envValue = ProcessInfo.processInfo.environment["RECORD_SNAPSHOTS"]
+        return envValue == "1" || envValue == "true"
+    }
 
     private func makeSUT() -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)

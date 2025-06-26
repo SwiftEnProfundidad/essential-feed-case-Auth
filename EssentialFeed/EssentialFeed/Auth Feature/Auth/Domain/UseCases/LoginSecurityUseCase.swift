@@ -43,15 +43,19 @@ extension LoginSecurityUseCase: LoginLockStatusProviderProtocol {
     }
 }
 
-// MARK: - FailedLoginHandlerProtocol
+// MARK: - LoginSecurityHandler
 
-extension LoginSecurityUseCase: FailedLoginHandlerProtocol {
+extension LoginSecurityUseCase: LoginSecurityHandlerProtocol {
     public func handleFailedLogin(username: String) async {
         await store.incrementAttempts(for: username)
     }
 
     public func resetAttempts(username: String) async {
         await store.resetAttempts(for: username)
+    }
+
+    public func handleSuccessfulCaptcha(for username: String) async {
+        await resetAttempts(username: username)
     }
 
     public func getFailedAttempts(username: String) -> Int {

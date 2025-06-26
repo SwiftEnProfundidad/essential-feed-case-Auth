@@ -1,4 +1,3 @@
-
 import SwiftUI
 
 public struct PasswordRecoveryScreen: View {
@@ -17,15 +16,20 @@ public struct PasswordRecoveryScreen: View {
                 viewModel.recoverPassword()
             }
             .modifier(BorderedProminentIfAvailable())
+
+            if let notification = viewModel.currentNotification {
+                InAppNotificationView(
+                    title: notification.title,
+                    message: notification.message,
+                    type: notification.type,
+                    actionButtonTitle: notification.actionButton ?? "OK",
+                    onAction: {
+                        viewModel.onFeedbackDismiss()
+                    }
+                )
+            }
         }
         .padding()
-        .alert(isPresented: $viewModel.showingFeedback) {
-            Alert(
-                title: Text(viewModel.feedbackTitle),
-                message: Text(viewModel.feedbackMessage),
-                dismissButton: .default(Text("OK"), action: viewModel.onFeedbackDismiss)
-            )
-        }
     }
 }
 

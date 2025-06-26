@@ -3,14 +3,17 @@
 "LOGIN_VIEW_TITLE" = "Οι Ροές Μου";
 "LOGIN_VIEW_USERNAME_PLACEHOLDER" = "Όνομα χρήστη";
 "LOGIN_VIEW_PASSWORD_PLACEHOLDER" = "Κωδικός πρόσβασης";
-"LOGIN_VIEW_LOGIN_BUTTON" = "Σύνडεση";
-"LOGIN_VIEW_FORGOT_PASSWORD" = "Ξεχासτον κωडικό σας";
+"LOGIN_VIEW_LOGIN_BUTTON" = "Σύνδεση";
+"LOGIN_VIEW_FORGOT_PASSWORD" = "Ξεχαστον κωδικό σας";
 "LOGIN_VIEW_REGISTER_BUTTON" = "Νέος εδώ; Εγγραφή";
 
 "LOGIN_ERROR_VALIDATION" = "Σφάλμα επικύρωσης";
-"LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυरα διαπιστευτήρια";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυρα διαπιστευτήρια";
 "LOGIN_ERROR_NETWORK" = "Σφάλμα δικτύου";
-"LOGIN_ERROR_ACCOUNT_BLOCKED" = "Ο λοगαरιασμός είναι κλειδωμένος";
-"LOGIN_ERROR_MESSAGE_ID" = "Μήνυμα σφάलματος";
-"LOGIN_SUCCESS_MESSAGE" = "Η σύνडεση επιτυχής!";
-"LOGIN_SUCCESS_MESSAGE_ID" = "Μήνυμα εпιτυχίας";
+"LOGIN_ERROR_ACCOUNT_BLOCKED" = "Ο λογαριασμός είναι κλειδωμένος";
+"LOGIN_ERROR_MESSAGE_ID" = "Μήνυμα σφάλματος";
+"LOGIN_SUCCESS_MESSAGE" = "Η σύνδεση επιτυχής!";
+"LOGIN_SUCCESS_MESSAGE_ID" = "Μήνυμα επιτυχίας";
+
+"PASSWORD_RECOVERY_SUCCESS_TITLE" = "Επιτυχία";
+"PASSWORD_RECOVERY_ERROR_TITLE" = "Σφάλμα";

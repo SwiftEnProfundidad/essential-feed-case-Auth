@@ -5,9 +5,9 @@ import XCTest
 final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
     func test_init_doesNotSendFeedback() {
         let (sut, _) = makeSUT()
-        XCTAssertEqual(sut.feedbackMessage, "")
-        XCTAssertFalse(sut.isSuccess)
-        XCTAssertFalse(sut.showingFeedback)
+        XCTAssertNil(sut.currentNotification)
+        XCTAssertFalse(sut.isPerformingRecovery)
+        XCTAssertEqual(sut.email, "")
     }
 
     func test_recoverPassword_success_displaysSuccessFeedback() {
@@ -19,10 +19,10 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 
         DispatchQueue.main.async {
             XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-            XCTAssertTrue(sut.isSuccess)
-            XCTAssertTrue(sut.showingFeedback)
-            XCTAssertEqual(sut.feedbackMessage, "OK")
-            XCTAssertEqual(sut.feedbackTitle, "Éxito")
+            XCTAssertNotNil(sut.currentNotification)
+            XCTAssertEqual(sut.currentNotification?.type, .success)
+            XCTAssertEqual(sut.currentNotification?.message, "OK")
+            XCTAssertEqual(sut.currentNotification?.title, "Success")
             exp.fulfill()
         }
 
@@ -38,10 +38,10 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 
         DispatchQueue.main.async {
             XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-            XCTAssertFalse(sut.isSuccess)
-            XCTAssertTrue(sut.showingFeedback)
-            XCTAssertEqual(sut.feedbackMessage, "No account associated with that email.")
-            XCTAssertEqual(sut.feedbackTitle, "Error")
+            XCTAssertNotNil(sut.currentNotification)
+            XCTAssertEqual(sut.currentNotification?.type, .error)
+            XCTAssertEqual(sut.currentNotification?.message, "No account associated with that email.")
+            XCTAssertEqual(sut.currentNotification?.title, "Error")
             exp.fulfill()
         }
 
@@ -56,21 +56,25 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
         DispatchQueue.main.async {
+            XCTAssertNotNil(sut.currentNotification)
             sut.onFeedbackDismiss()
-            XCTAssertFalse(sut.showingFeedback)
+            XCTAssertNil(sut.currentNotification)
             exp.fulfill()
         }
 
         wait(for: [exp], timeout: 1.0)
     }
 
-    func test_recoverPassword_withEmptyEmail_doesNotCallUseCaseAndDoesNotShowFeedback() {
+    func test_recoverPassword_withEmptyEmail_doesNotCallUseCaseAndShowsValidationError() {
         let (sut, useCaseSpy) = makeSUT()
         sut.email = ""
         sut.recoverPassword()
+
         XCTAssertTrue(useCaseSpy.receivedEmails.isEmpty)
-        XCTAssertEqual(sut.feedbackMessage, "")
-        XCTAssertFalse(sut.showingFeedback)
+        XCTAssertNotNil(sut.currentNotification)
+        XCTAssertEqual(sut.currentNotification?.type, .error)
+        XCTAssertEqual(sut.currentNotification?.message, "Please enter your email address.")
+        XCTAssertEqual(sut.currentNotification?.title, "Validation Error")
     }
 
     func test_changingEmailAfterFeedback_hidesFeedback() {
@@ -82,10 +86,9 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
         DispatchQueue.main.async {
-            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertNotNil(sut.currentNotification)
             sut.email = "nuevo@email.com"
-            XCTAssertFalse(sut.showingFeedback)
-            XCTAssertEqual(sut.feedbackMessage, "")
+            XCTAssertNil(sut.currentNotification)
             exp.fulfill()
         }
 
@@ -101,10 +104,10 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 
         DispatchQueue.main.async {
             XCTAssertEqual(useCaseSpy.receivedEmails, ["user@email.com"])
-            XCTAssertFalse(sut.isSuccess)
-            XCTAssertTrue(sut.showingFeedback)
-            XCTAssertEqual(sut.feedbackMessage, "Unknown error. Please try again.")
-            XCTAssertEqual(sut.feedbackTitle, "Error")
+            XCTAssertNotNil(sut.currentNotification)
+            XCTAssertEqual(sut.currentNotification?.type, .error)
+            XCTAssertEqual(sut.currentNotification?.message, "Unknown error. Please try again.")
+            XCTAssertEqual(sut.currentNotification?.title, "Error")
             exp.fulfill()
         }
 
@@ -120,8 +123,7 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
 
         useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
-        XCTAssertEqual(sut.feedbackMessage, "")
-        XCTAssertFalse(sut.showingFeedback)
+        XCTAssertNil(sut.currentNotification)
         XCTAssertTrue(useCaseSpy.receivedEmails.count == 1, "El use case no debe recibir múltiples emails")
     }
 
@@ -133,10 +135,10 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         useCaseSpy.completeRecovery(with: .success(PasswordRecoveryResponse(message: "OK")))
 
         DispatchQueue.main.async {
-            XCTAssertTrue(sut.showingFeedback)
+            XCTAssertNotNil(sut.currentNotification)
             sut.email = "user@email.com"
-            XCTAssertTrue(sut.showingFeedback)
-            XCTAssertEqual(sut.feedbackMessage, "OK")
+            XCTAssertNotNil(sut.currentNotification)
+            XCTAssertEqual(sut.currentNotification?.message, "OK")
             exp.fulfill()
         }
 
@@ -150,8 +152,7 @@ final class PasswordRecoverySwiftUIViewModelTests: XCTestCase {
         sut.email = "segundo@email.com"
 
         useCaseSpy.completeRecovery(with: .failure(.unknown))
-        XCTAssertEqual(sut.feedbackMessage, "")
-        XCTAssertFalse(sut.showingFeedback)
+        XCTAssertNil(sut.currentNotification)
     }
 
     // MARK: - Helpers

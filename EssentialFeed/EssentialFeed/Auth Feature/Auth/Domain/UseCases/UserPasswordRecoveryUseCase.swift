@@ -23,12 +23,10 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
 
         guard emailPredicate.evaluate(with: trimmedEmail) else {
+            completion(.failure(.invalidEmailFormat))
             Task { [weak self] in
-                if let self {
-                    let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .invalidEmailFormat)
-                    try? await self.auditLogger.logRecoveryAttempt(auditLog)
-                }
-                completion(.failure(.invalidEmailFormat))
+                let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .invalidEmailFormat)
+                try? await self?.auditLogger.logRecoveryAttempt(auditLog)
             }
             return
         }
@@ -40,50 +38,44 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
             api.recover(email: trimmedEmail) { [weak self] result in
                 guard let self else { return }
 
-                Task { [weak self] in
-                    guard let self else { return }
+                switch result {
+                case .success:
+                    do {
+                        let resetToken = try self.tokenManager.generateResetToken(for: trimmedEmail)
+                        let response = PasswordRecoveryResponse(message: "Password reset link sent to your email", resetToken: resetToken.token)
+                        completion(.success(response))
 
-                    switch result {
-                    case .success:
-                        do {
-                            let resetToken = try self.tokenManager.generateResetToken(for: trimmedEmail)
-                            let response = PasswordRecoveryResponse(message: "Password reset link sent to your email", resetToken: resetToken.token)
-
+                        Task { [weak self] in
                             let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .success)
-                            try? await self.auditLogger.logRecoveryAttempt(auditLog)
-
-                            completion(.success(response))
-                        } catch {
+                            try? await self?.auditLogger.logRecoveryAttempt(auditLog)
+                        }
+                    } catch {
+                        completion(.failure(.tokenGenerationFailed))
+                        Task { [weak self] in
                             let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .tokenGenerationFailed, errorDetails: error.localizedDescription)
-                            try? await self.auditLogger.logRecoveryAttempt(auditLog)
-
-                            completion(.failure(.tokenGenerationFailed))
+                            try? await self?.auditLogger.logRecoveryAttempt(auditLog)
                         }
-                    case let .failure(error):
+                    }
+                case let .failure(error):
+                    completion(.failure(error))
+                    Task { [weak self] in
                         let outcome: PasswordRecoveryOutcome = switch error {
-                        case .emailNotFound:
-                            .emailNotFound
-                        case .network:
-                            .networkError
-                        case .rateLimitExceeded:
-                            .rateLimitExceeded
-                        default:
-                            .unknown
+                        case .emailNotFound: .emailNotFound
+                        case .network: .networkError
+                        case .rateLimitExceeded: .rateLimitExceeded
+                        default: .unknown
                         }
-
                         let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: outcome, errorDetails: error.localizedDescription)
-                        try? await self.auditLogger.logRecoveryAttempt(auditLog)
-
-                        completion(.failure(error))
+                        try? await self?.auditLogger.logRecoveryAttempt(auditLog)
                     }
                 }
             }
         case let .failure(error):
+            completion(.failure(error))
             Task { [weak self] in
                 guard let self else { return }
                 let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .rateLimitExceeded, errorDetails: error.localizedDescription)
                 try? await self.auditLogger.logRecoveryAttempt(auditLog)
-                completion(.failure(error))
             }
         }
     }

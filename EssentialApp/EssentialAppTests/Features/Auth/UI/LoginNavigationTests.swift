@@ -3,44 +3,31 @@ import EssentialFeed
 import XCTest
 
 final class LoginNavigationTests: XCTestCase {
-    func test_registerButtonTap_triggersRegistrationNavigation() async {
-        let (sut, navigationSpy) = makeSUT()
-
-        XCTAssertFalse(navigationSpy.registerScreenShown, "Should not show register screen initially")
-
-        sut.handleRegisterTap()
-
-        try? await Task.sleep(nanoseconds: 100_000_000)
-
-        XCTAssertTrue(navigationSpy.registerScreenShown, "Should show register screen after register button tap")
-        XCTAssertFalse(navigationSpy.recoveryScreenShown, "Should not show recovery screen when register is tapped")
-    }
-
-    func test_recoveryButtonTap_triggersRecoveryNavigation() async {
-        let (sut, navigationSpy) = makeSUT()
-
-        XCTAssertFalse(navigationSpy.recoveryScreenShown, "Should not show recovery screen initially")
-
-        sut.handleRecoveryTap()
-
-        try? await Task.sleep(nanoseconds: 100_000_000)
-
-        XCTAssertTrue(navigationSpy.recoveryScreenShown, "Should show recovery screen after recovery button tap")
-        XCTAssertFalse(navigationSpy.registerScreenShown, "Should not show register screen when recovery is tapped")
-    }
-
-    func test_bothNavigationCallbacks_canBeTriggeredIndependently() async {
+    func test_registerButtonTap_triggersRegistrationNavigation() {
         let (sut, navigationSpy) = makeSUT()
 
         sut.handleRegisterTap()
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        XCTAssertTrue(navigationSpy.registerScreenShown, "Should show register screen")
-        XCTAssertFalse(navigationSpy.recoveryScreenShown, "Should not affect recovery screen")
+
+        XCTAssertTrue(navigationSpy.didShowRegister, "Should show register screen after register button tap")
+    }
+
+    func test_recoveryButtonTap_triggersRecoveryNavigation() {
+        let (sut, navigationSpy) = makeSUT()
 
         sut.handleRecoveryTap()
-        try? await Task.sleep(nanoseconds: 100_000_000)
-        XCTAssertTrue(navigationSpy.recoveryScreenShown, "Should show recovery screen")
-        XCTAssertTrue(navigationSpy.registerScreenShown, "Should not affect previous register navigation")
+
+        XCTAssertTrue(navigationSpy.didShowRecovery, "Should show recovery screen after recovery button tap")
+    }
+
+    func test_bothNavigationCallbacks_canBeTriggeredIndependently() {
+        let (sut, navigationSpy) = makeSUT()
+
+        sut.handleRegisterTap()
+        XCTAssertTrue(navigationSpy.didShowRegister, "Should show register screen")
+
+        sut.handleRecoveryTap()
+        XCTAssertTrue(navigationSpy.didShowRecovery, "Should show recovery screen")
+        XCTAssertTrue(navigationSpy.didShowRegister, "Should not affect previous register navigation")
     }
 
     func test_registerRequested_publisherSendsEvent() async {
@@ -65,11 +52,12 @@ final class LoginNavigationTests: XCTestCase {
     private func makeSUT(
         file: StaticString = #file,
         line: UInt = #line
-    ) -> (sut: LoginViewModel, spy: NavigationSpy) {
+    ) -> (sut: LoginViewModel, navigationSpy: LoginNavigationSpy) {
+        let navigationSpy = LoginNavigationSpy()
         let configuration = LoginSecurityConfiguration(
             maxAttempts: 3,
             blockDuration: 300,
-            captchaThreshold: 2 // <<< ASEGÚRATE QUE ESTA LÍNEA ESTÉ ASÍ
+            captchaThreshold: 2
         )
         let loginSecurity = LoginSecurityUseCase(
             store: ThreadSafeFailedLoginAttemptsStoreSpy(),
@@ -80,24 +68,24 @@ final class LoginNavigationTests: XCTestCase {
             loginSecurity: loginSecurity,
             blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
-        let navigationSpy = NavigationSpy()
         sut.navigation = navigationSpy
 
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(navigationSpy, file: file, line: line)
+
         return (sut, navigationSpy)
     }
+}
 
-    private class NavigationSpy: LoginNavigation {
-        private(set) var recoveryScreenShown = false
-        private(set) var registerScreenShown = false
+private final class LoginNavigationSpy: LoginNavigation {
+    private(set) var didShowRecovery = false
+    private(set) var didShowRegister = false
 
-        func showRecovery() {
-            recoveryScreenShown = true
-        }
+    func showRecovery() {
+        didShowRecovery = true
+    }
 
-        func showRegister() {
-            registerScreenShown = true
-        }
+    func showRegister() {
+        didShowRegister = true
     }
 }

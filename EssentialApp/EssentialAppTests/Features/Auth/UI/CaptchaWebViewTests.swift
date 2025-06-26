@@ -16,14 +16,20 @@ final class CaptchaWebViewTests: XCTestCase {
     }
 
     func test_captchaView_integration_configuresWebViewNavigationDelegate() {
-        let (hostingController, _) = makeSUT(initialLoading: false)
+        var hostingController: UIHostingController<CaptchaView>? = nil
+        var tokenSpy: CaptchaTokenSpy? = nil
+        (hostingController, tokenSpy) = makeSUT(initialLoading: false)
 
-        let webView = findWKWebView(in: hostingController.view)
-
+        let webView = findWKWebView(in: hostingController!.view)
         XCTAssertNotNil(webView?.navigationDelegate, "Expected the rendered WKWebView's navigationDelegate to be set")
-
-        cleanupWebView(in: hostingController.view)
-        hostingController.view.removeFromSuperview()
+        cleanupWebView(in: hostingController!.view)
+        webView?.navigationDelegate = nil
+        hostingController?.view.removeFromSuperview()
+        hostingController = nil
+        tokenSpy = nil
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.3))
+        XCTAssertNil(tokenSpy, "CaptchaTokenSpy should have been deallocated. Potential memory leak.")
+        XCTAssertNil(hostingController, "HostingController should have been deallocated. Potential memory leak.")
     }
 
     func test_captchaView_integration_loadsExpectedHTMLContent() {

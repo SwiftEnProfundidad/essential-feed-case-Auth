@@ -49,6 +49,22 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         super.init()
     }
 
+    public convenience init(
+        httpClient: HTTPClient, store: FeedStore & FeedImageDataStore,
+        scheduler: AnyDispatchQueueScheduler,
+        sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())
+    ) {
+        self.init(sessionManager: sessionManager)
+        self.httpClient = httpClient
+        self.store = store
+        self.scheduler = scheduler
+    }
+
+    public init(sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())) {
+        self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
+        super.init()
+    }
+
     private var isUserAuthenticatedClosure: () -> Bool
 
     public var window: UIWindow?
@@ -89,22 +105,6 @@ public class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             imageLoader: makeLocalImageLoaderWithRemoteFallback,
             selection: showComments
         ))
-
-    public convenience init(
-        httpClient: HTTPClient, store: FeedStore & FeedImageDataStore,
-        scheduler: AnyDispatchQueueScheduler,
-        sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())
-    ) {
-        self.init(sessionManager: sessionManager)
-        self.httpClient = httpClient
-        self.store = store
-        self.scheduler = scheduler
-    }
-
-    public init(sessionManager: SessionManager = KeychainSessionManager(keychain: EssentialFeed.KeychainHelper())) {
-        self.isUserAuthenticatedClosure = { sessionManager.isAuthenticated }
-        super.init()
-    }
 
     public func scene(
         _ scene: UIScene, willConnectTo _: UISceneSession,

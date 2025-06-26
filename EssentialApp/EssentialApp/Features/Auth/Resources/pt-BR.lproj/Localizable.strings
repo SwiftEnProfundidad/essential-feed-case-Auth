@@ -14,3 +14,6 @@
 "LOGIN_ERROR_MESSAGE_ID" = "Mensagem de erro";
 "LOGIN_SUCCESS_MESSAGE" = "Login bem-sucedido!";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Mensagem de sucesso";
+
+"PASSWORD_RECOVERY_SUCCESS_TITLE" = "Sucesso";
+"PASSWORD_RECOVERY_ERROR_TITLE" = "Erro";
