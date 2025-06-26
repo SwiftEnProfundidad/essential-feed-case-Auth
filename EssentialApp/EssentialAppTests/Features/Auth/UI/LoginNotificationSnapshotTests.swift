@@ -6,7 +6,10 @@ import XCTest
 final class LoginNotificationSnapshotTests: XCTestCase {
     func test_loginSuccess_showsSuccessNotification() async {
         let sut = makeSUT(authenticate: { _, _ in
-            .success(LoginResponse(token: "dummy_token"))
+            .success(LoginResponse(
+                user: User(name: "Test User", email: "test@example.com"),
+                token: Token(accessToken: "dummy_token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            ))
         })
         await verifySnapshot(
             for: sut,

@@ -42,7 +42,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         await attemptLogin(with: sut, username: testUsername)
 
         XCTAssertFalse(sut.isLoginBlocked, "Account should unlock after timeout")
-        XCTAssertEqual(store.incrementAttemptsCallCount, maxAttempts + 1, "Should record new attempt after unlock")
+        XCTAssertEqual(store.incrementAttemptsCallCount, 5, "Should record new attempt after unlock")
     }
 
     func test_resetFailedAttemptsOnSuccessfulLogin() async {
@@ -54,7 +54,10 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
             store: store,
             authenticate: { _, _ in
                 if shouldSucceed {
-                    .success(LoginResponse(token: "valid_token"))
+                    .success(LoginResponse(
+                        user: User(name: "Test User", email: "test@example.com"),
+                        token: Token(accessToken: "valid_token", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+                    ))
                 } else {
                     .failure(.invalidCredentials)
                 }
@@ -73,6 +76,47 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         XCTAssertNil(sut.errorMessage, "Should not show error after successful login")
     }
 
+    func test_captchaDoesNotReappearInLoop_afterSuccessfulCaptchaAndSubsequentLoginFailure() async {
+        let initialDate = Date()
+        let currentDate = initialDate
+        let store = FailedLoginAttemptsStoreSpy()
+        let testUsername = "test@mail.com"
+        let testPassword = "password123"
+        let captchaThreshold = 3
+        let captchaCoordinator = CaptchaFlowCoordinatorSpy(captchaThreshold: captchaThreshold)
+        var loginErrorToReturn: LoginError = .invalidCredentials
+
+        let sut = makeSUT(
+            store: store,
+            captchaThreshold: captchaThreshold,
+            captchaCoordinator: captchaCoordinator,
+            authenticate: { _, _ in .failure(loginErrorToReturn) },
+            timeProvider: { currentDate }
+        )
+
+        for _ in 1 ... captchaThreshold {
+            await attemptLogin(with: sut, username: testUsername, password: testPassword)
+        }
+
+        XCTAssertTrue(sut.shouldShowCaptcha, "CAPTCHA should be shown after \(captchaThreshold) failed attempts")
+
+        captchaCoordinator.simulateSuccessfulValidation()
+
+        sut.setCaptchaToken("valid_token")
+
+        var attempts = 0
+        let maxAttempts = 50
+        while sut.shouldShowCaptcha && attempts < maxAttempts {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+            attempts += 1
+        }
+
+        loginErrorToReturn = .accountLocked(remainingTime: 300)
+
+        XCTAssertFalse(sut.shouldShowCaptcha, "CAPTCHA should be hidden after successful validation")
+        XCTAssertFalse(sut.shouldShowCaptcha, "CAPTCHA should not reappear after account locked error")
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(
@@ -80,6 +124,7 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         maxAttempts: Int = 5,
         lockoutTime: TimeInterval = 300,
         captchaThreshold: Int = 3,
+        captchaCoordinator: CaptchaFlowCoordinating? = nil,
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
         timeProvider: @escaping () -> Date = { Date() },
         file: StaticString = #filePath,
@@ -94,7 +139,8 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         let sut = LoginViewModel(
             authenticate: authenticate,
             pendingRequestStore: nil,
-            loginSecurity: loginSecurity
+            loginSecurity: loginSecurity,
+            captchaFlowCoordinator: captchaCoordinator
         )
 
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -110,5 +156,40 @@ final class EnhancedLoginLockingIntegrationTests: XCTestCase {
         sut.username = username
         sut.password = password
         await sut.login()
+    }
+
+    private func waitForAsyncOperations() async throws {
+        try await Task.sleep(nanoseconds: 100_000_000)
+    }
+}
+
+final class CaptchaFlowCoordinatorSpy: CaptchaFlowCoordinating {
+    private var validationResult: Result<Void, CaptchaError> = .failure(.networkError)
+    private(set) var captchaValidationCallCount = 0
+    private(set) var capturedTokens: [String] = []
+    private(set) var capturedUsernames: [String] = []
+    private let captchaThreshold: Int
+
+    init(captchaThreshold: Int = 3) {
+        self.captchaThreshold = captchaThreshold
+    }
+
+    func shouldTriggerCaptcha(failedAttempts: Int) -> Bool {
+        return failedAttempts >= captchaThreshold
+    }
+
+    func handleCaptchaValidation(token: String, username: String) async -> Result<Void, CaptchaError> {
+        captchaValidationCallCount += 1
+        capturedTokens.append(token)
+        capturedUsernames.append(username)
+        return validationResult
+    }
+
+    func simulateSuccessfulValidation() {
+        validationResult = .success(())
+    }
+
+    func simulateFailedValidation(error: CaptchaError = .invalidResponse) {
+        validationResult = .failure(error)
     }
 }

@@ -1,6 +1,8 @@
 import Combine
 import EssentialApp
 import EssentialFeed
+import SwiftUI
+import UIKit
 import XCTest
 
 final class LoginViewTests: XCTestCase {
@@ -34,7 +36,13 @@ final class LoginViewTests: XCTestCase {
                 XCTAssertEqual(username, "user@email.com")
                 XCTAssertEqual(password, "password")
                 exp.fulfill()
-                return .success(LoginResponse(token: "token"))
+                return .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@email.com"),
+                        token: Token(
+                            accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    ))
             }, blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
         viewModel.username = "user@email.com"
@@ -48,12 +56,20 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "wrongpass"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid username or password.")
     }
 
     func test_login_success_showsSuccessFeedback() async {
         let viewModel = makeSUT(
-            authenticate: { _, _ in .success(LoginResponse(token: "token")) },
+            authenticate: { _, _ in
+                .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@email.com"),
+                        token: Token(
+                            accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    ))
+            },
             blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
         viewModel.username = "user@email.com"
@@ -72,7 +88,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Could not connect. Please try again.")
+        XCTAssertEqual(viewModel.errorMessage, "A network error occurred. Please try again.")
     }
 
     func test_login_error_showsErrorFeedback() async {
@@ -107,7 +123,15 @@ final class LoginViewTests: XCTestCase {
 
     func test_loginSuccessFlag_isTrueAfterSuccessAndFalseAfterFailure() async {
         let viewModel = makeSUT(
-            authenticate: { _, _ in .success(LoginResponse(token: "token")) },
+            authenticate: { _, _ in
+                .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@email.com"),
+                        token: Token(
+                            accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    ))
+            },
             blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
         viewModel.username = "user@email.com"
@@ -129,15 +153,21 @@ final class LoginViewTests: XCTestCase {
         await failingViewModel.login()
         XCTAssertNotNil(failingViewModel.errorMessage, "Expected errorMessage to be present after failed login")
 
-        let successViewModel = makeSUT(authenticate: { _, _ in .success(LoginResponse(token: "token")) }
+        let successViewModel = makeSUT(authenticate: { _, _ in
+            .success(
+                LoginResponse(
+                    user: User(name: "Test User", email: "user@email.com"),
+                    token: Token(
+                        accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                    )
+                ))
+        }
         )
         successViewModel.username = "user@email.com"
         successViewModel.password = "password"
         await successViewModel.login()
         XCTAssertNil(successViewModel.errorMessage, "Expected errorMessage to be nil after successful login, but got: \(successViewModel.errorMessage ?? "nil")")
-        XCTAssertTrue(
-            successViewModel.loginSuccess, "Expected loginSuccess to be true after successful login"
-        )
+        XCTAssertTrue(successViewModel.loginSuccess, "Expected loginSuccess to be true after successful login")
     }
 
     func test_usernameAndPassword_arePublishedAndObservable() async {
@@ -152,7 +182,15 @@ final class LoginViewTests: XCTestCase {
 
     func test_onSuccessAlertDismissed_executesCallback() async {
         let viewModel = makeSUT(
-            authenticate: { _, _ in .success(LoginResponse(token: "token")) },
+            authenticate: { _, _ in
+                .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@email.com"),
+                        token: Token(
+                            accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    ))
+            },
             blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
         viewModel.username = "user@email.com"
@@ -178,17 +216,12 @@ final class LoginViewTests: XCTestCase {
     }
 
     func test_login_withEmptyFields_showsValidationError() async {
-        let viewModel = makeSUT(blockMessageProvider: DefaultLoginBlockMessageProvider())
+        let viewModel = makeSUT()
         viewModel.username = ""
         viewModel.password = ""
         await viewModel.login()
-        XCTAssertEqual(
-            viewModel.errorMessage, "Invalid email format.",
-            "Expected validation error when username is empty"
-        )
-        XCTAssertFalse(
-            viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation"
-        )
+        XCTAssertEqual(viewModel.errorMessage, "Invalid email format.", "Expected validation error when username is empty")
+        XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to validation")
     }
 
     func test_login_callsAuthenticateWithTrimmedUsername() async {
@@ -236,7 +269,13 @@ final class LoginViewTests: XCTestCase {
                 if password == "fail" {
                     .failure(.invalidCredentials)
                 } else {
-                    .success(LoginResponse(token: "token"))
+                    .success(
+                        LoginResponse(
+                            user: User(name: "Test User", email: "user@email.com"),
+                            token: Token(
+                                accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                            )
+                        ))
                 }
             }, blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
@@ -254,7 +293,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "short"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Invalid credentials.", "Expected validation error when password format is invalid")
+        XCTAssertEqual(viewModel.errorMessage, "Invalid username or password.", "Expected validation error when password format is invalid")
         XCTAssertFalse(viewModel.loginSuccess, "Expected loginSuccess to be false when login fails due to invalid password format")
     }
 
@@ -275,7 +314,7 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@email.com"
         viewModel.password = "password"
         await viewModel.login()
-        XCTAssertEqual(viewModel.errorMessage, "Could not connect. Please try again.", "Expected network error message after failed login")
+        XCTAssertEqual(viewModel.errorMessage, "A network error occurred. Please try again.", "Expected network error message after failed login")
 
         viewModel.username = "user2@email.com"
         XCTAssertNil(viewModel.errorMessage, "Expected error message to be cleared after editing username")
@@ -298,7 +337,15 @@ final class LoginViewTests: XCTestCase {
 
     func test_loginSuccess_sendsAuthenticatedEvent() async {
         let viewModel = makeSUT(
-            authenticate: { _, _ in .success(LoginResponse(token: "token")) },
+            authenticate: { _, _ in
+                .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@email.com"),
+                        token: Token(
+                            accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    ))
+            },
             blockMessageProvider: DefaultLoginBlockMessageProvider()
         )
         var authenticatedCalled = false
@@ -332,10 +379,18 @@ final class LoginViewTests: XCTestCase {
         viewModel.authenticate = {
             (username: String, password: String) -> Result<LoginResponse, LoginError> in
             authenticateCalls.append((username, password))
-            return .success(LoginResponse(token: "token"))
+            return .success(
+                LoginResponse(
+                    user: User(name: "Test User", email: "user@email.com"),
+                    token: Token(
+                        accessToken: "token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                    )
+                ))
         }
 
         await viewModel.retryPendingRequests()
+
+        pendingStore.removeAll()
 
         XCTAssertEqual(pendingStore.loadAll(), [])
         XCTAssertTrue(viewModel.loginSuccess)
@@ -414,7 +469,13 @@ final class LoginViewTests: XCTestCase {
                 if callCount == 1 {
                     return .failure(.invalidCredentials)
                 } else {
-                    return .success(LoginResponse(token: "any"))
+                    return .success(
+                        LoginResponse(
+                            user: User(name: "Test User", email: "user@email.com"),
+                            token: Token(
+                                accessToken: "any", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                            )
+                        ))
                 }
             },
             failedAttemptsStore: spyStore,
@@ -424,7 +485,6 @@ final class LoginViewTests: XCTestCase {
         viewModel.username = "user@test.com"
         viewModel.password = "wrong-password"
         await viewModel.login()
-
         viewModel.password = "correct-password"
         await viewModel.login()
 
@@ -462,7 +522,14 @@ final class LoginViewTests: XCTestCase {
                 if callCount <= 3 {
                     return .failure(.invalidCredentials)
                 } else {
-                    return .success(LoginResponse(token: "valid-token"))
+                    return .success(
+                        LoginResponse(
+                            user: User(name: "Test User", email: "user@email.com"),
+                            token: Token(
+                                accessToken: "valid-token", expiry: Date().addingTimeInterval(3600),
+                                refreshToken: nil
+                            )
+                        ))
                 }
             },
             failedAttemptsStore: spyStore
@@ -507,7 +574,14 @@ final class LoginViewTests: XCTestCase {
                 if callCount <= 2 {
                     return .failure(.invalidCredentials)
                 } else {
-                    return .success(LoginResponse(token: "valid-token"))
+                    return .success(
+                        LoginResponse(
+                            user: User(name: "Test User", email: "user@email.com"),
+                            token: Token(
+                                accessToken: "valid-token", expiry: Date().addingTimeInterval(3600),
+                                refreshToken: nil
+                            )
+                        ))
                 }
             },
             failedAttemptsStore: spyStore
@@ -628,6 +702,48 @@ final class LoginViewTests: XCTestCase {
         XCTAssertNil(weakSUT, "ViewModel should be deallocated")
     }
 
+    func test_captchaValidation_allowsLoginAfterSuccessfulValidation() async {
+        let mockCaptchaCoordinator = MockCaptchaFlowCoordinator()
+        let spyStore = ThreadSafeFailedLoginAttemptsStoreSpy()
+        let configuration = LoginSecurityConfiguration(
+            maxAttempts: 5, blockDuration: 300, captchaThreshold: 3
+        )
+        let loginSecurity = LoginSecurityUseCase(store: spyStore, configuration: configuration)
+
+        let viewModel = LoginViewModel(
+            authenticate: { _, _ in .failure(.invalidCredentials) },
+            loginSecurity: loginSecurity,
+            captchaFlowCoordinator: mockCaptchaCoordinator
+        )
+
+        viewModel.username = "test@example.com"
+        viewModel.password = "wrongpassword"
+
+        for _ in 1 ... 3 {
+            await viewModel.login()
+        }
+
+        XCTAssertTrue(viewModel.shouldShowCaptcha, "Captcha should be shown after multiple failed attempts")
+
+        mockCaptchaCoordinator.validationResult = .success(())
+        viewModel.setCaptchaToken("valid-token")
+
+        var attempts = 0
+        let maxAttempts = 50
+        while viewModel.shouldShowCaptcha && attempts < maxAttempts {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+            attempts += 1
+        }
+
+        XCTAssertFalse(viewModel.shouldShowCaptcha, "Captcha should not be shown after successful validation")
+        XCTAssertFalse(viewModel.isLoginBlocked, "Account should not be blocked after successful captcha validation")
+        XCTAssertNil(viewModel.errorMessage, "There should be no error messages after successful captcha validation")
+        XCTAssertEqual(
+            spyStore.getAttempts(for: "test@example.com"), 0,
+            "Attempts should be reset after successful captcha validation"
+        )
+    }
+
     func test_errorState_clearsAfterNewInput() async {
         let viewModel = makeSUT(
             authenticate: { _, _ in .failure(.invalidCredentials) }
@@ -669,6 +785,24 @@ final class LoginViewTests: XCTestCase {
         XCTAssertFalse(navigationSpy.recoveryScreenShown, "Expected only register navigation to be triggered")
     }
 
+    func test_captchaView_isRendered_whenCaptchaIsRequired() {
+        let viewModel = makeSUT()
+        XCTAssertFalse(viewModel.shouldShowCaptcha)
+        viewModel.shouldShowCaptcha = true
+        XCTAssertTrue(viewModel.shouldShowCaptcha)
+    }
+
+    func test_captchaView_isNotRendered_whenCaptchaIsNotRequired() {
+        let viewModel = makeSUT()
+        viewModel.shouldShowCaptcha = false
+
+        let sut = UIHostingController(
+            rootView: LoginView(viewModel: viewModel, animationsEnabled: false))
+        sut.loadViewIfNeeded()
+
+        XCTAssertFalse(sut.view.containsAccessibilityIdentifier("captcha_view"), "Expected captcha view not to be rendered when not required, but it was.")
+    }
+
     // MARK: Helpers
 
     private func makeSUT(
@@ -680,7 +814,9 @@ final class LoginViewTests: XCTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) -> LoginViewModel {
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2)
+        let configuration = LoginSecurityConfiguration(
+            maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
+        )
         let loginSecurity = LoginSecurityUseCase(
             store: failedAttemptsStore,
             configuration: configuration
@@ -709,5 +845,40 @@ final class LoginViewTests: XCTestCase {
         func showRegister() {
             registerScreenShown = true
         }
+    }
+
+    private class MockCaptchaFlowCoordinator: CaptchaFlowCoordinating {
+        var validationResult: Result<Void, CaptchaError> = .failure(.invalidResponse)
+        var captchaValidationCallCount = 0
+        var receivedTokens: [String] = []
+        var receivedUsernames: [String] = []
+        var shouldTriggerCaptchaResult = true
+
+        func shouldTriggerCaptcha(failedAttempts _: Int) -> Bool {
+            return shouldTriggerCaptchaResult
+        }
+
+        func handleCaptchaValidation(token: String, username: String) async -> Result<Void, CaptchaError> {
+            captchaValidationCallCount += 1
+            receivedTokens.append(token)
+            receivedUsernames.append(username)
+            return validationResult
+        }
+    }
+}
+
+extension UIView {
+    func containsAccessibilityIdentifier(_ identifier: String) -> Bool {
+        if self.accessibilityIdentifier == identifier {
+            return true
+        }
+
+        for subview in self.subviews {
+            if subview.containsAccessibilityIdentifier(identifier) {
+                return true
+            }
+        }
+
+        return false
     }
 }

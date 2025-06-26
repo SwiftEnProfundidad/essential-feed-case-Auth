@@ -24,11 +24,12 @@ public final class RemoteUserPasswordRecoveryUseCase: UserPasswordRecoveryUseCas
 
         guard emailPredicate.evaluate(with: trimmedEmail) else {
             Task { [weak self] in
-                guard let self else { return }
-                let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .invalidEmailFormat)
-                try? await self.auditLogger.logRecoveryAttempt(auditLog)
+                if let self {
+                    let auditLog = PasswordRecoveryAuditLog(email: trimmedEmail, ipAddress: ipAddress, userAgent: userAgent, outcome: .invalidEmailFormat)
+                    try? await self.auditLogger.logRecoveryAttempt(auditLog)
+                }
+                completion(.failure(.invalidEmailFormat))
             }
-            completion(.failure(.invalidEmailFormat))
             return
         }
 

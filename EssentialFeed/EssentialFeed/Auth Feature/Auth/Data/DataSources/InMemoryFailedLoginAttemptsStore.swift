@@ -35,7 +35,7 @@ public final class InMemoryFailedLoginAttemptsStore: @unchecked Sendable, Failed
             }
             self.queue.async(flags: .barrier) {
                 self._attempts[username] = 0
-                self._lastAttemptTimes[username] = nil
+                self._lastAttemptTimes.removeValue(forKey: username)
                 continuation.resume()
             }
         }

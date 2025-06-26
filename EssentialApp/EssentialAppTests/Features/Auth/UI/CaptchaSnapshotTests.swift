@@ -6,11 +6,15 @@ import XCTest
 final class CaptchaSnapshotTests: XCTestCase {
     func test_captchaView_visible_light() {
         autoreleasepool {
-            var sut: UIViewController? = makeCaptchaView(isVisible: true, colorScheme: .light, initialLoading: false)
-
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "en", scheme: "light")
-            assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "es", scheme: "light")
-
+            var sut: UIViewController? = makeCaptchaView(
+                isVisible: true, colorScheme: .light, initialLoading: false
+            )
+            assertSnapshot(
+                sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "en", scheme: "light"
+            )
+            assertSnapshot(
+                sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "es", scheme: "light"
+            )
             RunLoop.current.run(until: Date())
             forceCleanupWebViews(in: sut!.view)
             sut?.view.removeFromSuperview()
@@ -24,7 +28,9 @@ final class CaptchaSnapshotTests: XCTestCase {
 
     func test_captchaView_visible_dark() {
         autoreleasepool {
-            var sut: UIViewController? = makeCaptchaView(isVisible: true, colorScheme: .dark, initialLoading: false)
+            var sut: UIViewController? = makeCaptchaView(
+                isVisible: true, colorScheme: .dark, initialLoading: false
+            )
 
             assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "en", scheme: "dark")
             assertSnapshot(sut!.view.snapshot(), named: "CAPTCHA_VISIBLE", language: "es", scheme: "dark")
@@ -63,11 +69,17 @@ final class CaptchaSnapshotTests: XCTestCase {
             weak var weakRef: UIViewController?
 
             autoreleasepool {
-                let sut = makeCaptchaView(isVisible: true, colorScheme: .light, isLoading: true, initialLoading: true)
+                let sut = makeCaptchaView(
+                    isVisible: true, colorScheme: .light, isLoading: true, initialLoading: true
+                )
                 weakRef = sut
 
-                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "light")
-                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "light")
+                assertSnapshot(
+                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "light"
+                )
+                assertSnapshot(
+                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "light"
+                )
 
                 forceCleanupWebViews(in: sut.view)
                 sut.view.removeFromSuperview()
@@ -83,11 +95,17 @@ final class CaptchaSnapshotTests: XCTestCase {
             weak var weakRef: UIViewController?
 
             autoreleasepool {
-                let sut = makeCaptchaView(isVisible: true, colorScheme: .dark, isLoading: true, initialLoading: true)
+                let sut = makeCaptchaView(
+                    isVisible: true, colorScheme: .dark, isLoading: true, initialLoading: true
+                )
                 weakRef = sut
 
-                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "dark")
-                assertSnapshot(sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "dark")
+                assertSnapshot(
+                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "en", scheme: "dark"
+                )
+                assertSnapshot(
+                    sut.view.snapshot(), named: "CAPTCHA_LOADING", language: "es", scheme: "dark"
+                )
 
                 forceCleanupWebViews(in: sut.view)
                 sut.view.removeFromSuperview()

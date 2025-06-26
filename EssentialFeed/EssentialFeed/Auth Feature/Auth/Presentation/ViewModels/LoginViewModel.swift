@@ -40,17 +40,15 @@ public final class LoginViewModel: ObservableObject {
         didSet { updateViewState() }
     }
 
+    @Published public private(set) var isPerformingLogin: Bool = false
+
     @Published public private(set) var publishedViewState: ViewState = .idle
     @Published public var shouldShowCaptcha: Bool = false {
         didSet { updateViewState() }
     }
 
-    @Published public var captchaToken: String? {
-        didSet {
-            if captchaToken != nil, shouldShowCaptcha {
-                Task { await validateCaptchaAndProceed() }
-            }
-        }
+    @Published public var captchaToken: String? = nil {
+        didSet { updateViewState() }
     }
 
     public let authenticated = PassthroughSubject<Void, Never>()
@@ -99,7 +97,8 @@ public final class LoginViewModel: ObservableObject {
 
         if isLoginBlocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            errorMessage = blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             return
         }
 
@@ -117,17 +116,25 @@ public final class LoginViewModel: ObservableObject {
 
     @MainActor
     private func validateCaptchaAndProceed() async {
-        guard let token = captchaToken,
-              let coordinator = captchaFlowCoordinator else { return }
+        guard let coordinator = captchaFlowCoordinator else { return }
+        guard let token = captchaToken else { return }
+        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let result = await coordinator.handleCaptchaValidation(token: token, username: username)
+        let result = await coordinator.handleCaptchaValidation(token: token, username: trimmedUsername)
 
         switch result {
         case .success:
             shouldShowCaptcha = false
             errorMessage = nil
-            guard let (trimmedUsername, trimmedPassword) = validateCredentials() else { return }
-            await performAuthentication(username: trimmedUsername, password: trimmedPassword)
+            let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            await loginSecurity.resetAttempts(username: trimmedUsername)
+
+            await performAuthentication(
+                username: trimmedUsername,
+                password: trimmedPassword,
+                isPostCaptchaRetry: true
+            )
         case let .failure(error):
             captchaToken = nil
             errorMessage = mapCaptchaError(error)
@@ -139,13 +146,13 @@ public final class LoginViewModel: ObservableObject {
         case .invalidResponse:
             "CAPTCHA verification failed. Please try again."
         case .networkError:
-            "Network error during CAPTCHA verification. Please try again."
-        case .serviceUnavailable:
-            "CAPTCHA service temporarily unavailable. Please try again later."
-        case .rateLimitExceeded:
-            "Too many CAPTCHA attempts. Please wait before trying again."
+            "Network error during CAPTCHA. Please check connection."
         case .malformedRequest:
             "CAPTCHA verification error. Please refresh and try again."
+        case .serviceUnavailable:
+            "CAPTCHA service is currently unavailable. Please try again later."
+        case .rateLimitExceeded:
+            "You have made too many requests. Please try again later."
         case let .unknownError(message):
             "CAPTCHA error: \(message)"
         }
@@ -169,15 +176,17 @@ public final class LoginViewModel: ObservableObject {
     }
 
     @MainActor
-    private func performAuthentication(username: String, password: String) async {
-        let result = await authenticate(username, password)
-        errorMessage = nil
+    private func performAuthentication(
+        username: String, password: String, isPostCaptchaRetry: Bool = false
+    ) async {
+        isPerformingLogin = true
+        let authResult = await authenticate(username, password)
 
-        switch result {
+        switch authResult {
         case .success:
             await handleSuccessfulLogin(username: username)
         case let .failure(error):
-            await handleFailedLogin(username: username, error: error)
+            await handleFailedLogin(error, for: username, isPostCaptchaRetry: isPostCaptchaRetry)
             if case .network = error {
                 savePendingRequest(username: username, password: password)
             }
@@ -191,9 +200,8 @@ public final class LoginViewModel: ObservableObject {
         authenticated.send(())
         errorMessage = nil
         isLoginBlocked = false
-        shouldShowCaptcha = false
-        captchaToken = nil
-        onAuthenticated?()
+        isPerformingLogin = false
+        resetCaptchaState()
     }
 
     private func savePendingRequest(username: String, password: String) {
@@ -201,40 +209,35 @@ public final class LoginViewModel: ObservableObject {
         pendingRequestStore?.save(request)
     }
 
-    public func unlockAfterRecovery() async {
-        isLoginBlocked = false
-        errorMessage = nil
-        shouldShowCaptcha = false
-        captchaToken = nil
-        await loginSecurity.resetAttempts(username: username)
-    }
-
     @MainActor
-    private func handleFailedLogin(username: String, error: LoginError = .invalidCredentials) async {
-        await loginSecurity.handleFailedLogin(username: username)
+    private func handleFailedLogin(
+        _ error: LoginError, for username: String, isPostCaptchaRetry: Bool = false
+    ) async {
+        isPerformingLogin = false
 
-        let isLocked = await loginSecurity.isAccountLocked(username: username)
-        if isLocked {
-            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            self.errorMessage = self.blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
-            self.isLoginBlocked = true
-            self.shouldShowCaptcha = false
-        } else {
-            let failedAttempts = loginSecurity.getFailedAttempts(username: username)
-
-            if let coordinator = captchaFlowCoordinator,
-               coordinator.shouldTriggerCaptcha(failedAttempts: failedAttempts)
-            {
-                self.shouldShowCaptcha = true
-                self.captchaToken = nil
-                self.errorMessage = "Please complete CAPTCHA verification to continue"
-            } else {
-                self.errorMessage = self.blockMessageProvider.message(for: error)
-                self.shouldShowCaptcha = false
-            }
-
-            self.isLoginBlocked = false
+        if isPostCaptchaRetry {
+            self.errorMessage = nil
+            resetCaptchaState()
+            updateViewState()
+            return
         }
+
+        await loginSecurity.handleFailedLogin(username: username)
+        if let coordinator = captchaFlowCoordinator {
+            let attempts = loginSecurity.getFailedAttempts(username: username)
+            shouldShowCaptcha = coordinator.shouldTriggerCaptcha(failedAttempts: attempts)
+        }
+
+        if await loginSecurity.isAccountLocked(username: username) {
+            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
+            self.errorMessage = blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            isLoginBlocked = true
+        } else {
+            self.errorMessage = mapLoginError(error, for: username)
+        }
+
+        updateViewState()
     }
 
     @MainActor
@@ -242,12 +245,18 @@ public final class LoginViewModel: ObservableObject {
         let isLocked = await loginSecurity.isAccountLocked(username: username)
         if isLocked {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            errorMessage = blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+            errorMessage = blockMessageProvider.message(
+                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
             isLoginBlocked = true
-            shouldShowCaptcha = false
+            shouldShowCaptcha = true
         } else {
             isLoginBlocked = false
-            if errorMessage?.contains("locked") == true {
+            let accountLockedErrorExample = LoginError.accountLocked(remainingTime: 0)
+            if let currentErrorMessage = errorMessage,
+               currentErrorMessage.contains("locked"),
+               currentErrorMessage.contains(
+                   blockMessageProvider.message(for: accountLockedErrorExample).prefix(10))
+            {
                 errorMessage = nil
             }
         }
@@ -259,12 +268,16 @@ public final class LoginViewModel: ObservableObject {
         guard let store = pendingRequestStore else { return }
         let requests = store.loadAll()
         for req in requests {
-            let result = await authenticate(req.username, req.password)
-            if case .success = result {
-                store.remove(req)
-                errorMessage = nil
-                loginSuccess = true
-                authenticated.send(())
+            let authResult = await authenticate(req.username, req.password)
+            await MainActor.run { [weak self] in
+                guard let self else { return }
+                if case .failure = authResult {
+                } else {
+                    store.remove(req)
+                }
+                self.errorMessage = nil
+                self.loginSuccess = true
+                self.authenticated.send(())
             }
         }
     }
@@ -301,8 +314,15 @@ public final class LoginViewModel: ObservableObject {
     }
 
     private func updateViewState() {
-        if isLoginBlocked {
-            publishedViewState = .blocked
+        if shouldShowCaptcha, let message = errorMessage {
+            publishedViewState = .error(message)
+        } else if isLoginBlocked {
+            let messageToDisplay =
+                errorMessage
+                    ?? blockMessageProvider.message(
+                        for: LoginError.accountLocked(
+                            remainingTime: Int(loginSecurity.getRemainingBlockTime(username: username) ?? 0)))
+            publishedViewState = .error(messageToDisplay)
         } else if let message = errorMessage {
             publishedViewState = .error(message)
         } else if loginSuccess {
@@ -315,9 +335,36 @@ public final class LoginViewModel: ObservableObject {
     deinit {
         delayTask?.cancel()
     }
+
+    private func mapLoginError(_ error: LoginError, for _: String) -> String {
+        switch error {
+        case .invalidCredentials:
+            "Invalid username or password."
+        case let .accountLocked(remainingTime):
+            blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: remainingTime))
+        case .network:
+            "A network error occurred. Please try again."
+        case .invalidEmailFormat,
+             .invalidPasswordFormat,
+             .tokenStorageFailed,
+             .noConnectivity,
+             .offlineStoreFailed,
+             .messageForMaxAttemptsReached,
+             .unknown:
+            error.errorMessage()
+        }
+    }
 }
 
-extension LoginViewModel: LoginViewModelProtocol {}
+extension LoginViewModel: LoginViewModelProtocol {
+    public func unlockAfterRecovery() async {
+        await loginSecurity.resetAttempts(username: username)
+        isLoginBlocked = false
+        errorMessage = nil
+        shouldShowCaptcha = false
+        updateViewState()
+    }
+}
 
 extension LoginViewModel: CaptchaStateManaging {
     public func setCaptchaRequired(_ required: Bool) {
@@ -325,7 +372,13 @@ extension LoginViewModel: CaptchaStateManaging {
     }
 
     public func setCaptchaToken(_ token: String?) {
-        captchaToken = token
+        self.captchaToken = token
+
+        if token != nil {
+            Task { @MainActor in
+                await validateCaptchaAndProceed()
+            }
+        }
     }
 
     public func resetCaptchaState() {

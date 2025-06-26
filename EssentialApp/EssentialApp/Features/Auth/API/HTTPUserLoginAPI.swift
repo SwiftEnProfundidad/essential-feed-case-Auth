@@ -17,11 +17,15 @@ class HTTPUserLoginAPI: UserLoginAPI {
 
     func login(with credentials: LoginCredentials) async -> Result<LoginResponse, LoginError> {
         if credentials.email == "real@example.com", credentials.password == "realPassword" {
-            return .success(LoginResponse(token: "real-user-token-123"))
+            let user = User(name: "Real User", email: "real@example.com")
+            let token = Token(accessToken: "real-user-token-123", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            return .success(LoginResponse(user: user, token: token))
         }
+
         if credentials.email == "offline@example.com" {
             return .failure(.network)
         }
+
         return .failure(.invalidCredentials)
     }
 }

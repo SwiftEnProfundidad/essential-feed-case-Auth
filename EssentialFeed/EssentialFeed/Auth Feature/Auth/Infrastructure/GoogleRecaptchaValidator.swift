@@ -5,17 +5,22 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
     private let httpClient: HTTPClient
     private let verifyURL: URL
 
-    public init(secretKey: String, httpClient: HTTPClient, verifyURL: URL = URL(string: "https://www.google.com/recaptcha/api/siteverify")!) {
+    public init(
+        secretKey: String, httpClient: HTTPClient,
+        verifyURL: URL = URL(string: "https://www.google.com/recaptcha/api/siteverify")!
+    ) {
         self.secretKey = secretKey
         self.httpClient = httpClient
         self.verifyURL = verifyURL
     }
 
-    public func validateCaptcha(response: String, clientIP: String?) async throws -> CaptchaValidationResult {
+    public func validateCaptcha(response token: String, clientIP: String?) async throws
+        -> CaptchaValidationResult
+    {
         var components = URLComponents()
         components.queryItems = [
-            URLQueryItem(name: "secret", value: secretKey),
-            URLQueryItem(name: "response", value: response)
+            URLQueryItem(name: "secret", value: self.secretKey),
+            URLQueryItem(name: "response", value: token)
         ]
 
         if let clientIP {
@@ -32,9 +37,9 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
         request.httpBody = bodyData
 
         do {
-            let (data, response) = try await httpClient.send(request)
+            let (data, httpResponse) = try await httpClient.send(request)
 
-            guard response.statusCode == 200 else {
+            guard httpResponse.statusCode == 200 else {
                 throw CaptchaError.serviceUnavailable
             }
 
@@ -46,10 +51,12 @@ public final class GoogleRecaptchaValidator: CaptchaValidator {
                 challengeId: recaptchaResponse.challengeTs,
                 timestamp: Date()
             )
-        } catch let captchaError as CaptchaError {
-            throw captchaError
+        } catch let specificError as CaptchaError {
+            throw specificError
+        } catch _ as DecodingError {
+            throw CaptchaError.invalidResponse
         } catch {
-            throw CaptchaError.networkError
+            throw CaptchaError.unknownError(error.localizedDescription)
         }
     }
 }

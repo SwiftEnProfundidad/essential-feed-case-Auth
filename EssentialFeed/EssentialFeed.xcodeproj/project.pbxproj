@@ -211,6 +211,9 @@
 		B42939712DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */; };
 		B42B78012DE64D220096DD34 /* LoginLockStatusProviderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */; };
 		B42B78032DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */; };
+		B43BC9AA2E05DF87006DB394 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43BC9A92E05DF87006DB394 /* LoginResponse.swift */; };
+		B43BC9AC2E05E02E006DB394 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43BC9AB2E05E02E006DB394 /* AnyLoginRequestStore.swift */; };
+		B43BC9AE2E05E0C1006DB394 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43BC9AD2E05E0C1006DB394 /* LoginBlockMessageProvider.swift */; };
 		B43D973A2DFB719400583077 /* SessionUserDefaultsManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */; };
 		B447C62B2DBE08BF00E738D3 /* LoginPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */; };
 		B447C62D2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */; };
@@ -224,11 +227,9 @@
 		B45C36C22DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369C2DDA92EE00184F55 /* OfflineLoginStoreProtocol.swift */; };
 		B45C36C32DDA92EE00184F55 /* LoginPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B42DDA92EE00184F55 /* LoginPresentation.swift */; };
 		B45C36C42DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369D2DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift */; };
-		B45C36C52DDA92EE00184F55 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36842DDA92EE00184F55 /* LoginResponse.swift */; };
 		B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */; };
 		B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A02DDA92EE00184F55 /* TokenStorageProtocol.swift */; };
 		B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B52DDA92EE00184F55 /* LoginPresenter.swift */; };
-		B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */; };
 		B45C36CB2DDA92EE00184F55 /* LoginViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C369B2DDA92EE00184F55 /* LoginViewModelProtocol.swift */; };
 		B45C36CC2DDA92EE00184F55 /* PendingRequestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */; };
 		B45C36CE2DDA92EE00184F55 /* LoginError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C368F2DDA92EE00184F55 /* LoginError.swift */; };
@@ -246,7 +247,6 @@
 		B45C36DB2DDA92EE00184F55 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36912DDA92EE00184F55 /* Token.swift */; };
 		B45C36DC2DDA92EE00184F55 /* PasswordRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36902DDA92EE00184F55 /* PasswordRecovery.swift */; };
 		B45C36DD2DDA92EE00184F55 /* RefreshTokenUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A92DDA92EE00184F55 /* RefreshTokenUseCase.swift */; };
-		B45C36DE2DDA92EE00184F55 /* LoginBlockMessageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */; };
 		B45C36DF2DDA92EE00184F55 /* LoginErrorMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */; };
 		B45C36E12DDA92EE00184F55 /* KeychainSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36872DDA92EE00184F55 /* KeychainSessionManager.swift */; };
 		B45C36E22DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45C36A72DDA92EE00184F55 /* PasswordRecoverySuggestionServiceUseCase.swift */; };
@@ -301,7 +301,6 @@
 		B48407BF2DDC5EAC00834C15 /* KeychainFullSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407BE2DDC5EAC00834C15 /* KeychainFullSpy.swift */; };
 		B48407C12DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407C02DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift */; };
 		B48407C32DDC633300834C15 /* EncryptionServiceDataSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48407C22DDC633300834C15 /* EncryptionServiceDataSpy.swift */; };
-		B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
 		B48914232DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */; };
 		B48914262DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */; };
 		B48991482DD3E85700A94850 /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -464,13 +463,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 08D9179F22B92A5D003BC31B;
 			remoteInfo = EssentialFeediOS;
-		};
-		B488701B2DBEC3B000E31404 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 080EDEE821B6DA7E00813479 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 080EDEF021B6DA7E00813479;
-			remoteInfo = EssentialFeed;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -690,6 +682,9 @@
 		B42939702DDB930F00811CBC /* DefaultTokenRefreshServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTokenRefreshServiceTests.swift; sourceTree = "<group>"; };
 		B42B78002DE64D220096DD34 /* LoginLockStatusProviderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLockStatusProviderSpy.swift; sourceTree = "<group>"; };
 		B42B78022DE64D4C0096DD34 /* FailedLoginHandlerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedLoginHandlerSpy.swift; sourceTree = "<group>"; };
+		B43BC9A92E05DF87006DB394 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		B43BC9AB2E05E02E006DB394 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
+		B43BC9AD2E05E0C1006DB394 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
 		B43D97392DFB719300583077 /* SessionUserDefaultsManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionUserDefaultsManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		B447C6292DBE08BF00E738D3 /* LoginPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenterTests.swift; sourceTree = "<group>"; };
 		B447C62C2DBE1F8300E738D3 /* UserLoginErrorMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginErrorMappingTests.swift; sourceTree = "<group>"; };
@@ -702,7 +697,6 @@
 		B45C367D2DDA92EE00184F55 /* InMemoryFailedLoginAttemptsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFailedLoginAttemptsStore.swift; sourceTree = "<group>"; };
 		B45C367E2DDA92EE00184F55 /* PendingRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRequestStore.swift; sourceTree = "<group>"; };
 		B45C36812DDA92EE00184F55 /* RemoteTokenRefreshService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTokenRefreshService.swift; sourceTree = "<group>"; };
-		B45C36842DDA92EE00184F55 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		B45C36852DDA92EE00184F55 /* UserRegistrationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationResponse.swift; sourceTree = "<group>"; };
 		B45C36872DDA92EE00184F55 /* KeychainSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSessionManager.swift; sourceTree = "<group>"; };
 		B45C36882DDA92EE00184F55 /* LoginEventNotifierRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginEventNotifierRepository.swift; sourceTree = "<group>"; };
@@ -733,8 +727,6 @@
 		B45C36AA2DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryOfflineRegistrationsUseCase.swift; sourceTree = "<group>"; };
 		B45C36AB2DDA92EE00184F55 /* UserLoginUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginUseCase.swift; sourceTree = "<group>"; };
 		B45C36AC2DDA92EE00184F55 /* UserRegistrationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCase.swift; sourceTree = "<group>"; };
-		B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyLoginRequestStore.swift; sourceTree = "<group>"; };
-		B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginBlockMessageProvider.swift; sourceTree = "<group>"; };
 		B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginErrorMessageMapper.swift; sourceTree = "<group>"; };
 		B45C36B42DDA92EE00184F55 /* LoginPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresentation.swift; sourceTree = "<group>"; };
 		B45C36B52DDA92EE00184F55 /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
@@ -783,7 +775,6 @@
 		B48407BE2DDC5EAC00834C15 /* KeychainFullSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainFullSpy.swift; sourceTree = "<group>"; };
 		B48407C02DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenEncryptionServiceSpy.swift; sourceTree = "<group>"; };
 		B48407C22DDC633300834C15 /* EncryptionServiceDataSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionServiceDataSpy.swift; sourceTree = "<group>"; };
-		B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B48914222DDDFBE600C6EF73 /* AES256CryptoKitEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptor.swift; sourceTree = "<group>"; };
 		B48914252DDDFC4800C6EF73 /* AES256CryptoKitEncryptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES256CryptoKitEncryptorTests.swift; sourceTree = "<group>"; };
 		B48B76392DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticatedHTTPClientDecorator.swift; sourceTree = "<group>"; };
@@ -961,14 +952,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B48870132DBEC3B000E31404 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B488701A2DBEC3B000E31404 /* EssentialFeed.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1100,7 +1083,6 @@
 				0832C67D22A0223A00E1C5E9 /* EssentialFeedCacheIntegrationTests.xctest */,
 				08D917A022B92A5D003BC31B /* EssentialFeediOS.framework */,
 				08D917A822B92A5D003BC31B /* EssentialFeediOSTests.xctest */,
-				B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1766,7 +1748,6 @@
 			children = (
 				B41D5DEA2DE033870020B37B /* RefreshTokenResponse+Extensions.swift */,
 				B41D5DE82DE02F3E0020B37B /* RefreshTokenResponse.swift */,
-				B45C36842DDA92EE00184F55 /* LoginResponse.swift */,
 				B45C36852DDA92EE00184F55 /* UserRegistrationResponse.swift */,
 			);
 			path = Models;
@@ -1797,6 +1778,7 @@
 		B45C36922DDA92EE00184F55 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				B43BC9A92E05DF87006DB394 /* LoginResponse.swift */,
 				B4D611592E034D4F00CF1A9C /* LoginSecurityConfiguration.swift */,
 				B4D611172E01D99200CF1A9C /* BotDetectionResult.swift */,
 				B4D611182E01D99200CF1A9C /* RequestPattern.swift */,
@@ -1834,6 +1816,8 @@
 		B45C36A32DDA92EE00184F55 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				B43BC9AD2E05E0C1006DB394 /* LoginBlockMessageProvider.swift */,
+				B43BC9AB2E05E02E006DB394 /* AnyLoginRequestStore.swift */,
 				B4D611512E034C6900CF1A9C /* CaptchaFlowCoordinating.swift */,
 				B4D611522E034C6900CF1A9C /* CaptchaStateCommanding.swift */,
 				B4D611532E034C6900CF1A9C /* CaptchaStateManaging.swift */,
@@ -1909,7 +1893,6 @@
 		B45C36B02DDA92EE00184F55 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				B45C36AF2DDA92EE00184F55 /* AnyLoginRequestStore.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1917,7 +1900,6 @@
 		B45C36B32DDA92EE00184F55 /* Mappers */ = {
 			isa = PBXGroup;
 			children = (
-				B45C36B12DDA92EE00184F55 /* LoginBlockMessageProvider.swift */,
 				B45C36B22DDA92EE00184F55 /* LoginErrorMessageMapper.swift */,
 			);
 			path = Mappers;
@@ -2622,26 +2604,6 @@
 			productReference = 08D917A822B92A5D003BC31B /* EssentialFeediOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B48870152DBEC3B000E31404 /* EssentialAppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B488701F2DBEC3B000E31404 /* Build configuration list for PBXNativeTarget "EssentialAppUITests" */;
-			buildPhases = (
-				B48870122DBEC3B000E31404 /* Sources */,
-				B48870132DBEC3B000E31404 /* Frameworks */,
-				B48870142DBEC3B000E31404 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B488701C2DBEC3B000E31404 /* PBXTargetDependency */,
-			);
-			name = EssentialAppUITests;
-			packageProductDependencies = (
-			);
-			productName = EssentialAppUITests;
-			productReference = B48870162DBEC3B000E31404 /* EssentialAppUITests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2677,9 +2639,6 @@
 						CreatedOnToolsVersion = 10.2.1;
 						LastSwiftMigration = 1020;
 					};
-					B48870152DBEC3B000E31404 = {
-						CreatedOnToolsVersion = 16.3;
-					};
 				};
 			};
 			buildConfigurationList = 080EDEEB21B6DA7E00813479 /* Build configuration list for PBXProject "EssentialFeed" */;
@@ -2704,7 +2663,6 @@
 				0832C67C22A0223A00E1C5E9 /* EssentialFeedCacheIntegrationTests */,
 				08D9179F22B92A5D003BC31B /* EssentialFeediOS */,
 				08D917A722B92A5D003BC31B /* EssentialFeediOSTests */,
-				B48870152DBEC3B000E31404 /* EssentialAppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -2777,13 +2735,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B48870142DBEC3B000E31404 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -2823,6 +2774,7 @@
 				08EF9D29250BBC6C004539C2 /* ResourceErrorView.swift in Sources */,
 				08E546CC24F9631300C64FAE /* FeedImageDataMapper.swift in Sources */,
 				B40ADAE12E01C82000A39B40 /* CaptchaValidationResult.swift in Sources */,
+				B43BC9AE2E05E0C1006DB394 /* LoginBlockMessageProvider.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				B49DC5802DF749D600C5ADE6 /* PersistenceCommand.swift in Sources */,
 				B49DC5812DF749D600C5ADE6 /* ValidationCommand.swift in Sources */,
@@ -2846,6 +2798,7 @@
 				B48B763A2DDFC499008A4EF4 /* AuthenticatedHTTPClientDecorator.swift in Sources */,
 				B4047DFB2DDA7D4300A0C34C /* KeychainStore.swift in Sources */,
 				089C40DE22170F2300DE552E /* FeedStore.swift in Sources */,
+				B43BC9AA2E05DF87006DB394 /* LoginResponse.swift in Sources */,
 				B49DC5652DF745C800C5ADE6 /* ReplayAttackProtection.swift in Sources */,
 				B4BBD48D2DF922F2001E1965 /* FailedLoginAttemptsStoreCleaning.swift in Sources */,
 				B4F52FED2DFB266300CC9322 /* DefaultHTTPClientAuthenticationHandler.swift in Sources */,
@@ -2905,7 +2858,6 @@
 				B4D611142E01D62500CF1A9C /* CaptchaErrorMapper.swift in Sources */,
 				B42939682DDB8D3F00811CBC /* TokenValidator.swift in Sources */,
 				B45C36C42DDA92EE00184F55 /* OfflineRegistrationStoreProtocol.swift in Sources */,
-				B45C36C52DDA92EE00184F55 /* LoginResponse.swift in Sources */,
 				B49DC5742DF7490000C5ADE6 /* RegistrationCommandChain.swift in Sources */,
 				B45C36C62DDA92EE00184F55 /* RetryOfflineRegistrationsUseCase.swift in Sources */,
 				B45C36C72DDA92EE00184F55 /* TokenStorageProtocol.swift in Sources */,
@@ -2914,7 +2866,6 @@
 				B4F52FF42DFB414600CC9322 /* HTTPClientAuthenticationHandler.swift in Sources */,
 				B45C36C92DDA92EE00184F55 /* LoginPresenter.swift in Sources */,
 				B49DC5892DF74A0700C5ADE6 /* RegistrationError.swift in Sources */,
-				B45C36CA2DDA92EE00184F55 /* AnyLoginRequestStore.swift in Sources */,
 				B4A7468A2DDD2D950087C33C /* KeychainTokenStore.swift in Sources */,
 				B45C36CB2DDA92EE00184F55 /* LoginViewModelProtocol.swift in Sources */,
 				B41D5DEB2DE033870020B37B /* RefreshTokenResponse+Extensions.swift in Sources */,
@@ -2951,7 +2902,6 @@
 				B45C36DB2DDA92EE00184F55 /* Token.swift in Sources */,
 				B45C36DC2DDA92EE00184F55 /* PasswordRecovery.swift in Sources */,
 				B45C36DD2DDA92EE00184F55 /* RefreshTokenUseCase.swift in Sources */,
-				B45C36DE2DDA92EE00184F55 /* LoginBlockMessageProvider.swift in Sources */,
 				B4A7468F2DDD3BB10087C33C /* User.swift in Sources */,
 				B40ADACD2E017F1C00A39B40 /* PasswordResetTokenManager.swift in Sources */,
 				B40ADAE32E01C84500A39B40 /* CaptchaError.swift in Sources */,
@@ -2995,6 +2945,7 @@
 				B4D6111A2E01D99200CF1A9C /* SecurityEvent.swift in Sources */,
 				B4D6111B2E01D99200CF1A9C /* RequestPattern.swift in Sources */,
 				B4D6111C2E01D99200CF1A9C /* BotDetectionResult.swift in Sources */,
+				B43BC9AC2E05E02E006DB394 /* AnyLoginRequestStore.swift in Sources */,
 				B4AF1BA62DDB50DD00FD2ED2 /* LoginSecurityServiceFactory.swift in Sources */,
 				B49DC5632DF6FED600C5ADE6 /* OfflineLoginRetryResult.swift in Sources */,
 				B4586AB62DE697FB00A82535 /* TokenAndUser.swift in Sources */,
@@ -3248,13 +3199,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B48870122DBEC3B000E31404 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -3277,12 +3221,6 @@
 			isa = PBXTargetDependency;
 			target = 08D9179F22B92A5D003BC31B /* EssentialFeediOS */;
 			targetProxy = 08D917AA22B92A5D003BC31B /* PBXContainerItemProxy */;
-		};
-		B488701C2DBEC3B000E31404 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			platformFilter = ios;
-			target = 080EDEF021B6DA7E00813479 /* EssentialFeed */;
-			targetProxy = B488701B2DBEC3B000E31404 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -3763,62 +3701,6 @@
 			};
 			name = Release;
 		};
-		B488701D2DBEC3B000E31404 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B488701E2DBEC3B000E31404 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGNING_ALLOWED = NO;
-				CODE_SIGNING_REQUIRED = NO;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z273P8K3M7;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = es.swiftenprofundidad.EssentialAppUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3881,15 +3763,6 @@
 			buildConfigurations = (
 				08D917B522B92A5D003BC31B /* Debug */,
 				08D917B622B92A5D003BC31B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B488701F2DBEC3B000E31404 /* Build configuration list for PBXNativeTarget "EssentialAppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B488701D2DBEC3B000E31404 /* Debug */,
-				B488701E2DBEC3B000E31404 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

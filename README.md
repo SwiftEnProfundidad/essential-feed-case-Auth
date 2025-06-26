@@ -692,17 +692,16 @@ _(Reference only for QA/business. Progress is only marked in the technical check
 
 ### Technical Checklist for Login — Seccion CAPTCHA UI
     
-- [ ] **Conditional CAPTCHA UI in LoginView:**
-     - [ ] **TDDViewModel:** Test `LoginViewModel` state change to require CAPTCHA after N failed login attempts.
-     - [ ] **TDDViewModel:** Test `LoginViewModel` handling CAPTCHA token input **for login**.
-     - [ ] **TDDViewModel:** Test `LoginViewModel` passing CAPTCHA token with login credentials.
-     - [ ] Add CAPTCHA UI component to `LoginView.swift`, initially hidden.
-     - [ ] Implement logic in `LoginView` to show CAPTCHA component when `LoginViewModel` state indicates it's required.
-     - [ ] Pass CAPTCHA token from `LoginView` to `LoginViewModel` when submitted.
-     - [ ] **Note (No Backend):** The `CaptchaValidatorProtocol` used by the login flow (si lo hay) should be stubbed.
-
+- [🚧] **Conditional CAPTCHA UI in LoginView:**
+     - [✅] **TDDViewModel:** Test `LoginViewModel` state change to require CAPTCHA after N failed login attempts.
+     - [✅] **TDDViewModel:** Test `LoginViewModel` handling CAPTCHA token input **for login**.
+     - [✅] **TDDViewModel:** Test `LoginViewModel` passing CAPTCHA token with login credentials.
+     - [✅] Add CAPTCHA UI component to `LoginView.swift`, initially hidden.
+     - [🚧] Implement logic in `LoginView` to show CAPTCHA component when `LoginViewModel` state indicates it's required.
+     - [🔜] Pass CAPTCHA token from `LoginView` to `LoginViewModel` when submitted.
+     - [✅] **Note (No Backend):** The `CaptchaValidatorProtocol` used by the login flow (si lo hay) should be stubbed
 > **Technical note:**
-> - Integration y lockout logic en el main use case (`UserLoginUseCase`) está implementada y cubierta por tests unitarios, integración y CI. Solo queda mantener la cobertura en futuras mejoras.
+> - Integration and lockout logic in the main use case (`UserLoginUseCase`) is implemented and covered by unit tests, integration tests, and CI. Only maintenance of coverage is needed for future improvements.
 
 ---
 

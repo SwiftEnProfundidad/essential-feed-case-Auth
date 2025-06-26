@@ -19,7 +19,10 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         offlineStore.stubLoadAll(with: [credentials1, credentials2])
 
         loginAPI.stubbedResults = [
-            .success(LoginResponse(token: "token1")),
+            .success(LoginResponse(
+                user: User(name: "Test User 1", email: credentials1.email),
+                token: Token(accessToken: "token1", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            )),
             .failure(.invalidCredentials)
         ]
 
@@ -35,7 +38,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         let (sut, offlineStore, loginAPI) = makeSUT()
         let credentials = LoginCredentials(email: "user@test.com", password: "password")
         offlineStore.stubLoadAll(with: [credentials])
-        let expectedResponse = LoginResponse(token: "success-token")
+        let expectedResponse = LoginResponse(user: User(name: "Test User", email: "user@test.com"), token: Token(accessToken: "success-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil))
         loginAPI.stubbedResults = [.success(expectedResponse)]
 
         let results = try await sut.execute()
@@ -44,7 +47,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
         XCTAssertTrue(results[0].isSuccessful, "Result should be marked as successful")
 
         if case let .success(response) = results[0].loginResult {
-            XCTAssertEqual(response.token, "success-token", "Should contain the login response from API")
+            XCTAssertEqual(response.token.accessToken, "success-token", "Should contain the login response from API")
         } else {
             XCTFail("Expected successful login result")
         }
@@ -76,9 +79,12 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
 
         offlineStore.stubLoadAll(with: [credentials1, credentials2, credentials3])
         loginAPI.stubbedResults = [
-            .success(LoginResponse(token: "token1")),
+            .success(LoginResponse(
+                user: User(name: "Success User 1", email: credentials1.email),
+                token: Token(accessToken: "token1", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            )),
             .failure(.network),
-            .success(LoginResponse(token: "token3"))
+            .success(LoginResponse(user: User(name: "Success User 2", email: "success2@test.com"), token: Token(accessToken: "token3", expiry: Date().addingTimeInterval(3600), refreshToken: nil)))
         ]
 
         let results = try await sut.execute()
@@ -102,7 +108,7 @@ final class RetryOfflineLoginsUseCaseTests: XCTestCase {
     ) {
         let offlineStore = OfflineLoginStoreSpy()
         let loginAPI = LoginAPISpy()
-        let sut = RetryOfflineLoginsUseCase(offlineStore: offlineStore, loginAPI: loginAPI) // offlineStore será el Spy compartido de EssentialFeedTests
+        let sut = RetryOfflineLoginsUseCase(offlineStore: offlineStore, loginAPI: loginAPI)
 
         trackForMemoryLeaks(offlineStore, file: file, line: line)
         trackForMemoryLeaks(loginAPI, file: file, line: line)

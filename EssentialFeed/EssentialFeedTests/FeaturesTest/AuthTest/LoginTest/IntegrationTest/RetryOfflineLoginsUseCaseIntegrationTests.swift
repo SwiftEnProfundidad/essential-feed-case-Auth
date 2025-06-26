@@ -10,7 +10,10 @@ final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
         try? await offlineStore.save(credentials: credentials1)
         try? await offlineStore.save(credentials: credentials2)
         loginAPI.stubbedResults = [
-            .success(LoginResponse(token: "OKTOKEN")),
+            .success(LoginResponse(
+                user: User(name: "Test User", email: credentials1.email),
+                token: Token(accessToken: "OKTOKEN", expiry: Date().addingTimeInterval(3600), refreshToken: nil)
+            )),
             .failure(.invalidCredentials)
         ]
 
@@ -22,7 +25,7 @@ final class RetryOfflineLoginsUseCaseIntegrationTests: XCTestCase {
         XCTAssertTrue(results[0].isSuccessful, "First login retry should be successful")
         XCTAssertEqual(results[0].credentials, credentials1, "First result should contain first credentials")
         if case let .success(response) = results[0].loginResult {
-            XCTAssertEqual(response.token, "OKTOKEN", "Should contain the expected token")
+            XCTAssertEqual(response.token.accessToken, "OKTOKEN", "Should contain the expected token")
         } else {
             XCTFail("Expected successful login result for first credentials")
         }

@@ -7,10 +7,10 @@ public final class LoginCredentialsValidator {
         let email = credentials.email.trimmingCharacters(in: .whitespacesAndNewlines)
         let password = credentials.password.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if email.isEmpty || !isValidEmail(email) {
+        if email.isEmpty {
             return .invalidEmailFormat
         }
-        if password.isEmpty || password.count < 6 {
+        if password.isEmpty {
             return .invalidPasswordFormat
         }
         return nil

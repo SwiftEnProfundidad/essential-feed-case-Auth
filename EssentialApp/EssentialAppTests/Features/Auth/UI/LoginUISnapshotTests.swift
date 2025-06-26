@@ -4,15 +4,8 @@ import SwiftUI
 import XCTest
 
 final class LoginUISnapshotTests: XCTestCase {
-    // NOTE: test_record_loginView_allStates is marked private as it seems to be a helper for recording, not a runnable test.
-    // If it's meant to be a runnable test, remove `private`.
-    private func test_record_loginView_allStates() async {
-        let localesToTest = [
-            Locale(identifier: "en"),
-            Locale(identifier: "es"),
-            Locale(identifier: "el"),
-            Locale(identifier: "pt-BR")
-        ]
+    func test_record_loginView_allStates() async {
+        let localesToTest = localesForTesting()
 
         for locale in localesToTest {
             let idleVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
@@ -22,7 +15,14 @@ final class LoginUISnapshotTests: XCTestCase {
             idleVM.isLoginBlocked = false
             await recordSnapshot(for: idleView, named: "LOGIN_IDLE", locale: locale)
 
-            let successVM = makeViewModel(authenticateResult: .success(LoginResponse(token: "any-token")))
+            let successVM = makeViewModel(
+                authenticateResult: .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@example.com"),
+                        token: Token(
+                            accessToken: "any-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    )))
             let successView = await LoginView(viewModel: successVM)
             successVM.loginSuccess = true
             successVM.errorMessage = nil
@@ -35,10 +35,14 @@ final class LoginUISnapshotTests: XCTestCase {
             await recordSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            // THE FIX IS FOR THIS LINE:
-            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
 
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
+            let blockedConfiguration = LoginSecurityConfiguration(
+                maxAttempts: 1, blockDuration: 300, captchaThreshold: 1
+            )
+
+            let blockedSecurityUseCase = LoginSecurityUseCase(
+                store: blockedStore, configuration: blockedConfiguration
+            )
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
@@ -51,18 +55,16 @@ final class LoginUISnapshotTests: XCTestCase {
 
             let recoveryVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
             let recoveryView = await LoginView(viewModel: recoveryVM)
-            recoveryVM.errorMessage = "Your account is blocked. Please try again later or recover your password."
-            await recordSnapshot(for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale)
+            recoveryVM.errorMessage =
+                "Your account is blocked. Please try again later or recover your password."
+            await recordSnapshot(
+                for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale
+            )
         }
     }
 
     func test_loginView_allStates() async {
-        let localesToTest = [
-            Locale(identifier: "en"),
-            Locale(identifier: "es"),
-            Locale(identifier: "el"),
-            Locale(identifier: "pt-BR")
-        ]
+        let localesToTest = localesForTesting()
 
         for locale in localesToTest {
             let idleVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
@@ -72,7 +74,14 @@ final class LoginUISnapshotTests: XCTestCase {
             idleVM.isLoginBlocked = false
             assertSnapshot(for: idleView, named: "LOGIN_IDLE", locale: locale)
 
-            let successVM = makeViewModel(authenticateResult: .success(LoginResponse(token: "any-token")))
+            let successVM = makeViewModel(
+                authenticateResult: .success(
+                    LoginResponse(
+                        user: User(name: "Test User", email: "user@example.com"),
+                        token: Token(
+                            accessToken: "any-token", expiry: Date().addingTimeInterval(3600), refreshToken: nil
+                        )
+                    )))
             let successView = await LoginView(viewModel: successVM)
             successVM.loginSuccess = true
             successVM.errorMessage = nil
@@ -85,9 +94,12 @@ final class LoginUISnapshotTests: XCTestCase {
             assertSnapshot(for: errorView, named: "LOGIN_ERROR_INVALID_CREDENTIALS", locale: locale)
 
             let blockedStore = InMemoryFailedLoginAttemptsStore()
-            // CORRECTED LINE: (This one was already correct in your paste, but ensuring it stays correct)
-            let blockedConfiguration = LoginSecurityConfiguration(maxAttempts: 1, blockDuration: 300, captchaThreshold: 1)
-            let blockedSecurityUseCase = LoginSecurityUseCase(store: blockedStore, configuration: blockedConfiguration)
+            let blockedConfiguration = LoginSecurityConfiguration(
+                maxAttempts: 1, blockDuration: 300, captchaThreshold: 1
+            )
+            let blockedSecurityUseCase = LoginSecurityUseCase(
+                store: blockedStore, configuration: blockedConfiguration
+            )
             let blockedVM = LoginViewModel(
                 authenticate: { _, _ in .failure(.invalidCredentials) },
                 loginSecurity: blockedSecurityUseCase
@@ -100,27 +112,40 @@ final class LoginUISnapshotTests: XCTestCase {
 
             let recoveryVM = makeViewModel(authenticateResult: .failure(.invalidCredentials))
             let recoveryView = await LoginView(viewModel: recoveryVM)
-            recoveryVM.errorMessage = "Your account is blocked. Please try again later or recover your password."
-            assertSnapshot(for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale)
+            recoveryVM.errorMessage =
+                "Your account is blocked. Please try again later or recover your password."
+            assertSnapshot(
+                for: recoveryView, named: "LOGIN_BLOCKED_WITH_RECOVERY_SUGGESTION", locale: locale
+            )
         }
     }
 
-    // MARK: - Helpers
+    private func localesForTesting() -> [Locale] {
+        return [
+            Locale(identifier: "en"),
+            Locale(identifier: "es"),
+            Locale(identifier: "el"),
+            Locale(identifier: "pt-BR")
+        ]
+    }
 
     private func makeViewModel(authenticateResult: Result<LoginResponse, LoginError>) -> LoginViewModel {
         let store = InMemoryFailedLoginAttemptsStore()
-        // CORRECTED: Ensure LoginSecurityUseCase is initialized with a configuration that includes captchaThreshold
-        let configuration = LoginSecurityConfiguration(maxAttempts: 3, blockDuration: 300, captchaThreshold: 2) // Default values, adjust if needed
+        let configuration = LoginSecurityConfiguration(
+            maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
+        ) // Default values, adjust if needed
         let securityUseCase = LoginSecurityUseCase(store: store, configuration: configuration)
         let vm = LoginViewModel(
             authenticate: { _, _ in authenticateResult },
             loginSecurity: securityUseCase
         )
-        // Consider adding trackForMemoryLeaks here for vm and securityUseCase if not done elsewhere
         return vm
     }
 
-    private func recordSnapshot(for view: some View, named name: String, locale: Locale, file: StaticString = #filePath, line _: UInt = #line) async {
+    private func recordSnapshot(
+        for view: some View, named name: String, locale: Locale, file: StaticString = #filePath,
+        line _: UInt = #line
+    ) async {
         let styles: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
         let snapshotsFolder = URL(fileURLWithPath: String(describing: file))
             .deletingLastPathComponent()
@@ -139,40 +164,78 @@ final class LoginUISnapshotTests: XCTestCase {
             let snapshot = await viewController.view!
             await MainActor.run {
                 snapshot.bounds = CGRect(origin: .zero, size: UIScreen.main.bounds.size)
-            }
-            let renderer = await UIGraphicsImageRenderer(bounds: snapshot.bounds)
-            let image = renderer.image { _ in
-                snapshot.drawHierarchy(in: snapshot.bounds, afterScreenUpdates: true)
-            }
-
-            let snapshotURL = snapshotsFolder.appendingPathComponent(
-                "\(name)_\(styleName)_\(locale.identifier).png")
-
-            if let data = image.pngData() {
-                try? data.write(to: snapshotURL)
+                if Thread.isMainThread {
+                    let window = UIWindow(frame: UIScreen.main.bounds)
+                    window.rootViewController = viewController
+                    window.makeKeyAndVisible()
+                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+                } else {
+                    DispatchQueue.main.sync {
+                        let window = UIWindow(frame: UIScreen.main.bounds)
+                        window.rootViewController = viewController
+                        window.makeKeyAndVisible()
+                        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+                    }
+                }
+                let renderer = UIGraphicsImageRenderer(bounds: snapshot.bounds)
+                let image = renderer.image { _ in
+                    snapshot.drawHierarchy(in: snapshot.bounds, afterScreenUpdates: true)
+                }
+                let snapshotURL = snapshotsFolder.appendingPathComponent(
+                    "\(name)_\(styleName)_\(locale.identifier).png")
+                if let data = image.pngData() {
+                    try? data.write(to: snapshotURL)
+                }
             }
         }
     }
 
-    private func assertSnapshot(for view: some View, named name: String, locale: Locale, file: StaticString = #filePath, line: UInt = #line) {
+    private func assertSnapshot(
+        for view: some View, named name: String, locale: Locale, file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         let styles: [(UIUserInterfaceStyle, String)] = [(.light, "light"), (.dark, "dark")]
 
         for (style, styleSuffix) in styles {
-            let configuredView = view
-                .environment(\.locale, locale)
-                .environment(\.colorScheme, style == .dark ? .dark : .light)
+            let configuredView =
+                view
+                    .environment(\.locale, locale)
+                    .environment(\.colorScheme, style == .dark ? .dark : .light)
 
-            let hostingController: UIHostingController<AnyView> =
-                if Thread.isMainThread {
-                    UIHostingController(rootView: AnyView(configuredView))
-                } else {
-                    DispatchQueue.main.sync {
-                        UIHostingController(rootView: AnyView(configuredView))
-                    }
+            let hostingController: UIHostingController<AnyView>
+            let snapshot: UIImage
+
+            if Thread.isMainThread {
+                hostingController = UIHostingController(rootView: AnyView(configuredView))
+
+                let window = UIWindow(frame: UIScreen.main.bounds)
+                window.rootViewController = hostingController
+                window.makeKeyAndVisible()
+
+                RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+
+                let snapshotConfiguration = SnapshotConfiguration.iPhone13(style: style)
+                snapshot = hostingController.snapshot(for: snapshotConfiguration)
+            } else {
+                var localHostingController: UIHostingController<AnyView>!
+                var localSnapshot: UIImage!
+
+                DispatchQueue.main.sync {
+                    localHostingController = UIHostingController(rootView: AnyView(configuredView))
+
+                    let window = UIWindow(frame: UIScreen.main.bounds)
+                    window.rootViewController = localHostingController
+                    window.makeKeyAndVisible()
+
+                    RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+
+                    let snapshotConfiguration = SnapshotConfiguration.iPhone13(style: style)
+                    localSnapshot = localHostingController.snapshot(for: snapshotConfiguration)
                 }
 
-            let snapshotConfiguration = SnapshotConfiguration.iPhone13(style: style)
-            let snapshot = hostingController.snapshot(for: snapshotConfiguration)
+                hostingController = localHostingController
+                snapshot = localSnapshot
+            }
 
             let snapshotNameWithLocale =
                 "\(name)_\(locale.identifier.replacingOccurrences(of: "-", with: "_"))_\(styleSuffix)"
@@ -182,13 +245,14 @@ final class LoginUISnapshotTests: XCTestCase {
     }
 }
 
-private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore { // Conforms to FailedLoginAttemptsStore
+private final class InMemoryFailedLoginAttemptsStore: FailedLoginAttemptsStore {
     private var attemptCounts: [String: Int] = [:]
     private var lastAttemptTimestamps: [String: Date] = [:]
-    private let lockQueue = DispatchQueue(label: "com.essentialdeveloper.inmemoryfailedloginattemptsstore.lock")
+    private let lockQueue = DispatchQueue(
+        label: "com.essentialdeveloper.inmemoryfailedloginattemptsstore.lock")
 
     func incrementAttempts(for username: String) async {
-        await Task { @MainActor in // Ensure modifications are thread-safe if called from multiple threads
+        await Task { @MainActor in
             lockQueue.sync {
                 attemptCounts[username, default: 0] += 1
                 lastAttemptTimestamps[username] = Date()
