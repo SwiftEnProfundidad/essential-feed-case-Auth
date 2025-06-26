@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 struct SnapshotConfiguration {
-    let size: CGRect
+    let size: CGSize
     let style: UIUserInterfaceStyle
     let contentSize: CGSize?
     let locale: Locale
@@ -12,7 +12,7 @@ struct SnapshotConfiguration {
         locale: Locale = Locale(identifier: "en_US")
     ) -> SnapshotConfiguration {
         SnapshotConfiguration(
-            size: CGRect(x: 0, y: 0, width: 390, height: 844),
+            size: CGSize(width: 390, height: 844),
             style: style,
             contentSize: nil,
             locale: locale
@@ -24,7 +24,7 @@ struct SnapshotConfiguration {
         locale: Locale = Locale(identifier: "en_US")
     ) -> SnapshotConfiguration {
         SnapshotConfiguration(
-            size: CGRect(x: 0, y: 0, width: 430, height: 932),
+            size: CGSize(width: 430, height: 932),
             style: style,
             contentSize: nil,
             locale: locale
@@ -40,14 +40,14 @@ extension UIViewController {
             }
         }
 
-        let window = UIWindow(frame: configuration.size)
+        let window = UIWindow(frame: CGRect(origin: .zero, size: configuration.size))
         window.overrideUserInterfaceStyle = configuration.style
         window.rootViewController = self
         window.makeKeyAndVisible()
 
-        RunLoop.main.run(until: Date())
+        RunLoop.main.run(until: Date().addingTimeInterval(1.5))
 
-        let renderer = UIGraphicsImageRenderer(bounds: window.bounds)
+        let renderer = UIGraphicsImageRenderer(size: window.bounds.size)
         let image = renderer.image { _ in
             self.view.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
         }

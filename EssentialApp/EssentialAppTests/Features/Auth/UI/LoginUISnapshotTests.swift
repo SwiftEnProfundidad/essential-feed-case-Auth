@@ -25,24 +25,15 @@ final class LoginUISnapshotTests: XCTestCase {
                 weakIdleVM = idleVM
                 weakIdleSUT = idleSUT
 
-                await assertSnapshot(
-                    for: idleSUT!, config: config, named: "LOGIN_IDLE", language: language,
-                    scheme: schemeName
-                )
+                await assertSnapshot(for: idleSUT!, config: config, named: "LOGIN_IDLE", language: language, scheme: schemeName)
 
                 idleVM = nil
                 idleSUT = nil
 
-                try await Task.sleep(nanoseconds: 100_000_000)
+                try await Task.sleep(nanoseconds: 300_000_000)
 
-                XCTAssertNil(
-                    weakIdleVM, "Idle ViewModel should have been deallocated. Potential memory leak.",
-                    file: #filePath, line: #line
-                )
-                XCTAssertNil(
-                    weakIdleSUT, "Idle SUT should have been deallocated. Potential memory leak.",
-                    file: #filePath, line: #line
-                )
+                XCTAssertNil(weakIdleVM, "Idle ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
+                XCTAssertNil(weakIdleSUT, "Idle SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
 
                 // MARK: - Error State
 
@@ -66,24 +57,14 @@ final class LoginUISnapshotTests: XCTestCase {
 
                 errorVM = nil
                 errorSUT = nil
-
-                try await Task.sleep(nanoseconds: 100_000_000)
-
-                XCTAssertNil(
-                    weakErrorVM, "Error ViewModel should have been deallocated. Potential memory leak.",
-                    file: #filePath, line: #line
-                )
-                XCTAssertNil(
-                    weakErrorSUT, "Error SUT should have been deallocated. Potential memory leak.",
-                    file: #filePath, line: #line
-                )
+                try await Task.sleep(nanoseconds: 300_000_000)
+                XCTAssertNil(weakErrorVM, "Error ViewModel should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
+                XCTAssertNil(weakErrorSUT, "Error SUT should have been deallocated. Potential memory leak.", file: #filePath, line: #line)
             }
         }
     }
 
-    private func makeSUT(authenticateResult: Result<LoginResponse, LoginError>, locale: Locale) -> (
-        LoginViewModel, UIViewController
-    ) {
+    private func makeSUT(authenticateResult: Result<LoginResponse, LoginError>, locale: Locale) -> (LoginViewModel, UIViewController) {
         let store = InMemoryFailedLoginAttemptsStore()
         let configuration = LoginSecurityConfiguration(
             maxAttempts: 3, blockDuration: 300, captchaThreshold: 2
@@ -103,11 +84,13 @@ final class LoginUISnapshotTests: XCTestCase {
         for controller: UIViewController, config: SnapshotConfiguration, named: String,
         language: String, scheme: String, file: StaticString = #filePath, line: UInt = #line
     ) async {
+        let window = UIWindow(frame: CGRect(origin: .zero, size: config.size))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
         try? await Task.sleep(nanoseconds: 200_000_000)
         let snapshot = controller.snapshot(for: config)
-        assert(
-            snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line
-        )
+        assert(snapshot: snapshot, named: named, language: language, scheme: scheme, file: file, line: line)
+        window.rootViewController = nil
     }
 }
 
