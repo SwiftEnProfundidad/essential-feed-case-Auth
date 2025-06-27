@@ -1,6 +1,42 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "CAPTCHA_ERROR_GENERIC" : {
+      "comment" : "Generic CAPTCHA error"
+    },
+    "CAPTCHA_ERROR_INVALID_RESPONSE" : {
+      "comment" : "CAPTCHA verification failed"
+    },
+    "CAPTCHA_ERROR_MALFORMED_REQUEST" : {
+      "comment" : "CAPTCHA request error"
+    },
+    "CAPTCHA_ERROR_NETWORK" : {
+      "comment" : "Network error during CAPTCHA verification"
+    },
+    "CAPTCHA_ERROR_RATE_LIMIT" : {
+      "comment" : "Too many CAPTCHA attempts"
+    },
+    "CAPTCHA_ERROR_SERVICE_UNAVAILABLE" : {
+      "comment" : "CAPTCHA service unavailable"
+    },
+    "CAPTCHA_ERROR_TITLE" : {
+      "comment" : "CAPTCHA error title"
+    },
+    "CAPTCHA_ERROR_UNKNOWN_FORMAT" : {
+      "comment" : "Unknown CAPTCHA error"
+    },
+    "CAPTCHA_REQUIRED_MESSAGE" : {
+      "comment" : "CAPTCHA required message"
+    },
+    "CAPTCHA_REQUIRED_TITLE" : {
+      "comment" : "CAPTCHA required title"
+    },
+    "CAPTCHA_VERIFIED_MESSAGE" : {
+      "comment" : "CAPTCHA verified message"
+    },
+    "CAPTCHA_VERIFIED_TITLE" : {
+      "comment" : "CAPTCHA verified title"
+    },
     "error_login_accountLocked" : {
       "comment" : "Login error: Account locked after too many attempts (general).",
       "localizations" : {
@@ -348,6 +384,24 @@
           }
         }
       }
+    },
+    "LOGIN_ALERT_ERROR_TITLE" : {
+      "comment" : "Error alert title"
+    },
+    "LOGIN_ALERT_SUCCESS_MESSAGE" : {
+      "comment" : "Login successful message"
+    },
+    "LOGIN_ALERT_SUCCESS_TITLE" : {
+      "comment" : "Success alert title"
+    },
+    "LOGIN_ERROR_INVALID_CREDENTIALS" : {
+      "comment" : "Invalid credentials error"
+    },
+    "LOGIN_ERROR_NETWORK" : {
+      "comment" : "Network error"
+    },
+    "LOGIN_ERROR_VALIDATION" : {
+      "comment" : "Validation error message"
     }
   },
   "version" : "1.0"

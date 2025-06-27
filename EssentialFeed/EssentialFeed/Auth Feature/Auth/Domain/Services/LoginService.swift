@@ -72,9 +72,8 @@ public final class DefaultLoginService: LoginService {
         let email = validator.normalizeEmail(credentials.email)
         await securityUseCase.handleFailedLogin(username: email)
 
-        if let securityError = await checkSecurity(credentials) {
-            return .failure(securityError)
-        }
+        // Let the LoginViewModel handle the CAPTCHA flow first
+        // Only return accountLocked if it was already locked before this attempt
 
         return .failure(.invalidCredentials)
     }

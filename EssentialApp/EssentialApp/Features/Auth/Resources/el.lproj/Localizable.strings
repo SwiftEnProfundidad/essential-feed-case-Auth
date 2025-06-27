@@ -4,16 +4,34 @@
 "LOGIN_VIEW_USERNAME_PLACEHOLDER" = "Όνομα χρήστη";
 "LOGIN_VIEW_PASSWORD_PLACEHOLDER" = "Κωδικός πρόσβασης";
 "LOGIN_VIEW_LOGIN_BUTTON" = "Σύνδεση";
-"LOGIN_VIEW_FORGOT_PASSWORD" = "Ξεχαστον κωδικό σας";
-"LOGIN_VIEW_REGISTER_BUTTON" = "Νέος εδώ; Εγγραφή";
+"LOGIN_VIEW_FORGOT_PASSWORD" = "Ξεχάστον κωδικό σας";
+"LOGIN_VIEW_REGISTER_BUTTON" = "Νέας εδώ; Εγγραφή";
 
-"LOGIN_ERROR_VALIDATION" = "Σφάλμα επικύρωσης";
-"LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυρα διαπιστευτήρια";
-"LOGIN_ERROR_NETWORK" = "Σφάλμα δικτύου";
+"LOGIN_ERROR_VALIDATION" = "Παρακαλώ εισάγετε τόσο το όνομα χρήστη όσο και τον κωδικό πρόσβασης";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Μη έγκυρο όνομα χρήστη ή κωδικός πρόσβασης";
+"LOGIN_ERROR_NETWORK" = "Προέκυψε σφάλμα δικτύου. Παρακαλώ δοκιμάστε ξανά";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Ο λογαριασμός είναι κλειδωμένος";
 "LOGIN_ERROR_MESSAGE_ID" = "Μήνυμα σφάλματος";
-"LOGIN_SUCCESS_MESSAGE" = "Η σύνδεση επιτυχής!";
+"LOGIN_SUCCESS_MESSAGE" = "Καλώς ήρθατε! Συνδεθήκατε επιτυχώς";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Μήνυμα επιτυχίας";
+
+"LOGIN_ALERT_SUCCESS_TITLE" = "Επιτυχής Σύνδεση";
+"LOGIN_ALERT_ERROR_TITLE" = "Σφάλμα Σύνδεσης";
+"LOGIN_ALERT_SUCCESS_MESSAGE" = "Καλώς ήρθατε! Συνδεθήκατε επιτυχώς";
 
 "PASSWORD_RECOVERY_SUCCESS_TITLE" = "Επιτυχία";
 "PASSWORD_RECOVERY_ERROR_TITLE" = "Σφάλμα";
+
+"CAPTCHA_VERIFIED_TITLE" = "CAPTCHA Επαληθεύτηκε";
+"CAPTCHA_VERIFIED_MESSAGE" = "Μπορείτε τώρα να δοκιμάσετε να συνδεθείτε ξανά";
+"CAPTCHA_REQUIRED_TITLE" = "Απαιτείται CAPTCHA";
+"CAPTCHA_REQUIRED_MESSAGE" = "Παρακαλώ ολοκληρώστε την επαλήθευση CAPTCHA";
+"CAPTCHA_ERROR_TITLE" = "Σφάλμα CAPTCHA";
+
+"CAPTCHA_ERROR_INVALID_RESPONSE" = "Η επαλήθευση CAPTCHA απέτυχε. Παρακαλώ δοκιμάστε ξανά.";
+"CAPTCHA_ERROR_NETWORK" = "Σφάλμα δικτύου κατά την επαλήθευση CAPTCHA. Παρακαλώ ελέγξτε τη σύνδεσή σας.";
+"CAPTCHA_ERROR_MALFORMED_REQUEST" = "Σφάλμα επαλήθευσης CAPTCHA. Παρακαλώ ανανεώστε και δοκιμάστε ξανά.";
+"CAPTCHA_ERROR_SERVICE_UNAVAILABLE" = "Η υπηρεσία CAPTCHA δεν είναι προσωρινά διαθέσιμη. Παρακαλώ δοκιμάστε αργότερα.";
+"CAPTCHA_ERROR_RATE_LIMIT" = "Πάρα πολλές προσπάθειες CAPTCHA. Παρακαλώ περιμένετε λίγο και δοκιμάστε ξανά.";
+"CAPTCHA_ERROR_UNKNOWN_FORMAT" = "Σφάλμα CAPTCHA: %@";
+"CAPTCHA_ERROR_GENERIC" = "Η επαλήθευση CAPTCHA απέτυχε. Παρακαλώ δοκιμάστε ξανά.";

@@ -311,6 +311,40 @@ public struct LoginView: View {
             ))
             .disabled(viewModel.isPerformingLogin)
 
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Demo Credentials:")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundColor(currentTextSecondaryColor)
+
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Button("admin / admin") { fillCredentials("admin", "admin") }
+                        Button("user / pass") { fillCredentials("user", "pass") }
+                        Button("demo / demo") { fillCredentials("demo", "demo") }
+                    }
+
+                    Spacer()
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Button("test / test") { fillCredentials("test", "test") }
+                        Button("offline test") { fillCredentials("offline@example.com", "any") }
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(.blue)
+            }
+            .padding(.vertical, 8)
+            .padding(.horizontal, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(currentBaseColor.opacity(0.3))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(currentTextSecondaryColor.opacity(0.2), lineWidth: 1)
+                    )
+            )
+
             Button {
                 Task { [weak viewModel] in
                     focusedField = nil
@@ -340,6 +374,12 @@ public struct LoginView: View {
             .accessibilityIdentifier("register_button")
             .padding(.top, 5)
         }
+    }
+
+    private func fillCredentials(_ email: String, _ password: String) {
+        viewModel.username = email
+        viewModel.password = password
+        focusedField = nil
     }
 
     @ViewBuilder

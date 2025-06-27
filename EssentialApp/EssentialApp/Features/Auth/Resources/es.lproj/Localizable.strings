@@ -7,17 +7,31 @@
 "LOGIN_VIEW_FORGOT_PASSWORD" = "¿Olvidaste tu contraseña?";
 "LOGIN_VIEW_REGISTER_BUTTON" = "¿Nuevo aquí? Regístrate";
 
-"LOGIN_ERROR_VALIDATION" = "Error de validación";
-"LOGIN_ERROR_INVALID_CREDENTIALS" = "Credenciales inválidas";
-"LOGIN_ERROR_NETWORK" = "Error de red";
+"LOGIN_ERROR_VALIDATION" = "Por favor, ingresa tanto el usuario como la contraseña";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Usuario o contraseña inválidos";
+"LOGIN_ERROR_NETWORK" = "Se produjo un error de red. Por favor, inténtalo de nuevo";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Cuenta bloqueada";
 "LOGIN_ERROR_MESSAGE_ID" = "Mensaje de error";
-"LOGIN_SUCCESS_MESSAGE" = "¡Inicio de sesión exitoso!";
+"LOGIN_SUCCESS_MESSAGE" = "¡Bienvenido! Has iniciado sesión exitosamente";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Mensaje de éxito";
 
-"LOGIN_ALERT_SUCCESS_TITLE" = "Éxito";
-"LOGIN_ALERT_ERROR_TITLE" = "Error";
-"LOGIN_ALERT_SUCCESS_MESSAGE" = "¡Inicio de sesión exitoso!";
+"LOGIN_ALERT_SUCCESS_TITLE" = "Inicio de Sesión Exitoso";
+"LOGIN_ALERT_ERROR_TITLE" = "Error de Inicio de Sesión";
+"LOGIN_ALERT_SUCCESS_MESSAGE" = "¡Bienvenido! Has iniciado sesión exitosamente";
 
 "PASSWORD_RECOVERY_SUCCESS_TITLE" = "Éxito";
 "PASSWORD_RECOVERY_ERROR_TITLE" = "Error";
+
+"CAPTCHA_VERIFIED_TITLE" = "CAPTCHA Verificado";
+"CAPTCHA_VERIFIED_MESSAGE" = "Ahora puedes intentar iniciar sesión de nuevo";
+"CAPTCHA_REQUIRED_TITLE" = "CAPTCHA Requerido";
+"CAPTCHA_REQUIRED_MESSAGE" = "Por favor, completa la verificación CAPTCHA";
+"CAPTCHA_ERROR_TITLE" = "Error de CAPTCHA";
+
+"CAPTCHA_ERROR_INVALID_RESPONSE" = "La verificación CAPTCHA falló. Por favor, inténtalo de novo.";
+"CAPTCHA_ERROR_NETWORK" = "Error de red durante la verificación CAPTCHA. Por favor, verifica tu conexión.";
+"CAPTCHA_ERROR_MALFORMED_REQUEST" = "Error de verificación CAPTCHA. Por favor, actualiza e inténtalo de nuevo.";
+"CAPTCHA_ERROR_SERVICE_UNAVAILABLE" = "El servicio CAPTCHA no está disponible temporalmente. Por favor, inténtalo más tarde.";
+"CAPTCHA_ERROR_RATE_LIMIT" = "Demasiados intentos de CAPTCHA. Por favor, espera un momento e inténtalo de nuevo.";
+"CAPTCHA_ERROR_UNKNOWN_FORMAT" = "Error de CAPTCHA: %@";
+"CAPTCHA_ERROR_GENERIC" = "La verificación CAPTCHA falló. Por favor, inténtalo de nuevo.";

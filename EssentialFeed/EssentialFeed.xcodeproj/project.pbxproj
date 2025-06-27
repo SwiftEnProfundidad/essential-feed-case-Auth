@@ -387,6 +387,10 @@
 		B4D71EF72DAF1DE5003A1316 /* UserRegistrationUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */; };
 		B4E458652E0DDE3300DBA56A /* InAppNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458632E0DDE3300DBA56A /* InAppNotification.swift */; };
 		B4E458692E0DEA5D00DBA56A /* Attempt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458682E0DEA5D00DBA56A /* Attempt.swift */; };
+		B4E458752E0E9AAB00DBA56A /* PasswordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458742E0E9AAB00DBA56A /* PasswordValidator.swift */; };
+		B4E458782E0E9AD800DBA56A /* PasswordValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458762E0E9AD800DBA56A /* PasswordValidatorTests.swift */; };
+		B4E4587C2E0EA0A700DBA56A /* DefaultPasswordValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E4587B2E0EA0A700DBA56A /* DefaultPasswordValidator.swift */; };
+		B4E4587E2E0EA0ED00DBA56A /* PasswordValidatorSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E4587D2E0EA0ED00DBA56A /* PasswordValidatorSpy.swift */; };
 		B4E5AC962DB5785C007B8F34 /* KeychainSecureStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */; };
 		B4E5AC972DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */; };
 		B4E5AC982DB5785C007B8F34 /* SystemKeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */; };
@@ -840,6 +844,10 @@
 		B4D71EF22DAF1D34003A1316 /* UserRegistrationUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegistrationUseCaseTests.swift; sourceTree = "<group>"; };
 		B4E458632E0DDE3300DBA56A /* InAppNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotification.swift; sourceTree = "<group>"; };
 		B4E458682E0DEA5D00DBA56A /* Attempt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attempt.swift; sourceTree = "<group>"; };
+		B4E458742E0E9AAB00DBA56A /* PasswordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidator.swift; sourceTree = "<group>"; };
+		B4E458762E0E9AD800DBA56A /* PasswordValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidatorTests.swift; sourceTree = "<group>"; };
+		B4E4587B2E0EA0A700DBA56A /* DefaultPasswordValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPasswordValidator.swift; sourceTree = "<group>"; };
+		B4E4587D2E0EA0ED00DBA56A /* PasswordValidatorSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordValidatorSpy.swift; sourceTree = "<group>"; };
 		B4E5AC922DB5785C007B8F34 /* KeychainSecureStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecureStorageTests.swift; sourceTree = "<group>"; };
 		B4E5AC932DB5785C007B8F34 /* SystemKeychainIntegrationCoverageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainIntegrationCoverageTests.swift; sourceTree = "<group>"; };
 		B4E5AC942DB5785C007B8F34 /* SystemKeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemKeychainTests.swift; sourceTree = "<group>"; };
@@ -1933,6 +1941,7 @@
 		B4725B032DD538B000E99BEC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B4E4587D2E0EA0ED00DBA56A /* PasswordValidatorSpy.swift */,
 				B46D35112DFAE06500FB924A /* OfflineLoginStoreSpy.swift */,
 				B46D350F2DFADF5C00FB924A /* LoginServiceSpy.swift */,
 				B4725B042DD5397800E99BEC /* LoginTestSpies.swift */,
@@ -1960,6 +1969,8 @@
 		B47A6AC12DF1B471001D47CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				B4E4587B2E0EA0A700DBA56A /* DefaultPasswordValidator.swift */,
+				B4E458742E0E9AAB00DBA56A /* PasswordValidator.swift */,
 				B4D6114D2E034B8A00CF1A9C /* DefaultCaptchaFlowCoordinator.swift */,
 				B4D6113A2E02CB7300CF1A9C /* DefaultRegistrationService.swift */,
 				B4D611112E01D62500CF1A9C /* CaptchaErrorMapper.swift */,
@@ -2254,6 +2265,7 @@
 		B4D6B2672DC8D71600F5A3FE /* DomainTest */ = {
 			isa = PBXGroup;
 			children = (
+				B4E458772E0E9AD800DBA56A /* Services */,
 				B4725B032DD538B000E99BEC /* Helpers */,
 				B417AE332DCE00EF0096D12B /* Mappings */,
 				B417AE2F2DCE00090096D12B /* UseCases */,
@@ -2376,6 +2388,14 @@
 				B4E458632E0DDE3300DBA56A /* InAppNotification.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		B4E458772E0E9AD800DBA56A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B4E458762E0E9AD800DBA56A /* PasswordValidatorTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		B4E5AC912DB5785C007B8F34 /* Helpers */ = {
@@ -2714,9 +2734,11 @@
 				B45C37032DDAD2E500184F55 /* AuthUseCase.swift in Sources */,
 				087148C4232BFCF100D6BE1A /* FeedImageViewModel.swift in Sources */,
 				08EF9D29250BBC6C004539C2 /* ResourceErrorView.swift in Sources */,
+				B4E458752E0E9AAB00DBA56A /* PasswordValidator.swift in Sources */,
 				08E546CC24F9631300C64FAE /* FeedImageDataMapper.swift in Sources */,
 				B40ADAE12E01C82000A39B40 /* CaptchaValidationResult.swift in Sources */,
 				B43BC9AE2E05E0C1006DB394 /* LoginBlockMessageProvider.swift in Sources */,
+				B4E4587C2E0EA0A700DBA56A /* DefaultPasswordValidator.swift in Sources */,
 				08E5941522523FCC00E2D213 /* FeedCachePolicy.swift in Sources */,
 				B49DC5802DF749D600C5ADE6 /* PersistenceCommand.swift in Sources */,
 				B49DC5812DF749D600C5ADE6 /* ValidationCommand.swift in Sources */,
@@ -2954,6 +2976,7 @@
 				B4EB10112DC9698000A4DA55 /* HTTPClientSpy.swift in Sources */,
 				B4BBD4992DF92473001E1965 /* SessionUserDefaultsManagerTests.swift in Sources */,
 				B46D35122DFAE06500FB924A /* OfflineLoginStoreSpy.swift in Sources */,
+				B4E4587E2E0EA0ED00DBA56A /* PasswordValidatorSpy.swift in Sources */,
 				081C0DAF22491A2400AC754E /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				B48407C12DDC5FD800834C15 /* TokenEncryptionServiceSpy.swift in Sources */,
 				087148AC232BDF6900D6BE1A /* FeedPresenterTests.swift in Sources */,
@@ -3016,6 +3039,7 @@
 				087546922272381700542C32 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */,
 				B48407BF2DDC5EAC00834C15 /* KeychainFullSpy.swift in Sources */,
 				B4F52FF22DFB410100CC9322 /* KeychainTokenStoreTests.swift in Sources */,
+				B4E458782E0E9AD800DBA56A /* PasswordValidatorTests.swift in Sources */,
 				B40ADADD2E018D6F00A39B40 /* PasswordRecoveryAuditLoggerSpy.swift in Sources */,
 				08EF9D2C250BC95A004539C2 /* ImageCommentsPresenterTests.swift in Sources */,
 				086044FE233E1A90005ECD22 /* CacheFeedImageDataUseCaseTests.swift in Sources */,

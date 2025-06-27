@@ -105,6 +105,7 @@
 		B4E31B6F2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */; };
 		B4E458672E0DDE6300DBA56A /* InAppNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E458662E0DDE6300DBA56A /* InAppNotificationView.swift */; };
 		B4E4586B2E0DEA8500DBA56A /* TimeControlledFailedLoginAttemptsStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E4586A2E0DEA8500DBA56A /* TimeControlledFailedLoginAttemptsStoreSpy.swift */; };
+		B4E4586D2E0DFC9800DBA56A /* HardcodedCaptchaValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E4586C2E0DFC9800DBA56A /* HardcodedCaptchaValidator.swift */; };
 		B4F64DD32DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */; };
 		B4F64DDC2DFB900100EB362C /* TokenRefreshServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F64DD82DFB900100EB362C /* TokenRefreshServiceSpy.swift */; };
 /* End PBXBuildFile section */
@@ -241,6 +242,7 @@
 		B4E31B6E2DE4D7EC003C45B6 /* EnhancedLoginSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedLoginSnapshotTests.swift; sourceTree = "<group>"; };
 		B4E458662E0DDE6300DBA56A /* InAppNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppNotificationView.swift; sourceTree = "<group>"; };
 		B4E4586A2E0DEA8500DBA56A /* TimeControlledFailedLoginAttemptsStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeControlledFailedLoginAttemptsStoreSpy.swift; sourceTree = "<group>"; };
+		B4E4586C2E0DFC9800DBA56A /* HardcodedCaptchaValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardcodedCaptchaValidator.swift; sourceTree = "<group>"; };
 		B4F64DD22DFB8E2100EB362C /* LoginRefreshFailureLockoutUIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRefreshFailureLockoutUIEndToEndTests.swift; sourceTree = "<group>"; };
 		B4F64DD82DFB900100EB362C /* TokenRefreshServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenRefreshServiceSpy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -487,6 +489,7 @@
 		B4D6B2572DC8D07900F5A3FE /* Composition */ = {
 			isa = PBXGroup;
 			children = (
+				B4E4586C2E0DFC9800DBA56A /* HardcodedCaptchaValidator.swift */,
 				B4D611212E0260A900CF1A9C /* RegistrationComposer.swift */,
 				B4BBD46C2DF9131D001E1965 /* Adapters */,
 				B4BBD4712DF9131D001E1965 /* Factories */,
@@ -725,6 +728,7 @@
 				B4E458672E0DDE6300DBA56A /* InAppNotificationView.swift in Sources */,
 				B4BBD4812DF91563001E1965 /* InMemoryOfflineLoginStore.swift in Sources */,
 				B4BBD4762DF9131D001E1965 /* NetworkDependencyFactory.swift in Sources */,
+				B4E4586D2E0DFC9800DBA56A /* HardcodedCaptchaValidator.swift in Sources */,
 				B4BBD4772DF9131D001E1965 /* LoginServiceFactory.swift in Sources */,
 				B4BBD4782DF9131D001E1965 /* ConfigurationFactory.swift in Sources */,
 				B48EEA682DDE9DCF0013D0A9 /* AppTheme.swift in Sources */,
