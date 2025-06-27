@@ -2,18 +2,35 @@ import EssentialFeed
 import XCTest
 
 final class PasswordResetUseCaseTests: XCTestCase {
+    func test_resetPassword_failsWithValidationError_forWeakPassword() {
+        let (sut, _, passwordUpdater, validator) = makeSUT()
+        let weakPassword = "weak"
+        let validationError = PasswordValidationError.tooShort
+        validator.stub(with: .failure(validationError))
+
+        let result = resetPasswordSync(sut: sut, token: "any-valid-token", newPassword: weakPassword)
+
+        switch result {
+        case let .failure(error):
+            XCTAssertEqual(error, .validationFailed(validationError))
+        case .success:
+            XCTFail("Expected validation error, but got success instead")
+        }
+        XCTAssertTrue(passwordUpdater.updatePasswordArgs.isEmpty, "Should not update password on validation failure")
+    }
+
     func test_resetPassword_updatesPasswordAndMarksTokenAsUsed_onValidToken() {
-        let (sut, tokenStore, passwordUpdater) = makeSUT()
+        let (sut, tokenStore, passwordUpdater, _) = makeSUT()
         let validToken = PasswordResetToken(token: "valid-token", email: "test@example.com", expirationDate: Date().addingTimeInterval(900))
         tokenStore.stubbedToken = validToken
 
-        let result = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "NewPassword123!")
+        let result = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "ValidNewPassword1!")
 
         switch result {
         case .success:
             XCTAssertEqual(passwordUpdater.updatePasswordCallCount, 1, "Should update password")
             XCTAssertEqual(passwordUpdater.updatePasswordArgs.first?.email, "test@example.com", "Should update password for correct email")
-            XCTAssertEqual(passwordUpdater.updatePasswordArgs.first?.newPassword, "NewPassword123!", "Should use new password")
+            XCTAssertEqual(passwordUpdater.updatePasswordArgs.first?.newPassword, "ValidNewPassword1!", "Should use new password")
             XCTAssertEqual(tokenStore.markTokenAsUsedCallCount, 1, "Should mark token as used")
             XCTAssertEqual(tokenStore.markTokenAsUsedArgs.first, "valid-token", "Should mark correct token as used")
         case let .failure(error):
@@ -22,10 +39,10 @@ final class PasswordResetUseCaseTests: XCTestCase {
     }
 
     func test_resetPassword_returnsTokenNotFound_forNonexistentToken() {
-        let (sut, tokenStore, _) = makeSUT()
+        let (sut, tokenStore, _, _) = makeSUT()
         tokenStore.stubbedToken = nil
 
-        let result = resetPasswordSync(sut: sut, token: "nonexistent-token", newPassword: "NewPassword123!")
+        let result = resetPasswordSync(sut: sut, token: "nonexistent-token", newPassword: "ValidNewPassword1!")
 
         switch result {
         case .success:
@@ -36,11 +53,11 @@ final class PasswordResetUseCaseTests: XCTestCase {
     }
 
     func test_resetPassword_returnsTokenExpired_forExpiredToken() {
-        let (sut, tokenStore, _) = makeSUT()
+        let (sut, tokenStore, _, _) = makeSUT()
         let expiredToken = PasswordResetToken(token: "expired-token", email: "test@example.com", expirationDate: Date().addingTimeInterval(-900))
         tokenStore.stubbedToken = expiredToken
 
-        let result = resetPasswordSync(sut: sut, token: "expired-token", newPassword: "NewPassword123!")
+        let result = resetPasswordSync(sut: sut, token: "expired-token", newPassword: "ValidNewPassword1!")
 
         switch result {
         case .success:
@@ -51,11 +68,11 @@ final class PasswordResetUseCaseTests: XCTestCase {
     }
 
     func test_resetPassword_returnsTokenAlreadyUsed_forUsedToken() {
-        let (sut, tokenStore, _) = makeSUT()
+        let (sut, tokenStore, _, _) = makeSUT()
         let usedToken = PasswordResetToken(token: "used-token", email: "test@example.com", expirationDate: Date().addingTimeInterval(900), isUsed: true)
         tokenStore.stubbedToken = usedToken
 
-        let result = resetPasswordSync(sut: sut, token: "used-token", newPassword: "NewPassword123!")
+        let result = resetPasswordSync(sut: sut, token: "used-token", newPassword: "ValidNewPassword1!")
 
         switch result {
         case .success:
@@ -66,12 +83,12 @@ final class PasswordResetUseCaseTests: XCTestCase {
     }
 
     func test_resetPassword_returnsStorageError_whenPasswordUpdateFails() {
-        let (sut, tokenStore, passwordUpdater) = makeSUT()
+        let (sut, tokenStore, passwordUpdater, _) = makeSUT()
         let validToken = PasswordResetToken(token: "valid-token", email: "test@example.com", expirationDate: Date().addingTimeInterval(900))
         tokenStore.stubbedToken = validToken
         passwordUpdater.stubbedResult = .failure(NSError(domain: "test", code: 1))
 
-        let result = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "NewPassword123!")
+        let result = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "ValidNewPassword1!")
 
         switch result {
         case .success:
@@ -82,17 +99,15 @@ final class PasswordResetUseCaseTests: XCTestCase {
     }
 
     func test_resetPassword_doesNotMarkTokenAsUsed_whenPasswordUpdateFails() {
-        let (sut, tokenStore, passwordUpdater) = makeSUT()
+        let (sut, tokenStore, passwordUpdater, _) = makeSUT()
         let validToken = PasswordResetToken(token: "valid-token", email: "test@example.com", expirationDate: Date().addingTimeInterval(900))
         tokenStore.stubbedToken = validToken
         passwordUpdater.stubbedResult = .failure(NSError(domain: "test", code: 1))
 
-        _ = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "NewPassword123!")
+        _ = resetPasswordSync(sut: sut, token: "valid-token", newPassword: "ValidNewPassword1!")
 
         XCTAssertEqual(tokenStore.markTokenAsUsedCallCount, 0, "Should not mark token as used when password update fails")
     }
-
-    // MARK: - Helpers
 
     private func resetPasswordSync(sut: PasswordResetUseCase, token: String, newPassword: String) -> Result<Void, PasswordResetTokenError> {
         let exp = expectation(description: "Wait for password reset")
@@ -105,18 +120,18 @@ final class PasswordResetUseCaseTests: XCTestCase {
         return receivedResult ?? .failure(.storageError)
     }
 
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: PasswordResetUseCase, tokenStore: PasswordResetTokenStoreSpy, passwordUpdater: PasswordUpdaterSpy) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: PasswordResetUseCase, tokenStore: PasswordResetTokenStoreSpy, passwordUpdater: PasswordUpdaterSpy, validator: PasswordValidatorSpy) {
         let tokenStore = PasswordResetTokenStoreSpy()
         let passwordUpdater = PasswordUpdaterSpy()
-        let sut = DefaultPasswordResetUseCase(tokenStore: tokenStore, passwordUpdater: passwordUpdater)
+        let validator = PasswordValidatorSpy()
+        let sut = DefaultPasswordResetUseCase(tokenStore: tokenStore, passwordUpdater: passwordUpdater, passwordValidator: validator)
         trackForMemoryLeaks(tokenStore, file: file, line: line)
         trackForMemoryLeaks(passwordUpdater, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
-        return (sut, tokenStore, passwordUpdater)
+        trackForMemoryLeaks(validator, file: file, line: line)
+        return (sut, tokenStore, passwordUpdater, validator)
     }
 }
-
-// MARK: - Test Doubles
 
 private final class PasswordResetTokenStoreSpy: PasswordResetTokenStore {
     var stubbedToken: PasswordResetToken?

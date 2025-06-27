@@ -11,13 +11,21 @@ public protocol PasswordUpdater {
 public final class DefaultPasswordResetUseCase: PasswordResetUseCase {
     private let tokenStore: PasswordResetTokenStore
     private let passwordUpdater: PasswordUpdater
+    private let passwordValidator: PasswordValidator
 
-    public init(tokenStore: PasswordResetTokenStore, passwordUpdater: PasswordUpdater) {
+    public init(tokenStore: PasswordResetTokenStore, passwordUpdater: PasswordUpdater, passwordValidator: PasswordValidator) {
         self.tokenStore = tokenStore
         self.passwordUpdater = passwordUpdater
+        self.passwordValidator = passwordValidator
     }
 
     public func resetPassword(token: String, newPassword: String, completion: @escaping (Result<Void, PasswordResetTokenError>) -> Void) {
+        let validationResult = passwordValidator.validate(password: newPassword)
+        if case let .failure(error) = validationResult {
+            completion(.failure(.validationFailed(error)))
+            return
+        }
+
         guard let resetToken = tokenStore.getToken(token) else {
             completion(.failure(.tokenNotFound))
             return

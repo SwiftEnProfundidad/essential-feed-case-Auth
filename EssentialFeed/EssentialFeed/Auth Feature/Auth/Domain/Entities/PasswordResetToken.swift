@@ -36,4 +36,5 @@ public enum PasswordResetTokenError: Error, Equatable {
     case storageError
     case generationFailed
     case invalidEmail
+    case validationFailed(PasswordValidationError)
 }
