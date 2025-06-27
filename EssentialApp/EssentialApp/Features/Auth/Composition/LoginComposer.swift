@@ -23,6 +23,8 @@ public enum LoginComposer {
         let userLoginUseCase = UserLoginUseCase(loginService: loginService)
         let viewModel = makeLoginViewModel(userLoginUseCase: userLoginUseCase)
 
+        viewModel.onAuthenticated = onAuthenticated
+
         return LoginUIComposer.composedLoginViewController(
             with: viewModel,
             onRecoveryRequested: onRecoveryRequested,
@@ -46,9 +48,9 @@ private extension LoginComposer {
         let config = ConfigurationFactory.makeUserLoginConfiguration()
 
         let securityConfig = LoginSecurityConfiguration(
-            maxAttempts: config.maxFailedAttempts,
+            maxAttempts: 8, // Block after 8 total attempts
             blockDuration: config.lockoutDuration,
-            captchaThreshold: LoginSecurityConfiguration.default.captchaThreshold
+            captchaThreshold: 3 // Show CAPTCHA after 3 attempts
         )
 
         let failedAttemptsStore = InMemoryFailedLoginAttemptsStore()
@@ -73,7 +75,6 @@ private extension LoginComposer {
             authenticate: { email, password in
                 await userLoginUseCase.login(with: LoginCredentials(email: email, password: password))
             },
-            pendingRequestStore: nil,
             loginSecurity: loginSecurity,
             blockMessageProvider: blockMessageProvider,
             captchaFlowCoordinator: captchaCoordinator

@@ -7,13 +7,31 @@
 "LOGIN_VIEW_FORGOT_PASSWORD" = "Esqueceu sua senha?";
 "LOGIN_VIEW_REGISTER_BUTTON" = "Novo por aqui? Cadastre-se";
 
-"LOGIN_ERROR_VALIDATION" = "Erro de validação";
-"LOGIN_ERROR_INVALID_CREDENTIALS" = "Credenciais inválidas";
-"LOGIN_ERROR_NETWORK" = "Erro de rede";
+"LOGIN_ERROR_VALIDATION" = "Por favor, digite tanto o usuário quanto a senha";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Usuário ou senha inválidos";
+"LOGIN_ERROR_NETWORK" = "Ocorreu um erro de rede. Por favor, tente novamente";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Conta bloqueada";
 "LOGIN_ERROR_MESSAGE_ID" = "Mensagem de erro";
-"LOGIN_SUCCESS_MESSAGE" = "Login bem-sucedido!";
+"LOGIN_SUCCESS_MESSAGE" = "Bem-vindo! Você fez login com sucesso";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Mensagem de sucesso";
+
+"LOGIN_ALERT_SUCCESS_TITLE" = "Login Bem-sucedido";
+"LOGIN_ALERT_ERROR_TITLE" = "Erro de Login";
+"LOGIN_ALERT_SUCCESS_MESSAGE" = "Bem-vindo! Você fez login com sucesso";
 
 "PASSWORD_RECOVERY_SUCCESS_TITLE" = "Sucesso";
 "PASSWORD_RECOVERY_ERROR_TITLE" = "Erro";
+
+"CAPTCHA_VERIFIED_TITLE" = "CAPTCHA Verificado";
+"CAPTCHA_VERIFIED_MESSAGE" = "Agora você pode tentar fazer login novamente";
+"CAPTCHA_REQUIRED_TITLE" = "CAPTCHA Obrigatório";
+"CAPTCHA_REQUIRED_MESSAGE" = "Por favor, complete a verificação CAPTCHA";
+"CAPTCHA_ERROR_TITLE" = "Erro de CAPTCHA";
+
+"CAPTCHA_ERROR_INVALID_RESPONSE" = "A verificação CAPTCHA falhou. Por favor, tente novamente.";
+"CAPTCHA_ERROR_NETWORK" = "Erro de rede durante a verificação CAPTCHA. Por favor, verifique sua conexão.";
+"CAPTCHA_ERROR_MALFORMED_REQUEST" = "Erro de verificação CAPTCHA. Por favor, atualize e tente novamente.";
+"CAPTCHA_ERROR_SERVICE_UNAVAILABLE" = "O serviço CAPTCHA está temporariamente indisponível. Por favor, tente mais tarde.";
+"CAPTCHA_ERROR_RATE_LIMIT" = "Muitas tentativas de CAPTCHA. Por favor, aguarde um momento e tente novamente.";
+"CAPTCHA_ERROR_UNKNOWN_FORMAT" = "Erro de CAPTCHA: %@";
+"CAPTCHA_ERROR_GENERIC" = "A verificação CAPTCHA falhou. Por favor, tente novamente.";

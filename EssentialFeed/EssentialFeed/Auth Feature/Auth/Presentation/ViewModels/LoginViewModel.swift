@@ -48,7 +48,9 @@ public final class LoginViewModel: ObservableObject {
     @Published public var password: String = "" {
         didSet {
             if oldValue != password, _errorMessage != nil {
-                userDidInitiateEditing()
+                Task { @MainActor in
+                    userDidInitiateEditing()
+                }
             }
         }
     }
@@ -89,9 +91,9 @@ public final class LoginViewModel: ObservableObject {
 
     @Published public var captchaToken: String? {
         didSet {
-            if captchaToken != nil {
+            if captchaToken != nil, !isCaptchaValidating {
                 Task {
-                    await validateCaptchaAndProceed()
+                    await handleCaptchaFlow()
                 }
             }
         }
@@ -107,26 +109,28 @@ public final class LoginViewModel: ObservableObject {
     public let registerRequested = PassthroughSubject<Void, Never>()
     private var cancellables: Set<AnyCancellable> = []
     private var delayTask: Task<Void, Never>?
-
     public var authenticate: (String, String) async -> Result<LoginResponse, LoginError>
-    private let pendingRequestStore: AnyLoginRequestStore?
     private let loginSecurity: LoginSecurityUseCase
     private let blockMessageProvider: LoginBlockMessageProvider
-    private let captchaFlowCoordinator: CaptchaFlowCoordinating?
     public var navigation: LoginNavigation?
+    public var captchaFlowCoordinator: CaptchaFlowCoordinating?
+    public var pendingRequestStore: Any?
+
+    private var isCaptchaValidating = false
+    private var isCurrentlyAuthenticating = false
+    private var currentLoginTask: Task<Void, Never>?
 
     public init(
         authenticate: @escaping (String, String) async -> Result<LoginResponse, LoginError>,
-        pendingRequestStore: AnyLoginRequestStore? = nil,
         loginSecurity: LoginSecurityUseCase = LoginSecurityUseCase(),
         blockMessageProvider: LoginBlockMessageProvider = DefaultLoginBlockMessageProvider(),
         captchaFlowCoordinator: CaptchaFlowCoordinating? = nil
     ) {
         self.authenticate = authenticate
-        self.pendingRequestStore = pendingRequestStore
         self.loginSecurity = loginSecurity
         self.blockMessageProvider = blockMessageProvider
         self.captchaFlowCoordinator = captchaFlowCoordinator
+        self.pendingRequestStore = nil
     }
 
     @MainActor
@@ -134,8 +138,18 @@ public final class LoginViewModel: ObservableObject {
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
 
+        forceResetAllStates()
+
+        guard !isCaptchaValidating else {
+            print(" Login blocked: CAPTCHA validation in progress")
+            return
+        }
+
         guard !trimmedUsername.isEmpty, !trimmedPassword.isEmpty else {
-            showErrorNotification(title: "Validation Error", message: "Please enter both username and password")
+            showErrorNotification(
+                title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                message: NSLocalizedString("LOGIN_ERROR_VALIDATION", comment: "Validation error message")
+            )
             return
         }
 
@@ -143,15 +157,22 @@ public final class LoginViewModel: ObservableObject {
             let remainingTime = loginSecurity.getRemainingBlockTime(username: trimmedUsername) ?? 0
             let message = blockMessageProvider.message(
                 for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
-            showErrorNotification(title: "Account Locked", message: message)
+            showErrorNotification(
+                title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                message: message
+            )
             isLoginBlocked = true
+            shouldShowCaptcha = false
             return
         } else {
             isLoginBlocked = false
         }
 
         if shouldShowCaptcha, captchaToken == nil {
-            showErrorNotification(title: "CAPTCHA Required", message: "Please complete the CAPTCHA verification")
+            showErrorNotification(
+                title: NSLocalizedString("CAPTCHA_REQUIRED_TITLE", comment: "CAPTCHA required title"),
+                message: NSLocalizedString("CAPTCHA_REQUIRED_MESSAGE", comment: "CAPTCHA required message")
+            )
             return
         }
 
@@ -159,6 +180,8 @@ public final class LoginViewModel: ObservableObject {
     }
 
     private func showSuccessNotification(title: String, message: String) {
+        guard !isCaptchaValidating else { return }
+
         currentNotification = InAppNotification(
             title: title,
             message: message,
@@ -168,6 +191,8 @@ public final class LoginViewModel: ObservableObject {
     }
 
     private func showErrorNotification(title: String, message: String) {
+        guard !isCaptchaValidating else { return }
+
         currentNotification = InAppNotification(
             title: title,
             message: message,
@@ -181,168 +206,32 @@ public final class LoginViewModel: ObservableObject {
         _errorMessage = nil
     }
 
+    @MainActor
     public func dismissNotification() {
-        currentNotification = nil
-        if loginSuccess {
-            onAuthenticated?()
-        }
-    }
-
-    @MainActor
-    public func retryPendingRequests() async {
-        guard let store = pendingRequestStore else { return }
-
-        let pendingRequests = store.loadAll()
-        for request in pendingRequests {
-            let result = await authenticate(request.username, request.password)
-            if case .success = result {
-                await handleSuccessfulLogin(username: request.username)
-                store.remove(request)
-                break
-            }
-        }
-    }
-
-    @MainActor
-    private func validateCaptchaAndProceed() async {
-        guard let coordinator = captchaFlowCoordinator else { return }
-        guard let token = captchaToken else { return }
-        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let result = await coordinator.handleCaptchaValidation(token: token, username: trimmedUsername)
-
-        switch result {
-        case .success:
-            await loginSecurity.handleSuccessfulCaptcha(for: trimmedUsername)
-            shouldShowCaptcha = false
-            clearNotification()
-            let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
-
-            await performAuthentication(
-                username: trimmedUsername,
-                password: trimmedPassword,
-                isPostCaptchaRetry: true
-            )
-        case let .failure(error):
-            captchaToken = nil
-            showErrorNotification(title: "CAPTCHA Error", message: mapCaptchaError(error))
-        }
-    }
-
-    private func mapCaptchaError(_ error: CaptchaError) -> String {
-        switch error {
-        case .invalidResponse:
-            "CAPTCHA verification failed. Please try again."
-        case .networkError:
-            "Network error during CAPTCHA. Please check connection."
-        case .malformedRequest:
-            "CAPTCHA verification error. Please refresh and try again."
-        case .serviceUnavailable:
-            "CAPTCHA service unavailable. Please try again later."
-        case .rateLimitExceeded:
-            "Too many CAPTCHA attempts. Please wait a moment and try again."
-        case let .unknownError(message):
-            "CAPTCHA error: \(message)"
-        }
+        forceResetAllStates()
     }
 
     public func resetCaptchaState() {
         shouldShowCaptcha = false
         captchaToken = nil
-    }
-
-    @MainActor
-    private func performAuthentication(
-        username: String, password: String, isPostCaptchaRetry: Bool = false
-    ) async {
-        isPerformingLogin = true
-        let authResult = await authenticate(username, password)
-
-        switch authResult {
-        case .success:
-            await handleSuccessfulLogin(username: username)
-        case let .failure(error):
-            await handleFailedLogin(error, for: username, isPostCaptchaRetry: isPostCaptchaRetry)
-            if case .network = error {
-                savePendingRequest(username: username, password: password)
-            }
+        Task { @MainActor in
+            forceResetAllStates()
         }
     }
 
     @MainActor
-    private func handleSuccessfulLogin(username: String) async {
-        await loginSecurity.resetAttempts(username: username)
-        loginSuccess = true
-        authenticated.send(())
-        showSuccessNotification(title: "Login Successful", message: "Welcome! You have successfully logged in.")
-        _errorMessage = nil
-        isLoginBlocked = false
-        isPerformingLogin = false
-        resetCaptchaState()
-    }
-
-    private func savePendingRequest(username: String, password: String) {
-        let request = LoginRequest(username: username, password: password)
-        pendingRequestStore?.save(request)
-    }
-
-    @MainActor
-    private func handleFailedLogin(_ error: LoginError, for username: String, isPostCaptchaRetry: Bool = false) async {
-        isPerformingLogin = false
-
-        if isPostCaptchaRetry {
-            clearNotification()
-            resetCaptchaState()
-            updateViewState()
-            return
-        }
-
-        await loginSecurity.handleFailedLogin(username: username)
-        if let coordinator = captchaFlowCoordinator {
-            let attempts = loginSecurity.getFailedAttempts(username: username)
-            shouldShowCaptcha = coordinator.shouldTriggerCaptcha(failedAttempts: attempts)
-        }
-
-        if await loginSecurity.isAccountLocked(username: username) {
-            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            let message = blockMessageProvider.message(
-                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
-            showErrorNotification(title: "Account Locked", message: message)
-            isLoginBlocked = true
-        } else {
-            let errorMessage = mapLoginError(error, for: username)
-            showErrorNotification(title: "Login Error", message: errorMessage)
-        }
-
-        updateViewState()
-    }
-
-    @MainActor
-    private func checkAccountUnlock(for username: String) async {
-        let isLocked = await loginSecurity.isAccountLocked(username: username)
-        if isLocked {
-            let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
-            let message = blockMessageProvider.message(
-                for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
-            showErrorNotification(title: "Account Locked", message: message)
-            isLoginBlocked = true
-            shouldShowCaptcha = true
-        } else {
-            isLoginBlocked = false
-            clearNotification()
-        }
-    }
-
     public func handleRecoveryTap() {
         navigation?.showRecovery()
-        recoveryRequested.send(())
+        recoveryRequested.send()
     }
 
+    @MainActor
     public func handleRegisterTap() {
         navigation?.showRegister()
-        registerRequested.send(())
+        registerRequested.send()
     }
 
+    @MainActor
     public func userDidInitiateEditing() {
         if let notification = currentNotification, notification.type == .error {
             clearNotification()
@@ -365,24 +254,211 @@ public final class LoginViewModel: ObservableObject {
 
     private func updateViewState() {
         publishedViewState = viewState
+
+        if case .showingNotification = viewState {
+            isPerformingLogin = false
+        }
+        if isLoginBlocked {
+            isPerformingLogin = false
+        }
     }
 
-    deinit {
-        delayTask?.cancel()
+    @MainActor
+    private func handleCaptchaFlow() async {
+        await validateCaptchaAndProceed()
+    }
+
+    @MainActor
+    private func validateCaptchaAndProceed() async {
+        guard let coordinator = captchaFlowCoordinator else { return }
+        guard let token = captchaToken else { return }
+        let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !isCaptchaValidating else {
+            print(" CAPTCHA validation already in progress, skipping")
+            return
+        }
+
+        print(" Validating CAPTCHA for user: \(trimmedUsername)")
+
+        currentLoginTask?.cancel()
+        currentLoginTask = nil
+
+        isCaptchaValidating = true
+        isPerformingLogin = true
+
+        currentNotification = nil
+        _errorMessage = nil
+
+        let result = await coordinator.handleCaptchaValidation(token: token, username: trimmedUsername)
+
+        await MainActor.run {
+            isCaptchaValidating = false
+            isPerformingLogin = false
+
+            switch result {
+            case .success:
+                print(" CAPTCHA validation successful")
+
+                Task {
+                    await loginSecurity.handleSuccessfulCaptcha(for: trimmedUsername)
+                    await loginSecurity.resetAttempts(username: trimmedUsername)
+
+                    await MainActor.run {
+                        shouldShowCaptcha = false
+                        isLoginBlocked = false
+                        clearNotification()
+
+                        currentNotification = InAppNotification(
+                            title: NSLocalizedString("CAPTCHA_VERIFIED_TITLE", comment: "CAPTCHA verified title"),
+                            message: NSLocalizedString("CAPTCHA_VERIFIED_MESSAGE", comment: "CAPTCHA verified message"),
+                            type: .success,
+                            actionButton: "Continue"
+                        )
+                    }
+                }
+
+            case let .failure(error):
+                print(" CAPTCHA validation failed: \(error)")
+                captchaToken = nil
+                currentNotification = InAppNotification(
+                    title: NSLocalizedString("CAPTCHA_ERROR_TITLE", comment: "CAPTCHA error title"),
+                    message: mapCaptchaError(error),
+                    type: .error,
+                    actionButton: "OK"
+                )
+            }
+        }
+    }
+
+    @MainActor
+    private func performAuthentication(
+        username: String, password: String, isPostCaptchaRetry: Bool = false
+    ) async {
+        print(" Performing authentication for: \(username), isPostCaptchaRetry: \(isPostCaptchaRetry)")
+
+        currentLoginTask = Task {
+            isPerformingLogin = true
+            let authResult = await authenticate(username, password)
+
+            guard !Task.isCancelled else {
+                print(" Authentication task was cancelled")
+                isPerformingLogin = false
+                return
+            }
+
+            switch authResult {
+            case .success:
+                print(" Authentication successful")
+                await handleSuccessfulLogin(username: username)
+            case let .failure(error):
+                print(" Authentication failed: \(error)")
+                await handleFailedLogin(error, for: username, isPostCaptchaRetry: isPostCaptchaRetry)
+            }
+        }
+
+        await currentLoginTask?.value
+    }
+
+    @MainActor
+    private func handleSuccessfulLogin(username: String) async {
+        await loginSecurity.resetAttempts(username: username)
+        loginSuccess = true
+        authenticated.send()
+
+        showSuccessNotification(
+            title: NSLocalizedString("LOGIN_ALERT_SUCCESS_TITLE", comment: "Success alert title"),
+            message: NSLocalizedString("LOGIN_ALERT_SUCCESS_MESSAGE", comment: "Login successful message")
+        )
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            self?.onAuthenticated?()
+        }
+
+        _errorMessage = nil
+        isLoginBlocked = false
+        isPerformingLogin = false
+        resetCaptchaState()
+    }
+
+    @MainActor
+    private func handleFailedLogin(_ error: LoginError, for username: String, isPostCaptchaRetry: Bool = false) async {
+        print(" Handling failed login for: \(username), isPostCaptchaRetry: \(isPostCaptchaRetry)")
+
+        forceResetAllStates()
+
+        if isPostCaptchaRetry {
+            print(" Post-CAPTCHA retry failed")
+            let errorMessage = mapLoginError(error, for: username)
+            showErrorNotification(
+                title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                message: errorMessage
+            )
+            resetCaptchaState()
+            return
+        }
+
+        switch error {
+        case .accountLocked:
+            let message = blockMessageProvider.message(for: error)
+            showErrorNotification(
+                title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                message: message
+            )
+            isLoginBlocked = true
+            shouldShowCaptcha = false
+
+        case .invalidCredentials:
+            await loginSecurity.handleFailedLogin(username: username)
+
+            let attempts = loginSecurity.getFailedAttempts(username: username)
+            print(" Total failed attempts: \(attempts)")
+
+            let isNowLocked = await loginSecurity.isAccountLocked(username: username)
+
+            if isNowLocked {
+                let remainingTime = loginSecurity.getRemainingBlockTime(username: username) ?? 0
+                let message = blockMessageProvider.message(
+                    for: LoginError.accountLocked(remainingTime: Int(remainingTime)))
+                showErrorNotification(title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"), message: message)
+                isLoginBlocked = true
+                shouldShowCaptcha = false
+            } else {
+                if let coordinator = captchaFlowCoordinator {
+                    shouldShowCaptcha = coordinator.shouldTriggerCaptcha(failedAttempts: attempts)
+                    print(" shouldShowCaptcha: \(shouldShowCaptcha)")
+                }
+
+                if !shouldShowCaptcha {
+                    let errorMessage = mapLoginError(error, for: username)
+                    showErrorNotification(
+                        title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                        message: errorMessage
+                    )
+                }
+            }
+
+        default:
+            let errorMessage = mapLoginError(error, for: username)
+            showErrorNotification(
+                title: NSLocalizedString("LOGIN_ALERT_ERROR_TITLE", comment: "Error alert title"),
+                message: errorMessage
+            )
+        }
     }
 
     private func mapLoginError(_ error: LoginError, for _: String) -> String {
         switch error {
         case .invalidCredentials:
-            "Invalid username or password."
+            NSLocalizedString("LOGIN_ERROR_INVALID_CREDENTIALS", comment: "Invalid credentials error")
         case .invalidEmailFormat:
-            "Invalid username or password."
+            NSLocalizedString("LOGIN_ERROR_INVALID_CREDENTIALS", comment: "Invalid credentials error")
         case .invalidPasswordFormat:
-            "Invalid username or password."
+            NSLocalizedString("LOGIN_ERROR_INVALID_CREDENTIALS", comment: "Invalid credentials error")
         case let .accountLocked(remainingTime):
             blockMessageProvider.message(for: LoginError.accountLocked(remainingTime: remainingTime))
         case .network:
-            "A network error occurred. Please try again."
+            NSLocalizedString("LOGIN_ERROR_NETWORK", comment: "Network error")
         case .tokenStorageFailed,
              .noConnectivity,
              .offlineStoreFailed,
@@ -390,6 +466,47 @@ public final class LoginViewModel: ObservableObject {
              .unknown:
             error.errorMessage()
         }
+    }
+
+    private func mapCaptchaError(_ error: Error) -> String {
+        if let captchaError = error as? CaptchaError {
+            switch captchaError {
+            case .invalidResponse:
+                return NSLocalizedString("CAPTCHA_ERROR_INVALID_RESPONSE", comment: "CAPTCHA verification failed")
+            case .networkError:
+                return NSLocalizedString("CAPTCHA_ERROR_NETWORK", comment: "Network error during CAPTCHA verification")
+            case .malformedRequest:
+                return NSLocalizedString("CAPTCHA_ERROR_MALFORMED_REQUEST", comment: "CAPTCHA request error")
+            case .serviceUnavailable:
+                return NSLocalizedString("CAPTCHA_ERROR_SERVICE_UNAVAILABLE", comment: "CAPTCHA service unavailable")
+            case .rateLimitExceeded:
+                return NSLocalizedString("CAPTCHA_ERROR_RATE_LIMIT", comment: "Too many CAPTCHA attempts")
+            case let .unknownError(message):
+                return String(format: NSLocalizedString("CAPTCHA_ERROR_UNKNOWN_FORMAT", comment: "Unknown CAPTCHA error"), message)
+            }
+        }
+
+        return NSLocalizedString("CAPTCHA_ERROR_GENERIC", comment: "Generic CAPTCHA error")
+    }
+
+    @MainActor
+    private func forceResetAllStates() {
+        print(" FORCE RESET: Stopping all operations and clearing state")
+
+        currentLoginTask?.cancel()
+        currentLoginTask = nil
+
+        isPerformingLogin = false
+        isCaptchaValidating = false
+
+        currentNotification = nil
+        _errorMessage = nil
+
+        updateViewState()
+    }
+
+    deinit {
+        delayTask?.cancel()
     }
 }
 

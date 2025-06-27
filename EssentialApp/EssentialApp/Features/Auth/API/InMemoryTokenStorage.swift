@@ -1,18 +1,23 @@
 import EssentialFeed
 import Foundation
 
-class InMemoryTokenStorage: TokenStorage {
+public class InMemoryTokenStorage: TokenStorage {
     private var token: Token?
 
-    func loadTokenBundle() async throws -> Token? {
+    public init() {}
+
+    public func loadTokenBundle() async throws -> Token? {
+        print("📱 InMemoryTokenStorage: Loading token - \(token?.accessToken ?? "nil")")
         return token
     }
 
-    func save(tokenBundle: Token) async throws {
+    public func save(tokenBundle: Token) async throws {
         self.token = tokenBundle
+        print("📱 InMemoryTokenStorage: Saved token - \(tokenBundle.accessToken)")
     }
 
-    func deleteTokenBundle() async throws {
+    public func deleteTokenBundle() async throws {
         token = nil
+        print("📱 InMemoryTokenStorage: Deleted token")
     }
 }

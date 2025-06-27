@@ -1,4 +1,4 @@
-// EssentialApp/Features/Auth/Resources/Localizable (English).strings
+/* EssentialApp Features Auth Resources English Localizable.strings */
 
 "LOGIN_VIEW_TITLE" = "My Feeds";
 "LOGIN_VIEW_USERNAME_PLACEHOLDER" = "Username";
@@ -7,17 +7,31 @@
 "LOGIN_VIEW_FORGOT_PASSWORD" = "Forgot your password?";
 "LOGIN_VIEW_REGISTER_BUTTON" = "New here? Sign up";
 
-"LOGIN_ERROR_VALIDATION" = "Validation error";
-"LOGIN_ERROR_INVALID_CREDENTIALS" = "Invalid credentials";
-"LOGIN_ERROR_NETWORK" = "Network error";
+"LOGIN_ERROR_VALIDATION" = "Please enter both username and password";
+"LOGIN_ERROR_INVALID_CREDENTIALS" = "Invalid username or password";
+"LOGIN_ERROR_NETWORK" = "A network error occurred. Please try again";
 "LOGIN_ERROR_MESSAGE_ID" = "Error message";
 "LOGIN_ERROR_ACCOUNT_BLOCKED" = "Account blocked";
-"LOGIN_SUCCESS_MESSAGE" = "Login successful!";
+"LOGIN_SUCCESS_MESSAGE" = "Welcome! You have successfully logged in";
 "LOGIN_SUCCESS_MESSAGE_ID" = "Success message";
 
-"LOGIN_ALERT_SUCCESS_TITLE" = "Success";
-"LOGIN_ALERT_ERROR_TITLE" = "Error";
-"LOGIN_ALERT_SUCCESS_MESSAGE" = "Login successful!";
+"LOGIN_ALERT_SUCCESS_TITLE" = "Login Successful";
+"LOGIN_ALERT_ERROR_TITLE" = "Login Error";
+"LOGIN_ALERT_SUCCESS_MESSAGE" = "Welcome! You have successfully logged in";
 
 "PASSWORD_RECOVERY_SUCCESS_TITLE" = "Success";
 "PASSWORD_RECOVERY_ERROR_TITLE" = "Error";
+
+"CAPTCHA_VERIFIED_TITLE" = "CAPTCHA Verified";
+"CAPTCHA_VERIFIED_MESSAGE" = "You may now try to log in again";
+"CAPTCHA_REQUIRED_TITLE" = "CAPTCHA Required";
+"CAPTCHA_REQUIRED_MESSAGE" = "Please complete the CAPTCHA verification";
+"CAPTCHA_ERROR_TITLE" = "CAPTCHA Error";
+
+"CAPTCHA_ERROR_INVALID_RESPONSE" = "CAPTCHA verification failed. Please try again.";
+"CAPTCHA_ERROR_NETWORK" = "Network error during CAPTCHA verification. Please check your connection.";
+"CAPTCHA_ERROR_MALFORMED_REQUEST" = "CAPTCHA verification error. Please refresh and try again.";
+"CAPTCHA_ERROR_SERVICE_UNAVAILABLE" = "CAPTCHA service is temporarily unavailable. Please try again later.";
+"CAPTCHA_ERROR_RATE_LIMIT" = "Too many CAPTCHA attempts. Please wait a moment and try again.";
+"CAPTCHA_ERROR_UNKNOWN_FORMAT" = "CAPTCHA error: %@";
+"CAPTCHA_ERROR_GENERIC" = "CAPTCHA verification failed. Please try again.";
